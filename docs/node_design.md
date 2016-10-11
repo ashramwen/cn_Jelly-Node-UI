@@ -449,20 +449,27 @@ Node's info modal is defined by its `InfoModel`.
 
 ## Browser supports
   >`IE 10+`, `any other browsers`
+
 ## Tech Stack
 ### *Libraries* 
   - Typescript@>2.0
     > ES 6 polyfills.
+
   - SCSS
     > OO CSS Style
+
   - Angular 2@>2.0.0
     > MVVM Template framework, Flux
+
   - Angular 2 material design
     > build-in UI components
+
   - rxjs
     > Data communication
+
   - immutableJS
     > Data state maintainer
+    
   - d3@v4
     > SVG lib
 

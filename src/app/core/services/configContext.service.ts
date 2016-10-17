@@ -1,9 +1,9 @@
-import {Injectable, Inject} from '@angular/core';
-import {Http} from '@angular/http';
-import {JNConfig} from '../../jn-config';
+import { Injectable, Inject } from '@angular/core';
+import { Http } from '@angular/http';
+import { JNConfig } from '../../jn-config';
 
 @Injectable()
-export class ConfigContextService{
+export class ConfigContextService {
   private _storage: Object;
 
   constructor(private http: Http) {

@@ -1,8 +1,8 @@
 import {NgModule} from '@angular/core';
-import {EditFormModule} from './edit-forms';
+import {NodeEditorModule} from './node-editor';
 
 @NgModule({
-  imports: [EditFormModule],
+  imports: [NodeEditorModule],
   exports: [],
   providers: []
 })

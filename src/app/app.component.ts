@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import {TranslateService} from 'ng2-translate/ng2-translate';
 import {cn, en} from '../assets/i18n';
-import {ApplicationContextService} from './shared/services/applicationContext.service';
+import {ApplicationContextService} from './core/services/applicationContext.service';
 
 @Component({
     selector: 'app',
-    template: '<jn-editform></jn-editform>'
+    template: '<jn-node-editor></jn-node-editor>'
 })
 export class AppComponent {
 

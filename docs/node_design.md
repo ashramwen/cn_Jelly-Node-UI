@@ -132,7 +132,7 @@ class InputFlowValidator{
   ![](https://i.imgsafe.org/b4f4d06f82.png)
 
 ## ViewModel
-  Every node renders its editing modal with its `ViewModel`. The view schema supports inline script to render its view, validate its input. A view model will be instantiated when a node is created(shown on canvas).
+  Every node renders its editing modal with its `ViewModel`. A view model will be instantiated when a node is created(shown on canvas).
 
   `ViewModel` defines as:
   ```typescript
@@ -448,7 +448,7 @@ Node's info modal is defined by its `InfoModel`.
     - EN
 
 ## Browser supports
-  >`IE 10+`, `any other browsers`
+  > `IE 10+`, `any other browsers`
 
 ## Tech Stack
 ### *Libraries* 
@@ -469,14 +469,16 @@ Node's info modal is defined by its `InfoModel`.
 
   - immutableJS
     > Data state maintainer
-    
+
   - d3@v4
     > SVG lib
 
 ### *Development*
   - NPM
     > Dependency Manager
+
   - Webpack
     > Development building tool
+
   - Typings
     > Javascript Lib descriptor manager

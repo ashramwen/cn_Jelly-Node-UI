@@ -1,39 +1,20 @@
 import { NgModule, Provider }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { MaterialModule } from '@angular/material';
-import { PROVIDERS } from './shared/services';
-import { LocalStorageService, LOCAL_STORAGE_SERVICE_CONFIG } from 'angular-2-local-storage';
-import { HttpModule, Http} from '@angular/http';
-import {TranslateModule, TranslateLoader, TranslateStaticLoader} from 'ng2-translate/ng2-translate';
 
+import { CoreModule } from './core/core.module';
 import { AppComponent }  from './app.component';
 import { JNViewModule } from './views'
-import { EditFormModule } from './views/edit-forms/edit-form.module';
+import { NodeEditorModule } from './views/node-editor/node-editor.module';
 
  
-// Create config options (see ILocalStorageServiceConfigOptions) for deets:
-let localStorageServiceConfig = {
-  prefix: 'jn-app',
-  storageType: 'sessionStorage'
-};
-// Provide the config to the service:
-const LOCAL_STORAGE_CONFIG_PROVIDER: Provider = {
-  provide: LOCAL_STORAGE_SERVICE_CONFIG,
-  useValue: localStorageServiceConfig
-};
 /*
 * Platform and Environment
 * our providers/directives/pipes
 */
 
 @NgModule({
-  imports: [ BrowserModule, HttpModule, TranslateModule.forRoot(), EditFormModule, MaterialModule.forRoot(), JNViewModule ],
+  imports: [ BrowserModule, NodeEditorModule, JNViewModule, CoreModule ],
   declarations: [ AppComponent],
-  bootstrap: [AppComponent],
-  providers: [LocalStorageService, LOCAL_STORAGE_CONFIG_PROVIDER, {
-    provide: TranslateLoader,
-    useFactory: (http: Http) => new TranslateStaticLoader(http, 'assets/i18n', '.json'),
-    deps: [Http]
-  }, ...PROVIDERS]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

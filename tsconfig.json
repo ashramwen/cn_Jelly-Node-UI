@@ -19,6 +19,10 @@
     "src/custom-typings.d.ts",
     "typings/browser.d.ts"
   ],
+  "types": [
+    "lodash",
+    "d3"
+  ],
   "awesomeTypescriptLoaderOptions": {
     "resolveGlobs": true,
     "forkChecker": true

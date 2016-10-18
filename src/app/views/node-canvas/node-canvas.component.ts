@@ -1,4 +1,5 @@
 import { Directive, OnInit, ElementRef } from '@angular/core';
+import * as d3 from 'd3';
 
 @Directive({
   selector: 'graphic'
@@ -6,7 +7,6 @@ import { Directive, OnInit, ElementRef } from '@angular/core';
 export class NodeCanvasComponent implements OnInit {
 
   constructor(private ele: ElementRef) {
-
   }
 
   ngOnInit() {
@@ -14,7 +14,6 @@ export class NodeCanvasComponent implements OnInit {
   }
 
   start() {
-    window['d3'] = d3;
     var margin = { top: 20, right: 120, bottom: 20, left: 120 },
       width = 960 - margin.right - margin.left,
       height = 500 - margin.top - margin.bottom;

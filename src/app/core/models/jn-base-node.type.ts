@@ -4,6 +4,11 @@ import { Observable, Subscriber } from 'rxjs';
 import { IJNInfoPanelModel } from '../../views/info-panel/interfaces';
 import { IJNEditorModel } from '../../views/node-editor/interfaces';
 import { IJNPaletteModel } from '../../views/palette/interfaces';
+import {
+  ApplicationContextService,
+  CacheContextService,
+  ConfigContextService
+} from '../services';
 
 
 export abstract class JNBaseNode {
@@ -45,13 +50,11 @@ export abstract class JNBaseNode {
    * @desc serialize data model
    */
   protected abstract formatter(): Promise<Object>;
-
   /**
    * @returns Object
    * @desc produce output data for publisher
    */
   protected abstract buildOutput(): Object;
-
 
   /**
    * @param  {JNBaseNode} node
@@ -62,12 +65,12 @@ export abstract class JNBaseNode {
     node.output.subscribe(this.listener);
   }
   
+  constructor(
+    protected applicationContext: ApplicationContextService,
+    protected configContext: ConfigContextService,
+    protected cacheContext: CacheContextService
+  ) {}
 
-  constructor() {
-    
-  }
-
-  
   /**
    * @param  {Object} data
    * @desc update node by given data and publish new body

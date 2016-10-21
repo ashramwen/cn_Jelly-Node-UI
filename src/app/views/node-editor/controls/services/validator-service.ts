@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {FormBuilder, Validators, FormControl, FormGroup} from '@angular/forms';
-import {IJBFormValidator} from '../interfaces/validator';
+import {IJNFormValidator} from '../../interfaces/validator';
 import {JNFormValidator} from '../entities/validator';
 
 @Injectable()
@@ -9,7 +9,7 @@ export class ValidatorService{
     
   }
 
-  public generatorValidators(validators: IJBFormValidator[]): JNFormValidator[] {
+  public generatorValidators(validators: IJNFormValidator[]): JNFormValidator[] {
     // ::TODO  
     return [];
   }

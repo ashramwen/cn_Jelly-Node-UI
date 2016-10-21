@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { CoreModule } from './core/core.module';
 import { AppComponent }  from './app.component';
-import { JNViewModule } from './views'
+import { JNViewModule } from './views';
 import { NodeEditorModule } from './views/node-editor/node-editor.module';
 
  

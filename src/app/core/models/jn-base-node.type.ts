@@ -54,7 +54,7 @@ export abstract class JNBaseNode {
    * @returns Object
    * @desc produce output data for publisher
    */
-  protected abstract buildOutput(): Object;
+  protected abstract buildOutput(): Promise<Object>;
 
   /**
    * @param  {JNBaseNode} node

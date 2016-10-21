@@ -21,38 +21,69 @@ export abstract class JNBaseNode {
     this.stream = subscriber;
   });
 
+  /**
+   * @returns void
+   * @desc listens all published messages in the linked road
+   */
   protected abstract listener(): void; // listener
-  protected abstract parser(data: Object): IJNNodeModel;
-  protected abstract formatter(): Object;
-  protected abstract buildOutput(): Object;
   
+  /**
+   * @param  {Object} data
+   * @returns Promise
+   * @desc deserialize raw data to data model
+   */
+  protected abstract parser(data: Object): Promise<IJNNodeModel>;
+
+  /**
+   * @returns Promise
+   * @desc serialize data model
+   */
+  protected abstract formatter(): Promise<Object>;
+
+  /**
+   * @returns Object
+   * @desc produce output data for publisher
+   */
+  protected abstract buildOutput(): Object;
+
+
+  /**
+   * @param  {JNBaseNode} node
+   * @desc description
+   */
   protected accept(node: JNBaseNode) {
     this.inputFlows.push(node);
     node.output.subscribe(this.listener);
   }
-
   
 
   constructor() {
     
   }
+
   
   /**
    * @param  {Object} data
-   * @description update node by given data and publish new body
+   * @desc update node by given data and publish new body
    */
   public update(data: Object) { 
-    let model = this.parser(data);
-    let payload: IJNNodePayload = {
-      type: this.constructor,
-      data: this.buildOutput(),
-      valid: model.$valid,
-      error: model.$error
-    };
+    this.parser(data).then((model) => {
+      let payload: IJNNodePayload = {
+        type: this.constructor,
+        data: this.buildOutput(),
+        valid: model.$valid,
+        error: model.$error
+      };
 
-    this.stream.next(payload);
+      this.stream.next(payload);
+    });
   };
 
+  /**
+   * @param  {JNBaseNode} target output node
+   * @returns boolean
+   * @desc if thow target is coonectable
+   */
   public connectable(target: JNBaseNode): boolean {
     return true;
   }

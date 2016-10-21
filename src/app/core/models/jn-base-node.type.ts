@@ -1,6 +1,9 @@
 import { INodePosition, IJNNodePayload, IJNNodeModel } from './interfaces';
 import { JNNodeError } from './exceptions';
 import { Observable, Subscriber } from 'rxjs';
+import { IJNInfoPanelModel } from '../../views/info-panel/interfaces';
+import { IJNEditorModel } from '../../views/node-editor/interfaces';
+import { IJNPaletteModel } from '../../views/palette/interfaces';
 
 
 export abstract class JNBaseNode {
@@ -9,6 +12,9 @@ export abstract class JNBaseNode {
   static color: String; // node color display on canvas
   static borderColor: String; // node border color on canvas
   static accepts: Array<JNBaseNode>; // node types that can be accepted;
+  static editorModel: IJNEditorModel;
+  static infoModel: IJNInfoPanelModel;
+  static paletteModel: IJNPaletteModel;
 
   name: String; // node name
   position: INodePosition; // node position on canvas

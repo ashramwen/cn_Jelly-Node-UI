@@ -1,4 +1,4 @@
-import {IJBFormValidator} from './validator';
+import {IJNFormValidator} from './validator';
 import {IJNFormParser} from './parser';
 
 export interface IJNFormControl{

@@ -1,4 +1,4 @@
-export interface IJBFormButton{
+export interface IJNFormButton{
   "buttonText": String,
   "role?": "cancel" | "submit",
   "callback?": 'cancel' | 'submit' | Function,

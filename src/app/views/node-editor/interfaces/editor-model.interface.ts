@@ -1,9 +1,9 @@
 import {IJNFormControl} from './form-control';
-import {IJBFormButton} from './button';
+import {IJNFormButton} from './button';
 
-export interface IViewSchema {
+export interface IJNEditorModel {
   "title": String,
-  "buttons": IJBFormButton[],
+  "buttons": IJNFormButton[],
   "viewTemplate?": String,
   "formControls?": IJNFormControl[]
 }

@@ -4,10 +4,13 @@ import { JNBaseNode } from './jn-base-node.type';
 declare const Reflect: any;
 
 export function JNNode(options: INodeOptions) {
-  return function (node: JNBaseNode) {
-    node['icon'] = options.icon;
-    node['color'] = options.color;
-    node['borderColor'] = options.borderColor;
-    node['accepts'] = options.accepts;
+  return function (nodeClass) {
+    nodeClass['icon'] = options.icon;
+    nodeClass['color'] = options.color;
+    nodeClass['borderColor'] = options.borderColor;
+    nodeClass['accepts'] = options.accepts;
+    nodeClass['editorModel'] = options.editorModel;
+    nodeClass['infoPanelModel'] = options.infoPanelModel;
+    nodeClass['palettePanelModel'] = options.paletteModel;
   };
 }

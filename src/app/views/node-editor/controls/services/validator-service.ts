@@ -4,7 +4,7 @@ import {IJNFormValidator} from '../../interfaces/validator';
 import {JNFormValidator} from '../entities/validator';
 
 @Injectable()
-export class ValidatorService{
+export class ValidatorService {
   constructor() {
     
   }

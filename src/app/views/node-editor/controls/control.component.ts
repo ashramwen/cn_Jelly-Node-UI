@@ -1,10 +1,13 @@
-import {Component, Input, Output, ElementRef, Renderer, NgZone, SimpleChange} from '@angular/core';
-import {FormBuilder, Validators, FormGroup, FormControl} from '@angular/forms';
+import {
+  Component, Input, Output,
+  ElementRef, Renderer, NgZone, SimpleChange
+} from '@angular/core';
+import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
 
 const noop = () => {
 };
 
-export abstract class NodeFormControl{
+export abstract class NodeFormControl {
   @Input()
   protected disabled: boolean;
   @Input()
@@ -12,9 +15,9 @@ export abstract class NodeFormControl{
   @Input()
   protected hidden: String;
   @Input()
-  protected ApplicationContext;
+  protected applicationContext;
   @Input()
-  protected ConfigContext;
+  protected configContext;
   @Input()
   protected label: String;
 
@@ -28,35 +31,35 @@ export abstract class NodeFormControl{
     private _zone: NgZone) {
   }
 
-  //get accessor
+  // get accessor
   get value(): any {
     return this._value;
   };
 
-  //set accessor including call the onchange callback
+  // set accessor including call the onchange callback
   set value(v: any) {
     if (v !== this._value) {
-      this._zone.run(()=>{
+      this._zone.run(() => {
         this._value = v;
         this.onChangeCallback(v);
       });
     }
   }
 
-  //From ControlValueAccessor interface
+  // From ControlValueAccessor interface
   writeValue(value: any) {
     if (value !== this.value) {
       this.value = value;
     }
   }
 
-  //From ControlValueAccessor interface
+  // From ControlValueAccessor interface
   registerOnChange(fn: any) {
     this.onChangeCallback = fn;
   }
 
-  //From ControlValueAccessor interface
+  // From ControlValueAccessor interface
   registerOnTouched(fn: any) {
-      this.onTouchedCallback = fn;
+    this.onTouchedCallback = fn;
   }
 }

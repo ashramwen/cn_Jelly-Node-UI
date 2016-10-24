@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import {TranslateService} from 'ng2-translate';
-import {cn, en} from '../assets/i18n';
-import {ApplicationContextService} from './core/services/applicationContext.service';
+import { TranslateService } from 'ng2-translate';
+import { cn, en } from '../assets/i18n';
+import { ApplicationContextService } from './core/services/applicationContext.service';
 
 @Component({
     selector: 'app',
-    template: '<jn-node-editor></jn-node-editor>'
+    template: '<router-outlet></router-outlet>'
 })
 export class AppComponent {
 
@@ -18,7 +18,7 @@ export class AppComponent {
 
         setTimeout(() => {
             translate.set('APP_NAME', 'NODE_RED', 'cn');
-        }, 1000);  
+        }, 1000);
 
         translate.setTranslation('cn', cn);
         translate.setTranslation('en', en);
@@ -32,7 +32,7 @@ export class AppComponent {
 
     @logParamTypes
     private test(appContext: ApplicationContextService) {
-        
+
     }
 
 }
@@ -44,7 +44,7 @@ function logParamTypes(target: any, key: string) {
         var s = types.map(a => a.name).join();
         console.log(`${key} param types: ${s}`);
     }, 3000);
-}  
+}
 
 function getParams(func: Function) {
     setTimeout(function () {

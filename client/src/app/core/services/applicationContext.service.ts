@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 
 @Injectable()
-export class ApplicationContextService{
+export class ApplicationContextService {
   private _storage: Object = {};
 
   get(key: string) {

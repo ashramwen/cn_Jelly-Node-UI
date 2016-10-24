@@ -10,7 +10,7 @@ export interface IJNFormValidator {
     method?: String, // calling method
     headers?: JSON,
     body?: String | JSON
-  },
-  validator: () => {} | string,
-  msg?: String
+  };
+  validator: () => {} | string;
+  msg?: String;
 }

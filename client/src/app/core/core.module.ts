@@ -1,7 +1,11 @@
 import { NgModule, Provider } from '@angular/core';
 import { MaterialModule } from '@angular/material';
 import { LocalStorageService, LOCAL_STORAGE_SERVICE_CONFIG } from 'angular-2-local-storage';
-import {TranslateModule, TranslateLoader, TranslateStaticLoader} from 'ng2-translate/ng2-translate';
+import {
+  TranslateModule,
+  TranslateLoader,
+  TranslateStaticLoader
+} from 'ng2-translate';
 import { HttpModule, Http} from '@angular/http';
 
 import { PROVIDERS } from './services';

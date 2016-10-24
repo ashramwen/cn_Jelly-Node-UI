@@ -1,4 +1,3 @@
-import { FlowComponent } from './views/flow/flow.component';
 import { NgModule, Provider } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
@@ -9,6 +8,8 @@ import { AppComponent } from './app.component';
 import { JNViewModule } from './views';
 import { NodeEditorModule } from './views/node-editor/node-editor.module';
 
+import { FlowComponent } from './views/flow/flow.component';
+import { FlowDetailComponent } from './views/flow/flow-detail/flow-detail.component';
 
 /*
 * Platform and Environment
@@ -19,7 +20,8 @@ import { NodeEditorModule } from './views/node-editor/node-editor.module';
   imports: [BrowserModule, NodeEditorModule, JNViewModule, CoreModule, HttpModule, AppRoutingModule],
   declarations: [
     AppComponent,
-    FlowComponent
+    FlowComponent,
+    FlowDetailComponent
   ],
   bootstrap: [AppComponent]
 })

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import {TranslateService} from 'ng2-translate';
 import {cn, en} from '../assets/i18n';
-import {ApplicationContextService} from './core/services/applicationContext.service';
+import {ApplicationContextService} from './core/services';
 
 @Component({
     selector: 'app',

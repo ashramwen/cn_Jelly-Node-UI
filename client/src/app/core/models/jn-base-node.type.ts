@@ -35,7 +35,13 @@ export abstract class JNBaseNode {
   }
 
   protected abstract model: JNNodeModel; // node model
-  public abstract body: Object; // node data payload
+
+  /**
+   * @desc return body
+   */
+  public get body() {
+    return this.formatter();
+  }
 
   private inputFlows: Array<JNBaseNode>; // accepted nodes
   private stream: Subscriber<IJNNodePayload>; // stream publisher
@@ -48,7 +54,7 @@ export abstract class JNBaseNode {
    * @desc listens all published messages in the linked road
    */
   protected abstract listener(): void; // listener
-  
+
   /**
    * @param  {Object} data
    * @returns Promise
@@ -60,7 +66,7 @@ export abstract class JNBaseNode {
    * @returns Promise
    * @desc serialize data model
    */
-  protected abstract formatter(): Promise<Object>;
+  protected abstract formatter(): Object;
   /**
    * @returns Object
    * @desc produce output data for publisher
@@ -75,18 +81,18 @@ export abstract class JNBaseNode {
     this.inputFlows.push(node);
     node.output.subscribe(this.listener);
   }
-  
+
   constructor(
     protected applicationContext: ApplicationContextService,
     protected configContext: ConfigContextService,
     protected cacheContext: CacheContextService
-  ) {}
+  ) { }
 
   /**
    * @param  {Object} data
    * @desc update node by given data and publish new body
    */
-  public update(data: Object) { 
+  public update(data: Object) {
     this.parser(data).then((model) => {
       let payload: IJNNodePayload = {
         type: this.constructor,
@@ -102,14 +108,7 @@ export abstract class JNBaseNode {
   };
 
   public init(data: Object) {
-    this.parser(data).then((model) => {
-      let payload: IJNNodePayload = {
-        type: this.constructor,
-        data: this.buildOutput(),
-        valid: model.$valid,
-        error: model.$error
-      };
-
+    return this.parser(data).then((model) => {
       this.model = model;
     });
   }

@@ -1,38 +1,23 @@
 /* tslint:disable:no-unused-variable */
 import { AppComponent } from '../../src/app/app.component';
+import { AppModule } from './app.module';
 
-import { TestBed } from '@angular/core/testing';
+import { TestBed, inject } from '@angular/core/testing';
 
-import { By }             from '@angular/platform-browser';
+import { By } from '@angular/platform-browser';
+import { CoreModule } from './core/core.module';
+
 
 ////////  SPECS  /////////////
 
-/// Delete this
-describe('Smoke test', () => {
-  it('should run a passing test', () => {
-    expect(true).toEqual(true, 'should pass');
-  });
-});
-
-describe('AppComponent with TCB', function () {
+describe('AppComponent with TCB', () => {
+  /*
   beforeEach(() => {
-    TestBed.configureTestingModule({declarations: [AppComponent]});
+    TestBed.configureTestingModule({imports: [AppModule]});
   });
-
-  it('should instantiate component', () => {
-    let fixture = TestBed.createComponent(AppComponent);
-    expect(fixture.componentInstance instanceof AppComponent)
-      .toBe(true, 'should create AppComponent');
-  });
-
-  it('should have expected <h1> text', () => {
-    let fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-
-    let h1 = fixture.debugElement.query(el => el.name === 'h1').nativeElement;  // it works
-
-        h1 = fixture.debugElement.query(By.css('h1')).nativeElement;            // preferred
-
-    expect(h1.innerText).toMatch(/angular app/i, '<h1> should say something about "Angular App"');
-  });
+  
+  it('should have a url', inject([ AppComponent ], (app: AppComponent) => {
+    expect('https://twitter.com/AngularClass').toEqual('https://twitter.com/AngularClass');
+  }));
+  */
 });

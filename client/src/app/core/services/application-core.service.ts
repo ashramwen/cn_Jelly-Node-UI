@@ -5,9 +5,9 @@ import { JNBaseNode } from '../models/jn-base-node.type';
 export class JNApplcation {
 
   nodes: Array<JNBaseNode>;
-  
+
   loader() {
-    
+
   }
 
   status(): Promise<boolean> {

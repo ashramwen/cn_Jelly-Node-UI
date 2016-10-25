@@ -6,7 +6,7 @@ import {
   TranslateLoader,
   TranslateStaticLoader
 } from 'ng2-translate';
-import { HttpModule, Http} from '@angular/http';
+import { HttpModule, Http } from '@angular/http';
 
 import { PROVIDERS } from './services';
 

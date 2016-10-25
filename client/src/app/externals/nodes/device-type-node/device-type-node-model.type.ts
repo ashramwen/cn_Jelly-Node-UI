@@ -5,5 +5,10 @@ import { Serializable } from '../../../../bin/JsonMapper';
 export class JNDeviceTypeNodeModel extends JNNodeModel {
   typeName: String;
   typeDisplayName: String;
-  
+
+  constructor() {
+    super();
+    this.typeName = null;
+    this.typeDisplayName = null;
+  }
 }

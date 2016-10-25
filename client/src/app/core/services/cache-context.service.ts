@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { LocalStorageService } from 'angular-2-local-storage';
 
 @Injectable()
-export class CacheContextService{
-  
+export class CacheContextService {
+
   constructor(private localStorageService: LocalStorageService) {
   }
 
@@ -14,6 +14,6 @@ export class CacheContextService{
   set(key, value) {
     this.localStorageService.set(key, value);
   }
-  
+
 }
 

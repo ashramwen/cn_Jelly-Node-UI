@@ -4,6 +4,7 @@ import { IJNNodeModel} from '../../../core/models/interfaces';
 import { JNDeviceNodeEditorModel } from './device-node-editor-model.type';
 import { JNDeviceInfoPanelModel } from './device-node-info-panel-model.type';
 import { JNDevicePaletteModel } from './device-node-palette-model.type';
+import { JNDeviceNodeModel } from './device-node-model.type';
 
 @JNNode({
   icon: '',
@@ -22,6 +23,8 @@ export class JNDeviceNode extends JNBaseNode  {
   public set body(value) {
     
   }
+
+  protected model: JNDeviceNodeModel;
 
   protected buildOutput(): Promise<Object> {
     return null;  

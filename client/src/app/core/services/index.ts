@@ -1,11 +1,11 @@
-import {ConfigContextService} from './configContext.service';
-import {ApplicationContextService} from './applicationContext.service';
-import {CacheContextService} from './cacheContext.service';
+import {ConfigContextService} from './config-context.service';
+import {ApplicationContextService} from './application-context.service';
+import {CacheContextService} from './cache-context.service';
 
 export const PROVIDERS = [
   ConfigContextService, ApplicationContextService, CacheContextService
 ];
 
-export * from './configContext.service';
-export * from './applicationContext.service';
-export * from './cacheContext.service';
+export * from './config-context.service';
+export * from './application-context.service';
+export * from './cache-context.service';

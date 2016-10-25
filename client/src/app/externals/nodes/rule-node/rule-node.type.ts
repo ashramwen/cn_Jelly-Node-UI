@@ -4,6 +4,7 @@ import { IJNNodeModel} from '../../../core/models/interfaces';
 import { JNRuleNodeEditorModel } from './rule-node-editor-model.type';
 import { JNRuleInfoPanelModel } from './rule-node-info-panel-model.type';
 import { JNRulePaletteModel } from './rule-node-palette-model.type';
+import { JNRuleNodeModel } from './rule-node-model.type';
 
 @JNNode({
   icon: '',
@@ -22,6 +23,8 @@ export class JNRuleNode extends JNBaseNode  {
   public set body(value) {
     
   }
+
+  protected model: JNRuleNodeModel;
 
   protected buildOutput(): Promise<Object> {
     return null;  

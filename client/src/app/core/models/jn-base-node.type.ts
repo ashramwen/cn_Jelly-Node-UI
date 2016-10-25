@@ -1,4 +1,4 @@
-import { INodePosition, IJNNodePayload, IJNNodeModel } from './interfaces';
+import { INodePosition, IJNNodePayload } from './interfaces';
 import { JNNodeError } from './exceptions';
 import { Observable, Subscriber } from 'rxjs';
 import { IJNInfoPanelModel } from '../../views/info-panel/interfaces';
@@ -9,6 +9,7 @@ import {
   CacheContextService,
   ConfigContextService
 } from '../services';
+import { JNNodeModel } from './jn-node-model.type';
 
 
 export abstract class JNBaseNode {
@@ -21,9 +22,19 @@ export abstract class JNBaseNode {
   static infoModel: IJNInfoPanelModel;
   static paletteModel: IJNPaletteModel;
 
-  name: String; // node name
-  position: INodePosition; // node position on canvas
-  protected model: IJNNodeModel; // node model
+  get name(): String {
+    return this.model.nodeName;
+  }
+
+  get position(): INodePosition {
+    return this.model.position;
+  }
+
+  set position(position: INodePosition) {
+    this.model.position = position;
+  }
+
+  protected abstract model: JNNodeModel; // node model
   public abstract body: Object; // node data payload
 
   private inputFlows: Array<JNBaseNode>; // accepted nodes
@@ -43,7 +54,7 @@ export abstract class JNBaseNode {
    * @returns Promise
    * @desc deserialize raw data to data model
    */
-  protected abstract parser(data: Object): Promise<IJNNodeModel>;
+  protected abstract parser(data: Object): Promise<JNNodeModel>;
 
   /**
    * @returns Promise
@@ -84,9 +95,24 @@ export abstract class JNBaseNode {
         error: model.$error
       };
 
+      this.model = model;
+
       this.stream.next(payload);
     });
   };
+
+  public init(data: Object) {
+    this.parser(data).then((model) => {
+      let payload: IJNNodePayload = {
+        type: this.constructor,
+        data: this.buildOutput(),
+        valid: model.$valid,
+        error: model.$error
+      };
+
+      this.model = model;
+    });
+  }
 
   /**
    * @param  {JNBaseNode} target output node

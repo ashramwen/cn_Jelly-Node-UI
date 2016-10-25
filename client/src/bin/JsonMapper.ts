@@ -17,7 +17,7 @@ export interface ISerializable {
   serialize: () => any;
 }
 
-export function JsonProperty<T>(metadata: () => void | string | IJsonMetaData<T>): any {
+export function JsonProperty<T>(metadata: (() => void) | string | IJsonMetaData<T>): any {
   if (metadata instanceof String || typeof metadata === 'string') {
     return Reflect.metadata(jsonMetadataKey, {
       name: metadata,
@@ -28,7 +28,7 @@ export function JsonProperty<T>(metadata: () => void | string | IJsonMetaData<T>
     return Reflect.metadata(jsonMetadataKey, {
       name: metadataObj ? metadataObj.name : undefined,
       clazz: metadataObj ? metadataObj.clazz : undefined,
-      serilizer: metadataObj ? metadataObj.serializer : undefined,
+      serilizer: metadataObj ? metadataObj.serialize : undefined,
       deserilizer: metadataObj ? metadataObj.deserialize : undefined
     });
   }
@@ -70,19 +70,19 @@ export class MapUtils {
         if (!MapUtils.isPrimitive(clazz)) {
           if (MapUtils.isArray(obj[key])) {
             return obj[key].map((item) => {
-              return metadata.serializer ?
-                metadata.serializer(item) :
+              return metadata.serialize ?
+                metadata.serialize(item) :
                 MapUtils.serialize(item);
             });
           } else {
-            return metadata.serializer ?
-              metadata.serializer(obj[key]) :
+            return metadata.serialize ?
+              metadata.serialize(obj[key]) :
               MapUtils.serialize(obj[key]);
           }
         } else {
           return obj ? (
-            metadata.serializer ?
-              metadata.serializer(obj[key]) :
+            metadata.serialize ?
+              metadata.serialize(obj[key]) :
               obj[key]
           ) : undefined;
         }
@@ -167,7 +167,7 @@ export class MapUtils {
 export interface IJsonMetaData<T> {
   name?: string;
   clazz?: { new (): T };
-  serializer?: (t: T) => any;
+  serialize?: (t: T) => any;
   deserialize?: (a: any) => T;
 }
 

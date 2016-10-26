@@ -26,7 +26,7 @@ module.exports.routes = {
   'POST /flows/save': 'FlowController.save',
 
   // create flow to external service
-  'POST /flows/create': 'FlowController.create',
+  'POST /flows/:flowID/publish': 'FlowController.publish',
 
   // get all flows created by the user
   'GET /flows': 'FlowController.get',

@@ -5,8 +5,8 @@ import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-flow-detail',
-  template: require('./flow-detail.component.html'),
-  styles: [require('./flow-detail.component.scss')]
+  templateUrl: './flow-detail.component.html',
+  styleUrls: ['./flow-detail.component.scss']
 })
 export class FlowDetailComponent implements OnInit, OnDestroy {
 

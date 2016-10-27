@@ -11,6 +11,7 @@ import { NodeEditorModule } from './views/node-editor/node-editor.module';
 import { FlowComponent } from './views/flow/flow.component';
 import { FlowDetailComponent } from './views/flow/flow-detail/flow-detail.component';
 
+import { NodeCanvasComponent } from './views/node-canvas/node-canvas.component';
 /*
 * Platform and Environment
 * our providers/directives/pipes
@@ -21,7 +22,8 @@ import { FlowDetailComponent } from './views/flow/flow-detail/flow-detail.compon
   declarations: [
     AppComponent,
     FlowComponent,
-    FlowDetailComponent
+    FlowDetailComponent,
+    NodeCanvasComponent
   ],
   bootstrap: [AppComponent]
 })

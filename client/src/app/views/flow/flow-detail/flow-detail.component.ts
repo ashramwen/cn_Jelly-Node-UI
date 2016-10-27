@@ -1,3 +1,4 @@
+import { NodeCanvasComponent } from './../../node-canvas/node-canvas.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';

@@ -10,7 +10,7 @@ export class NodeCanvasComponent implements OnInit {
   }
 
   ngOnInit() {
-    setTimeout(this.start.bind(this), 5000);
+    setTimeout(this.start.bind(this), 0);
   }
 
   start() {
@@ -32,11 +32,35 @@ export class NodeCanvasComponent implements OnInit {
       new Foobar({ name: 'd', x: 220, y: 90, color: 'red' })
     ];
 
+    var drag = d3.drag()
+      .on('start', dragstarted)
+      .on('drag', dragged)
+      .on('end', dragended);
+
+    function dragstarted(d) {
+      d3.select(this).raise().classed("active", true);
+    }
+
+    function dragged(d) {
+      d3.select(this)
+      .attr('transform', function (d) {
+        d.x = d3.event.x;
+        d.y = d3.event.y;
+        return "translate(" + d3.event.x + "," + d3.event.y + ")";
+      });
+    }
+
+    function dragended(d) {
+      d3.select(this).classed("active", false);
+    }
+
     var rects = svg.selectAll('g')
       .data(data);
 
     rects.enter()
+
       .append('g')
+      .call(drag)
       .attr('transform', function (d) {
         console.log(d);
         return "translate(" + d.x + "," + d.y + ")";
@@ -50,7 +74,8 @@ export class NodeCanvasComponent implements OnInit {
       .on('mouseover', function (e) {
         console.log(this);
         console.log(e);
-      });
+      })
+          ;
 
     var pathEnter = svg.selectAll('g.link')
       .data([{

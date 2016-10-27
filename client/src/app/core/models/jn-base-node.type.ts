@@ -12,7 +12,6 @@ import {
 import { JNNodeModel } from './jn-node-model.type';
 import { JNNodeUnconnectableException } from './exceptions/node-unconnectable-exception.type';
 import { JNApplication } from '../services/application-core.service';
-import { JNNodeException } from './exceptions/node-exception.type';
 
 
 export abstract class JNBaseNode {

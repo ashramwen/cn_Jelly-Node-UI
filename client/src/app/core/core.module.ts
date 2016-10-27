@@ -9,6 +9,11 @@ import {
 import { HttpModule, Http } from '@angular/http';
 
 import { PROVIDERS } from './services';
+import { JNApplication } from './services/application-core.service';
+import { ApplicationContextService } from './services/application-context.service';
+import { CacheContextService } from './services/cache-context.service';
+import { ConfigContextService } from './services/config-context.service';
+import { RuleApplication } from '../externals/rule-application.core';
 
 
 // Create config options (see ILocalStorageServiceConfigOptions) for deets:
@@ -30,6 +35,13 @@ const LOCAL_STORAGE_CONFIG_PROVIDER: Provider = {
     provide: TranslateLoader,
     useFactory: (http: Http) => new TranslateStaticLoader(http, 'assets/i18n', '.json'),
     deps: [Http]
-  }, ...PROVIDERS]
+  }, ...PROVIDERS, {
+      provide: JNApplication,
+      useFactory: (appContext: ApplicationContextService,
+        cacheContext: CacheContextService,
+        configContext: ConfigContextService,
+        http: Http) => new RuleApplication(appContext, configContext, cacheContext, http),
+      deps: [ApplicationContextService, ConfigContextService, CacheContextService, Http]
+  }]
 })
 export class CoreModule { }

@@ -6,7 +6,7 @@ export class JNDeviceTypeInfoPanelModel implements IJNInfoPanelModel {
   static instance = new JNDeviceTypeInfoPanelModel();
 
   constructor() {
-    
+
   }
 
 }

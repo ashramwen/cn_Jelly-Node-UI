@@ -1,27 +1,23 @@
 import { JNBaseNode } from '../../../core/models/jn-base-node.type';
 import { JNNode } from '../../../core/models/node-annotation';
-import { JNConjunctionNodeModel } from './conjunction-node-model.type';
-import { JNConditionNode } from '../condition-node/condition-node.type';
+import { JNDevicePropertyNode } from '../device-property-node/device-property-node.type';
+import { JNConditionNodeModel } from './condition-node-model.type';
 
 @JNNode({
   icon: '',
   color: '',
   borderColor: '',
-  accepts: [JNConditionNode, JNConjunctionNode],
+  accepts: [JNDevicePropertyNode],
   editorModel: null,
   infoPanelModel: null,
   paletteModel: null
 })
-export class JNConjunctionNode extends JNBaseNode  {
+export class JNConditionNode extends JNBaseNode  {
   public get body (){
     return '';
   }
 
-  protected model: JNConjunctionNodeModel;
-
-  protected whenRejected() {
-    return null;
-  }
+  protected model: JNConditionNodeModel;
 
   protected buildOutput(): Promise<Object> {
     return new Promise((resolve) => {
@@ -29,13 +25,17 @@ export class JNConjunctionNode extends JNBaseNode  {
     });
   }
 
+  protected whenRejected() {
+    return null;
+  }
+
   protected formatter(): Promise<Object> {
     return null;
   }
 
-  protected parser(data: Object): Promise<JNConjunctionNodeModel> {
+  protected parser(data: Object): Promise<JNConditionNodeModel> {
     return new Promise((resolve) => {
-      resolve(JNConjunctionNodeModel.deserialize(data));
+      resolve(JNConditionNodeModel.deserialize(data));
     });
   }
 

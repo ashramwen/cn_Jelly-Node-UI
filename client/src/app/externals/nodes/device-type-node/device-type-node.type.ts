@@ -5,22 +5,29 @@ import { JNDeviceTypeNodeEditorModel } from './device-type-node-editor-model.typ
 import { JNDeviceTypeInfoPanelModel } from './device-type-node-info-panel-model.type';
 import { JNDeviceTypePaletteModel } from './device-type-node-palette-model.type';
 import { JNDeviceTypeNodeModel } from './device-type-node-model.type';
+import { JNLocationNode } from '../location-node/location-node.type';
 
 @JNNode({
   icon: '',
   color: '',
   borderColor: '',
-  accepts: [],
+  accepts: [JNLocationNode],
   editorModel: JNDeviceTypeNodeEditorModel.instance,
   infoPanelModel: JNDeviceTypeInfoPanelModel.instance,
   paletteModel: JNDeviceTypePaletteModel.instance
 })
 export class JNDeviceTypeNode extends JNBaseNode {
 
-  protected model: JNDeviceTypeNodeModel;
+  protected model: JNDeviceTypeNodeModel = new JNDeviceTypeNodeModel;
+
+  protected whenRejected() {
+    return null;
+  }
 
   protected buildOutput(): Promise<Object> {
-    return null;
+    return new Promise((resolve) => {
+      resolve(this.model.serialize());
+    });
   }
 
   protected formatter(): Object {

@@ -3,7 +3,7 @@ import { Serializable } from '../../../../bin/JsonMapper';
 
 @Serializable()
 export class JNDeviceNodeModel extends JNNodeModel {
-  typeName: String;
-  typeDisplayName: String;
-  
+  locations: Array<String>;
+  thingIDs: Array<number>;
+  types: Array<String>;
 }

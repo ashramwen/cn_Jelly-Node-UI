@@ -6,14 +6,14 @@ import {
 
 export class JNDeviceTypeNodeEditorModel implements IJNEditorModel {
   static instance = new JNDeviceTypeNodeEditorModel();
-  
+
   title: String;
   buttons: IJNFormButton[];
   viewTemplate: String;
   formControls: IJNFormControl[];
 
   constructor() {
-    
+
   }
 
 }

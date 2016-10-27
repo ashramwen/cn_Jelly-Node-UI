@@ -6,7 +6,7 @@ export class JNLocationPaletteModel implements IJNPaletteModel {
   static instance = new JNLocationPaletteModel();
 
   constructor() {
-    
+
   }
 
 }

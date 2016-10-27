@@ -1,16 +1,16 @@
 import { JNBaseNode } from '../../../core/models/jn-base-node.type';
 import { JNNode } from '../../../core/models/node-annotation';
-import { IJNNodeModel} from '../../../core/models/interfaces';
 import { JNDeviceNodeEditorModel } from './device-node-editor-model.type';
 import { JNDeviceInfoPanelModel } from './device-node-info-panel-model.type';
 import { JNDevicePaletteModel } from './device-node-palette-model.type';
 import { JNDeviceNodeModel } from './device-node-model.type';
+import { JNDeviceTypeNode } from '../device-type-node/device-type-node.type';
 
 @JNNode({
   icon: '',
   color: '',
   borderColor: '',
-  accepts: [],
+  accepts: [JNDeviceTypeNode],
   editorModel: JNDeviceNodeEditorModel.instance,
   infoPanelModel: JNDeviceInfoPanelModel.instance,
   paletteModel: JNDevicePaletteModel.instance
@@ -20,25 +20,29 @@ export class JNDeviceNode extends JNBaseNode  {
     return '';
   }
 
-  public set body(value) {
-    
-  }
-
   protected model: JNDeviceNodeModel;
 
+  protected whenRejected() {
+    return null;
+  }
+
   protected buildOutput(): Promise<Object> {
-    return null;  
+    return new Promise((resolve) => {
+      resolve({ thingIDs: this.model.thingIDs });
+    });
   }
 
   protected formatter(): Promise<Object> {
     return null;
   }
 
-  protected parser(data: Object): Promise<IJNNodeModel> {
-    return null;
+  protected parser(data: Object): Promise<JNDeviceNodeModel> {
+    return new Promise((resolve) => {
+      resolve(JNDeviceNodeModel.deserialize(data));
+    });
   }
 
-  protected listener() {
-    
+  protected listener(data: Object) {
+    console.log(data);
   }
 }

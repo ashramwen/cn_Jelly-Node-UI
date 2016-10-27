@@ -3,7 +3,9 @@ import { TranslateService } from 'ng2-translate';
 import { cn, en } from '../assets/i18n';
 
 import { JNDeviceTypeNode } from './externals/nodes/device-type-node/device-type-node.type';
-import { LocalStorageService } from 'angular-2-local-storage';
+import { JNLocationNode } from './externals/nodes/location-node/location-node.type';
+import { JNDeviceNode } from './externals/nodes/device-node/device-node.type';
+import { JNApplication } from './core/services/application-core.service';
 
 import {
   ApplicationContextService,
@@ -18,8 +20,7 @@ import {
 export class AppComponent implements OnInit{
 
     constructor(private translate: TranslateService,
-        private appContext: ApplicationContextService, private cacheContext: CacheContextService,
-        private configContext: ConfigContextService) {
+        private application: JNApplication) {
         // this language will be used as a fallback when a translation isn't found in the current language
         translate.setDefaultLang('cn');
 
@@ -32,7 +33,7 @@ export class AppComponent implements OnInit{
 
         translate.setTranslation('cn', cn);
         translate.setTranslation('en', en);
-        appContext.set('a', '123');
+        application.applicationContext.set('a', '123');
 
         setTimeout(() => {
             // this.logParamTypes(this.test, 'appContext');
@@ -40,23 +41,12 @@ export class AppComponent implements OnInit{
     }
 
     ngOnInit() {
-        let deviceType = new JNDeviceTypeNode(this.appContext, this.configContext, this.cacheContext);
-        setTimeout(function() {
-            deviceType.init({
-                typeName: 'Lighting',
-                typeDisplayName: '灯泡',
-                position: {
-                    x: 100,
-                    y: 100
-                },
-                nodeID: 123,
-                nodeName: '类型-灯泡'
-            }).then(() => {
-                console.log(deviceType.body);
-            // console.log(JSON.stringify(deviceType.body));
-            // expect(deviceType.body['typeName']).toEqual('Lighting');
-            // expect(deviceType.body['position']).toEqual({ x: 100, y: 100 });
-            });
+        setTimeout(() => {
+            console.log(JNDeviceTypeNode.accepts);
+            let thingNode = new JNDeviceNode(this.application);
+            let typeNode = new JNDeviceTypeNode(this.application);
+            thingNode.accept(typeNode);
+            typeNode.update({typeName: 'typeName', typeDisplayName: 'displayName'});
         }, 3000);
     }
 }

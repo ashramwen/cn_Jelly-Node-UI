@@ -7,7 +7,7 @@ export interface INodeOptions {
   icon: String;
   color: String;
   borderColor: String;
-  accepts: Array<JNBaseNode>;
+  accepts: Array<typeof JNBaseNode>;
   editorModel: IJNEditorModel;
   infoPanelModel: IJNInfoPanelModel;
   paletteModel: IJNPaletteModel;

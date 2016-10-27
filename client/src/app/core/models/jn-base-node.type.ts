@@ -1,5 +1,5 @@
 import { INodePosition, IJNNodePayload } from './interfaces';
-import { JNNodeError } from './exceptions';
+import { JNNodeException } from './exceptions';
 import { Observable, Subscriber } from 'rxjs';
 import { IJNInfoPanelModel } from '../../views/info-panel/interfaces';
 import { IJNEditorModel } from '../../views/node-editor/interfaces';
@@ -10,6 +10,9 @@ import {
   ConfigContextService
 } from '../services';
 import { JNNodeModel } from './jn-node-model.type';
+import { JNNodeUnconnectableException } from './exceptions/node-unconnectable-exception.type';
+import { JNApplication } from '../services/application-core.service';
+import { JNNodeException } from './exceptions/node-exception.type';
 
 
 export abstract class JNBaseNode {
@@ -17,7 +20,7 @@ export abstract class JNBaseNode {
   static icon: String; // node icon diplay on canvas
   static color: String; // node color display on canvas
   static borderColor: String; // node border color on canvas
-  static accepts: Array<JNBaseNode>; // node types that can be accepted;
+  static accepts: Array<typeof JNBaseNode>; // node types that can be accepted;
   static editorModel: IJNEditorModel;
   static infoModel: IJNInfoPanelModel;
   static paletteModel: IJNPaletteModel;
@@ -43,7 +46,7 @@ export abstract class JNBaseNode {
     return this.formatter();
   }
 
-  private inputFlows: Array<JNBaseNode>; // accepted nodes
+  private inputFlows: Array<JNBaseNode> = []; // accepted nodes
   private stream: Subscriber<IJNNodePayload>; // stream publisher
   private output = new Observable((subscriber: Subscriber<IJNNodePayload>) => {
     this.stream = subscriber;
@@ -53,7 +56,7 @@ export abstract class JNBaseNode {
    * @returns void
    * @desc listens all published messages in the linked road
    */
-  protected abstract listener(): void; // listener
+  protected abstract listener(payload: Object): void; // listener
 
   /**
    * @param  {Object} data
@@ -73,19 +76,37 @@ export abstract class JNBaseNode {
    */
   protected abstract buildOutput(): Promise<Object>;
 
+  protected abstract whenRejected(node: JNBaseNode): Promise<boolean>;
+
   /**
    * @param  {JNBaseNode} node
    * @desc description
    */
-  protected accept(node: JNBaseNode) {
+  public accept(node: JNBaseNode) {
+    if (!this.connectable(<typeof JNBaseNode>node.constructor)) {
+      throw new JNNodeUnconnectableException(this, node);
+    }
     this.inputFlows.push(node);
-    node.output.subscribe(this.listener);
+    node.output.subscribe(this.listener.bind(this));
+  }
+
+  /**
+   * @param  {JNBaseNode} node
+   * @returns {Promise<boolean | JNNodeException>}
+   */
+  public reject(node: JNBaseNode): Promise<boolean | JNNodeException> {
+    return new Promise((resolve, reject) => {
+      this.whenRejected(node).then(() => {
+        this.inputFlows.splice(this.inputFlows.indexOf(node), 1);
+        resolve(node);
+      }, (err) => {
+        reject(err);
+      });
+    });
   }
 
   constructor(
-    protected applicationContext: ApplicationContextService,
-    protected configContext: ConfigContextService,
-    protected cacheContext: CacheContextService
+    protected application: JNApplication
   ) { }
 
   /**
@@ -94,19 +115,22 @@ export abstract class JNBaseNode {
    */
   public update(data: Object) {
     this.parser(data).then((model) => {
-      let payload: IJNNodePayload = {
-        type: this.constructor,
-        data: this.buildOutput(),
-        valid: model.$valid,
-        error: model.$error
-      };
-
       this.model = model;
-
-      this.stream.next(payload);
+      this.buildOutput().then((output) => {
+        let payload: IJNNodePayload = {
+          type: this.constructor,
+          data: output,
+          valid: model.$valid,
+          error: model.$error
+        };
+        this.stream.next(payload);
+      });
     });
   };
 
+  /**
+   * @param  {Object} data
+   */
   public init(data: Object) {
     return this.parser(data).then((model) => {
       this.model = model;
@@ -116,9 +140,10 @@ export abstract class JNBaseNode {
   /**
    * @param  {JNBaseNode} target output node
    * @returns boolean
-   * @desc if thow target is coonectable
+   * @desc if thow target is connectable
    */
-  public connectable(target: JNBaseNode): boolean {
-    return true;
+  public connectable(target: typeof JNBaseNode): boolean {
+    let accepts: Array<typeof JNBaseNode> = this.constructor['accepts'];
+    return accepts.indexOf(target) > -1;
   }
 }

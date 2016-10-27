@@ -5,10 +5,13 @@ import { Serializable } from '../../../../bin/JsonMapper';
 export class JNDeviceTypeNodeModel extends JNNodeModel {
   typeName: String;
   typeDisplayName: String;
+  things: Array<String>;
+  locations: Array<String>;
 
   constructor() {
     super();
     this.typeName = null;
     this.typeDisplayName = null;
+    this.locations = [];
   }
 }

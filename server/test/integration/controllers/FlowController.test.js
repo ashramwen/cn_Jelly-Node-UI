@@ -1,13 +1,33 @@
 var request = require('supertest'),
     should = require('should');
 
-
 describe('Flow Controller', function () {
 
     var flowID = '';
+    var userAccessToken = '';
 
     before(function (done) {
         done(null, sails);
+    });
+
+    it('should retrieve user token from Beehive server', function (done) {
+        request(sails.config.constants.beehiveProdServerBase)
+        .post('/beehive-portal/api/oauth2/login')
+        .send({
+            "userName": "alfred",
+            "password":"1qaz2wsx"
+        })
+        .expect(200)
+        .expect(function (res) {
+            if (!res.body.accessToken) throw new Error("failed retieving user access token");
+            userAccessToken = res.body.accessToken
+        })
+        .end(function (err, res) {
+            if (err) return done(err);
+            flowID = res.body.flowID
+            should.exist(res.body);
+            done();
+        });
     });
 
     it('should save a flow', function (done) {
@@ -19,7 +39,7 @@ describe('Flow Controller', function () {
                 "key": "value"
             }
         })
-        .set({"authorization": "Bearer f2ad50237590ed39ecc8ca6285675d393951ef01"})
+        .set({"authorization": "Bearer " + userAccessToken})
         .expect(201)
         .expect(function (res) {
             if (!('flowType' in res.body)) throw new Error("missing flowType key");
@@ -43,7 +63,7 @@ describe('Flow Controller', function () {
     it('should get flows', function (done) {
         request(sails.hooks.http.app)
         .get('/flows')
-        .set({"authorization": "Bearer f2ad50237590ed39ecc8ca6285675d393951ef01"})
+        .set({"authorization": "Bearer " + userAccessToken})
         .expect(200)
         .expect(function (res) {
             if (!(typeof res.body == 'object')) throw new Error ("wrong body type");
@@ -59,7 +79,7 @@ describe('Flow Controller', function () {
     it('should get a flow', function (done) {
         request(sails.hooks.http.app)
         .get('/flows/' + flowID)
-        .set({"authorization": "Bearer f2ad50237590ed39ecc8ca6285675d393951ef01"})
+        .set({"authorization": "Bearer " + userAccessToken})
         .expect(200)
         .expect(function (res) {
             if (!(typeof res.body == 'object')) throw new Error ("wrong body type");
@@ -83,7 +103,7 @@ describe('Flow Controller', function () {
     it('should update a flow', function (done) {
         request(sails.hooks.http.app)
         .put('/flows/' + flowID)
-        .set({"authorization": "Bearer f2ad50237590ed39ecc8ca6285675d393951ef01"})
+        .set({"authorization": "Bearer " + userAccessToken})
         .send({
             "flowType": "rule",
             "flow": {
@@ -105,7 +125,7 @@ describe('Flow Controller', function () {
     it('should delete a flow', function (done) {
         request(sails.hooks.http.app)
         .delete('/flows/' + flowID)
-        .set({"authorization": "Bearer f2ad50237590ed39ecc8ca6285675d393951ef01"})
+        .set({"authorization": "Bearer " + userAccessToken})
         .expect(204)
         .expect(function (res) {
             Flow.findOne({flowID: flowID})

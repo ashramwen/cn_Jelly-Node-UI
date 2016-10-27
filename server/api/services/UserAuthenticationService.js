@@ -1,5 +1,5 @@
 var request = require('request')
-var beehiveBase = 'http://114.215.178.24:8080'
+var beehiveBase = sails.config.constants.beehiveProdServerBase
 
 module.exports = {
 

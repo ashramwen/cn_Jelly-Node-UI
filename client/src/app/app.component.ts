@@ -5,6 +5,7 @@ import { cn, en } from '../assets/i18n';
 import { JNDeviceTypeNode } from './externals/nodes/device-type-node/device-type-node.type';
 import { JNLocationNode } from './externals/nodes/location-node/location-node.type';
 import { JNApplication } from './core/services/application-core.service';
+import { JNDeviceTypeNodeModel } from './externals/nodes/device-type-node/device-type-node-model.type';
 
 import {
   ApplicationContextService,
@@ -41,7 +42,12 @@ export class AppComponent implements OnInit {
 
     ngOnInit() {
         setTimeout(() => {
-            console.log(JNDeviceTypeNode.accepts);
+            let a = JNDeviceTypeNodeModel.deserialize({
+                type: 'Lighting',
+                typeDisplayName: '灯泡',
+                locations: [1, 2, 3]
+            });
+            console.log(a);
         }, 3000);
     }
 }

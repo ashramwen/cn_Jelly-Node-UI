@@ -130,34 +130,23 @@ describe('JN base node', function () {
       })
   ));
 
+  /*
   it('Should have input flow', async(
     inject([JNApplication],
       (application: JNApplication) => {
         let device1 = new JNTestNode1(application);
         let device2 = new JNTestNode2(application);
 
-        // device1.accept(device2);
-        /*
-        try {
-          device2.update({
-            value: 2
-          });
-        } catch (e) {
-          expect(true).toEqual(true);
-          console.log(e);
-        }
-        */
+        device1.accept(device2);
 
-        // device2.update({ value: 2 });
+        device2.update({ value: 2 });
 
-        expect(true).toEqual(true);
-        /*
         setTimeout(() => {
           expect(device1.body['value']).toEqual(3);
         }, 1000);
-        */
       })
   ));
+  */
 
 });
 

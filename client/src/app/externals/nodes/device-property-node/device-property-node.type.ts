@@ -15,7 +15,7 @@ import { JNDevicePropertyNodeModel } from './device-property-node-model.type';
 export class JNDevicePropertyNode extends JNBaseNode {
 
   protected model: JNDevicePropertyNodeModel = new JNDevicePropertyNodeModel;
-  
+
   protected whenRejected() {
     return null;
   }

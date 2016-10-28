@@ -24,10 +24,16 @@ export class JNRuleNode extends JNBaseNode  {
     
   }
 
+  protected whenRejected() {
+    return new Promise((resolve) => {
+      resolve(true);
+    });
+  }
+
   protected model: JNRuleNodeModel;
 
   protected buildOutput(): Promise<Object> {
-    return null;  
+    return null;
   }
 
   protected formatter(): Promise<Object> {

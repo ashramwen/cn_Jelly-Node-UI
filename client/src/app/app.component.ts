@@ -4,7 +4,6 @@ import { cn, en } from '../assets/i18n';
 
 import { JNDeviceTypeNode } from './externals/nodes/device-type-node/device-type-node.type';
 import { JNLocationNode } from './externals/nodes/location-node/location-node.type';
-import { JNDeviceNode } from './externals/nodes/device-node/device-node.type';
 import { JNApplication } from './core/services/application-core.service';
 
 import {
@@ -17,7 +16,7 @@ import {
     selector: 'app',
     template: '<jn-node-editor></jn-node-editor>'
 })
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit {
 
     constructor(private translate: TranslateService,
         private application: JNApplication) {
@@ -43,10 +42,6 @@ export class AppComponent implements OnInit{
     ngOnInit() {
         setTimeout(() => {
             console.log(JNDeviceTypeNode.accepts);
-            let thingNode = new JNDeviceNode(this.application);
-            let typeNode = new JNDeviceTypeNode(this.application);
-            thingNode.accept(typeNode);
-            typeNode.update({typeName: 'typeName', typeDisplayName: 'displayName'});
         }, 3000);
     }
 }

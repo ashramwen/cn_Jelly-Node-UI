@@ -148,7 +148,7 @@ describe('JN base node', function () {
         }
         */
 
-        device2.update({ value: 2 });
+        // device2.update({ value: 2 });
 
         expect(true).toEqual(true);
         /*

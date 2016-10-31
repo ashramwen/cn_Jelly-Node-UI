@@ -130,7 +130,7 @@ describe('JN base node', function () {
       })
   ));
 
-  /*
+  /*    
   it('Should have input flow', async(
     inject([JNApplication],
       (application: JNApplication) => {
@@ -147,6 +147,5 @@ describe('JN base node', function () {
       })
   ));
   */
-
 });
 

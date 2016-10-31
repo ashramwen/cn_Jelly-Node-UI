@@ -7,5 +7,4 @@ export class JNDeviceTypePaletteModel implements IJNPaletteModel {
 
   constructor() {
   }
-
 }

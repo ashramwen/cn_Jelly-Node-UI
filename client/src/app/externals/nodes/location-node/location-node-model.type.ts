@@ -4,5 +4,5 @@ import { Serializable } from '../../../../bin/JsonMapper';
 @Serializable()
 export class JNLocationNodeModel extends JNNodeModel {
   locationID: String;
-  locationStr: String;
+  locationStr: Array<String>;
 }

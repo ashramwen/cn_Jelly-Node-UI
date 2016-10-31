@@ -16,8 +16,9 @@ export interface ILocation {
 export class BeehiveLocation extends Resource {
 
   @ResourceAction({
-    isArray: true
+    isArray: true,
+    method: RequestMethod.Get
   })
-  getTop: ResourceMethod<any, ILocation[]>;
+  getAll: ResourceMethod<any, ILocation[]>;
 
 }

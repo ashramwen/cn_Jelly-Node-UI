@@ -59,7 +59,6 @@ export class MapUtils {
   }
 
   static serialize<T>(obj: Object) {
-    let clazz = obj.constructor;
     let result = {};
     Object.keys(obj).forEach((key) => {
       let propertyMetadataFn: (d: IJsonMetaData<T>) => any = (propertyMetadata) => {

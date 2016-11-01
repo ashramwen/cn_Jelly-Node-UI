@@ -1,3 +1,4 @@
+import { JNFlow } from './../../core/models/jn-flow.type';
 import { Directive, OnInit, ElementRef } from '@angular/core';
 import * as d3 from 'd3';
 
@@ -6,12 +7,17 @@ import * as d3 from 'd3';
 })
 export class NodeCanvasComponent implements OnInit {
 
-  constructor(private ele: ElementRef) {
+  nodeFlow: JNFlow = new JNFlow();
 
+  node_width = 100;
+  node_height = 30;
+
+  constructor(private ele: ElementRef) {
   }
 
   ngOnInit() {
-    setTimeout(this.start.bind(this), 0);
+    this.start();
+    // setTimeout(this.start.bind(this), 0);
   }
 
   start() {
@@ -110,8 +116,11 @@ export class NodeCanvasComponent implements OnInit {
         return `M${d.source.x + 120} ${d.source.y + 15} C ${d.source.x + 120 / 2 + scale * node_width} ${d.source.y + 15 + scaleY * node_height} ${d.target.x - scale * node_width} ${d.target.y + 15 - scaleY * node_height} ${d.target.x} ${d.target.y + 15}`;
       });
     console.log(data);
-  }
 
+    function drawNode(): any {
+
+    }
+  }
 }
 
 class Foobar {

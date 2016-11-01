@@ -7,7 +7,7 @@ export function Serializable() {
       return MapUtils.deserialize(clazz, obj);
     };
 
-    clazz.prototype.serialize = function () {
+    clazz.prototype.serialize = function() {
       return MapUtils.serialize(this);
     };
   };
@@ -28,8 +28,8 @@ export function JsonProperty<T>(metadata: (() => void) | string | IJsonMetaData<
     return Reflect.metadata(jsonMetadataKey, {
       name: metadataObj ? metadataObj.name : undefined,
       clazz: metadataObj ? metadataObj.clazz : undefined,
-      serilizer: metadataObj ? metadataObj.serialize : undefined,
-      deserilizer: metadataObj ? metadataObj.deserialize : undefined
+      serialize: metadataObj ? metadataObj.serialize : undefined,
+      deserialize: metadataObj ? metadataObj.deserialize : undefined
     });
   }
 }
@@ -59,15 +59,14 @@ export class MapUtils {
   }
 
   static serialize<T>(obj: Object) {
-    let clazz = obj.constructor;
     let result = {};
     Object.keys(obj).forEach((key) => {
       let propertyMetadataFn: (d: IJsonMetaData<T>) => any = (propertyMetadata) => {
         let innerJson = undefined;
         innerJson = obj ? obj[key] : undefined;
-        let clazz = MapUtils.getClazz(obj, key);
+        let _clazz = MapUtils.getClazz(obj, key);
         let metadata = MapUtils.getJsonProperty(obj, key);
-        if (!MapUtils.isPrimitive(clazz)) {
+        if (!MapUtils.isPrimitive(_clazz)) {
           if (MapUtils.isArray(obj[key])) {
             return obj[key].map((item) => {
               return metadata.serialize ?
@@ -108,14 +107,14 @@ export class MapUtils {
       let propertyMetadataFn: (d: IJsonMetaData<T>) => any = (propertyMetadata) => {
         let propertyName = propertyMetadata.name || key;
         let innerJson = jsonObject ? jsonObject[propertyName] : undefined;
-        let clazz = MapUtils.getClazz(obj, key);
-        if (MapUtils.isArray(clazz)) {
+        let _clazz = MapUtils.getClazz(obj, key);
+        if (MapUtils.isArray(_clazz)) {
           let metadata = MapUtils.getJsonProperty(obj, key);
-          if (metadata.clazz || MapUtils.isPrimitive(clazz)) {
+          if (metadata.clazz || MapUtils.isPrimitive(_clazz)) {
             if (innerJson && MapUtils.isArray(innerJson)) {
               return innerJson.map(
                 metadata.deserialize ?
-                  (item) => metadata.deserialize(item) :  
+                  (item) => metadata.deserialize(item) :
                   (item) => MapUtils.deserialize(metadata.clazz, item)
               );
             } else {

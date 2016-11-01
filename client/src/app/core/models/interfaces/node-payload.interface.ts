@@ -1,9 +1,9 @@
 import { JNBaseNode } from '../jn-base-node.type';
-import { JNNodeError } from '../exceptions/jn-node-error.type';
+import { JNNodeException } from '../exceptions/node-exception.type';
 
 export interface IJNNodePayload {
   type: Object;
   data: Object;
   valid: boolean;
-  error: JNNodeError;
+  error: JNNodeException;
 }

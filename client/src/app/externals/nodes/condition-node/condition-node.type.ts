@@ -1,7 +1,7 @@
 import { JNBaseNode } from '../../../core/models/jn-base-node.type';
 import { JNNode } from '../../../core/models/node-annotation';
 import { JNDevicePropertyNode } from '../device-property-node/device-property-node.type';
-import { JNActionNodeModel } from './action-node-model.type';
+import { JNConditionNodeModel } from './condition-node-model.type';
 
 @JNNode({
   icon: '',
@@ -13,12 +13,11 @@ import { JNActionNodeModel } from './action-node-model.type';
   paletteModel: null
 })
 export class JNConditionNode extends JNBaseNode  {
-
   public get body (){
     return '';
   }
 
-  protected model: JNActionNodeModel;
+  protected model: JNConditionNodeModel;
 
   protected buildOutput(): Promise<Object> {
     return new Promise((resolve) => {
@@ -34,9 +33,9 @@ export class JNConditionNode extends JNBaseNode  {
     return null;
   }
 
-  protected parser(data: Object): Promise<JNActionNodeModel> {
+  protected parser(data: Object): Promise<JNConditionNodeModel> {
     return new Promise((resolve) => {
-      resolve(JNActionNodeModel.deserialize(data));
+      resolve(JNConditionNodeModel.deserialize(data));
     });
   }
 

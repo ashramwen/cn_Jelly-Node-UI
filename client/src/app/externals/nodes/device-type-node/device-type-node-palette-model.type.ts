@@ -6,7 +6,5 @@ export class JNDeviceTypePaletteModel implements IJNPaletteModel {
   static instance = new JNDeviceTypePaletteModel();
 
   constructor() {
-    
   }
-
 }

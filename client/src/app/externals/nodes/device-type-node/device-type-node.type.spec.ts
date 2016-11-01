@@ -1,39 +1,47 @@
 /* tslint:disable:no-unused-variable */
 import { JNDeviceTypeNode } from './device-type-node.type';
-import { LocalStorageService } from 'angular-2-local-storage';
-
-import {
-  ApplicationContextService,
-  CacheContextService,
-  ConfigContextService
-} from '../../../core/services';
 import { CoreModule } from '../../../core/core.module';
-
 import { TestBed, async, inject } from '@angular/core/testing';
-
-import { By }             from '@angular/platform-browser';
+import { By } from '@angular/platform-browser';
+import { JNApplication } from '../../../core/services/application-core.service';
 
 ////////  SPECS  /////////////
 
-describe('AppComponent with TCB', function () {
-  let appContext, cacheContext, configContext;
+describe('Device Type Node', function () {
+
   beforeEach(() => {
     TestBed.configureTestingModule({ imports: [CoreModule] });
     // appContext = new ApplicationContextService;
     // cacheContext = new CacheContextService(new LocalStorageService);
   });
 
-  it('input should equals output', inject([ApplicationContextService, CacheContextService, ConfigContextService],
-    (appContext: ApplicationContextService, cacheContext: CacheContextService, configContext: ConfigContextService) => {
-      appContext.set('a', 100);
-      expect(appContext.get('a')).toEqual(100);
-  }));
+  it('should init', async(
+    inject([JNApplication],
+      (application: JNApplication) => {
+        let device = new JNDeviceTypeNode(application);
+        expect(device instanceof JNDeviceTypeNode).toEqual(true);
+      })
+  ));
 
-  /*  
-  it('should init', async(() => {
-    let deivce = new JNDeviceTypeNode();
-    expect(h1.innerText).toMatch(/angular app/i, '<h1> should say something about "Angular App"');
-  }));
-  */
-
+  it('should init default value', async(
+    inject([JNApplication],
+      (application: JNApplication) => {
+        let deviceType = new JNDeviceTypeNode(application);
+        deviceType.init({
+          typeName: 'Lighting',
+          typeDisplayName: '灯泡',
+          position: {
+            x: 100,
+            y: 100
+          },
+          nodeID: 123,
+          nodeName: '类型-灯泡'
+        }).then(() => {
+          // expect(deviceType['model'].typeName).toEqual('Lighting');
+          // console.log(JSON.stringify(deviceType.body));
+          // expect(deviceType.body['typeName']).toEqual('Lighting');
+          expect(deviceType.body['position']).toEqual({ x: 100, y: 100 });
+        });
+      })
+  ));
 });

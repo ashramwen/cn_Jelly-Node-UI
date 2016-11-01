@@ -1,1 +1,1 @@
-export * from './jn-node-error.type';
+export * from './node-exception.type';

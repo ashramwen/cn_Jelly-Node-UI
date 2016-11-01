@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { SecurityService } from './services/security.service';
 import { BEEHIVE_RESOURCES } from './resources/index';
 import { BEEHIVE_RPOVIDERS } from './services/index';
 import { JNApplication } from '../core/services/application-core.service';
@@ -9,12 +8,13 @@ import { CacheContextService } from '../core/services/cache-context.service';
 import { Http } from '@angular/http';
 import { Events } from '../core/services/event.service';
 import { RuleApplication } from './rule-application-core';
+import { ResourceProviders } from 'ng2-resource-rest';
 
 @NgModule({
   imports: [],
   exports: [],
   declarations: [],
-  providers: [SecurityService, BEEHIVE_RESOURCES, BEEHIVE_RPOVIDERS,{
+  providers: [BEEHIVE_RESOURCES, BEEHIVE_RPOVIDERS, {
       provide: JNApplication,
       useFactory: (appContext: ApplicationContextService,
         configContext: ConfigContextService,
@@ -29,7 +29,7 @@ export class ExternalsModule {
   static forRoot() {
     return {
       ngModule: ExternalsModule,
-      providers: [SecurityService, BEEHIVE_RESOURCES, BEEHIVE_RPOVIDERS, {
+      providers: [BEEHIVE_RESOURCES, BEEHIVE_RPOVIDERS, {
           provide: JNApplication,
           useFactory: (appContext: ApplicationContextService,
             configContext: ConfigContextService,

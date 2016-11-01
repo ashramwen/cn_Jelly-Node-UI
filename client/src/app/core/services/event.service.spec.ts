@@ -22,6 +22,16 @@ describe('app events ', () => {
     });
 
     events.emit('ev', 'a');
+
+  })));
+
+  it('should emit value backward', async(inject([Events], (events: Events) => {
+    events.emit('ev', 'a');
+
+    events.on('ev', (value, initial) => {
+      expect(value).toEqual('a');
+      expect(initial).toEqual(true);
+    });
   })));
 
 });

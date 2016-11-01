@@ -3,6 +3,7 @@ import { Resource, ResourceParams, ResourceAction, ResourceMethod } from 'ng2-re
 import { RequestMethod, Http, Headers } from '@angular/http';
 import { JNConfig, BEEHIVE_HEADERS } from '../../jn-config';
 import { CacheContextService } from '../../core/services/cache-context.service';
+import { BeehiveResource } from './beehive-resource.type';
 
 export interface IThing {
   thingID: number;
@@ -19,7 +20,7 @@ export interface IThingRequest {
 @ResourceParams({
   url: JNConfig.apis.THING
 })
-export class BeehiveThing extends Resource {
+export class BeehiveThing extends BeehiveResource {
 
   @ResourceAction({
     isArray: true,
@@ -30,11 +31,5 @@ export class BeehiveThing extends Resource {
     }
   })
   query: ResourceMethod<IThingRequest, IThing[]>;
-
-  constructor(http: Http, injector: Injector, cacheContext: CacheContextService) {
-    super(http, injector);
-    let headers = new Headers(cacheContext.get(BEEHIVE_HEADERS));
-    super.setHeaders(headers);
-  }
 
 }

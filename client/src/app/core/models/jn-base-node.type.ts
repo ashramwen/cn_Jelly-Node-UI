@@ -105,7 +105,6 @@ export abstract class JNBaseNode {
   }
 
   constructor(
-    protected application: JNApplication
   ) { }
 
   /**

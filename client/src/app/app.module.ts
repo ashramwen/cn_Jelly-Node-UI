@@ -5,6 +5,7 @@ import { CoreModule } from './core/core.module';
 import { AppComponent }  from './app.component';
 import { JNViewModule } from './views';
 import { NodeEditorModule } from './views/node-editor/node-editor.module';
+import { ExternalsModule } from './externals/externals.module';
 
  
 /*
@@ -13,7 +14,7 @@ import { NodeEditorModule } from './views/node-editor/node-editor.module';
 */
 
 @NgModule({
-  imports: [ BrowserModule, NodeEditorModule, JNViewModule, CoreModule ],
+  imports: [ BrowserModule, NodeEditorModule, JNViewModule, CoreModule, ExternalsModule ],
   declarations: [ AppComponent],
   bootstrap: [AppComponent]
 })

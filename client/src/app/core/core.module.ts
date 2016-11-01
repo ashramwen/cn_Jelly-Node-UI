@@ -32,13 +32,9 @@ const LOCAL_STORAGE_CONFIG_PROVIDER: Provider = {
 
 @NgModule({
   imports: [
-    // vendors
-    HttpModule, TranslateModule.forRoot(), MaterialModule.forRoot(), ResourceModule.forRoot(),
-
-    // app
-    ExternalsModule.forRoot()
+    HttpModule, TranslateModule.forRoot(), MaterialModule.forRoot(), ResourceModule.forRoot()
   ],
-  exports: [HttpModule, TranslateModule, MaterialModule, ExternalsModule],
+  exports: [HttpModule, TranslateModule, MaterialModule, ExternalsModule, ResourceModule],
   providers: [LocalStorageService, LOCAL_STORAGE_CONFIG_PROVIDER, {
     provide: TranslateLoader,
     useFactory: (http: Http) => new TranslateStaticLoader(http, 'assets/i18n', '.json'),

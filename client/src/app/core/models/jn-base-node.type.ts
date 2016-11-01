@@ -62,7 +62,11 @@ export abstract class JNBaseNode {
    * @returns Promise
    * @desc deserialize raw data to data model
    */
-  protected abstract parser(data: Object): Promise<JNNodeModel>;
+  protected parser(data: Object): Promise<JNNodeModel> {
+    return new Promise((resolve, reject) => {
+      resolve(this.model.extends(data));
+    });
+  }
 
   /**
    * @returns Promise
@@ -131,7 +135,7 @@ export abstract class JNBaseNode {
    */
   public init(data: Object) {
     return this.parser(data).then((model) => {
-      this.model = model;
+      this.model.extends(model);
     });
   }
 

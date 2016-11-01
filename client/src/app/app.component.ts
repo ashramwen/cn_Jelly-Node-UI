@@ -8,6 +8,7 @@ import { JNApplication } from './core/services/application-core.service';
 import { JNDeviceTypeNodeModel } from './externals/nodes/device-type-node/device-type-node-model.type';
 import { Events } from './core/services/event.service';
 import { BeehiveThing } from './externals/resources/thing.type';
+import { JNFlow } from './core/models/jn-flow.type';
 
 import {
   ApplicationContextService,
@@ -47,6 +48,9 @@ export class AppComponent implements OnInit {
             }, (res) => {
                 console.log(res);
             });
+            let nodeFlow = new JNFlow();
+            let node = nodeFlow.createNode(JNLocationNode);
+            console.log(node);
         }, 3000);
     }
 }

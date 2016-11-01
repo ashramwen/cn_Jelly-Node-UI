@@ -15,17 +15,20 @@
     "./test/**/*.ts",
     "!./node_modules/**/*.ts",
     "src/custom-typings.d.ts",
+    "src/d3.d.ts",
     "typings/browser.d.ts"
-  ],
-  "types": [
-    "lodash",
-    "d3"
   ],
   "awesomeTypescriptLoaderOptions": {
     "resolveGlobs": true,
     "forkChecker": true
   },
+  "types": [
+    "lodash",
+    "d3"
+  ],
   "compileOnSave": false,
   "buildOnSave": false,
-  "atom": { "rewriteTsconfig": false }
+  "atom": {
+    "rewriteTsconfig": false
+  }
 }

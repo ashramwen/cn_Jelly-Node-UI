@@ -2,11 +2,12 @@ import { Directive, OnInit, ElementRef } from '@angular/core';
 import * as d3 from 'd3';
 
 @Directive({
-  selector: 'graphic'
+  selector: 'jn-canvas'
 })
 export class NodeCanvasComponent implements OnInit {
 
   constructor(private ele: ElementRef) {
+
   }
 
   ngOnInit() {
@@ -18,13 +19,12 @@ export class NodeCanvasComponent implements OnInit {
       width = 960 - margin.right - margin.left,
       height = 500 - margin.top - margin.bottom;
 
-    var svg = d3.select(this.ele.nativeElement).append("svg")
-      .attr("width", width + margin.right + margin.left)
-      .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    var svg = d3.select(this.ele.nativeElement).append('svg')
+      .attr('width', width + margin.right + margin.left)
+      .attr('height', height + margin.top + margin.bottom)
+      .append('g')
+      .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
-    var i = 0;
     var data = [
       new Foobar({ name: 'a', x: 20, y: 20, color: 'black' }),
       new Foobar({ name: 'b', x: 20, y: 80, color: 'black' }),
@@ -38,44 +38,43 @@ export class NodeCanvasComponent implements OnInit {
       .on('end', dragended);
 
     function dragstarted(d) {
-      d3.select(this).raise().classed("active", true);
+      d3.select(this).raise().classed('active', true);
     }
 
     function dragged(d) {
       d3.select(this)
-      .attr('transform', function (d) {
-        d.x = d3.event.x;
-        d.y = d3.event.y;
-        return "translate(" + d3.event.x + "," + d3.event.y + ")";
-      });
+        .attr('transform', function (d) {
+          d.x = d3.event.x;
+          d.y = d3.event.y;
+          return `translate(${d3.event.x}, ${d3.event.y})`;
+        });
     }
 
     function dragended(d) {
-      d3.select(this).classed("active", false);
+      d3.select(this).classed('active', false);
+      console.log(d3.event);
     }
 
     var rects = svg.selectAll('g')
       .data(data);
 
     rects.enter()
-
       .append('g')
-      .call(drag)
       .attr('transform', function (d) {
         console.log(d);
-        return "translate(" + d.x + "," + d.y + ")";
+        return `translate(${d.x}, ${d.y})`;
       })
+      .call(drag)
       .append('rect')
-      .attr("class", "node")
+      .attr('class', 'node')
       .attr('width', 120)
       .attr('height', 30)
       .attr('fill', 'transparent')
       .attr('stroke', (d) => d.color)
       .on('mouseover', function (e) {
-        console.log(this);
-        console.log(e);
-      })
-          ;
+        // console.log(this);
+        // console.log(e);
+      });
 
     var pathEnter = svg.selectAll('g.link')
       .data([{
@@ -85,7 +84,7 @@ export class NodeCanvasComponent implements OnInit {
 
     pathEnter.append('g')
       .append('path')
-      .attr('class', "link_background")
+      .attr('class', 'link_background')
       .attr('stroke', 'black')
       .attr('fill', 'transparent')
       .attr('d', (d) => {

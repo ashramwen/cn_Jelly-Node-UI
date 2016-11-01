@@ -17,6 +17,8 @@ export class JNFlow {
     let node = new nodeType();
     if (data) {
       node.init(data);
+    } else {
+      node.init({ nodeID: this._generateNodeID() });
     }
     this.nodes.push(node);
 
@@ -31,6 +33,18 @@ export class JNFlow {
     if (this.nodes.indexOf(node) > -1) {
       this.nodes.splice(this.nodes.indexOf(node), 1);
     }
+  }
+
+  redo() {
+    
+  }
+
+  undo() {
+    
+  }
+
+  private _generateNodeID() {
+    return new Date().getTime() * 10000 + Math.random() * 10000;
   }
 
 }

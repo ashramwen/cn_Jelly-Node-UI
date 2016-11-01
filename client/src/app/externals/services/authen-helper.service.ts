@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 import { JNConfig } from '../../jn-config';
 import { CacheContextService } from '../../core/services/cache-context.service';
+import { CredentialException } from '../../core/models/exceptions/credential-exception.type';
 
 export interface ILoginPayload {
   password: String;
@@ -43,12 +44,15 @@ export class AuthenHelperSerivce {
    */
   extendHeaders(headers: Headers) {
     let credential: ICredential = this.cacheContext.get(CREDENTIAL);
+    if (!credential) {
+      throw new CredentialException();
+    }
     let _headers = new Headers({
       'Authorization': `Bearer ${credential.accessToken}`
     });
 
-    headers.keys().forEach((key) => {
-      _headers.set(key, headers.get(key));
+    Object.keys(headers).forEach((key) => {
+      _headers[key] = headers[key];
     });
 
     return _headers;

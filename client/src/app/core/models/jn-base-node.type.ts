@@ -1,5 +1,4 @@
 import { INodePosition, IJNNodePayload } from './interfaces';
-import { JNNodeException } from './exceptions';
 import { Observable, Subscriber } from 'rxjs';
 import { IJNInfoPanelModel } from '../../views/info-panel/interfaces';
 import { IJNEditorModel } from '../../views/node-editor/interfaces';
@@ -12,6 +11,7 @@ import {
 import { JNNodeModel } from './jn-node-model.type';
 import { JNNodeUnconnectableException } from './exceptions/node-unconnectable-exception.type';
 import { JNApplication } from '../services/application-core.service';
+import { JNException } from './exceptions/exception.type';
 
 
 export abstract class JNBaseNode {
@@ -97,7 +97,7 @@ export abstract class JNBaseNode {
    * @param  {JNBaseNode} node
    * @returns {Promise<boolean | JNNodeException>}
    */
-  public reject(node: JNBaseNode): Promise<boolean | JNNodeException> {
+  public reject(node: JNBaseNode): Promise<boolean | JNException> {
     return new Promise((resolve, reject) => {
       this.whenRejected(node).then(() => {
         this.inputFlows.splice(this.inputFlows.indexOf(node), 1);

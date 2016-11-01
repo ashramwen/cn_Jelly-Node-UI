@@ -17,7 +17,11 @@ export class BeehiveLocation extends Resource {
 
   @ResourceAction({
     isArray: true,
-    method: RequestMethod.Get
+    method: RequestMethod.Get,
+    headers: {
+      authorization: 'Bearer super_token',
+      contentType: 'application/json'
+    }
   })
   getAll: ResourceMethod<any, ILocation[]>;
 

@@ -4,6 +4,7 @@ import { ConfigContextService } from '../core/services/config-context.service';
 import { CacheContextService } from '../core/services/cache-context.service';
 import { Http } from '@angular/http';
 import { Injectable } from '@angular/core';
+import { BEEHIVE_HEADERS } from '../jn-config';
 
 @Injectable()
 export class RuleApplication extends JNApplication {
@@ -15,6 +16,11 @@ export class RuleApplication extends JNApplication {
       let apis = this.configContext.get('apis');
       Object.keys(apis).forEach((key) => {
         apis[key] = [beehiveUrl, apiPrefix, apis[key]].join();
+      });
+
+      this.cacheContext.set(BEEHIVE_HEADERS, {
+        authorization: 'Bearer super_token',
+        contentType: 'application/json'
       });
     });
   }

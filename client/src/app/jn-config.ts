@@ -6,10 +6,12 @@ export const JNConfig = {
   apis: {
     'LOCATION_TAGS': '/locationTags',
     'SCHEMA': '/schema',
-    'THING': '/things',
+    'THING': '/reports',
     'TRIGGER': '/triggers',
     'TYPE': '/things/types',
     'AUTH': '/oauth2',
     'USER': '/users'
   }
 };
+
+export const BEEHIVE_HEADERS = 'beehive_headers';

@@ -15,9 +15,8 @@ import { ApplicationContextService } from './services/application-context.servic
 import { CacheContextService } from './services/cache-context.service';
 import { ConfigContextService } from './services/config-context.service';
 import { RuleApplication } from '../externals/rule-application-core';
-import { BEEHIVE_RESOURCES } from '../externals/resources/index';
-import { BEEHIVE_RPOVIDERS } from '../externals/services/index';
 import { Events } from './services/event.service';
+import { ExternalsModule } from '../externals/externals.module';
 
 
 // Create config options (see ILocalStorageServiceConfigOptions) for deets:
@@ -32,21 +31,18 @@ const LOCAL_STORAGE_CONFIG_PROVIDER: Provider = {
 };
 
 @NgModule({
-  imports: [HttpModule, TranslateModule.forRoot(), MaterialModule.forRoot(), ResourceModule.forRoot()],
-  exports: [HttpModule, TranslateModule, MaterialModule],
+  imports: [
+    // vendors
+    HttpModule, TranslateModule.forRoot(), MaterialModule.forRoot(), ResourceModule.forRoot(),
+
+    // app
+    ExternalsModule.forRoot()
+  ],
+  exports: [HttpModule, TranslateModule, MaterialModule, ExternalsModule],
   providers: [LocalStorageService, LOCAL_STORAGE_CONFIG_PROVIDER, {
     provide: TranslateLoader,
     useFactory: (http: Http) => new TranslateStaticLoader(http, 'assets/i18n', '.json'),
     deps: [Http]
-  }, ...PROVIDERS, ...BEEHIVE_RESOURCES, ...BEEHIVE_RPOVIDERS, {
-      provide: JNApplication,
-      useFactory: (appContext: ApplicationContextService,
-        configContext: ConfigContextService,
-        cacheContext: CacheContextService,
-        http: Http,
-        events: Events
-      ) => new RuleApplication(appContext, cacheContext, configContext, http, events),
-      deps: [ApplicationContextService, ConfigContextService, CacheContextService, Http, Events]
-  }]
+  }, ...PROVIDERS]
 })
 export class CoreModule { }

@@ -27,6 +27,15 @@ export abstract class JNNodeModel implements IJNNodeModel {
 
   public serialize: () => any;
 
+  public extends(obj) {
+    if (!obj) return;
+    for (let key in this) {
+      if (obj.hasOwnProperty(key))
+        this[key] = obj[key];
+    }
+    return this;
+  }
+
   constructor() {
     this.nodeID = null;
     this.nodeName = null;

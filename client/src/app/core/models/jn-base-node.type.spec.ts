@@ -103,7 +103,7 @@ describe('JN base node', function () {
   it('Should Connectable when accepted', async(
     inject([JNApplication],
       (application: JNApplication) => {
-        let device = new JNTestNode1(application);
+        let device = new JNTestNode1();
         expect(device.connectable(JNTestNode2)).toEqual(true);
       })
   ));
@@ -111,7 +111,7 @@ describe('JN base node', function () {
   it('Should Unconnectable when not accepted', async(
     inject([JNApplication],
       (application: JNApplication) => {
-        let device = new JNTestNode2(application);
+        let device = new JNTestNode2();
         expect(device.connectable(JNTestNode1)).toEqual(false);
       })
   ));
@@ -119,8 +119,8 @@ describe('JN base node', function () {
   it('Should alert Error', async(
     inject([JNApplication],
       (application: JNApplication) => {
-        let device1 = new JNTestNode1(application);
-        let device2 = new JNTestNode2(application);
+        let device1 = new JNTestNode1();
+        let device2 = new JNTestNode2();
 
         try {
           device2.accept(device1);

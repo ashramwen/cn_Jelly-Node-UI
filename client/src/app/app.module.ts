@@ -8,17 +8,16 @@ import { AppRoutingModule } from './app-routing.module';
 import { CoreModule } from './core/core.module';
 import { AppComponent } from './app.component';
 import { JNViewModule } from './views';
+import { NodeEditorModule } from './views/node-editor/node-editor.module';
+import { ExternalsModule } from './externals/externals.module';
 
 /*
 * Platform and Environment
 * our providers/directives/pipes
 */
-
 @NgModule({
-  imports: [BrowserModule, FormsModule, JNViewModule, CoreModule, HttpModule, AppRoutingModule],
-  declarations: [
-    AppComponent
-  ],
+  imports: [ BrowserModule, NodeEditorModule, JNViewModule, CoreModule, ExternalsModule, HttpModule, AppRoutingModule ],
+  declarations: [ AppComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

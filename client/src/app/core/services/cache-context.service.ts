@@ -15,5 +15,9 @@ export class CacheContextService {
     this.localStorageService.set(key, value);
   }
 
+  remove(key: string): void {
+    this.localStorageService.remove(key);
+  }
+
 }
 

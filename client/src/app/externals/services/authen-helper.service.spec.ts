@@ -3,12 +3,15 @@ import { CoreModule } from '../../core/core.module';
 import { TestBed, async, inject } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { JNApplication, APP_READY } from '../../core/services/application-core.service';
-import { BeehiveThing } from './thing.type';
+import { AuthenHelperSerivce } from './authen-helper.service';
+import { RuleApplication } from '../rule-application-core';
 import { Events } from '../../core/services/event.service';
+
+
 
 ////////  SPECS  /////////////
 
-describe('Resources', function () {
+describe('Authen Helper', function () {
 
   beforeEach(() => {
     TestBed.configureTestingModule({ imports: [CoreModule] });
@@ -16,18 +19,17 @@ describe('Resources', function () {
     // cacheContext = new CacheContextService(new LocalStorageService);
   });
 
-  it('things', async(inject([BeehiveThing, JNApplication, Events],
-    ($thing: BeehiveThing, application: JNApplication, events: Events) => {
-      events.on(APP_READY, () => {
-        expect(false).toEqual(true);
-        $thing.query({
-          type: 'Lighting',
-          locationPrefix: '08',
-          includeSubLevel: true
-        }, (things) => {
-          // expect(typeof things).toBe(Array);
-          expect(false).toEqual(true);
+  it('should login', async(
+    inject([AuthenHelperSerivce, JNApplication, Events],
+      (authHelper: AuthenHelperSerivce, application: JNApplication, events: Events) => {
+        events.on(APP_READY, () => {
+          authHelper.hasLoggedIn().then(() => {
+            expect(true).toEqual(true);
+          }, () => {
+            expect(false).toEqual(true);
+          });
         });
-      });
-  })));
+      })
+  ));
+
 });

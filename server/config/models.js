@@ -28,7 +28,9 @@ module.exports.models = {
   *                                                                          *
   ***************************************************************************/
   migrate: 'safe',
+  // migrate: 'drop',
   autoCreatedAt: true,
-  autoUpdatedAt: true
+  autoUpdatedAt: true,
+  autoPK: false
 
 };

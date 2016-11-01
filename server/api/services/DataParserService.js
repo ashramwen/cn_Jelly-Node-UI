@@ -6,7 +6,7 @@ module.exports = {
 
   toReporting: function (options, done) {
     return done()
-  }
+  },
 
   toDummy: function (options, done) {
     return done()

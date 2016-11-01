@@ -1,6 +1,6 @@
-import { JNNodeException } from '../exceptions';
+import { JNException } from '../exceptions';
 
 export interface IJNNodeModel { // node data model
   $valid: boolean; // model valid or not
-  $error: JNNodeException; // error type & msg
+  $error: JNException; // error type & msg
 }

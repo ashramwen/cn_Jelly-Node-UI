@@ -1,1 +1,1 @@
-export * from './node-exception.type';
+export * from './exception.type';

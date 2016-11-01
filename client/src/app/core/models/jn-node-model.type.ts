@@ -1,14 +1,14 @@
-import { JNNodeException } from './exceptions';
 import { INodePosition, IJNNodeModel } from './interfaces';
 import { JNBaseNode } from './jn-base-node.type';
 import { JsonProperty, MapUtils, Serializable } from '../../../bin/JsonMapper';
+import { JNException } from './exceptions/exception.type';
 
 @Serializable()
 export abstract class JNNodeModel implements IJNNodeModel {
 
   static deserialize: (obj: any) => IJNNodeModel;
 
-  public $error: JNNodeException;
+  public $error: JNException;
   public $valid: boolean;
 
   public position: INodePosition;

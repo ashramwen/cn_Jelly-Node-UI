@@ -49,10 +49,10 @@ export abstract class JNApplication {
    */
   private _init() {
     this._loadConfig()
-      .then(this._validateToken)
-      .then(this.init)
-      .then(this._loader)
-      .then(this._onReady, this._onError);
+      .then(this._validateToken.bind(this))
+      .then(this.init.bind(this))
+      .then(this._loader.bind(this))
+      .then(this._onReady.bind(this), this._onError.bind(this));
   }
 
   private _loadConfig() {

@@ -4,6 +4,8 @@ import { RequestMethod, Http, Headers } from '@angular/http';
 import { JNConfig, BEEHIVE_HEADERS } from '../../jn-config';
 import { CacheContextService } from '../../core/services/cache-context.service';
 import { BeehiveResource } from './beehive-resource.type';
+import { AuthenHelperSerivce } from '../services/authen-helper.service';
+import { inject } from '@angular/core/testing';
 
 export interface IThing {
   thingID: number;
@@ -25,11 +27,12 @@ export class BeehiveThing extends BeehiveResource {
   @ResourceAction({
     isArray: true,
     method: RequestMethod.Post,
-    path: '/thingQuery',
-    headers: {
-      contentType: 'application/json'
-    }
+    path: '/thingQuery'
   })
   query: ResourceMethod<IThingRequest, IThing[]>;
+
+  constructor(http: Http, injector: Injector, authHelper: AuthenHelperSerivce) {
+    super(http, injector, authHelper);
+  }
 
 }

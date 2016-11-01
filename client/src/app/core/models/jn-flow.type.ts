@@ -36,11 +36,9 @@ export class JNFlow {
   }
 
   redo() {
-    
   }
 
   undo() {
-    
   }
 
   private _generateNodeID() {

@@ -11,10 +11,6 @@ export interface ILocation {
   subLocations: Array<ILocation>;
 }
 
-@Injectable()
-@ResourceParams({
-  url: JNConfig.beehiveBaseUrl
-})
 export class BeehiveResource extends Resource {
 
   constructor(http: Http, injector: Injector, private authenHelper: AuthenHelperSerivce) {
@@ -33,7 +29,7 @@ export class BeehiveResource extends Resource {
     if (req.method === RequestMethod.Post
       || req.method === RequestMethod.Put
       || req.method === RequestMethod.Patch) {
-      req.headers.set('contentType', 'application/json');
+      req.headers.set('content-type', 'application/json');
     }
     return req;
   }

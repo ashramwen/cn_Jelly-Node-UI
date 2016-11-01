@@ -9,6 +9,7 @@ import { Http } from '@angular/http';
 import { Events } from '../core/services/event.service';
 import { RuleApplication } from './rule-application-core';
 import { ResourceProviders } from 'ng2-resource-rest';
+import { AuthenHelperSerivce } from './services/authen-helper.service';
 
 @NgModule({
   imports: [],
@@ -20,9 +21,10 @@ import { ResourceProviders } from 'ng2-resource-rest';
         configContext: ConfigContextService,
         cacheContext: CacheContextService,
         http: Http,
-        events: Events
-      ) => new RuleApplication(appContext, cacheContext, configContext, http, events),
-      deps: [ApplicationContextService, ConfigContextService, CacheContextService, Http, Events]
+        events: Events,
+        authenHelper: AuthenHelperSerivce
+      ) => new RuleApplication(appContext, cacheContext, configContext, http, events, authenHelper),
+      deps: [ApplicationContextService, ConfigContextService, CacheContextService, Http, Events, AuthenHelperSerivce]
   }]
 })
 export class ExternalsModule {
@@ -35,9 +37,11 @@ export class ExternalsModule {
             configContext: ConfigContextService,
             cacheContext: CacheContextService,
             http: Http,
-            events: Events
-          ) => new RuleApplication(appContext, cacheContext, configContext, http, events),
-          deps: [ApplicationContextService, ConfigContextService, CacheContextService, Http, Events]
+            events: Events,
+            authenHelper: AuthenHelperSerivce
+          ) => new RuleApplication(appContext, cacheContext, configContext, http, events, authenHelper),
+          deps: [ApplicationContextService, ConfigContextService,
+            CacheContextService, Http, Events, AuthenHelperSerivce]
       }]
     };
   }

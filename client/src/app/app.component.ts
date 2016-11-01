@@ -15,7 +15,7 @@ import {
 
 @Component({
     selector: 'app',
-    template: '<jn-node-editor></jn-node-editor>'
+    template: '<router-outlet></router-outlet>'
 })
 export class AppComponent implements OnInit {
 

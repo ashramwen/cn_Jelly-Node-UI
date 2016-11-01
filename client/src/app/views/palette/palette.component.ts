@@ -1,8 +1,15 @@
+// import * as d3 from "d3";
 import { ApplicationContextService } from './../../core/services/application-context.service';
 import { ConfigContextService } from './../../core/services/config-context.service';
 import { CacheContextService } from './../../core/services/cache-context.service';
-import { JNDeviceNode } from './../../externals/nodes/device-node/device-node.type';
 import { Component, OnInit } from '@angular/core';
+
+import { JNApplication } from '../../core/services/application-core.service';
+import { IJNNodeModel } from './../../core/models/interfaces/node-model.interface';
+import { JNNodeModel } from './../../core/models/jn-node-model.type';
+import { JNDeviceTypeNodeModel } from './../../externals/nodes/device-type-node/device-type-node-model.type';
+import {JNBaseNode} from '../../core/models/jn-base-node.type';
+import { JNDeviceTypeNode } from './../../externals/nodes/device-type-node/device-type-node.type';
 
 @Component({
   selector: 'jn-palette',
@@ -10,20 +17,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./palette.component.scss']
 })
 export class PaletteComponent implements OnInit {
-  constructor(private applicationContext: ApplicationContextService,
-    private configContext: ConfigContextService,
-    private cacheContext: CacheContextService) { }
+  constructor( private application: JNApplication) { }
 
-  nodes: JNDeviceNode[]
-  heroes: number[]
+  nodes: JNBaseNode[]
 
   ngOnInit() {
-    let node = new JNDeviceNode(this.applicationContext, this.configContext, this.cacheContext);
+    // d3.drag();
+    // let node = new JNDeviceTypeNode(this.application);
+    // node.body()
     // node.position = { x: 10, y: 20 };
-    this.nodes = [];
-    this.nodes.push(node);
-    this.nodes.push(Object.assign({}, node));
 
-    this.heroes = [1, 2, 3];
+    this.nodes.push(new JNDeviceTypeNode(this.application));
+    // this.nodes.push(Object.assign({}, node));
   }
 }

@@ -1,0 +1,31 @@
+svg {
+    .node_group {
+        cursor: move;
+        .node {
+            stroke: #000;
+            fill: #fff;
+        }
+        .port {
+            cursor: crosshair;
+            stroke: #000;
+            fill: #fff;
+            &:hover {
+                fill: #ffa500;
+            }
+        }
+        path {
+            stroke-width: 1;
+            stroke: #000;
+        }
+        text {
+            fill: #333;
+            font-size: 14px;
+        }
+    }
+    g.link {
+        path {
+            stroke: #000;
+            fill: transparent;
+        }
+    }
+}

@@ -48,9 +48,9 @@ export class AppComponent implements OnInit {
             }, (res) => {
                 console.log(res);
             });
-            let nodeFlow = new JNFlow();
-            let node = nodeFlow.createNode(JNLocationNode);
-            console.log(node);
+            // let nodeFlow = new JNFlow();
+            // let node = nodeFlow.createNode(JNLocationNode);
+            // console.log(node);
         }, 3000);
     }
 }

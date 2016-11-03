@@ -7,7 +7,7 @@ import { JNViewModule } from './views';
 import { NodeEditorModule } from './views/node-editor/node-editor.module';
 import { ExternalsModule } from './externals/externals.module';
 
- 
+
 /*
 * Platform and Environment
 * our providers/directives/pipes

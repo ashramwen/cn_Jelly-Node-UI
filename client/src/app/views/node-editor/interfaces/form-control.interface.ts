@@ -1,7 +1,6 @@
-import { IJNFormValidator } from './validator';
-import { IJNFormParser } from './parser';
 import { JNFormControl } from '../controls/control.component';
 import { IJNFormControlInput } from './form-control-input.interface';
+import { IJNEditorFormValidator } from './validator.interface';
 
 export interface IJNFormControl {
   input: IJNFormControlInput;
@@ -10,7 +9,5 @@ export interface IJNFormControl {
   controlType: typeof JNFormControl;
   maxLength?: number; // max length of input
   minLength?: number; // min length of input
-  $validators?: IJNFormValidator[];
-  $parser?: IJNFormParser;
-  $formatter?: () => Object | String; // formate view data to modal data
+  $validators?: IJNEditorFormValidator[];
 }

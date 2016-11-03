@@ -11,7 +11,7 @@ const VALUE_ACCESSOR: any = {
 
 @JNControl({
   template: `
-    <jn-text [data]="data" [label]="label" [disabled]="disabled"
+    <jn-text [data]="inputs.data" [label]="inputs.label" [disabled]="inputs.disabled"
       [formControl]="formControl">
     </jn-text>
   `

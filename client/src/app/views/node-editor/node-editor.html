@@ -8,6 +8,5 @@
   -->
   <form [formGroup]="activityForm" (ngSubmit)="submit(activityForm.value)">
     <div #dynamicTarget></div>
-    <em *ngIf="formControl.hasError('maxLength')">maxLength</em>
   </form>
 </div>

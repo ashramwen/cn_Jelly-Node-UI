@@ -10,6 +10,12 @@ import { IJNFormControlInput } from '../interfaces/form-control-input.interface'
 import { IJNFormControl } from '../interfaces/form-control.interface';
 import { JNTemplateBuilder } from './template-builder.service';
 import { ValidatorGenerator } from '../controls/services/validator-generator.service';
+import { BrowserModule } from '@angular/platform-browser';
+
+interface IDynamicComponent {
+  inputs: IJNFormControlInput;
+  formControl: FormControl;
+}
 
 @Injectable()
 export class JNControlLoader {
@@ -21,38 +27,34 @@ export class JNControlLoader {
   ) { }
 
   public buildComponent(controlSchema: IJNFormControl, dynamicComponentTarget: ViewContainerRef) {
-    return new Promise((resolve) => {
+    return new Promise<IDynamicComponent>((resolve) => {
       let template = this.templateBuilder.prepareTemplate(controlSchema);
 
       // here we get Factory (just compiled or from cache)
       this.createComponentFactory(template)
         .then((factory) => {
-          // Target will instantiate and inject component (we'll keep reference to it)
+          // Target will instantiate and inject component 
           let componentRef = dynamicComponentTarget
               .createComponent(factory);
 
           let component = componentRef.instance;
           let fc = new FormControl();
           let validators = this.validatorGenerator.generate(controlSchema.$validators);
-          fc.setAsyncValidators(validators.map(validator=>validator.$validator));
+
+          component.formControl = fc;
+          fc.setAsyncValidators(validators.map(validator => validator.$validator));
 
           this.injectInputs(component, controlSchema.input);
-          component.formControl = fc;
-
-
           resolve(component);
         });
     });
   }
 
-  private injectInputs(component: IJNFormControlInput, formInputs: IJNFormControlInput) {
-    component.data = formInputs.data;
-    component.label = formInputs.label;
-    component.disabled = formInputs.disabled;
-    component.hidden = formInputs.hidden;
+  private injectInputs(component: IDynamicComponent, formInputs: IJNFormControlInput) {
+    component.inputs = formInputs;
   }
 
-  private createComponentFactory(template: string): Promise<ComponentFactory<IJNFormControlInput>> {
+  private createComponentFactory(template: string): Promise<ComponentFactory<IDynamicComponent>> {
      // unknown template ... let's create a Type for it
     let type = this.createNewComponent(template);
     let myModule = this.createComponentModule(type);
@@ -67,16 +69,14 @@ export class JNControlLoader {
     });
   }
 
-  createNewComponent (tmpl: string) {
+  private createNewComponent (tmpl: string) {
     @Component({
         selector: 'dynamic-component',
         template: tmpl
     })
-    class CustomDynamicComponent implements IJNFormControlInput {
-      @Input() public label: String;
-      @Input() public hidden: boolean;
-      @Input() public disabled: boolean;
-      @Input() public data: any;
+    class CustomDynamicComponent  implements IDynamicComponent {
+
+      @Input() public inputs: IJNFormControlInput;
       @Input() public formControl: FormControl;
     };
     // a component for this particular template
@@ -87,7 +87,8 @@ export class JNControlLoader {
       @NgModule({
         imports: [
           JNControlModule,
-          ReactiveFormsModule
+          ReactiveFormsModule,
+          BrowserModule
         ],
         declarations: [
           componentType

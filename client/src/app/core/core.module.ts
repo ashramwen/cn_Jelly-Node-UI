@@ -1,5 +1,4 @@
 import { NgModule, Provider } from '@angular/core';
-import { MaterialModule } from '@angular/material';
 import { LocalStorageService, LOCAL_STORAGE_SERVICE_CONFIG } from 'angular-2-local-storage';
 import {
   TranslateModule,
@@ -32,9 +31,9 @@ const LOCAL_STORAGE_CONFIG_PROVIDER: Provider = {
 
 @NgModule({
   imports: [
-    HttpModule, TranslateModule.forRoot(), MaterialModule.forRoot(), ResourceModule.forRoot()
+    HttpModule, TranslateModule.forRoot(), ResourceModule.forRoot(), ExternalsModule
   ],
-  exports: [HttpModule, TranslateModule, MaterialModule, ExternalsModule, ResourceModule],
+  exports: [HttpModule, TranslateModule, ResourceModule],
   providers: [LocalStorageService, LOCAL_STORAGE_CONFIG_PROVIDER, {
     provide: TranslateLoader,
     useFactory: (http: Http) => new TranslateStaticLoader(http, 'assets/i18n', '.json'),

@@ -5,25 +5,26 @@ import { JNControl } from '../../control.annotation';
 
 const VALUE_ACCESSOR: any = {
     provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => JNTextAreaControl),
+    useExisting: forwardRef(() => JNTextControl),
     multi: true
 };
 
 @JNControl({
   template: `
-    <jn-textarea [data]="data" [label]="label" [disabled]="disabled"
-      formControlName="testValue">
+    <jn-text [data]="data" [label]="label" [disabled]="disabled"
+      [formControl]="formControl">
     </jn-text>
   `
 })
 @Component({
-  selector: 'jn-textarea',
+  selector: 'jn-text',
   styles: [
-    require('./textarea.scss')
+    require('./text.scss')
   ],
-  template: require('./textarea.html')
+  template: require('./text.html'),
+  providers: [VALUE_ACCESSOR]
 })
-export class JNTextAreaControl extends JNFormControl {
+export class JNTextControl extends JNFormControl {
   @Input()
   protected disabled: boolean;
   @Input()

@@ -80,6 +80,6 @@ export abstract class JNApplication {
   }
 
   private _loader() {
-    return Promise.all([this.lazyLoading]);
+    return Promise.all([this.lazyLoading()]);
   }
 }

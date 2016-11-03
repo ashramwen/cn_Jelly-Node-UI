@@ -2,6 +2,7 @@ import { JNBaseNode } from './jn-base-node.type';
 
 export class JNFlow {
   flowID: number;
+  flowName: String;
   nodes: Array<JNBaseNode> = [];
 
   private _redoStack: Array<any> = [];

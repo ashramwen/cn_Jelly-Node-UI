@@ -1,13 +1,20 @@
-import {FormBuilder, Validators, FormControl, FormGroup} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, AsyncValidatorFn } from '@angular/forms';
 
-export class JNFormValidator{
+export class JNFormValidator {
 
-  //:: TODO
-  get $errorString(): string{
-    return '';
+  private _validator: AsyncValidatorFn;
+  private _errorString: String;
+
+  constructor(err: String, validator: AsyncValidatorFn) {
+    this._validator = validator;
+    this._errorString = err;
   }
 
-  get $validator(): Validators {
-    return null;
+  get $errorString(): String {
+    return this._errorString;
+  }
+
+  get $validator(): AsyncValidatorFn {
+    return this._validator;
   }
 }

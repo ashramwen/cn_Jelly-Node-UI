@@ -20,16 +20,16 @@ export interface IThingRequest {
 
 @Injectable()
 @ResourceParams({
-  url: JNConfig.apis.THING
+  url: JNConfig.apis.SCHEMA
 })
-export class BeehiveThing extends BeehiveResource {
+export class BeehiveSchema extends BeehiveResource {
 
   @ResourceAction({
     isArray: true,
     method: RequestMethod.Post,
     path: '/thingQuery'
   })
-  query: ResourceMethod<IThingRequest, IThing[]>;
+  getAll: ResourceMethod<IThingRequest, IThing[]>;
 
   constructor(
     http: Http,

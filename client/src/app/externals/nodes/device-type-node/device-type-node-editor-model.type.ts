@@ -1,7 +1,7 @@
+import { IJNFormControl } from '../../../views/node-editor/interfaces/form-control.interface';
 import {
   IJNEditorModel,
-  IJNFormButton,
-  IJNFormControl
+  IJNFormButton
 } from '../../../views/node-editor/interfaces';
 
 export class JNDeviceTypeNodeEditorModel implements IJNEditorModel {

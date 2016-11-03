@@ -1,3 +1,13 @@
 <div>
-  {{"APP_NAME"}}
+  <!--
+  <form [formGroup]="activityForm" (ngSubmit)="submit(activityForm.value)">
+    <jn-text [data]="data" [label]="'label'" 
+      formControlName="testValue">
+    </jn-text>
+  </form>
+  -->
+  <form [formGroup]="activityForm" (ngSubmit)="submit(activityForm.value)">
+    <div #dynamicTarget></div>
+    <em *ngIf="formControl.hasError('maxLength')">maxLength</em>
+  </form>
 </div>

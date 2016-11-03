@@ -1,5 +1,5 @@
-import {IJNFormControl} from './form-control';
-import {IJNFormButton} from './button';
+import { IJNFormButton } from './button';
+import { IJNFormControl } from './form-control.interface';
 
 export interface IJNEditorModel {
   title: String;

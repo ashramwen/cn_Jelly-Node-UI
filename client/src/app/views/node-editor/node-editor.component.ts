@@ -66,6 +66,7 @@ export class JNEditFormComponent implements OnInit {
   onControlReady(formControl: FormControl, i: number, schema) {
     formControl.valueChanges.subscribe(function() {
       console.log(formControl.value, formControl.valid, formControl.errors);
+      console.log(formControl.hasError('maxLength'));
     });
     this.activityForm.addControl(i.toLocaleString(), formControl);
   }

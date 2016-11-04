@@ -9,10 +9,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { JNCONTROLS } from './components/controls/index';
 import { EDITOR_PROVIDERS } from './services/index';
 import { BrowserModule } from '@angular/platform-browser';
+import { JNControlContainer } from './components/control-container/control-container.component';
 
 @NgModule({
-  declarations: [JNEditFormComponent],
-  imports: [JNControlModule.forRoot(), FormsModule, ReactiveFormsModule, MaterialModule, TranslateModule, BrowserModule],
+  declarations: [JNEditFormComponent, JNControlContainer],
+  imports: [
+    JNControlModule.forRoot(), FormsModule,
+    ReactiveFormsModule, MaterialModule, TranslateModule, BrowserModule
+  ],
   exports: [JNEditFormComponent],
   providers: [...EDITOR_PROVIDERS, COMPILER_PROVIDERS]
 })

@@ -7,6 +7,7 @@
   </form>
   -->
   <form [formGroup]="activityForm" (ngSubmit)="submit(activityForm.value)">
-    <div #dynamicTarget></div>
+    <jn-control-container *ngFor="let schema of controlSchemas; let i=index" 
+    [controlSchema]="schema" (ready)="onControlReady($event, i, schema)"></jn-control-container>
   </form>
 </div>

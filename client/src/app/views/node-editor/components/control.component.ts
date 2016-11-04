@@ -13,8 +13,6 @@ export abstract class JNFormControl implements ControlValueAccessor {
   protected abstract hidden: boolean;
   @Input()
   protected abstract label: String;
-  @Input()
-  protected abstract data: any;
 
   protected _value = null;
   protected onChange = (_: any) => {};

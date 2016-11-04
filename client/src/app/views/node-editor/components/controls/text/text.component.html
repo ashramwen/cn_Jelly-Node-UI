@@ -1,7 +1,12 @@
 <div class="jn-form">
-  <md-input placeholder="{{label | translate}}" #control [(ngModel)]="value" maxlength="data.maxLength" [disabled]="disabled">
+  <md-input 
+      placeholder="{{label | translate}}"
+      #control
+      [(ngModel)]="value" 
+      maxlength="maxLength" 
+      [disabled]="disabled">
     <md-hint align="end">
-      {{control.characterCount}} / {{data.maxLength}}
+      {{control.characterCount}} / {{maxLength}}
     </md-hint>
   </md-input>
 </div>

@@ -4,9 +4,10 @@ import { TranslateModule } from 'ng2-translate';
 import { MaterialModule } from '@angular/material';
 import { FormsModule } from '@angular/forms';
 import { EDITOR_CONTROL_SERVICES } from './services/index';
+import { BrowserModule } from '@angular/platform-browser';
 
 @NgModule({
-  imports: [TranslateModule, MaterialModule, FormsModule],
+  imports: [TranslateModule, MaterialModule, FormsModule, BrowserModule],
   providers: [],
   declarations: [...JNCONTROLS],
   exports: [...JNCONTROLS]

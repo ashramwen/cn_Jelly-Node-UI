@@ -5,26 +5,36 @@ import { JNControl } from '../../control.annotation';
 
 const VALUE_ACCESSOR: any = {
     provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => JNTextControl),
+    useExisting: forwardRef(() => JNRadioControl),
     multi: true
 };
 
+export interface IRadio {
+  options: Array<IRadioOption>;
+  selectedByDefault?: boolean;
+}
+
+interface IRadioOption {
+  text: string;
+  value: string;
+}
+
 @JNControl({
   template: `
-    <jn-text [data]="inputs.data" [label]="inputs.label" [disabled]="inputs.disabled"
+    <jn-radio [data]="inputs.data" [label]="inputs.label" [disabled]="inputs.disabled"
       [formControl]="formControl">
-    </jn-text>
+    </jn-radio>
   `
 })
 @Component({
-  selector: 'jn-text',
+  selector: 'jn-select',
   styles: [
-    require('./text.scss')
+    require('./radio.component.scss')
   ],
-  template: require('./text.html'),
+  template: require('./radio.component.html'),
   providers: [VALUE_ACCESSOR]
 })
-export class JNTextControl extends JNFormControl {
+export class JNRadioControl extends JNFormControl {
   @Input()
   protected disabled: boolean;
   @Input()

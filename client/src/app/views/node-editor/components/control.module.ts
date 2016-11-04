@@ -1,5 +1,5 @@
 import { NgModule, Provider }      from '@angular/core';
-import { JNCONTROLS } from './components/index';
+import { JNCONTROLS } from './controls/index';
 import { TranslateModule } from 'ng2-translate';
 import { MaterialModule } from '@angular/material';
 import { FormsModule } from '@angular/forms';

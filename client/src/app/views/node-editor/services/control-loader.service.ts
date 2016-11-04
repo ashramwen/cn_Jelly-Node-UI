@@ -4,12 +4,12 @@ import { MaterialModule } from '@angular/material';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from 'ng2-translate';
 
-import { JNFormControl } from '../controls/control.component';
-import { JNControlModule } from '../controls/control.module';
+import { JNFormControl } from '../components/control.component';
+import { JNControlModule } from '../components/control.module';
 import { IJNFormControlInput } from '../interfaces/form-control-input.interface';
 import { IJNFormControl } from '../interfaces/form-control.interface';
 import { JNTemplateBuilder } from './template-builder.service';
-import { ValidatorGenerator } from '../controls/services/validator-generator.service';
+import { ValidatorGenerator } from '../components/services/validator-generator.service';
 import { BrowserModule } from '@angular/platform-browser';
 
 interface IDynamicComponent {

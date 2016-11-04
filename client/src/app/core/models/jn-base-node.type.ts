@@ -1,7 +1,6 @@
 import { INodePosition, IJNNodePayload } from './interfaces';
 import { Observable, Subscriber } from 'rxjs';
 import { IJNInfoPanelModel } from '../../views/info-panel/interfaces';
-import { IJNEditorModel } from '../../views/node-editor/interfaces';
 import { IJNPaletteModel } from '../../views/palette/interfaces';
 import {
   ApplicationContextService,
@@ -12,6 +11,7 @@ import { JNNodeModel } from './jn-node-model.type';
 import { JNNodeUnconnectableException } from './exceptions/node-unconnectable-exception.type';
 import { JNApplication } from '../services/application-core.service';
 import { JNException } from './exceptions/exception.type';
+import { IJNEditorModel } from '../../views/node-editor/interfaces/editor-model.interface';
 
 
 export abstract class JNBaseNode {

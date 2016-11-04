@@ -1,4 +1,4 @@
-import { JNFormControl } from '../controls/control.component';
+import { JNFormControl } from '../components/control.component';
 import { IJNFormControlInput } from './form-control-input.interface';
 import { IJNEditorFormValidator } from './validator.interface';
 

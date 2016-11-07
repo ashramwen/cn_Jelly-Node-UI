@@ -11,7 +11,6 @@ import { By } from '@angular/platform-browser';
 
 import { JNBaseNode } from '../../core/models/jn-base-node.type';
 import { JNNode } from '../../core/models/node-annotation';
-import { IJNNodeModel } from '../../core/models/interfaces';
 
 
 @JNNode({

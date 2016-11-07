@@ -13,6 +13,7 @@ import { CACHE_LOCATION } from './resources/location.type';
 
 @Injectable()
 export class RuleApplication extends JNApplication {
+  static instance: JNApplication;
 
   constructor(
     public applicationContext: ApplicationContextService,
@@ -24,6 +25,7 @@ export class RuleApplication extends JNApplication {
     private authenHelper: AuthenHelperSerivce,
   ) {
     super(applicationContext, cacheContext, configContext, http, events);
+    RuleApplication.instance = this;
   }
 
   protected init() {
@@ -39,6 +41,7 @@ export class RuleApplication extends JNApplication {
     return new Promise((resolve) => {
       let pList = [];
 
+      // cache location
       if (!this.resources.$location.isCached) {
         let promise = this.resources.$location.getAll({}, (location) => {
           this.resources.$location.cache(location);

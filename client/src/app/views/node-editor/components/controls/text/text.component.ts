@@ -10,7 +10,7 @@ const VALUE_ACCESSOR: any = {
     multi: true
 };
 
-export interface ITextInput extends IJNFormControlInput{
+export interface ITextInput extends IJNFormControlInput {
   maxLength: number;
 }
 
@@ -29,7 +29,20 @@ export interface ITextInput extends IJNFormControlInput{
   styles: [
     require('./text.component.scss')
   ],
-  template: require('./text.component.html'),
+  template: `
+    <div class="jn-form">
+      <md-input 
+          placeholder="{{label | translate}}"
+          #control
+          [(ngModel)]="value" 
+          maxlength="maxLength" 
+          [disabled]="disabled">
+        <md-hint align="end">
+          {{control.characterCount}} / {{maxLength}}
+        </md-hint>
+      </md-input>
+    </div>
+  `,
   providers: [VALUE_ACCESSOR]
 })
 export class JNTextControl extends JNFormControl {

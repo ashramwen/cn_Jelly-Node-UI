@@ -1,6 +1,5 @@
 import { JNBaseNode } from '../../../core/models/jn-base-node.type';
 import { JNNode } from '../../../core/models/node-annotation';
-import { IJNNodeModel } from '../../../core/models/interfaces';
 import { JNDeviceTypeNodeEditorModel } from './device-type-node-editor-model.type';
 import { JNDeviceTypeInfoPanelModel } from './device-type-node-info-panel-model.type';
 import { JNDeviceTypePaletteModel } from './device-type-node-palette-model.type';
@@ -12,7 +11,7 @@ import { JNLocationNode } from '../location-node/location-node.type';
   color: '',
   borderColor: '',
   accepts: [JNLocationNode],
-  editorModel: JNDeviceTypeNodeEditorModel.instance,
+  editorModel: null,
   infoPanelModel: JNDeviceTypeInfoPanelModel.instance,
   paletteModel: JNDeviceTypePaletteModel.instance
 })

@@ -9,7 +9,7 @@ import { CacheContextService } from '../../core/services/cache-context.service';
 export interface ILocation {
   location: String;
   displayName: String;
-  subLocations: Array<ILocation>;
+  subLocations: { [key: string]: ILocation };
 }
 
 export const CACHE_LOCATION = 'beehive.location';

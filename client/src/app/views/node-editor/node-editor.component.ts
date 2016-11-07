@@ -1,12 +1,17 @@
-import { Component, ViewContainerRef, ViewChild, ElementRef, OnInit } from '@angular/core';
+import { Component, ViewContainerRef, ViewChild, ElementRef, OnInit, Input } from '@angular/core';
 import { ApplicationContextService } from '../../core/services';
-import { FormBuilder, FormGroup, FormControl, Validators, AsyncValidatorFn } from '@angular/forms';
+import { FormGroup, FormControl, Validators, AsyncValidatorFn } from '@angular/forms';
 import { JNTemplateBuilder } from './services/template-builder.service';
 import { JNControlLoader } from './services/control-loader.service';
 import { JNTextControl, ITextInput } from './components/controls/text/text.component';
 import { IJNFormControl } from './interfaces/form-control.interface';
 import { IJNFormControlInput } from './interfaces/form-control-input.interface';
-import { IRadioInputs, JNRadioControl } from './components/controls/radio/radio.component';
+import { IRadioInput, JNRadioControl } from './components/controls/radio/radio.component';
+import { JNEditorModel } from './interfaces/editor-model.type';
+import { JNRuleNode } from '../../externals/nodes/rule-node/rule-node.type';
+import { JNLocationNode } from '../../externals/nodes/location-node/location-node.type';
+import { Events } from '../../core/services/event.service';
+import { APP_READY } from '../../core/services/application-core.service';
 
 @Component({
   selector: 'jn-node-editor',
@@ -15,63 +20,36 @@ import { IRadioInputs, JNRadioControl } from './components/controls/radio/radio.
 })
 export class JNEditFormComponent implements OnInit {
 
-  private activityForm: FormGroup = new FormGroup({});
-  private controlSchemas: Array<IJNFormControl> = [];
+  @Input()
+  editorModel: JNEditorModel;
+
+  private controls: IJNFormControl[] = [];
+  private formGroup: FormGroup = new FormGroup({});
 
   constructor(
-    private formBuilder: FormBuilder,
+    private events: Events
   ) { }
 
   ngOnInit() {
-    let input: ITextInput = {
-      label: '规则名称',
-      maxLength: 50
-    };
-
-    let radioInputs: IRadioInputs = {
-      label: '何时出发',
-      options: [
-        { text: '由假转真', value: 'FALSE_TO_TRUE' },
-        { text: '由真转假', value: 'TRUE_TO_FALSE' },
-        { text: '改变', value: 'CHANGE' }
-      ]
-    };
-
-    this.controlSchemas = [
-      {
-        input: input,
-        controlType: JNTextControl,
-        $validators: [{
-          validator: (fc: FormControl) => {
-            return new Promise((resolve, reject) => {
-              if (fc.value && fc.value.length > 10) {
-                resolve(false);
-                return;
-              }
-              resolve(true);
-            });
-          },
-          errorName: 'maxLength',
-          msg: '最大长度不可超过10'
-        }]
-      },
-      {
-        input: radioInputs,
-        controlType: JNRadioControl,
-        $validators: []
-      }
-    ];
-  }
-
-  onControlReady(formControl: FormControl, i: number, schema) {
-    formControl.valueChanges.subscribe(function() {
-      console.log(formControl.value, formControl.valid, formControl.errors);
-      console.log(formControl.hasError('maxLength'));
+    // let ruleNode = new JNRuleNode();
+    // ruleNode.init({ ruleName: 'rule1', description: 'description', triggerWhen: 'TRUE_TO_FALSE' });
+    let locationNode = new JNLocationNode();
+    locationNode.init({ locationStr: ['08', '0801'] });
+    this.events.on(APP_READY, () => {
+      setTimeout(() => {
+        this.editorModel = locationNode.createEditorModel();
+        this.prepare();
+      }, 50);
     });
-    this.activityForm.addControl(i.toLocaleString(), formControl);
   }
 
-  submit(value) {
+  prepare() {
+    if (!this.editorModel) return;
+    this.formGroup = this.editorModel.formGroup;
+    this.controls = this.editorModel.controlsToArray();
   }
 
+  submit() {
+    console.log(this.editorModel.submit());
+  }
 }

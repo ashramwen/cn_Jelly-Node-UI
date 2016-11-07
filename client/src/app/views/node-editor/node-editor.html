@@ -6,8 +6,10 @@
     </jn-text>
   </form>
   -->
-  <form [formGroup]="activityForm" (ngSubmit)="submit(activityForm.value)">
-    <jn-control-container *ngFor="let schema of controlSchemas; let i=index" 
-    [controlSchema]="schema" (ready)="onControlReady($event, i, schema)"></jn-control-container>
+  <form [formGroup]="formGroup" (ngSubmit)="submit(activityForm.value)">
+    <jn-control-container *ngFor="let control of controls" 
+    [controlSchema]="control"></jn-control-container>
+
+    <button (click)="submit()" type="button">Submit</button>
   </form>
 </div>

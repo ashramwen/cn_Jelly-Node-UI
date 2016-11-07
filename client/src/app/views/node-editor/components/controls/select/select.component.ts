@@ -2,6 +2,7 @@ import { forwardRef, Component, Input, Output } from '@angular/core';
 import { JNFormControl } from '../../control.component';
 import { FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { JNControl } from '../../control.annotation';
+import { IJNFormControlInput } from '../../../interfaces/form-control-input.interface';
 
 const VALUE_ACCESSOR: any = {
     provide: NG_VALUE_ACCESSOR,
@@ -9,7 +10,7 @@ const VALUE_ACCESSOR: any = {
     multi: true
 };
 
-export interface ISelectData {
+export interface ISelectInput extends IJNFormControlInput{
   options: Array<ISelectOption>;
   selectedByDefault?: boolean;
 }
@@ -21,7 +22,10 @@ interface ISelectOption {
 
 @JNControl({
   template: `
-    <jn-select [data]="inputs.data" [label]="inputs.label" [disabled]="inputs.disabled"
+    <jn-select 
+      [label]="inputs.label" 
+      [disabled]="inputs.disabled"
+      [options]="inputs.options"
       [formControl]="formControl">
     </jn-select>
   `
@@ -31,7 +35,16 @@ interface ISelectOption {
   styles: [
     require('./select.component.scss')
   ],
-  template: require('./select.component.html'),
+  template: `
+    <div class="jn-form">
+      <label>{{label | translate}}</label>
+      <select 
+        [(ngModel)]="value"
+        [disabled]="disabled">
+        <option *ngFor="let o of options" [value]="o.value">{{o.text}}</option>
+      </select>
+    </div>
+  `,
   providers: [VALUE_ACCESSOR]
 })
 export class JNSelectControl extends JNFormControl {
@@ -43,4 +56,6 @@ export class JNSelectControl extends JNFormControl {
   protected label: String;
   @Input()
   protected data: any;
+  @Input()
+  protected options: ISelectOption;
 }

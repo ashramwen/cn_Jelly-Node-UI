@@ -10,7 +10,7 @@ const VALUE_ACCESSOR: any = {
     multi: true
 };
 
-export interface IRadioInputs extends IJNFormControlInput {
+export interface IRadioInput extends IJNFormControlInput {
   options: Array<IRadioOption>;
 }
 
@@ -34,7 +34,13 @@ interface IRadioOption {
   styles: [
     require('./radio.component.scss')
   ],
-  template: require('./radio.component.html'),
+  template: `
+    <md-radio-group [(ngModel)]="value">
+      <md-radio-button *ngFor="let d of options" [value]="d.value">
+        {{d.text}}
+      </md-radio-button>
+    </md-radio-group>
+  `,
   providers: [VALUE_ACCESSOR]
 })
 export class JNRadioControl extends JNFormControl {

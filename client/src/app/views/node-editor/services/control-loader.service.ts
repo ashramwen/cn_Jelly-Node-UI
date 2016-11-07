@@ -11,6 +11,8 @@ import { IJNFormControl } from '../interfaces/form-control.interface';
 import { JNTemplateBuilder } from './template-builder.service';
 import { ValidatorGenerator } from '../components/services/validator-generator.service';
 import { BrowserModule } from '@angular/platform-browser';
+import { JNEditorModel } from '../interfaces/editor-model.type';
+import { Request } from '@angular/http';
 
 interface IDynamicComponent {
   inputs: IJNFormControlInput;
@@ -26,6 +28,16 @@ export class JNControlLoader {
     private validatorGenerator: ValidatorGenerator
   ) { }
 
+  /*  
+  public buildFormGroup(nodeEditorModel: JNEditorModel, dynamicComponentTarget: ViewContainerRef) {
+    let promises = [];
+    nodeEditorModel.literal((fieldName, controlSchema) => {
+      promises.push(this.buildComponent(controlSchema, dynamicComponentTarget));
+    });
+    return Promise.all(promises);
+  }
+  */
+
   public buildComponent(controlSchema: IJNFormControl, dynamicComponentTarget: ViewContainerRef) {
     return new Promise<IDynamicComponent>((resolve) => {
       let template = this.templateBuilder.prepareTemplate(controlSchema);
@@ -38,11 +50,11 @@ export class JNControlLoader {
               .createComponent(factory);
 
           let component = componentRef.instance;
-          let fc = new FormControl();
           let validators = this.validatorGenerator.generate(controlSchema.$validators);
+          let formControl = controlSchema.formControl;
 
-          component.formControl = fc;
-          fc.setAsyncValidators(validators.map(validator => validator.$validator));
+          component.formControl = formControl;
+          formControl.setAsyncValidators(validators.map(validator => validator.$validator));
 
           this.injectInputs(component, controlSchema.input);
           resolve(component);

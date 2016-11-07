@@ -11,7 +11,7 @@ import { JNNodeModel } from './jn-node-model.type';
 import { JNNodeUnconnectableException } from './exceptions/node-unconnectable-exception.type';
 import { JNApplication } from '../services/application-core.service';
 import { JNException } from './exceptions/exception.type';
-import { IJNEditorModel } from '../../views/node-editor/interfaces/editor-model.interface';
+import { JNEditorModel } from '../../views/node-editor/interfaces/editor-model.type';
 
 
 export abstract class JNBaseNode {
@@ -20,7 +20,8 @@ export abstract class JNBaseNode {
   static color: String; // node color display on canvas
   static borderColor: String; // node border color on canvas
   static accepts: Array<typeof JNBaseNode>; // node types that can be accepted;
-  static editorModel: IJNEditorModel;
+  static nodeModel: typeof JNNodeModel;
+  static editorModel: typeof JNEditorModel;
   static infoModel: IJNInfoPanelModel;
   static paletteModel: IJNPaletteModel;
 
@@ -135,7 +136,11 @@ export abstract class JNBaseNode {
    */
   public init(data: Object) {
     return this.parser(data).then((model) => {
-      this.model.extends(model);
+      if (!this.model) {
+        this.model = model;
+      } else {
+        this.model.extends(model);
+      }
     });
   }
 
@@ -147,5 +152,14 @@ export abstract class JNBaseNode {
   public connectable(target: typeof JNBaseNode): boolean {
     let accepts: Array<typeof JNBaseNode> = this.constructor['accepts'];
     return accepts.indexOf(target) > -1;
+  }
+  /**
+   * @desc create an editor model instance
+   */
+  public createEditorModel() {
+    let clazz = <typeof JNBaseNode>(this.constructor);
+    let editorModel: JNEditorModel = new (<any>clazz.editorModel);
+    editorModel.load(this.model);
+    return editorModel;
   }
 }

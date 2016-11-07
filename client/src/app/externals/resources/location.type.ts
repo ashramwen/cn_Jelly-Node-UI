@@ -1,14 +1,18 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { Resource, ResourceParams, ResourceAction, ResourceMethod } from 'ng2-resource-rest';
-import { RequestMethod } from '@angular/http';
+import { RequestMethod, Http } from '@angular/http';
 import { JNConfig } from '../../jn-config';
 import { BeehiveResource } from './beehive-resource.type';
+import { AuthenHelperSerivce } from '../services/authen-helper.service';
+import { CacheContextService } from '../../core/services/cache-context.service';
 
 export interface ILocation {
   location: String;
   displayName: String;
-  subLocations: Array<ILocation>;
+  subLocations: { [key: string]: ILocation };
 }
+
+export const CACHE_LOCATION = 'beehive.location';
 
 @Injectable()
 @ResourceParams({
@@ -17,13 +21,22 @@ export interface ILocation {
 export class BeehiveLocation extends BeehiveResource {
 
   @ResourceAction({
-    isArray: true,
     method: RequestMethod.Get,
-    headers: {
-      authorization: 'Bearer super_token',
-      contentType: 'application/json'
-    }
+    path: '/fullTree'
   })
   getAll: ResourceMethod<any, ILocation[]>;
 
+  constructor(http: Http, injector: Injector,
+    private authHelper: AuthenHelperSerivce,
+    private cacheContext: CacheContextService) {
+    super(http, injector, authHelper);
+  }
+
+  cache(location) {
+    this.cacheContext.set(CACHE_LOCATION, location);
+  }
+
+  get isCached(): boolean {
+    return !!this.cacheContext.get(CACHE_LOCATION);
+  }
 }

@@ -1,3 +1,15 @@
 <div>
-  {{"APP_NAME"}}
+  <!--
+  <form [formGroup]="activityForm" (ngSubmit)="submit(activityForm.value)">
+    <jn-text [data]="data" [label]="'label'" 
+      formControlName="testValue">
+    </jn-text>
+  </form>
+  -->
+  <form [formGroup]="formGroup" (ngSubmit)="submit(activityForm.value)">
+    <jn-control-container *ngFor="let control of controls" 
+    [controlSchema]="control"></jn-control-container>
+
+    <button (click)="submit()" type="button">Submit</button>
+  </form>
 </div>

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
+
 import { JNConfig } from '../../jn-config';
 import { CacheContextService } from '../../core/services/cache-context.service';
 import { CredentialException } from '../../core/models/exceptions/credential-exception.type';
@@ -9,7 +10,7 @@ export interface ILoginPayload {
   permanentToken?: boolean;
   userName: String;
 }
-export const CREDENTIAL = 'beehive-token';
+export const CACHE_CREDENTIAL = 'beehive.token';
 export interface ICredential {
   id?: number;
   createDate?: number;
@@ -35,7 +36,7 @@ export class AuthenHelperSerivce {
   ) { }
 
   storeCredential(credential: ICredential) {
-    this.cacheContext.set(CREDENTIAL, credential);
+    this.cacheContext.set(CACHE_CREDENTIAL, credential);
   }
 
   /**
@@ -43,7 +44,7 @@ export class AuthenHelperSerivce {
    * @desc extend http headers with Authorization Header
    */
   extendHeaders(headers: Headers) {
-    let credential: ICredential = this.cacheContext.get(CREDENTIAL);
+    let credential: ICredential = this.cacheContext.get(CACHE_CREDENTIAL);
     if (!credential) {
       throw new CredentialException();
     }
@@ -63,7 +64,7 @@ export class AuthenHelperSerivce {
    */
   hasLoggedIn(): Promise<boolean | ICredential> {
     return new Promise<boolean | ICredential>((resolve, reject) => {
-      let credential: ICredential = this.cacheContext.get(CREDENTIAL);
+      let credential: ICredential = this.cacheContext.get(CACHE_CREDENTIAL);
       if (!credential) {
         reject();
         return;
@@ -81,7 +82,7 @@ export class AuthenHelperSerivce {
   }
 
   clearToken() {
-    this.cacheContext.remove(CREDENTIAL);
+    this.cacheContext.remove(CACHE_CREDENTIAL);
   }
 
 }

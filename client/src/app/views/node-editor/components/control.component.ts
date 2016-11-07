@@ -2,28 +2,21 @@ import {
   Component, Input, Output,
   ElementRef, Renderer, NgZone, SimpleChange
 } from '@angular/core';
-import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup, FormControl, ControlValueAccessor } from '@angular/forms';
+import { IControlOptions } from './control.annotation';
 
-const noop = () => {
-};
+export abstract class JNFormControl implements ControlValueAccessor {
+  static template: string;
+  @Input()
+  protected abstract disabled: boolean;
+  @Input()
+  protected abstract hidden: boolean;
+  @Input()
+  protected abstract label: String;
 
-export abstract class NodeFormControl {
-  @Input()
-  protected disabled: boolean;
-  @Input()
-  protected fieldName: String;
-  @Input()
-  protected hidden: String;
-  @Input()
-  protected applicationContext;
-  @Input()
-  protected configContext;
-  @Input()
-  protected label: String;
-
-  private onChangeCallback: (_: any) => void = noop;
-  private onTouchedCallback: () => void = noop;
-  private _value;
+  protected _value = null;
+  protected onChange = (_: any) => {};
+  protected onTouched = () => {};
 
   constructor(
     private el: ElementRef,
@@ -39,10 +32,10 @@ export abstract class NodeFormControl {
   // set accessor including call the onchange callback
   set value(v: any) {
     if (v !== this._value) {
-      this._zone.run(() => {
-        this._value = v;
-        this.onChangeCallback(v);
-      });
+      this._value = v;
+      if (this.onChange) {
+        this.onChange(v);
+      }
     }
   }
 
@@ -55,11 +48,11 @@ export abstract class NodeFormControl {
 
   // From ControlValueAccessor interface
   registerOnChange(fn: any) {
-    this.onChangeCallback = fn;
+    this.onChange = fn;
   }
 
   // From ControlValueAccessor interface
   registerOnTouched(fn: any) {
-    this.onTouchedCallback = fn;
+    this.onTouched = fn;
   }
 }

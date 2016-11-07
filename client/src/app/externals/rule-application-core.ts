@@ -1,15 +1,19 @@
+import { Http } from '@angular/http';
+import { Injectable } from '@angular/core';
+
 import { JNApplication } from '../core/services/application-core.service';
 import { ApplicationContextService } from '../core/services/application-context.service';
 import { ConfigContextService } from '../core/services/config-context.service';
 import { CacheContextService } from '../core/services/cache-context.service';
-import { Http } from '@angular/http';
-import { Injectable } from '@angular/core';
 import { BEEHIVE_HEADERS, JNConfig } from '../jn-config';
-import { CREDENTIAL, AuthenHelperSerivce } from './services/authen-helper.service';
+import { AuthenHelperSerivce } from './services/authen-helper.service';
 import { Events } from '../core/services/event.service';
+import { ResourceService } from './resources/resources.service';
+import { CACHE_LOCATION } from './resources/location.type';
 
 @Injectable()
 export class RuleApplication extends JNApplication {
+  static instance: JNApplication;
 
   constructor(
     public applicationContext: ApplicationContextService,
@@ -17,9 +21,11 @@ export class RuleApplication extends JNApplication {
     public configContext: ConfigContextService,
     public http: Http,
     public events: Events,
-    private authenHelper: AuthenHelperSerivce
+    public resources: ResourceService,
+    private authenHelper: AuthenHelperSerivce,
   ) {
     super(applicationContext, cacheContext, configContext, http, events);
+    RuleApplication.instance = this;
   }
 
   protected init() {
@@ -32,9 +38,20 @@ export class RuleApplication extends JNApplication {
   }
 
   protected lazyLoading() {
-    let apis = this.cacheContext.get('apis');
     return new Promise((resolve) => {
-      resolve(true);
+      let pList = [];
+
+      // cache location
+      if (!this.resources.$location.isCached) {
+        let promise = this.resources.$location.getAll({}, (location) => {
+          this.resources.$location.cache(location);
+        }).$observable.toPromise();
+        pList.push(promise);
+      }
+
+      Promise.all(pList).then(() => {
+        resolve(true);
+      });
     });
   }
 }

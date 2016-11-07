@@ -1,6 +1,5 @@
 import { JNBaseNode } from '../../../core/models/jn-base-node.type';
 import { JNNode } from '../../../core/models/node-annotation';
-import { IJNNodeModel} from '../../../core/models/interfaces';
 import { JNRuleNodeEditorModel } from './rule-node-editor-model.type';
 import { JNRuleInfoPanelModel } from './rule-node-info-panel-model.type';
 import { JNRulePaletteModel } from './rule-node-palette-model.type';
@@ -11,11 +10,13 @@ import { JNRuleNodeModel } from './rule-node-model.type';
   color: '',
   borderColor: '',
   accepts: [],
-  editorModel: JNRuleNodeEditorModel.instance,
+  editorModel: JNRuleNodeEditorModel,
   infoPanelModel: JNRuleInfoPanelModel.instance,
   paletteModel: JNRulePaletteModel.instance
 })
 export class JNRuleNode extends JNBaseNode  {
+  protected model: JNRuleNodeModel;
+
   public get body (){
     return '';
   }
@@ -30,18 +31,19 @@ export class JNRuleNode extends JNBaseNode  {
     });
   }
 
-  protected model: JNRuleNodeModel;
 
   protected buildOutput(): Promise<Object> {
     return null;
   }
 
   protected formatter(): Promise<Object> {
-    return null;
+    return this.model.serialize();
   }
 
-  protected parser(data: Object): Promise<IJNNodeModel> {
-    return null;
+  protected parser(data: Object): Promise<JNRuleNodeModel> {
+    return new Promise((resolve) => {
+      resolve(JNRuleNodeModel.deserialize(data));
+    });
   }
 
   protected listener() {

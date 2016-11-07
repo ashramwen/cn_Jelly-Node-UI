@@ -31,7 +31,11 @@ export class BeehiveThing extends BeehiveResource {
   })
   query: ResourceMethod<IThingRequest, IThing[]>;
 
-  constructor(http: Http, injector: Injector, authHelper: AuthenHelperSerivce) {
+  constructor(
+    http: Http,
+    injector: Injector,
+    authHelper: AuthenHelperSerivce,
+    private cacheContext: CacheContextService) {
     super(http, injector, authHelper);
   }
 

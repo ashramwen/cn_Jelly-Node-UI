@@ -2,9 +2,10 @@ import { INodePosition } from './interfaces';
 import { JNBaseNode } from './jn-base-node.type';
 import { JsonProperty, MapUtils, Serializable } from '../../../bin/JsonMapper';
 import { JNException } from './exceptions/exception.type';
+import { INodeBody } from './interfaces/node-body.interface';
 
 @Serializable()
-export abstract class JNNodeModel {
+export abstract class JNNodeModel implements INodeBody {
 
   static deserialize: (obj: any) => JNNodeModel;
 

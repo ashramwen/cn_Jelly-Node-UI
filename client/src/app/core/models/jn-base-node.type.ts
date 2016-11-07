@@ -12,6 +12,17 @@ import { JNNodeUnconnectableException } from './exceptions/node-unconnectable-ex
 import { JNApplication } from '../services/application-core.service';
 import { JNException } from './exceptions/exception.type';
 import { JNEditorModel } from '../../views/node-editor/interfaces/editor-model.type';
+import { INodeBody } from './interfaces/node-body.interface';
+import { JNUtils } from '../../share/util';
+
+export interface INodeMap {
+  accepted: {
+    [id: number]: JNBaseNode;
+  };
+  outputTo: {
+    [id: number]: JNBaseNode;
+  };
+}
 
 export abstract class JNBaseNode {
 
@@ -41,11 +52,14 @@ export abstract class JNBaseNode {
   /**
    * @desc return body
    */
-  public get body() {
-    return this.formatter();
+  public get body(): INodeBody {
+    return <INodeBody>this.formatter();
   }
 
-  private inputFlows: Array<JNBaseNode> = []; // accepted nodes
+  public nodeMap: INodeMap = {
+    accepted: {},
+    outputTo: {}
+  };
   private stream: Subscriber<IJNNodePayload>; // stream publisher
   private output = new Observable((subscriber: Subscriber<IJNNodePayload>) => {
     this.stream = subscriber;
@@ -79,17 +93,33 @@ export abstract class JNBaseNode {
    */
   protected abstract buildOutput(): Promise<Object>;
 
+  /**
+   * @desc update node body when when node is disconnected
+   * @param  {JNBaseNode} node
+   * @returns Promise
+   */
   protected abstract whenRejected(node: JNBaseNode): Promise<boolean>;
+
+  /**
+   * @desc should reject connection with given node;
+   *       data-level validation;
+   * @param  {JNBaseNode} target
+   * @returns boolean
+   */
+  protected shouldReject(target: JNBaseNode): boolean {
+    return false;
+  }
 
   /**
    * @param  {JNBaseNode} node
    * @desc description
    */
   public accept(node: JNBaseNode) {
-    if (!this.connectable(<typeof JNBaseNode>node.constructor)) {
+    if (!this.connectable(node)) {
       throw new JNNodeUnconnectableException(this, node);
     }
-    this.inputFlows.push(node);
+    this.nodeMap.accepted[node.body.nodeID] = node;
+    node.nodeMap.outputTo[this.body.nodeID] = this;
     node.output.subscribe(this.listener.bind(this));
   }
 
@@ -100,7 +130,8 @@ export abstract class JNBaseNode {
   public reject(node: JNBaseNode): Promise<boolean | JNException> {
     return new Promise((resolve, reject) => {
       this.whenRejected(node).then(() => {
-        this.inputFlows.splice(this.inputFlows.indexOf(node), 1);
+        delete this.nodeMap.accepted[node.body.nodeID];
+        delete node.nodeMap.outputTo[this.body.nodeID];
         resolve(node);
       }, (err) => {
         reject(err);
@@ -144,14 +175,32 @@ export abstract class JNBaseNode {
   }
 
   /**
+   * @desc remove node
+   */
+  public remove() {
+    JNUtils.toArray(this.nodeMap.accepted).forEach((t: { key: string; value: JNBaseNode}) => {
+      let node = t.value;
+      delete node.nodeMap.outputTo[node.body.nodeID];
+    });
+
+    JNUtils.toArray(this.nodeMap.outputTo).forEach((t: { key: string; value: JNBaseNode}) => {
+      let node = t.value;
+      delete node.nodeMap.accepted[node.body.nodeID];
+      node.reject(this);
+    });
+  }
+
+  /**
    * @param  {JNBaseNode} target output node
    * @returns boolean
    * @desc if thow target is connectable
    */
-  public connectable(target: typeof JNBaseNode): boolean {
-    let accepts: Array<typeof JNBaseNode> = this.constructor['accepts'];
-    return accepts.indexOf(target) > -1;
+  public connectable(target: JNBaseNode): boolean {
+    if (this._shouldReject(<typeof JNBaseNode>target.constructor)) return false;
+    if (this.shouldReject(target)) return false;
+    return true;
   }
+
   /**
    * @desc create an editor model instance
    */
@@ -160,5 +209,14 @@ export abstract class JNBaseNode {
     let editorModel: JNEditorModel = new (<any>clazz.editorModel);
     editorModel.load(this.model);
     return editorModel;
+  }
+
+  /**
+   * @desc type-level connectable check
+   * @param  {typeof JNBaseNode} target
+   */
+  private _shouldReject(target: typeof JNBaseNode): boolean {
+    let accepts: Array<typeof JNBaseNode> = this.constructor['accepts'];
+    return accepts.indexOf(target) > -1;
   }
 }

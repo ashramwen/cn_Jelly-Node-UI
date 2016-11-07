@@ -84,14 +84,18 @@ export class JNLocationNodeEditorModel extends JNEditorModel {
         || !subLocations.subLocations
         || !Object.keys(subLocations.subLocations).length) break;
 
+      let options = JNUtils.toArray(subLocations.subLocations).map((location) => {
+        return {
+          text: (<ILocation>location.value).location,
+          value: (<ILocation>location.value).location
+        };
+      });
+
+      options.unshift({ text: 'terms.pleaseSelect', value: null });
+
       set.push({
         label: labels[i],
-        options: JNUtils.toArray(subLocations.subLocations).map((location) => {
-          return {
-            text: (<ILocation>location.value).location,
-            value: (<ILocation>location.value).location
-          };
-        }),
+        options: options,
         fieldName: i
       });
     }

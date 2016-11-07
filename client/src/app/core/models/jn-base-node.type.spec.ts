@@ -6,7 +6,6 @@ import { By } from '@angular/platform-browser';
 
 import { JNBaseNode } from '../../core/models/jn-base-node.type';
 import { JNNode } from '../../core/models/node-annotation';
-import { IJNNodeModel } from '../../core/models/interfaces';
 import { JNNodeModel } from './jn-node-model.type';
 import { JNNodeUnconnectableException } from './exceptions/node-unconnectable-exception.type';
 import { Serializable } from '../../../bin/JsonMapper';
@@ -104,7 +103,7 @@ describe('JN base node', function () {
     inject([JNApplication],
       (application: JNApplication) => {
         let device = new JNTestNode1();
-        expect(device.connectable(JNTestNode2)).toEqual(true);
+        expect(device.connectable(new JNTestNode2)).toEqual(true);
       })
   ));
 
@@ -112,7 +111,7 @@ describe('JN base node', function () {
     inject([JNApplication],
       (application: JNApplication) => {
         let device = new JNTestNode2();
-        expect(device.connectable(JNTestNode1)).toEqual(false);
+        expect(device.connectable(new JNTestNode1)).toEqual(false);
       })
   ));
 

@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import * as d3 from 'd3';
 
 import { JNBaseNode } from '../../../core/models/jn-base-node.type';
-require('./bihisankey.js');
 
 @Injectable()
 export class D3HelperService {
@@ -10,11 +9,12 @@ export class D3HelperService {
   private node_width = 180;
   private node_height = 40;
 
-  private activeNodes: JNBaseNode[];
   private vis: any;
   private drag: any;
 
   private data: JNBaseNode[] = [];
+  private inputs: number[][];
+  private outputs: number[][];
 
   constructor() {
 
@@ -45,16 +45,16 @@ export class D3HelperService {
 
     this.drag = d3.drag()
       .on('start', dragstarted)
-      .on('drag', dragged)
+      .on('drag', dragging)
       .on('end', dragended);
 
     function dragstarted(d) {
       d3.select(this).raise().classed('active', true);
     }
 
-    function dragged(d) {
+    function dragging(d) {
       d3.select(this)
-        .attr('transform', function (d) {
+        .attr('transform', (d: any) => {
           d.position = {
             x: Math.max(0, Math.min(space_width - node_width, d3.event.x)),
             y: Math.max(0, Math.min(space_height - node_height, d3.event.y))
@@ -63,7 +63,7 @@ export class D3HelperService {
           d.y = d.position.y;
           return `translate(${d.position.x}, ${d.position.y})`;
         });
-      self.updateLink(self.data[1], self.data[0]);
+      // self.updateLink(self.data[1], self.data[0]);
     }
 
     function dragended(d) {
@@ -73,16 +73,18 @@ export class D3HelperService {
 
   drawNode(node: any) {
     this.data = node;
-    var rects = this.vis.selectAll('g.node').data(this.data);
+    var rects = this.vis.selectAll('g.node_group').data(this.data);
+    rects.exit().remove();
     var g = rects.enter()
       .append('svg:g')
       .classed('node_group', true)
-      .attr('transform', d => {
+      .attr('transform', (d: any) => {
         d.x = d.position.x;
         d.y = d.position.y;
         return `translate(${d.position.x}, ${d.position.y})`;
       })
       .call(this.drag);
+
     g.insert('svg:rect')
       .classed('node', true)
       .attr('width', this.node_width)
@@ -103,7 +105,7 @@ export class D3HelperService {
 
     g.insert('svg:path')
       .attr('d', 'M 40 1 l 0 40');
-      // .attr('stroke-opacity', '0.1')
+    // .attr('stroke-opacity', '0.1')
 
     g.insert('svg:rect')
       .classed('port', true)
@@ -112,7 +114,17 @@ export class D3HelperService {
       .attr('height', 10)
       .attr('rx', 3)
       .attr('ry', 3)
-      .attr('transform', 'translate(-5, 15)');
+      .attr('transform', 'translate(-5, 15)')
+      .on("mousedown", (d, i) => {
+        console.log(this.vis);
+        d3.event.preventDefault();
+      }).on("mouseup", (d, i) => {
+        console.log(this.vis);
+        d3.event.preventDefault();
+      }).on("mousemove", (d, i) => {
+        console.log(this.vis);
+        d3.event.preventDefault();
+      });
 
     g.insert('svg:rect')
       .classed('port', true)
@@ -121,9 +133,51 @@ export class D3HelperService {
       .attr('height', 10)
       .attr('rx', 3)
       .attr('ry', 3)
-      .attr('transform', 'translate(175, 15)');
+      .attr('transform', 'translate(175, 15)')
+      .on("mousedown", (d, i) => {
+        console.log(this.vis);
+        d3.event.preventDefault();
+      }).on("mouseup", (d, i) => {
+        console.log(this.vis);
+        d3.event.preventDefault();
+      }).on("mousemove", (d, i) => {
+        console.log(this.vis);
+        d3.event.preventDefault();
+      });
 
-    this.drawLink(this.data[1], this.data[0]);
+    function portMouseDown(d, portType, portIndex) {
+    }
+
+  }
+
+  drawLink = (s, t) => {
+    let linkData = {
+      source: { x: s.x, y: s.y },
+      target: { x: t.x, y: t.y }
+    };
+    let path = this.vis.selectAll('g.link').data([linkData]);
+    path.enter()
+      .insert('svg:g')
+      .classed('link', true)
+      .append('svg:path')
+      .attr('d', this.line)
+  }
+
+  helperOffset(ui) {
+    return d3.touches(ui.helper.get(0))[0] || d3.mouse(ui.helper.get(0));
+  }
+
+  mousePos(e){
+    return d3.touches(e)[0] || d3.mouse(e);
+  }
+
+  private updateLink = (s, t) => {
+    let linkData = {
+      source: { x: s.x, y: s.y },
+      target: { x: t.x, y: t.y }
+    };
+    let path = this.vis.selectAll('g.link').selectAll('path').data([linkData]);
+    path.attr('d', this.line);
   }
 
   private line = (d) => {
@@ -141,32 +195,10 @@ export class D3HelperService {
     if (dx < 0) {
       scale += 2 * (Math.min(5 * self.node_width, Math.abs(dx)) / (5 * self.node_width));
       if (Math.abs(dy) < 3 * self.node_height) {
-        scaleY = ((dy > 0) ? 0.5 : -0.5) * (((3 * self.node_height) - Math.abs(dy)) / (3 * self.node_height)) * (Math.min(self.node_width, Math.abs(dx)) / (self.node_width));
+        scaleY = ((dy > 0) ? 0.5 : -0.5) * ((3 * self.node_height - Math.abs(dy)) / (3 * self.node_height)) * (Math.min(self.node_width, Math.abs(dx)) / self.node_width);
       }
     }
-    let v = `M${d.source.x + self.node_width + 5} ${d.source.y + 20} C ${d.source.x + self.node_width + scale * self.node_width} ${d.source.y + 20 + scaleY * self.node_height} ${d.target.x - scale * self.node_width} ${d.target.y + 20 - scaleY * self.node_height} ${d.target.x - 5} ${d.target.y + 20}`;
+    let v = `M${d.source.x + self.node_width + 5} ${d.source.y + self.node_height / 2} C ${d.source.x + self.node_width + scale * self.node_width} ${d.source.y + self.node_height / 2 + scaleY * self.node_height} ${d.target.x - scale * self.node_width} ${d.target.y + self.node_height / 2 - scaleY * self.node_height} ${d.target.x - 5} ${d.target.y + self.node_height / 2}`;
     return v;
-  }
-
-  private drawLink = (s, t) => {
-    let linkData = {
-      source: { x: s.x, y: s.y },
-      target: { x: t.x, y: t.y }
-    };
-    let path = this.vis.selectAll('g.link').data([linkData]);
-    path.enter()
-      .insert('svg:g')
-      .classed('link', true)
-      .append('svg:path')
-      .attr('d', this.line)
-  }
-
-  private updateLink = (s, t) => {
-    let linkData = {
-      source: { x: s.x, y: s.y },
-      target: { x: t.x, y: t.y }
-    };
-    let path = this.vis.selectAll('g.link').selectAll('path').data([linkData]);
-    path.attr('d', this.line);
   }
 }

@@ -66,10 +66,10 @@ interface ErrorStackTraceLimit {
 
 
 // Extend typings
-interface NodeRequire extends WebpackRequire {}
-interface ErrorConstructor extends ErrorStackTraceLimit {}
-interface NodeModule extends WebpackModule {}
-interface Global extends GlobalEnvironment  {}
+interface NodeRequire extends WebpackRequire { }
+interface ErrorConstructor extends ErrorStackTraceLimit { }
+interface NodeModule extends WebpackModule { }
+interface Global extends GlobalEnvironment { }
 
 
 declare namespace Reflect {
@@ -116,4 +116,9 @@ interface Thenable<T> {
     onFulfilled?: (value: T) => U | Thenable<U>,
     onRejected?: (error: any) => void): Thenable<U>;
   catch<U>(onRejected?: (error: any) => U | Thenable<U>): Thenable<U>;
+}
+
+declare module "d3" {
+  export * from 'd3-drag';
+  export * from 'd3-selection';
 }

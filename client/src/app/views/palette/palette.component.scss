@@ -1,0 +1,46 @@
+.palette_node {
+    position: relative;
+    width: 180px;
+    height: 40px;
+    cursor: move;
+    /*background-color: #ddd;*/
+    margin: 10px auto;
+    border-radius: 10px;
+    border: 1px solid #999;
+    background-position: 5% 50%;
+    background-repeat: no-repeat;
+    background-size: contain;
+    .palette_label {
+        font-size: 14px;
+        margin-left: 28px;
+        line-height: 40px;
+        overflow: hidden;
+        text-align: center;
+    }
+    .palette_icon {
+        position: absolute;
+        text-align: center;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 30px;
+        border-right: 1px solid rgba(0, 0, 0, 0.1);
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+    .palette_port {
+        position: absolute;
+        top: 15px;
+        left: -5px;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        background-color: #d9d9d9;
+        border-radius: 3px;
+        width: 10px;
+        height: 10px;
+        border: 1px solid #999;
+        &.output {
+            left: auto;
+            right: -6px;
+        }
+    }
+}

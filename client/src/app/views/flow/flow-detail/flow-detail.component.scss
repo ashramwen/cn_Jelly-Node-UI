@@ -1,18 +1,22 @@
 .main-container {
     position: relative;
+    display: flex;
 }
 
 .palette {
     float: left;
-    width: 180px;
+    width: 200px;
+    border: 1px solid #666;
 }
 
 .canvas {
     float: left;
     width: 960px;
+    border: 1px solid #666;
 }
 
 .info-panel {
     float: left;
-    width: 270px;
+    width: 250px;
+    border: 1px solid #666;
 }

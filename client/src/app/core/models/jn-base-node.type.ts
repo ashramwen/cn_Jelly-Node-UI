@@ -12,7 +12,17 @@ import { JNNodeUnconnectableException } from './exceptions/node-unconnectable-ex
 import { JNApplication } from '../services/application-core.service';
 import { JNException } from './exceptions/exception.type';
 import { JNEditorModel } from '../../views/node-editor/interfaces/editor-model.type';
+import { INodeBody } from './interfaces/node-body.interface';
+import { JNUtils } from '../../share/util';
 
+export interface INodeMap {
+  accepted: {
+    [id: number]: JNBaseNode;
+  };
+  outputTo: {
+    [id: number]: JNBaseNode;
+  };
+}
 
 export abstract class JNBaseNode {
 
@@ -42,19 +52,14 @@ export abstract class JNBaseNode {
   /**
    * @desc return body
    */
-  public get body() {
-    return this.formatter();
+  public get body(): INodeBody {
+    return <INodeBody>this.formatter();
   }
 
-  /**
-   * @desc accepted nodes
-   * @returns Array<JNBaseNode>
-   */
-  public get acceptedNodes(): Array<JNBaseNode> {
-    return this.inputFlows;
-  }
-
-  private inputFlows: Array<JNBaseNode> = []; // accepted nodes
+  public nodeMap: INodeMap = {
+    accepted: {},
+    outputTo: {}
+  };
   private stream: Subscriber<IJNNodePayload>; // stream publisher
   private output = new Observable((subscriber: Subscriber<IJNNodePayload>) => {
     this.stream = subscriber;
@@ -113,7 +118,8 @@ export abstract class JNBaseNode {
     if (!this.connectable(node)) {
       throw new JNNodeUnconnectableException(this, node);
     }
-    this.inputFlows.push(node);
+    this.nodeMap.accepted[node.body.nodeID] = node;
+    node.nodeMap.outputTo[this.body.nodeID] = this;
     node.output.subscribe(this.listener.bind(this));
   }
 
@@ -124,7 +130,8 @@ export abstract class JNBaseNode {
   public reject(node: JNBaseNode): Promise<boolean | JNException> {
     return new Promise((resolve, reject) => {
       this.whenRejected(node).then(() => {
-        this.inputFlows.splice(this.inputFlows.indexOf(node), 1);
+        delete this.nodeMap.accepted[node.body.nodeID];
+        delete node.nodeMap.outputTo[this.body.nodeID];
         resolve(node);
       }, (err) => {
         reject(err);
@@ -164,6 +171,22 @@ export abstract class JNBaseNode {
       } else {
         this.model.extends(model);
       }
+    });
+  }
+
+  /**
+   * @desc remove node
+   */
+  public remove() {
+    JNUtils.toArray(this.nodeMap.accepted).forEach((t: { key: string; value: JNBaseNode}) => {
+      let node = t.value;
+      delete node.nodeMap.outputTo[node.body.nodeID];
+    });
+
+    JNUtils.toArray(this.nodeMap.outputTo).forEach((t: { key: string; value: JNBaseNode}) => {
+      let node = t.value;
+      delete node.nodeMap.accepted[node.body.nodeID];
+      node.reject(this);
     });
   }
 

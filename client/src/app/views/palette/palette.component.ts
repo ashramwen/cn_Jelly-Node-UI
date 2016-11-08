@@ -10,6 +10,7 @@ import { JNFlow } from './../../core/models/jn-flow.type';
 import { JNBaseNode } from '../../core/models/jn-base-node.type';
 import { JNDeviceTypeNode } from './../../externals/nodes/device-type-node/device-type-node.type';
 import { JNLocationNode } from './../../externals/nodes/location-node/location-node.type';
+import { IJNPaletteNode } from './palette-node.type';
 
 @Component({
   selector: 'jn-palette',

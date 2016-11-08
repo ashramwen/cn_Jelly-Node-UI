@@ -4,11 +4,10 @@ import { IRadioInput, JNRadioControl } from '../../../views/node-editor/componen
 import { FormControl } from '@angular/forms';
 import { JNTextControl, ITextInput } from '../../../views/node-editor/components/controls/text/text.component';
 import { JNEditorModel } from '../../../views/node-editor/interfaces/editor-model.type';
-import { ISelectInput } from '../../../views/node-editor/components/controls/select/select.component';
-import { JNDevicePropertyNodeModel } from './device-property-node-model.type';
+import { ISelectInput, JNSelectControl } from '../../../views/node-editor/components/controls/select/select.component';
 import { RuleApplication } from '../../rule-application-core';
 import { JNUtils } from '../../../share/util';
-import { ISchemaProperty } from '../../resources/schema.type';
+import { JNConjunctionNodeModel } from './conjunction-node-model.type';
 import {
   JNTextAreaControl,
   ITextareaInput
@@ -21,37 +20,36 @@ export class JNDevicePropertyNodeEditorModel extends JNEditorModel {
 
   protected init() {
     this.formControls = {
-      property: {
+      conjunction: {
         input: <ISelectInput>{
-          label: '设备属性',
-          options: []
+          label: '连接表达式',
+          options: [{
+            text: '与',
+            value: 'and'
+          }, {
+            text: '或',
+            value: 'or'
+          }, {
+            text: '非',
+            value: 'nor'
+          }]
         },
-        controlType: JNTextControl,
+        controlType: JNSelectControl,
         $validators: [],
         formControl: new FormControl()
       }
     };
   }
 
-  protected parse(data: JNDevicePropertyNodeModel) {
-    let schema = RuleApplication.instance.resources.$schema.schemas[data.typeName];
-    let properties = JNUtils.toArray<ISchemaProperty>(schema.content.statesSchema.properties);
-    (<ISelectInput>this.formControls['property'].input).options = properties
-      .map((property) => {
-        return {
-          text: property.value.displayNameCN,
-          value: property.key
-        };
-      });
-    this.setValue('property', data.property);
+  protected parse(data: JNConjunctionNodeModel) {
+    this.setValue('conjunction', data.conjunction);
   }
 
-  protected formate(): JNDevicePropertyNodeModel {
-    return <JNDevicePropertyNodeModel>this.model;
+  protected formate(): JNConjunctionNodeModel {
+    return <JNConjunctionNodeModel>this.model;
   }
 
   protected updated(fieldName: string, value: any): void {
-    (<JNDevicePropertyNodeModel>this.model).property = value;
   }
 
 }

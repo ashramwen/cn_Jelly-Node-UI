@@ -16,6 +16,32 @@ export interface ISchemaRequest {
   version: number;
 }
 
+export interface ISchemaProperty {
+  displayNameCN: string;
+  enum?: { [key: string]: string | number };
+  maximum?: number;
+  minimum?: number;
+  type: 'int' | 'string' | 'boolean';
+  unit: string;
+  enumType: string;
+}
+
+export interface ISchemaAction {
+  displayNameCN: string;
+  'in': {
+    type: 'object';
+    title: string;
+    required: string[];
+    properties?: {
+      [key: string]: ISchemaProperty;
+    };
+  };
+  out: {
+    type: 'object';
+    title: string;
+  };
+}
+
 export interface ISchema {
   id: number;
   createDate: number;
@@ -31,37 +57,11 @@ export interface ISchema {
       type: 'object';
       title: string;
       properties: {
-        [key: string]: {
-          displayNameCN: string;
-          enum?: { [key: string]: string | number };
-          maximum?: number;
-          minimum?: number;
-          type: 'int' | 'string' | 'boolean';
-          unit: string;
-          enumType: string;
-        }
+        [key: string]: ISchemaProperty;
       };
     };
     actions?: {
-      [key: string]: {
-        title: string;
-        displayNameCN: string;
-        type: 'object';
-        'in': {
-          required: string[];
-        };
-        properties?: {
-          [key: string]: {
-            displayNameCN: string;
-            enum?: { [key: string]: string | number };
-            maximum?: number;
-            minimum?: number;
-            type: 'int' | 'string' | 'boolean';
-            unit: string;
-            enumType: string;
-          };
-        };
-      };
+      [key: string]: ISchemaAction;
     };
   };
 }

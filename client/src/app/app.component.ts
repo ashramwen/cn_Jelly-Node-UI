@@ -36,7 +36,6 @@ export class AppComponent implements OnInit {
         setTimeout(() => {
             translate.set('APP_NAME', 'NODE_RED', 'cn');
         }, 1000);
-        
         let nodeFlow = new JNFlow();
         let node = nodeFlow.createNode(JNLocationNode, { position: { x: 200, y: 200 } });
         let node2 = nodeFlow.createNode(JNDeviceTypeNode, { position: { x: 200, y: 200 } });
@@ -46,13 +45,6 @@ export class AppComponent implements OnInit {
 
     ngOnInit() {
         setTimeout(() => {
-            this.$thing.query({
-                type: 'Lighting',
-                locationPrefix: '08',
-                includeSubLevel: true
-            }, (res) => {
-                console.log(res);
-            });
             // let nodeFlow = new JNFlow();
             // let node = nodeFlow.createNode(JNLocationNode);
             // console.log(node);

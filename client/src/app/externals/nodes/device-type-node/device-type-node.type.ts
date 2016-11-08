@@ -11,7 +11,7 @@ import { JNLocationNode } from '../location-node/location-node.type';
   color: '',
   borderColor: '',
   accepts: [JNLocationNode],
-  editorModel: null,
+  editorModel: JNDeviceTypeNodeEditorModel,
   infoPanelModel: JNDeviceTypeInfoPanelModel.instance,
   paletteModel: JNDeviceTypePaletteModel.instance
 })
@@ -39,6 +39,10 @@ export class JNDeviceTypeNode extends JNBaseNode {
         <JNDeviceTypeNodeModel>JNDeviceTypeNodeModel.deserialize(data);
       resolve(result);
     });
+  }
+
+  protected shouldReject(node: JNBaseNode) {
+    return false;
   }
 
   protected listener() {

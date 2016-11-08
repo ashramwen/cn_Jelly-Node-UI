@@ -12,6 +12,7 @@ import { JNRuleNode } from '../../externals/nodes/rule-node/rule-node.type';
 import { JNLocationNode } from '../../externals/nodes/location-node/location-node.type';
 import { Events } from '../../core/services/event.service';
 import { APP_READY } from '../../core/services/application-core.service';
+import { JNDeviceTypeNode } from '../../externals/nodes/device-type-node/device-type-node.type';
 
 @Component({
   selector: 'jn-node-editor',
@@ -33,11 +34,15 @@ export class JNEditFormComponent implements OnInit {
   ngOnInit() {
     // let ruleNode = new JNRuleNode();
     // ruleNode.init({ ruleName: 'rule1', description: 'description', triggerWhen: 'TRUE_TO_FALSE' });
-    let locationNode = new JNLocationNode();
-    locationNode.init({ locationStr: ['08', '0801'] });
+    // let locationNode = new JNLocationNode();
+    // locationNode.init({ locationStr: ['08', '0801'] });
+
+    let deviceTypeNode = new JNDeviceTypeNode;
+    deviceTypeNode.init({ things: [], locations: ['08'], typeName: 'EnvironmentSensor' });
+
     this.events.on(APP_READY, () => {
       setTimeout(() => {
-        this.editorModel = locationNode.createEditorModel();
+        this.editorModel = deviceTypeNode.createEditorModel();
         this.prepare();
       }, 50);
     });

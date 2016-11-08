@@ -13,7 +13,7 @@ import { CACHE_LOCATION } from './resources/location.type';
 
 @Injectable()
 export class RuleApplication extends JNApplication {
-  static instance: JNApplication;
+  static instance: RuleApplication;
 
   constructor(
     public applicationContext: ApplicationContextService,
@@ -49,7 +49,12 @@ export class RuleApplication extends JNApplication {
         pList.push(promise);
       }
 
+      // cache schema
+      pList.push(this.resources.$schema.cacheAll());
+
       Promise.all(pList).then(() => {
+        // restore schemas
+        this.resources.$schema.restoreSchemas();
         resolve(true);
       });
     });

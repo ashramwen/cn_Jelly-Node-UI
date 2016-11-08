@@ -75,7 +75,7 @@ export class JNRuleNodeEditorModel extends JNEditorModel {
   }
 
   protected updated(fieldName: string, value: any): void {
-
+    
   }
 
 }

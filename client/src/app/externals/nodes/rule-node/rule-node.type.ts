@@ -18,11 +18,7 @@ export class JNRuleNode extends JNBaseNode  {
   protected model: JNRuleNodeModel;
 
   public get body (){
-    return '';
-  }
-
-  public set body(value) {
-    
+    return this.model.serialize();
   }
 
   protected whenRejected() {

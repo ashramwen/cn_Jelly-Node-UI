@@ -47,6 +47,11 @@ export abstract class JNBaseNode {
     this.model.position = position;
   }
 
+  public nodeMap: INodeMap = {
+    accepted: {},
+    outputTo: {}
+  };
+
   protected abstract model: JNNodeModel; // node model
 
   /**
@@ -56,10 +61,6 @@ export abstract class JNBaseNode {
     return <INodeBody>this.formatter();
   }
 
-  public nodeMap: INodeMap = {
-    accepted: {},
-    outputTo: {}
-  };
   private stream: Subscriber<IJNNodePayload>; // stream publisher
   private output = new Observable((subscriber: Subscriber<IJNNodePayload>) => {
     this.stream = subscriber;

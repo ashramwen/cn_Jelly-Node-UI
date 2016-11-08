@@ -36,6 +36,11 @@ export class AppComponent implements OnInit {
         setTimeout(() => {
             translate.set('APP_NAME', 'NODE_RED', 'cn');
         }, 1000);
+        
+        let nodeFlow = new JNFlow();
+        let node = nodeFlow.createNode(JNLocationNode, { position: { x: 200, y: 200 } });
+        let node2 = nodeFlow.createNode(JNDeviceTypeNode, { position: { x: 200, y: 200 } });
+        let node3 = nodeFlow.createNode(JNDeviceTypeNode, { position: { x: 200, y: 200 } });
 
     }
 

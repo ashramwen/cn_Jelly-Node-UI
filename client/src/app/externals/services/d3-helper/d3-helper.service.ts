@@ -16,6 +16,14 @@ export class D3HelperService {
   private inputs: number[][];
   private outputs: number[][];
 
+  private NODE_DRAG = false;
+  private PORT_DRAG = false;
+  private SVG_DRAG = false;
+
+  private SELECT_NODE = null;
+  private SELECT_LINK = null;
+  private SELECT_BRUSH = null;
+
   constructor() {
 
   }
@@ -33,10 +41,7 @@ export class D3HelperService {
       .attr('width', space_width)
       .attr('height', space_height)
       .attr('pointer-events', 'all')
-      .style('cursor', 'crosshair')
-      .on('mousedown', function () {
-        //focusView();
-      });
+      .style('cursor', 'crosshair');
 
     this.vis = svg
       .append('svg:g')
@@ -49,6 +54,7 @@ export class D3HelperService {
       .on('end', dragended);
 
     function dragstarted(d) {
+      console.log('drag start');
       d3.select(this).raise().classed('active', true);
     }
 
@@ -72,6 +78,7 @@ export class D3HelperService {
   }
 
   drawNode(node: any) {
+    let self = this;
     this.data = node;
     var rects = this.vis.selectAll('g.node_group').data(this.data);
     rects.exit().remove();
@@ -90,11 +97,7 @@ export class D3HelperService {
       .attr('width', this.node_width)
       .attr('height', this.node_height)
       .attr('rx', 10)
-      .attr('ry', 10)
-      .on('mouseover', e => {
-        // console.log(this);
-        // console.log(e);
-      });
+      .attr('ry', 10);
 
     g.insert('svg:text')
       .attr('x', 50)
@@ -105,26 +108,33 @@ export class D3HelperService {
 
     g.insert('svg:path')
       .attr('d', 'M 40 1 l 0 40');
-    // .attr('stroke-opacity', '0.1')
 
     g.insert('svg:rect')
-      .classed('port', true)
-      .classed('input', true)
+      .classed('port input', true)
+      // .classed('input', true)
       .attr('width', 10)
       .attr('height', 10)
       .attr('rx', 3)
       .attr('ry', 3)
       .attr('transform', 'translate(-5, 15)')
-      .on("mousedown", (d, i) => {
-        console.log(this.vis);
-        d3.event.preventDefault();
-      }).on("mouseup", (d, i) => {
-        console.log(this.vis);
-        d3.event.preventDefault();
-      }).on("mousemove", (d, i) => {
-        console.log(this.vis);
-        d3.event.preventDefault();
-      });
+      .on('mouseenter', function (d) {
+        console.log(this.parentNode);
+      })
+      .on('mouseout', function (d) {
+        console.log(d)
+      })
+      .call(d3.drag()
+        .on('start', function (d) {
+          console.log('input drag start')
+        })
+        .on('end', function (d) {
+          console.log('input drag end')
+        })
+        .on('drag', function (d) {
+          // console.log(this);
+          // console.log('input drag')
+        })
+      );
 
     g.insert('svg:rect')
       .classed('port', true)
@@ -134,16 +144,39 @@ export class D3HelperService {
       .attr('rx', 3)
       .attr('ry', 3)
       .attr('transform', 'translate(175, 15)')
-      .on("mousedown", (d, i) => {
-        console.log(this.vis);
-        d3.event.preventDefault();
-      }).on("mouseup", (d, i) => {
-        console.log(this.vis);
-        d3.event.preventDefault();
-      }).on("mousemove", (d, i) => {
-        console.log(this.vis);
-        d3.event.preventDefault();
-      });
+      .call(
+      d3.drag()
+        .on('start', function (d: any) {
+
+        })
+        .on('end', function (d) {
+          console.log(d3.event);
+          console.log('output drag end')
+        })
+        .on('drag', function (d: any) {
+          var m = d3.mouse(this);
+          // console.log(m);
+          let rect = d3.select(this).attr('transform');
+          let t = rect.substring(rect.indexOf("(") + 1, rect.indexOf(")")).split(",");
+          let linkData = {
+            source: { x: d.x, y: d.y },
+            target: { x: d3.event.x + 180, y: d3.event.y }
+          };
+          let link = self.vis.selectAll('g.new_link').data([linkData]);
+          link.select('path')
+            .attr('d', self.line);
+          link.exit().remove();
+          link.enter().insert('svg:g')
+            .classed('new_link link', true)
+            .append('svg:path')
+            .attr('d', self.line);
+        })
+      );
+
+    // let path = this.vis.selectAll('g.link').selectAll('path').data([d]);
+    // path.attr('d', this.line);
+    //     }));
+
 
     function portMouseDown(d, portType, portIndex) {
     }
@@ -167,7 +200,7 @@ export class D3HelperService {
     return d3.touches(ui.helper.get(0))[0] || d3.mouse(ui.helper.get(0));
   }
 
-  mousePos(e){
+  mousePos(e) {
     return d3.touches(e)[0] || d3.mouse(e);
   }
 

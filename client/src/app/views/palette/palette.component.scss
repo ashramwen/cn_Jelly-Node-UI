@@ -6,7 +6,7 @@
     /*background-color: #ddd;*/
     margin: 10px auto;
     border-radius: 10px;
-    border: 1px solid #999;
+    border: 1px solid #000;
     background-position: 5% 50%;
     background-repeat: no-repeat;
     background-size: contain;
@@ -24,8 +24,8 @@
         bottom: 0;
         left: 0;
         width: 30px;
-        border-right: 1px solid rgba(0, 0, 0, 0.1);
-        background-color: rgba(0, 0, 0, 0.05);
+        border-right: 1px solid #000;
+        /*background-color: rgba(0, 0, 0, 0.05);*/
     }
     .palette_port {
         position: absolute;
@@ -33,11 +33,11 @@
         left: -5px;
         box-sizing: border-box;
         -moz-box-sizing: border-box;
-        background-color: #d9d9d9;
+        background-color: #fff;
         border-radius: 3px;
         width: 10px;
         height: 10px;
-        border: 1px solid #999;
+        border: 1px solid #000;
         &.output {
             left: auto;
             right: -6px;

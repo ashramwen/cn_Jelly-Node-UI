@@ -74,6 +74,16 @@ export interface IConditionResult {
             <option *ngFor="let o of condition.options" [value]="o.value">{{o.text}}</option>
           </select>
         </template>
+
+        <!-- enum type row -->
+        <template [ngSwitchCase]="'value'">
+          <label>{{condition.text}}</label>
+          <select [(ngModel)]="condition.operator" (ngModelChange)="modelChange($event)">
+            <option *ngFor="let o of getOperators(condition.type)" [value]="o.value">{{o.text}}</option>
+          </select>
+          <input type="text" [(ngModel)]="condition.value" (ngModelChange)="modelChange($event)" />
+        </template>
+
       </div>
     </div>
   `,
@@ -131,7 +141,7 @@ export class RulePropertyCondition extends JNFormControl {
   }
 
   getOperators(type) {
-    return type === 'enum' ?
+    return type === 'enum' || type === 'value' ?
       [this._operators[0], this._operators[1]]
       : this._operators;
   }

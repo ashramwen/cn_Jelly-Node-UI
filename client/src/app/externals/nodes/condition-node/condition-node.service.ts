@@ -16,7 +16,8 @@ export class ConditionNodeService {
         property: condition.property,
         type: this.getControlType(propertySchema),
         operator: condition.operator,
-        options: this.buildEnumOptions(propertySchema)
+        options: this.buildEnumOptions(propertySchema),
+        aggregation: condition.aggregation
       };
     });
   }

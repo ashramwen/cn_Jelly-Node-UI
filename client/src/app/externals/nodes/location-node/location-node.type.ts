@@ -6,6 +6,7 @@ import { JNLocationPaletteModel } from './location-node-palette-model.type';
 import { JNLocationNodeModel } from './location-node-model.type';
 
 @JNNode({
+  title: 'JNLocationNode',
   icon: '',
   color: '',
   borderColor: '',

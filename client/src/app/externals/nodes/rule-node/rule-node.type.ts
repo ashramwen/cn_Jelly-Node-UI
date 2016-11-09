@@ -6,6 +6,7 @@ import { JNRulePaletteModel } from './rule-node-palette-model.type';
 import { JNRuleNodeModel } from './rule-node-model.type';
 
 @JNNode({
+  title: 'JNRuleNode',
   icon: '',
   color: '',
   borderColor: '',

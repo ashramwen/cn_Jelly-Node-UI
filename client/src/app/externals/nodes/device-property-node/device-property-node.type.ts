@@ -4,6 +4,7 @@ import { JNNode } from '../../../core/models/node-annotation';
 import { JNDevicePropertyNodeModel } from './device-property-node-model.type';
 
 @JNNode({
+  title: 'JNDevicePropertyNode',
   icon: '',
   color: '',
   borderColor: '',

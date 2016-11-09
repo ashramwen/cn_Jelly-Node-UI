@@ -5,6 +5,7 @@ import { JNConditionNode } from '../condition-node/condition-node.type';
 import { JNConjunctionNodeEditorModel } from './conjunction-node-editor-model.type';
 
 @JNNode({
+  title: 'JNConjunctionNode',
   icon: '',
   color: '',
   borderColor: '',

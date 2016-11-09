@@ -24,6 +24,11 @@ export interface INodeMap {
   };
 }
 
+export interface IConnectRule {
+  message: string;
+  validator: () => boolean;
+}
+
 export abstract class JNBaseNode {
 
   static title: string; // static node name
@@ -55,7 +60,8 @@ export abstract class JNBaseNode {
   public nodeMap: INodeMap = {
     accepted: {},
     outputTo: {}
-  }
+  };
+
 
   protected abstract model: JNNodeModel; // node model
 
@@ -65,6 +71,14 @@ export abstract class JNBaseNode {
   public get body(): INodeBody {
     return <INodeBody>this.formatter();
   }
+
+  private connectRules: {
+    global: Array<IConnectRule>,
+    nodes: Array<{
+      nodeType: typeof JNBaseNode;
+      rules: Array<IConnectRule>;
+    }>;
+  };
 
   private stream: Subscriber<IJNNodePayload>; // stream publisher
   private output = new Observable((subscriber: Subscriber<IJNNodePayload>) => {
@@ -105,16 +119,6 @@ export abstract class JNBaseNode {
    * @returns Promise
    */
   protected abstract whenRejected(node: JNBaseNode): Promise<boolean>;
-
-  /**
-   * @desc should reject connection with given node;
-   *       data-level validation;
-   * @param  {JNBaseNode} target
-   * @returns boolean
-   */
-  protected shouldReject(target: JNBaseNode): boolean {
-    return false;
-  }
 
   /**
    * @param  {JNBaseNode} node
@@ -201,10 +205,31 @@ export abstract class JNBaseNode {
    * @returns boolean
    * @desc if thow target is connectable
    */
-  public connectable(target: JNBaseNode): boolean {
-    if (this._shouldReject(<typeof JNBaseNode>target.constructor)) return false;
-    if (this.shouldReject(target)) return false;
-    return true;
+  public connectable(target: JNBaseNode): {message: string} {
+    if (this._shouldReject(<typeof JNBaseNode>target.constructor)) {
+      return {
+        message: `<${(<typeof JNBaseNode>this.constructor).title}>节点只支持与
+        ${(<typeof JNBaseNode>this.constructor).accepts.map((type) => `<${type.title}>`).join(',')}节点相连。`
+      };
+    }
+    let globalRules = this.connectRules.global;
+    if (globalRules && globalRules.length) {
+      for (let rule of globalRules) {
+        if (!rule.validator()) {
+          return { message: rule.message };
+        }
+      }
+      let node = this.connectRules.nodes.find(node => node.nodeType === (<typeof JNBaseNode>target.constructor));
+      if (!node) return null;
+      let nodeRules = node.rules;
+      for (let rule of nodeRules) {
+        if (!rule.validator()) {
+          return { message: rule.message };
+        }
+      }
+    }
+
+    return null;
   }
 
   /**
@@ -225,4 +250,5 @@ export abstract class JNBaseNode {
     let accepts: Array<typeof JNBaseNode> = this.constructor['accepts'];
     return accepts.indexOf(target) > -1;
   }
+
 }

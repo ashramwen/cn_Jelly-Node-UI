@@ -4,6 +4,7 @@ import { JNDevicePropertyNode } from '../device-property-node/device-property-no
 import { JNActionNodeModel } from './action-node-model.type';
 
 @JNNode({
+  title: 'JNActionNode',
   icon: '',
   color: '',
   borderColor: '',

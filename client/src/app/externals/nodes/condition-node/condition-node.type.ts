@@ -6,6 +6,7 @@ import { JNConditionNodeEditorModel } from './condition-node-editor-model.type';
 
 @JNNode({
   icon: '',
+  title: 'JNCondtionNode',
   color: '',
   borderColor: '',
   accepts: [JNDevicePropertyNode],

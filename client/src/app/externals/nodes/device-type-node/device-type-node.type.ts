@@ -7,6 +7,7 @@ import { JNDeviceTypeNodeModel } from './device-type-node-model.type';
 import { JNLocationNode } from '../location-node/location-node.type';
 
 @JNNode({
+  title: 'JNDeviceTypeNode',
   icon: '',
   color: '',
   borderColor: '',

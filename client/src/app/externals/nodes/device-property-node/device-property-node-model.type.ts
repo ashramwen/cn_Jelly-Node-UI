@@ -3,8 +3,9 @@ import { Serializable } from '../../../../bin/JsonMapper';
 
 @Serializable()
 export class JNDevicePropertyNodeModel extends JNNodeModel {
-  property: String;
-  propertyName: String;
+  property: string;
+  propertyName: string;
+  typeName: string;
 
   constructor() {
     super();

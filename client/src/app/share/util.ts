@@ -3,7 +3,7 @@ export class JNUtils {
     return (val === null || val === undefined);
   }
 
-  static toArray(obj): {key: string, value: any}[] {
+  static toArray<T>(obj): {key: string, value: T}[] {
     return Object.keys(obj).map((key) => {
       return { key: key, value: obj[key] };
     });

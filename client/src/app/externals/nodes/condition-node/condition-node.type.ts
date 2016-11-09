@@ -14,7 +14,7 @@ import { JNConditionNodeModel } from './condition-node-model.type';
 })
 export class JNConditionNode extends JNBaseNode  {
   public get body (){
-    return '';
+    return this.model.serialize();
   }
 
   protected model: JNConditionNodeModel;

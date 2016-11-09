@@ -22,7 +22,10 @@ export abstract class JNFormControl implements ControlValueAccessor {
     private el: ElementRef,
     public renderer: Renderer,
     private _zone: NgZone) {
+    this.init();
   }
+
+  private init() { }
 
   // get accessor
   get value(): any {

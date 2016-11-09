@@ -34,7 +34,7 @@ export class JNLocationNodeEditorModel extends JNEditorModel {
         formControl: new FormControl()
       }
     };
-    this.locationTree = RuleApplication.instance.cacheContext.get(CACHE_LOCATION);
+    this.locationTree = RuleApplication.instance.resources.$location.data;
   }
 
   protected parse(data: JNLocationNodeModel) {

@@ -17,6 +17,7 @@ export abstract class JNEditorModel {
   parser?: IJNEditorFormParser;
   formatter?: IJNEditorFormFormatter;
   formGroup: FormGroup;
+  model: JNNodeModel;
 
   constructor() {
     this._init();
@@ -35,6 +36,7 @@ export abstract class JNEditorModel {
    * @param  {JNNodeModel} data
    */
   public load(data: JNNodeModel) {
+    this.model = data.clone();
     this.parse(data);
   }
 

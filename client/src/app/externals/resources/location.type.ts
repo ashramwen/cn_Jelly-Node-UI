@@ -39,4 +39,8 @@ export class BeehiveLocation extends BeehiveResource {
   get isCached(): boolean {
     return !!this.cacheContext.get(CACHE_LOCATION);
   }
+
+  get data() {
+    return this.cacheContext.get(CACHE_LOCATION);
+  }
 }

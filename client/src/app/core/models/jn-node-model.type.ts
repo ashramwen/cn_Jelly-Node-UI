@@ -37,6 +37,10 @@ export abstract class JNNodeModel implements INodeBody {
     return this;
   }
 
+  public clone() {
+    return (<typeof JNNodeModel>this.constructor).deserialize(this.serialize());
+  }
+
   constructor() {
     this.nodeID = null;
     this.nodeName = null;

@@ -15,7 +15,7 @@ export class BeehiveResource extends Resource {
 
   constructor(http: Http, injector: Injector, private authenHelper: AuthenHelperSerivce) {
     super(http, injector);
-    this.setUrl(JNConfig.beehiveBaseUrl + JNConfig.apiPrefix + this.getUrl());
+    // this.setUrl(JNConfig.beehiveBaseUrl + JNConfig.apiPrefix + this.getUrl());
   }
 
   getHeaders(): any {
@@ -31,6 +31,7 @@ export class BeehiveResource extends Resource {
       || req.method === RequestMethod.Patch) {
       req.headers.set('content-type', 'application/json');
     }
+    req.url = JNConfig.beehiveBaseUrl + JNConfig.apiPrefix + req.url;
     return req;
   }
 

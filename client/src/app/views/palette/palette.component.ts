@@ -25,6 +25,8 @@ export class PaletteComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     let nodeFlow = new JNFlow();
     this.nodes = [];
+    let node = new JNLocationNode();
+    console.log(node.name);
     this.nodes.push(nodeFlow.createNode(JNLocationNode));
     this.nodes.push(nodeFlow.createNode(JNDeviceTypeNode));
   }

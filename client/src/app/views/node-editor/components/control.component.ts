@@ -25,7 +25,7 @@ export abstract class JNFormControl implements ControlValueAccessor {
     this.init();
   }
 
-  private init() { }
+  protected init() { }
 
   // get accessor
   get value(): any {

@@ -24,6 +24,14 @@ export abstract class JNEditorModel {
   }
 
   /**
+   * @desc get formcontrol input
+   * @param  {string} property
+   */
+  protected getInput(property: string) {
+    return this.formControls[property].input;
+  }
+
+  /**
    * @desc to get editor result
    * @param  JNNodeModel
    */

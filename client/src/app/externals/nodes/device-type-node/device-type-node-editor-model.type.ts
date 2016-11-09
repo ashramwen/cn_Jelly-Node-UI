@@ -7,6 +7,7 @@ import { FormControl } from '@angular/forms';
 import { RuleApplication } from '../../rule-application-core';
 import { ICheckTableInput, JNCheckTableControl } from '../../../views/node-editor/components/controls/check-table/check-table.component';
 import { IThingRequest } from '../../resources/thing.type';
+import { DeviceTypeNodeService } from './device-type-node.service';
 
 export class JNDeviceTypeNodeEditorModel extends JNEditorModel {
 
@@ -67,29 +68,17 @@ export class JNDeviceTypeNodeEditorModel extends JNEditorModel {
 
   protected updated(fieldName: string, value: any): void {
     if (fieldName === 'typeName') {
+      let typeName = value;
       if (!fieldName) return;
       if (!this.locations || !this.locations.length) return;
 
       let tableData = [];
       let input: ICheckTableInput = <ICheckTableInput>this.formControls['things'].input;
-      let promises =this.locations.map((location) => {
-        let requestParam = {
-          type: value,
-          locationPrefix: location,
-          includeSubLevel: true
-        };
-
-        return RuleApplication.instance.resources.$thing.query(requestParam, (data) => {
-          data.forEach((row) => {
-            row['location'] = row.vendorThingID;
-            tableData.push(row);
-          });
-        }).$observable.toPromise();
-      });
-
-      Promise.all(promises).then(() => {
-        this.formControls['things'].input['tableData'] = tableData;
-      });
+      DeviceTypeNodeService.instance
+        .getThings(this.locations, typeName)
+        .then((tableData) => {
+          this.formControls['things'].input['tableData'] = tableData;
+        });
     }
   }
 }

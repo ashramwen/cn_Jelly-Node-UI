@@ -7,46 +7,40 @@ import { JNEditorModel } from '../../../views/node-editor/interfaces/editor-mode
 import { ISelectInput, JNSelectControl } from '../../../views/node-editor/components/controls/select/select.component';
 import { RuleApplication } from '../../rule-application-core';
 import { JNUtils } from '../../../share/util';
-import { JNConjunctionNodeModel } from './conjunction-node-model.type';
+import { JNConditionNodeModel } from './condition-node-model.type';
+import { RulePropertyCondition, IPropertyConditionsInput } from '../../controls/property-condition/property-condition.component';
+import { ConditionNodeService } from './condition-node.service';
 import {
   JNTextAreaControl,
   ITextareaInput
 } from '../../../views/node-editor/components/controls/textarea/textarea.component';
 
 
-export class JNConjunctionNodeEditorModel extends JNEditorModel {
+export class JNConditionNodeEditorModel extends JNEditorModel {
 
   title: String = 'nodeset.JNDevicePropertyNode.nodename';
 
   protected init() {
     this.formControls = {
       conjunction: {
-        input: <ISelectInput>{
+        input: <IPropertyConditionsInput>{
           label: '连接表达式',
-          options: [{
-            text: '与',
-            value: 'and'
-          }, {
-            text: '或',
-            value: 'or'
-          }, {
-            text: '非',
-            value: 'nor'
-          }]
+          conditions: []
         },
-        controlType: JNSelectControl,
+        controlType: RulePropertyCondition,
         $validators: [],
         formControl: new FormControl()
       }
     };
   }
 
-  protected parse(data: JNConjunctionNodeModel) {
-    this.setValue('conjunction', data.conjunction);
+  protected parse(data: JNConditionNodeModel) {
+    let conditions = ConditionNodeService.instance.buildConditions(data);
+    (<IPropertyConditionsInput>this.getInput('conjunction')).conditions = conditions;
   }
 
-  protected formate(): JNConjunctionNodeModel {
-    return <JNConjunctionNodeModel>this.model;
+  protected formate(): JNConditionNodeModel {
+    return <JNConditionNodeModel>this.model;
   }
 
   protected updated(fieldName: string, value: any): void {

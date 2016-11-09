@@ -2,13 +2,14 @@ import { JNBaseNode } from '../../../core/models/jn-base-node.type';
 import { JNNode } from '../../../core/models/node-annotation';
 import { JNDevicePropertyNode } from '../device-property-node/device-property-node.type';
 import { JNConditionNodeModel } from './condition-node-model.type';
+import { JNConditionNodeEditorModel } from './condition-node-editor-model.type';
 
 @JNNode({
   icon: '',
   color: '',
   borderColor: '',
   accepts: [JNDevicePropertyNode],
-  editorModel: null,
+  editorModel: JNConditionNodeEditorModel,
   infoPanelModel: null,
   paletteModel: null
 })

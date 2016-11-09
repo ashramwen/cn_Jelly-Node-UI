@@ -4,4 +4,9 @@ import { Serializable } from '../../../../bin/JsonMapper';
 @Serializable()
 export class JNConjunctionNodeModel extends JNNodeModel {
   conjunction: 'and' | 'or' | 'nore';
+
+  constructor() {
+    super();
+    this.conjunction = null;
+  }
 }

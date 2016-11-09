@@ -13,6 +13,8 @@ import { JNLocationNode } from '../../externals/nodes/location-node/location-nod
 import { Events } from '../../core/services/event.service';
 import { APP_READY } from '../../core/services/application-core.service';
 import { JNDeviceTypeNode } from '../../externals/nodes/device-type-node/device-type-node.type';
+import { JNConjunctionNode } from '../../externals/nodes/conjunction-node/conjunction-node.type';
+import { JNConditionNode } from '../../externals/nodes/condition-node/condition-node.type';
 
 @Component({
   selector: 'jn-node-editor',
@@ -36,13 +38,28 @@ export class JNEditFormComponent implements OnInit {
     // ruleNode.init({ ruleName: 'rule1', description: 'description', triggerWhen: 'TRUE_TO_FALSE' });
     // let locationNode = new JNLocationNode();
     // locationNode.init({ locationStr: ['08', '0801'] });
-
-    let deviceTypeNode = new JNDeviceTypeNode;
-    deviceTypeNode.init({ things: [], locations: ['08'], typeName: 'EnvironmentSensor' });
+    // let deviceTypeNode = new JNDeviceTypeNode;
+    // deviceTypeNode.init({ things: [5266], locations: ['08'], typeName: 'EnvironmentSensor' });
+    // let node = new JNConjunctionNode();
+    // node.init({conjunction: 'and'});
+    let node = new JNConditionNode();
+    node.init({
+      thingType: 'AirCondition',
+      conditions: [{
+        property: 'Power',
+        value: 0,
+        operator: 'eq'
+      }, {
+        property: 'Temp',
+        value: 20,
+        operator: 'gte',
+        aggregation: 'avg'
+      }]
+    });
 
     this.events.on(APP_READY, () => {
       setTimeout(() => {
-        this.editorModel = deviceTypeNode.createEditorModel();
+        this.editorModel = node.createEditorModel();
         this.prepare();
       }, 50);
     });

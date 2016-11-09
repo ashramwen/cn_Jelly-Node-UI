@@ -26,6 +26,7 @@ export interface INodeMap {
 
 export abstract class JNBaseNode {
 
+  static title: string; // static node name
   static icon: String; // node icon diplay on canvas
   static color: String; // node color display on canvas
   static borderColor: String; // node border color on canvas
@@ -34,6 +35,10 @@ export abstract class JNBaseNode {
   static editorModel: typeof JNEditorModel;
   static infoModel: IJNInfoPanelModel;
   static paletteModel: IJNPaletteModel;
+
+  static connectable(left: typeof JNBaseNode, right: typeof JNBaseNode): boolean {
+    return right.accepts.indexOf(left) > -1;
+  }
 
   get name(): String {
     return this.model.nodeName;
@@ -50,7 +55,7 @@ export abstract class JNBaseNode {
   public nodeMap: INodeMap = {
     accepted: {},
     outputTo: {}
-  };
+  }
 
   protected abstract model: JNNodeModel; // node model
 

@@ -12,6 +12,7 @@ import { CACHE_LOCATION, ILocation } from '../../resources/location.type';
 import { JNUtils } from '../../../share/util';
 import { ISelectSetInput, JNSelectSetControl } from '../../../views/node-editor/components/controls/select-set/select-set.component';
 import { Input } from '@angular/core';
+import { LocationNodeService } from './location-node.service';
 
 
 export class JNLocationNodeEditorModel extends JNEditorModel {
@@ -20,7 +21,6 @@ export class JNLocationNodeEditorModel extends JNEditorModel {
   viewTemplate: String;
   formControls: { [fieldName: string]: IJNFormControl };
   depth = 1;
-  locationTree: ILocation;
 
   protected init() {
     this.formControls = {
@@ -34,7 +34,6 @@ export class JNLocationNodeEditorModel extends JNEditorModel {
         formControl: new FormControl()
       }
     };
-    this.locationTree = RuleApplication.instance.resources.$location.data;
   }
 
   protected parse(data: JNLocationNodeModel) {
@@ -68,38 +67,8 @@ export class JNLocationNodeEditorModel extends JNEditorModel {
       i++;
     }
     this.depth = i + 1;
-    (<ISelectSetInput>this.formControls['location'].input).set = this.buildSet(value);
-  }
-
-  buildSet(value) {
-    let labels = ['楼号', '层号', '区域', '区块', '工位'];
-    let tree = this.locationTree;
-    let set = [];
-    for (let i = 0; i < this.depth; i++) {
-      let subLocations = tree;
-      for (let j = 0; j < i; j++) {
-        subLocations = subLocations.subLocations[value[j]];
-      }
-      if (!subLocations
-        || !subLocations.subLocations
-        || !Object.keys(subLocations.subLocations).length) break;
-
-      let options = JNUtils.toArray(subLocations.subLocations).map((location) => {
-        return {
-          text: (<ILocation>location.value).location,
-          value: (<ILocation>location.value).location
-        };
-      });
-
-      options.unshift({ text: 'terms.pleaseSelect', value: null });
-
-      set.push({
-        label: labels[i],
-        options: options,
-        fieldName: i
-      });
-    }
-    return set;
+    (<ISelectSetInput>this.formControls['location'].input).set
+      = LocationNodeService.instance.buildSet(value, this.depth);
   }
 
 }

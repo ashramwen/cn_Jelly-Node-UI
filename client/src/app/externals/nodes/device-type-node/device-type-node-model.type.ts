@@ -11,7 +11,7 @@ export class JNDeviceTypeNodeModel extends JNNodeModel {
 
   constructor() {
     super();
-
+    this.things = null;
     this.typeName = null;
     this.typeDisplayName = null;
     this.locations = [];

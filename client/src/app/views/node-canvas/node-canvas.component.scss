@@ -9,7 +9,8 @@ svg {
             cursor: crosshair;
             stroke: #000;
             fill: #fff;
-            &:hover {
+            &:hover,
+            &.hover {
                 fill: #ffa500;
             }
         }

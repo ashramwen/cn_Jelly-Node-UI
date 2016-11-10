@@ -32,8 +32,6 @@ export class PaletteComponent implements OnInit, AfterViewInit {
     $('.ui-draggable').draggable({
       helper: 'clone',
       appendTo: '#chart',
-      revert: true,
-      revertDuration: 50,
       // containment: '',
       drag: function (e, ui) {
         // console.log(ui);

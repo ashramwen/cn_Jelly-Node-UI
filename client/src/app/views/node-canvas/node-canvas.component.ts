@@ -37,8 +37,8 @@ export class NodeCanvasComponent implements OnInit {
     this.d3Helper.start();
 
     let node = this.nodeFlow.createNode(JNLocationNode, { position: { x: 200, y: 200 } });
-    // let node2 = this.nodeFlow.createNode(JNDeviceTypeNode, { position: { x: 200, y: 200 } });
-    // let node3 = this.nodeFlow.createNode(JNDeviceTypeNode, { position: { x: 200, y: 200 } });
+    // let node2 = this.nodeFlow.createNode(JNDeviceTypeNode, { position: { x: 300, y: 200 } });
+    // let node3 = this.nodeFlow.createNode(JNDeviceTypeNode, { position: { x: 400, y: 200 } });
     let a = 1;
 
 

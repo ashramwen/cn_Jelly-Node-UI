@@ -34,7 +34,10 @@ export class PaletteComponent implements OnInit, AfterViewInit {
       appendTo: '#chart',
       // containment: '',
       drag: function (e, ui) {
-        // console.log(ui);
+        // console.log('palette drag start.');
+      },
+      stop: function (e, ui) {
+        // console.log('palette drag stop.');
       }
     });
   }

@@ -27,6 +27,7 @@ export class NodeCanvasComponent implements OnInit {
     $("#chart").droppable({
       accept: ".palette_node",
       drop: function (event, ui) {
+        console.log('canvas drop.');
         let left = $(this).position().left;
         let node = self.nodeFlow.createNode(JNDeviceTypeNode, { position: { x: ui.position.left - left, y: ui.position.top } });
         node.position = { x: ui.position.left - left, y: ui.position.top };

@@ -13,16 +13,17 @@ export class D3HelperService {
   private drag: any;
 
   private data: JNBaseNode[] = [];
-  private inputs: number[][];
+  private links: number[][];
   private outputs: number[][];
 
-  private NODE_DRAG = false;
-  private PORT_DRAG = false;
-  private SVG_DRAG = false;
+  private select_node: JNBaseNode = null;
+  private select_input = false;
+  private select_output = false;
+  private select_link = null;
+  private select_brush = null;
 
-  private SELECT_NODE = null;
-  private SELECT_LINK = null;
-  private SELECT_BRUSH = null;
+  private input_dragging = false;
+  private output_dragging = false;
 
   constructor() {
 
@@ -30,8 +31,8 @@ export class D3HelperService {
 
   start() {
     let self = this;
-    let NODE_WIDTH = this.NODE_WIDTH;
-    let NODE_HEIGHT = this.NODE_HEIGHT;
+    // let NODE_WIDTH = this.NODE_WIDTH;
+    // let NODE_HEIGHT = this.NODE_HEIGHT;
 
     // var margin = { top: 20, right: 120, bottom: 20, left: 120 },
     //   space_width = 960 - margin.right - margin.left,
@@ -48,7 +49,9 @@ export class D3HelperService {
     this.vis = svg
       .append('svg:g')
       .on('dblclick.zoom', null)
-      .append('svg:g');
+      .append('svg:g')
+      .on('mousedown', function () {
+      });
 
     this.drag = d3.drag()
       .on('start', dragstarted)
@@ -64,8 +67,8 @@ export class D3HelperService {
       d3.select(this)
         .attr('transform', (d: any) => {
           d.position = {
-            x: Math.max(0, Math.min(space_width - NODE_WIDTH, d3.event.x)),
-            y: Math.max(0, Math.min(space_height - NODE_HEIGHT, d3.event.y))
+            x: Math.max(0, Math.min(space_width - self.NODE_WIDTH, d3.event.x)),
+            y: Math.max(0, Math.min(space_height - self.NODE_HEIGHT, d3.event.y))
           }
           d.x = d.position.x;
           d.y = d.position.y;
@@ -82,9 +85,9 @@ export class D3HelperService {
   drawNode(node: any) {
     let self = this;
     this.data = node;
-    var rects = this.vis.selectAll('g.node_group').data(this.data);
+    let rects = this.vis.selectAll('g.node_group').data(this.data);
     rects.exit().remove();
-    var g = rects.enter()
+    let g = rects.enter()
       .append('svg:g')
       .classed('node_group', true)
       .attr('transform', (d: any) => {
@@ -113,7 +116,6 @@ export class D3HelperService {
 
     g.insert('svg:rect')
       .classed('port input', true)
-      // .classed('input', true)
       .attr('width', 10)
       .attr('height', 10)
       .attr('rx', 3)
@@ -121,38 +123,42 @@ export class D3HelperService {
       .attr('transform', 'translate(-5, 15)')
       .on('mouseenter', function (d) {
         d3.select(this).classed('hover', true);
+        self.select_node = d;
+        self.select_input = true;
+        console.log('node:', self.select_node);
       })
       .on('mouseout', function (d) {
         d3.select(this).classed('hover', false);
+        self.select_node = null;
+        self.select_input = false;
+        console.log('node:', self.select_node);
       })
       .call(d3.drag()
-        .on('start', function (d) {
-          console.log('input drag start')
+        .on('start', d => {
+          this.input_dragging = true;
         })
-        .on('end', function (d) {
-          self.vis.selectAll('g.new_link').remove();
+        .on('end', (d: JNBaseNode) => {
+          this.vis.selectAll('g.new_link').remove();
+          this.input_dragging = false;
+          if (!this.select_output) return;
+          let target = self.select_node;
+          if (!d.connectable(target)) {
+            d.accept(target);
+          }
         })
-        .on('drag', function (d: any) {
-          let rect = d3.select(this).attr('transform');
-          let t = rect.substring(rect.indexOf("(") + 1, rect.indexOf(")")).split(",");
+        .on('drag', (d: any) => {
+          // let rect = d3.select(this).attr('transform');
+          // let t = rect.substring(rect.indexOf("(") + 1, rect.indexOf(")")).split(",");
           let linkData = {
-            target: { x: d.x - 5, y: d.y + self.NODE_HEIGHT / 2 },
-            source: { x: d3.event.x, y: d3.event.y + self.NODE_HEIGHT / 2 }
+            target: { x: d.x - 5, y: d.y + this.NODE_HEIGHT / 2 },
+            source: { x: d3.event.x, y: d3.event.y + this.NODE_HEIGHT / 2 }
           };
-          let link = self.vis.selectAll('g.new_link').data([linkData]);
-          link.select('path')
-            .attr('d', self.line);
-          link.exit().remove();
-          link.enter().insert('svg:g')
-            .classed('new_link link', true)
-            .append('svg:path')
-            .attr('d', self.line);
+          this.mouseLink(linkData);
         })
       );
 
     g.insert('svg:rect')
-      .classed('port', true)
-      .classed('output', true)
+      .classed('port output', true)
       .attr('width', 10)
       .attr('height', 10)
       .attr('rx', 3)
@@ -160,76 +166,79 @@ export class D3HelperService {
       .attr('transform', 'translate(175, 15)')
       .on('mouseenter', function (d) {
         d3.select(this).classed('hover', true);
+        self.select_node = d;
+        self.select_output = true;
+        console.log('node:', self.select_node);
       })
       .on('mouseout', function (d) {
         d3.select(this).classed('hover', false);
+        self.select_node = null;
+        self.select_output = false;
+        console.log('node:', self.select_node);
       })
       .call(d3.drag()
-        .on('start', function (d: any) {
-
+        .on('start', (d: any) => {
+          this.output_dragging = true;
         })
-        .on('end', function (d) {
-          self.vis.selectAll('g.new_link').remove();
+        .on('end', (d: JNBaseNode) => {
+          this.vis.selectAll('g.new_link').remove();
+          this.output_dragging = false;
+          if (!this.select_input) return;
+          let target = self.select_node;
+          if (!target.connectable(d)) {
+            target.accept(d);
+            self.shiftNodeLink({
+              source: { x: d.position.x, y: d.position.y },
+              target: { x: target.position.x, y: target.position.y }
+            });
+          }
         })
-        .on('drag', function (d: any) {
-          let rect = d3.select(this).attr('transform');
-          let t = rect.substring(rect.indexOf("(") + 1, rect.indexOf(")")).split(",");
+        .on('drag', (d: any) => {
           let linkData = {
-            source: { x: d.x + self.NODE_WIDTH + 5, y: d.y + self.NODE_HEIGHT / 2 },
-            target: { x: d3.event.x + self.NODE_WIDTH, y: d3.event.y + self.NODE_HEIGHT / 2 }
+            source: { x: d.x + this.NODE_WIDTH + 5, y: d.y + this.NODE_HEIGHT / 2 },
+            target: { x: d3.event.x + this.NODE_WIDTH, y: d3.event.y + this.NODE_HEIGHT / 2 }
           };
-          let link = self.vis.selectAll('g.new_link').data([linkData]);
-          link.select('path')
-            .attr('d', self.line);
-          link.exit().remove();
-          link.enter().insert('svg:g')
-            .classed('new_link link', true)
-            .append('svg:path')
-            .attr('d', self.line);
+          this.mouseLink(linkData);
         })
       );
-
-    // let path = this.vis.selectAll('g.link').selectAll('path').data([d]);
-    // path.attr('d', this.line);
-    //     }));
-
-
-    function portMouseDown(d, portType, portIndex) {
-    }
-
   }
 
-  drawLink = (s, t) => {
-    let linkData = {
-      source: { x: s.x, y: s.y },
-      target: { x: t.x, y: t.y }
-    };
+  private mouseLink = (linkData) => {
+    let link = this.vis.selectAll('g.new_link').data([linkData]);
+    link.select('path')
+      .attr('d', this.genLinkPathValue);
+    link.exit().remove();
+    link.enter().insert('svg:g')
+      .classed('new_link link', true)
+      .append('svg:path')
+      .attr('d', this.genLinkPathValue);
+  }
+
+  private shiftNodeLink = (linkData) => {
+    linkData.source.x += this.NODE_WIDTH + 5;
+    linkData.source.y += this.NODE_HEIGHT / 2;
+    linkData.target.x -= 5;
+    linkData.target.y += this.NODE_HEIGHT / 2;
+    this.nodeLink(linkData);
+  }
+  private nodeLink = (linkData) => {
     let path = this.vis.selectAll('g.link').data([linkData]);
     path.enter()
       .insert('svg:g')
       .classed('link', true)
+      .on('mousedown', function () {
+
+      })
       .append('svg:path')
-      .attr('d', this.line)
+      .attr('d', this.genLinkPathValue)
   }
 
-  helperOffset(ui) {
-    return d3.touches(ui.helper.get(0))[0] || d3.mouse(ui.helper.get(0));
-  }
-
-  mousePos(e) {
-    return d3.touches(e)[0] || d3.mouse(e);
-  }
-
-  private updateLink = (s, t) => {
-    let linkData = {
-      source: { x: s.x, y: s.y },
-      target: { x: t.x, y: t.y }
-    };
+  private moveNodeLink = (linkData) => {
     let path = this.vis.selectAll('g.link').selectAll('path').data([linkData]);
-    path.attr('d', this.line);
+    path.attr('d', this.genLinkPathValue);
   }
 
-  private line = (d) => {
+  private genLinkPathValue = (d) => {
     let self = this;
     let lineCurveScale = 0.75;
     let dy = d.target.y - (d.source.y + 1);
@@ -247,6 +256,7 @@ export class D3HelperService {
         scaleY = ((dy > 0) ? 0.5 : -0.5) * ((3 * self.NODE_HEIGHT - Math.abs(dy)) / (3 * self.NODE_HEIGHT)) * (Math.min(self.NODE_WIDTH, Math.abs(dx)) / self.NODE_WIDTH);
       }
     }
+
     // let v = `M${d.source.x + self.NODE_WIDTH + 5} ${d.source.y + self.NODE_HEIGHT / 2} C ${d.source.x + self.NODE_WIDTH + scale * self.NODE_WIDTH} ${d.source.y + self.NODE_HEIGHT / 2 + scaleY * self.NODE_HEIGHT} ${d.target.x - scale * self.NODE_WIDTH} ${d.target.y + self.NODE_HEIGHT / 2 - scaleY * self.NODE_HEIGHT} ${d.target.x - 5} ${d.target.y + self.NODE_HEIGHT / 2}`;
     let v = `M${d.source.x} ${d.source.y} C ${d.source.x + scale * self.NODE_WIDTH} ${d.source.y + scaleY * self.NODE_HEIGHT} ${d.target.x - scale * self.NODE_WIDTH} ${d.target.y - scaleY * self.NODE_HEIGHT} ${d.target.x} ${d.target.y}`;
     return v;

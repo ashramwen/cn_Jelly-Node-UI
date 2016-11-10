@@ -11,6 +11,7 @@ svg {
             fill: #fff;
             &:hover,
             &.hover {
+                stroke: #ffa500;
                 fill: #ffa500;
             }
         }
@@ -27,6 +28,10 @@ svg {
         path {
             stroke: #000;
             fill: transparent;
+        }
+        &.new_link path {
+            stroke-width: 2px;
+            stroke: #ffa500;
         }
     }
 }

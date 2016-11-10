@@ -8,9 +8,14 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 
 import { JNFlow } from './../../core/models/jn-flow.type';
 import { JNBaseNode } from '../../core/models/jn-base-node.type';
-import { JNDeviceTypeNode } from './../../externals/nodes/device-type-node/device-type-node.type';
 import { JNLocationNode } from './../../externals/nodes/location-node/location-node.type';
 import { IJNPaletteNode } from './palette-node.type';
+import { RuleApplication } from '../../externals/rule-application-core';
+import { JNDeviceTypeNode } from '../../externals/nodes/device-type-node/device-type-node.type';
+import { JNDevicePropertyNode } from '../../externals/nodes/device-property-node/device-property-node.type';
+import { JNLocationPaletteModel } from '../../externals/nodes/location-node/location-node-palette-model.type';
+import { JNRuleNode } from '../../externals/nodes/rule-node/rule-node.type';
+import { JNConditionNode } from '../../externals/nodes/condition-node/condition-node.type';
 
 @Component({
   selector: 'jn-palette',
@@ -20,15 +25,18 @@ import { IJNPaletteNode } from './palette-node.type';
 export class PaletteComponent implements OnInit, AfterViewInit {
   constructor() { }
 
-  nodes: JNBaseNode[]
+  nodes: IJNPaletteNode[]
 
   ngOnInit() {
     let nodeFlow = new JNFlow();
     this.nodes = [];
-    let node = new JNLocationNode();
-    console.log(node.name);
-    this.nodes.push(nodeFlow.createNode(JNLocationNode));
-    this.nodes.push(nodeFlow.createNode(JNDeviceTypeNode));
+    
+    let locationNode = new JNLocationNode();
+
+
+    // this.nodes.push(nodeFlow.createNode(JNLocationNode));
+    // this.nodes.push(nodeFlow.createNode(JNDeviceTypeNode));
+    // console.log(this.nodes);
   }
 
   ngAfterViewInit() {

@@ -8,29 +8,18 @@ import { JNDeviceTypeNode } from '../device-type-node/device-type-node.type';
 import { JNDevicePropertyNode } from '../device-property-node/device-property-node.type';
 import { JNConjunctionNode } from '../conjunction-node/conjunction-node.type';
 import { JNConditionNode } from '../condition-node/condition-node.type';
+import { JNUtils } from '../../../share/util';
 
-export class JNLocationPaletteModel implements IJNPaletteModel {
+export class JNLocationPaletteModel extends IJNPaletteModel {
 
-  staticPropertyTitle: String = 'nodes';
-  dynamicPropertyTitle: String = 'connections';
-  nodes: Array<IJNPaletteNode>;
-  connections: Array<IJNPaletteConnection>;
+  // staticPropertyTitle: String = 'nodes';
+  // dynamicPropertyTitle: String = 'connections';
+  // nodes: Array<IJNPaletteNode>;
+  // connections: Array<IJNPaletteConnection>;
 
   static instance = new JNLocationPaletteModel();
 
   protected init() {
-    this.nodes = [];
-    this.connections = [];
-
-    let ruleNode = new IJNPaletteNode(JNRuleNode);
-    let locationNode = new IJNPaletteNode(JNLocationNode);
-    let DeviceTypeNode = new IJNPaletteNode(JNDeviceTypeNode);
-    let PropertyNode = new IJNPaletteNode(JNDevicePropertyNode);
-    let conjunctionNode = new IJNPaletteNode(JNConjunctionNode);
-    let conditionNode = new IJNPaletteNode(JNConditionNode);
-    
-    
-    
 
   }
 }

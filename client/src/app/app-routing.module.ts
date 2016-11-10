@@ -7,7 +7,7 @@ import { JNEditFormComponent } from './views/node-editor/node-editor.component';
 
 const routes: Routes = [
     // { path: '', component: FlowComponent },
-    { path: '', redirectTo: '/editor', pathMatch: 'full' },
+    { path: '', redirectTo: '/flow/1', pathMatch: 'full' },
     { path: 'flow', component: FlowComponent },
     { path: 'flow/:id', component: FlowDetailComponent },
     { path: 'editor', component: JNEditFormComponent}

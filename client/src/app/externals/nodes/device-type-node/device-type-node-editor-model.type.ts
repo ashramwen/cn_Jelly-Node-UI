@@ -16,6 +16,7 @@ export class JNDeviceTypeNodeEditorModel extends JNEditorModel {
   protected init() {
     let types = RuleApplication.instance.resources.$schema.types;
     let schemas = RuleApplication.instance.resources.$schema.schemas;
+    
     let schemaOptions = types
       .filter(type => !!schemas[type])
       .map((type) => {

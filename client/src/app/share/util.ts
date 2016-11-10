@@ -8,4 +8,8 @@ export class JNUtils {
       return { key: key, value: obj[key] };
     });
   }
+
+  static removeItem<T>(arr: Array<T>, v: T) {
+    arr.splice(arr.indexOf(v), 1);
+  }
 }

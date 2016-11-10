@@ -55,10 +55,11 @@ export class JNLocationNodeEditorModel extends JNEditorModel {
       locationID = locationStr[i - 1];
     }
 
-    return <JNLocationNodeModel>JNLocationNodeModel.deserialize({
-      locationID: locationID,
-      locationStr: locationStr
-    });
+    let model: JNLocationNodeModel = <JNLocationNodeModel>this.model;
+    model.locationID = locationID;
+    model.locationStr = model.locationStr;
+
+    return model;
   }
 
   protected updated(fieldName: string, value: any): void {

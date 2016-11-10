@@ -27,7 +27,7 @@ export class JNConditionNode extends JNBaseNode  {
     });
   }
 
-  protected whenRejected() {
+  protected whenReject() {
     return null;
   }
 

@@ -23,7 +23,7 @@ export class JNLocationNode extends JNBaseNode {
 
   protected model: JNLocationNodeModel = new JNLocationNodeModel;
 
-  protected whenRejected() {
+  protected whenReject() {
     return null;
   }
 
@@ -31,7 +31,7 @@ export class JNLocationNode extends JNBaseNode {
     return null;
   }
 
-  protected formatter(): Promise<Object> {
+  protected formatter() {
     return this.model.serialize();
   }
 

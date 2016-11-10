@@ -17,6 +17,7 @@ class JNTestNodeModel extends JNNodeModel {
 }
 
 @JNNode({
+  title: 'JNTestNode2',
   icon: 'icon',
   color: 'color',
   borderColor: 'borderColor',
@@ -29,7 +30,7 @@ class JNTestNode2 extends JNBaseNode {
 
   protected model: JNTestNodeModel = new JNTestNodeModel;
 
-  protected whenRejected() {
+  protected whenReject() {
     return null;
   }
 
@@ -57,6 +58,7 @@ class JNTestNode2 extends JNBaseNode {
 }
 
 @JNNode({
+  title: 'JNTestNode1',
   icon: 'icon',
   color: 'color',
   borderColor: 'borderColor',
@@ -69,7 +71,7 @@ class JNTestNode1 extends JNBaseNode {
 
   protected model: JNTestNodeModel = new JNTestNodeModel;
 
-  protected whenRejected() {
+  protected whenReject() {
     return null;
   }
 
@@ -99,35 +101,26 @@ describe('JN base node', function () {
     TestBed.configureTestingModule({ imports: [CoreModule] });
   });
 
-  it('Should Connectable when accepted', async(
-    inject([JNApplication],
-      (application: JNApplication) => {
-        let device = new JNTestNode1();
-        expect(device.connectable(new JNTestNode2)).toEqual(true);
-      })
-  ));
+  it('Should Connectable when accepted', () => {
+      let device = new JNTestNode1();
+      expect(device.connectable(new JNTestNode2)).toEqual(null);
+  });
 
-  it('Should Unconnectable when not accepted', async(
-    inject([JNApplication],
-      (application: JNApplication) => {
-        let device = new JNTestNode2();
-        expect(device.connectable(new JNTestNode1)).toEqual(false);
-      })
-  ));
+  it('Should Unconnectable when not accepted', () => {
+    let device = new JNTestNode2();
+    expect(!!device.connectable(new JNTestNode1).message).toEqual(true);
+  });
 
-  it('Should alert Error', async(
-    inject([JNApplication],
-      (application: JNApplication) => {
-        let device1 = new JNTestNode1();
-        let device2 = new JNTestNode2();
+  it('Should alert Error', () => {
+    let device1 = new JNTestNode1();
+    let device2 = new JNTestNode2();
 
-        try {
-          device2.accept(device1);
-        } catch (e) {
-          expect(e instanceof JNNodeUnconnectableException).toEqual(true);
-        }
-      })
-  ));
+    try {
+      device2.accept(device1);
+    } catch (e) {
+      expect(e instanceof JNNodeUnconnectableException).toEqual(true);
+    }
+  });
 
   /*    
   it('Should have input flow', async(

@@ -26,7 +26,15 @@ export interface INodeMap {
 
 export interface IConnectRule {
   message: string;
-  validator: () => boolean;
+  validator: (target: JNBaseNode) => boolean;
+}
+
+export interface IConnectRuleSetting {
+  global?: Array<IConnectRule>;
+  nodes?: Array<{
+    nodeType: typeof JNBaseNode;
+    rules: Array<IConnectRule>;
+  }>;
 }
 
 export abstract class JNBaseNode {
@@ -40,6 +48,7 @@ export abstract class JNBaseNode {
   static editorModel: typeof JNEditorModel;
   static infoModel: IJNInfoPanelModel;
   static paletteModel: IJNPaletteModel;
+  static outputable: boolean;
 
   static connectable(left: typeof JNBaseNode, right: typeof JNBaseNode): boolean {
     return right.accepts.indexOf(left) > -1;
@@ -72,13 +81,11 @@ export abstract class JNBaseNode {
     return <INodeBody>this.formatter();
   }
 
-  private connectRules: {
-    global: Array<IConnectRule>,
-    nodes: Array<{
-      nodeType: typeof JNBaseNode;
-      rules: Array<IConnectRule>;
-    }>;
-  };
+  /**
+   * @desc connect rules setting.
+   *  global rules will be challenged before node rules
+   */
+  protected connectRules: IConnectRuleSetting = {};
 
   private stream: Subscriber<IJNNodePayload>; // stream publisher
   private output = new Observable((subscriber: Subscriber<IJNNodePayload>) => {
@@ -118,14 +125,14 @@ export abstract class JNBaseNode {
    * @param  {JNBaseNode} node
    * @returns Promise
    */
-  protected abstract whenRejected(node: JNBaseNode): Promise<boolean>;
+  protected abstract whenReject(node: JNBaseNode): Promise<boolean>;
 
   /**
    * @param  {JNBaseNode} node
    * @desc description
    */
   public accept(node: JNBaseNode) {
-    if (!this.connectable(node)) {
+    if (!!this.connectable(node)) {
       throw new JNNodeUnconnectableException(this, node);
     }
     this.nodeMap.accepted[node.body.nodeID] = node;
@@ -139,14 +146,23 @@ export abstract class JNBaseNode {
    */
   public reject(node: JNBaseNode): Promise<boolean | JNException> {
     return new Promise((resolve, reject) => {
-      this.whenRejected(node).then(() => {
+      this.whenReject(node).then(() => {
         delete this.nodeMap.accepted[node.body.nodeID];
         delete node.nodeMap.outputTo[this.body.nodeID];
         resolve(node);
+        this.publishData();
       }, (err) => {
         reject(err);
       });
     });
+  }
+
+  /**
+   * @desc has given node as input
+   * @param  {JNBaseNode} node
+   */
+  public hasAccepted(node: JNBaseNode): boolean {
+    return !!JNUtils.toArray<JNBaseNode>(this.nodeMap).find(r => r.value === node);
   }
 
   constructor(
@@ -159,15 +175,7 @@ export abstract class JNBaseNode {
   public update(data: Object) {
     this.parser(data).then((model) => {
       this.model = model;
-      this.buildOutput().then((output) => {
-        let payload: IJNNodePayload = {
-          type: this.constructor,
-          data: output,
-          valid: model.$valid,
-          error: model.$error
-        };
-        this.stream.next(payload);
-      });
+      this.publishData();
     });
   };
 
@@ -205,25 +213,28 @@ export abstract class JNBaseNode {
    * @returns boolean
    * @desc if thow target is connectable
    */
-  public connectable(target: JNBaseNode): {message: string} {
-    if (this._shouldReject(<typeof JNBaseNode>target.constructor)) {
-      return {
-        message: `<${(<typeof JNBaseNode>this.constructor).title}>节点只支持与
-        ${(<typeof JNBaseNode>this.constructor).accepts.map((type) => `<${type.title}>`).join(',')}节点相连。`
-      };
-    }
+  public connectable(target: JNBaseNode): { message: string } {
+    // type level validation
+    let typeValid = this._shouldReject(<typeof JNBaseNode>target.constructor);
+    if (typeValid) return typeValid;
+
+    // global rule
     let globalRules = this.connectRules.global;
     if (globalRules && globalRules.length) {
       for (let rule of globalRules) {
-        if (!rule.validator()) {
+        if (!rule.validator(target)) {
           return { message: rule.message };
         }
       }
-      let node = this.connectRules.nodes.find(node => node.nodeType === (<typeof JNBaseNode>target.constructor));
+    }
+
+    // node rule
+    if (this.connectRules.nodes && this.connectRules.nodes.length) {
+      let node = this.connectRules.nodes.find(_node => _node.nodeType === (<typeof JNBaseNode>target.constructor));
       if (!node) return null;
       let nodeRules = node.rules;
       for (let rule of nodeRules) {
-        if (!rule.validator()) {
+        if (!rule.validator(target)) {
           return { message: rule.message };
         }
       }
@@ -246,9 +257,32 @@ export abstract class JNBaseNode {
    * @desc type-level connectable check
    * @param  {typeof JNBaseNode} target
    */
-  private _shouldReject(target: typeof JNBaseNode): boolean {
+  private _shouldReject(target: typeof JNBaseNode): {message: string} {
     let accepts: Array<typeof JNBaseNode> = this.constructor['accepts'];
-    return accepts.indexOf(target) > -1;
+    if (!accepts || !accepts.length) {
+      return {
+        message: `<${(<typeof JNBaseNode>this.constructor).title}>节点不接受任何输入节点`
+      };
+    }
+    if (accepts.indexOf(target) === -1) {
+      return {
+        message: `<${(<typeof JNBaseNode>this.constructor).title}>节点只支持与
+        ${(<typeof JNBaseNode>this.constructor).accepts.map((type) => `<${type.title}>`).join(',')}节点相连。`
+      };
+    }
+    return null;
+  }
+
+  private publishData() {
+    this.buildOutput().then((output) => {
+      let payload: IJNNodePayload = {
+        type: this.constructor,
+        data: output,
+        valid: this.model.$valid,
+        error: this.model.$error
+      };
+      this.stream.next(payload);
+    });
   }
 
 }

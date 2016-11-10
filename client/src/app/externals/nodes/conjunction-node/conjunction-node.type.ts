@@ -21,7 +21,7 @@ export class JNConjunctionNode extends JNBaseNode  {
 
   protected model: JNConjunctionNodeModel;
 
-  protected whenRejected() {
+  protected whenReject() {
     return null;
   }
 

@@ -22,7 +22,7 @@ export class JNRuleNode extends JNBaseNode  {
     return this.model.serialize();
   }
 
-  protected whenRejected() {
+  protected whenReject() {
     return new Promise((resolve) => {
       resolve(true);
     });

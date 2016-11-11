@@ -1,6 +1,7 @@
-import { Component, ViewContainerRef, ViewChild, ElementRef, OnInit, Input } from '@angular/core';
-import { ApplicationContextService } from '../../core/services';
+import { Component, ViewContainerRef, ViewChild, ElementRef, OnInit, Input, OnChanges } from '@angular/core';
 import { FormGroup, FormControl, Validators, AsyncValidatorFn } from '@angular/forms';
+
+import { ApplicationContextService } from '../../core/services';
 import { JNTemplateBuilder } from './services/template-builder.service';
 import { JNControlLoader } from './services/control-loader.service';
 import { JNTextControl, ITextInput } from './components/controls/text/text.component';
@@ -18,16 +19,18 @@ import { JNConditionNode } from '../../externals/nodes/condition-node/condition-
 import { JNTimeNode } from '../../externals/nodes/time-node/time-node.type';
 import { JNActionNode } from '../../externals/nodes/action-node/action-node.type';
 import { JNApiNode } from '../../externals/nodes/api-node/api-node.type';
+import { JNBaseNode } from '../../core/models/jn-base-node.type';
 
 @Component({
   selector: 'jn-node-editor',
   template: require('./node-editor.component.html'),
   styles: [require('./node-editor.component.scss')]
 })
-export class JNEditFormComponent implements OnInit {
+export class JNEditFormComponent implements OnInit, OnChanges {
 
-  @Input()
   editorModel: JNEditorModel;
+  @Input()
+  targetNode: JNBaseNode;
 
   private controls: IJNFormControl[] = [];
   private formGroup: FormGroup = new FormGroup({});
@@ -41,8 +44,8 @@ export class JNEditFormComponent implements OnInit {
     // ruleNode.init({ ruleName: 'rule1', description: 'description', triggerWhen: 'TRUE_TO_FALSE' });
     // let locationNode = new JNLocationNode();
     // locationNode.init({ locationStr: ['08', '0801'] });
-    let node = new JNDeviceTypeNode;
-    node.init({ things: [5266], locations: ['08'], typeName: 'EnvironmentSensor' });
+    // let node = new JNDeviceTypeNode;
+    // node.init({ things: [5266], locations: ['08'], typeName: 'EnvironmentSensor' });
     // let node = new JNConjunctionNode();
     // node.init({conjunction: 'and'});
     /*
@@ -86,9 +89,15 @@ export class JNEditFormComponent implements OnInit {
     });
     */
 
+    
+  }
+
+  ngOnChanges(value) {
     this.events.on(APP_READY, () => {
       setTimeout(() => {
-        this.editorModel = node.createEditorModel();
+        this.editorModel = this.targetNode.createEditorModel();
+        console.log(value);
+        // this.editorModel = node.createEditorModel();
         this.prepare();
       }, 50);
     });

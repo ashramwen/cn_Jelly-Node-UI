@@ -11,7 +11,7 @@ import { DeviceTypeNodeService } from './device-type-node.service';
 import { JNNodeEditor } from '../../../core/models/node-editor-annotation';
 
 @JNNodeEditor({
-  title: 'nodeset.JNRuleNode.nodename',
+  title: 'nodeset.JNDeviceTypeNode.nodename',
   formControls: {
     typeName: {
       input: <ISelectInput>{
@@ -24,7 +24,7 @@ import { JNNodeEditor } from '../../../core/models/node-editor-annotation';
     },
     things: {
       input: <ICheckTableInput>{
-        label: '设备种类',
+        label: '设备选择列表',
         tableFields: [{
           displayName: 'ID',
           fieldName: 'thingID'

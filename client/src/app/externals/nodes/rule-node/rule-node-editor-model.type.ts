@@ -38,7 +38,7 @@ import {
     },
     triggerWhen: {
       input: <IRadioInput>{
-        label: '何时出发',
+        label: '何时触发',
         options: [
           { text: '由假转真', value: 'FALSE_TO_TRUE' },
           { text: '由真转假', value: 'TRUE_TO_FALSE' },
@@ -61,7 +61,6 @@ import {
   }
 })
 export class JNRuleNodeEditorModel extends JNEditorModel {
-
 
   protected init() {
   }

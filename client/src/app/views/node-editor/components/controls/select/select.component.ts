@@ -36,13 +36,15 @@ interface ISelectOption {
     require('./select.component.scss')
   ],
   template: `
-    <div class="jn-form">
-      <label>{{label | translate}}</label>
-      <select 
-        [(ngModel)]="value"
-        [disabled]="disabled">
-        <option *ngFor="let o of options" [value]="o.value">{{o.text}}</option>
-      </select>
+    <div class="jn-form inline">
+      <label class="jn-form-label">{{label | translate}}</label>
+      <div class="jn-form-control">
+        <select 
+          [(ngModel)]="value"
+          [disabled]="disabled">
+          <option *ngFor="let o of options" [value]="o.value">{{o.text}}</option>
+        </select>
+      </div>
     </div>
   `,
   providers: [VALUE_ACCESSOR]

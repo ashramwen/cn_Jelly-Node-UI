@@ -31,18 +31,15 @@ export interface ITextareaInput extends IJNFormControlInput {
   ],
   template: `
     <div class="jn-form">
-      <div>
-        <label>{{label | translate}}</label>
-        <textarea
+      <label class="jn-form-label">{{label | translate}}</label>
+      <div class="jn-form-control">
+        <textarea class="jn-textarea"
           placeholder="{{label | translate}}"
           #control
           [(ngModel)]="value" 
           maxlength="maxLength" 
           [disabled]="disabled"
         ></textarea>
-      </div>
-      <div class="pull-right">
-        {{value.length}} / {{maxLength}}
       </div>
     </div>
   `,

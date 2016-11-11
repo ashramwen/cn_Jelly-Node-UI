@@ -34,6 +34,11 @@ export interface ITextInput extends IJNFormControlInput {
   ],
   template: `
     <div class="jn-form">
+      <label class="jn-form-label">{{label | translate}}</label>
+      <div class="jn-form-control">
+        <input type="text" class="jn-text" placeholder="{{label | translate}}" [(ngModel)]="value" [disabled]="disabled"/>
+      </div>
+      <!--
       <md-input 
           placeholder="{{label | translate}}"
           #control
@@ -44,6 +49,7 @@ export interface ITextInput extends IJNFormControlInput {
           {{control.characterCount}} / {{maxLength}}
         </md-hint>
       </md-input>
+      -->
     </div>
   `,
   providers: [VALUE_ACCESSOR]

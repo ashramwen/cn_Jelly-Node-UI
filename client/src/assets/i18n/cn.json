@@ -1,3 +1,11 @@
 {
-  "APP_NAME": "Jelly-Node"
+  "APP_NAME": "Jelly-Node",
+  "nodeset": {
+    "JNRuleNode": {
+      "nodename": "规则节点"
+    },
+    "JNDeviceTypeNode": {
+      "nodename": "设备种类节点"
+    }
+  }
 }

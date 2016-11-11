@@ -39,26 +39,29 @@ interface ITableField {
     require('./check-table.component.scss')
   ],
   template: `
-    <table>
-      <thead>
-        <tr>
-          <th></th>
-          <th *ngFor="let field of tableFields">
-            {{field.displayName}}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let row of tableData">
-          <td>
-            <input type="checkbox" [(ngModel)]="row._checked" (change)="rowCheckChange(row, $event)" />
-          </td>
-          <td *ngFor="let field of tableFields">
-            {{row[field.fieldName]}}
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="jn-form">
+      <label class="jn-form-label">{{label | translate}}</label>
+      <table class="jn-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th *ngFor="let field of tableFields">
+              {{field.displayName}}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of tableData">
+            <td>
+              <input type="checkbox" [(ngModel)]="row._checked" (change)="rowCheckChange(row, $event)" />
+            </td>
+            <td *ngFor="let field of tableFields">
+              {{row[field.fieldName]}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   `,
   providers: [VALUE_ACCESSOR]
 })

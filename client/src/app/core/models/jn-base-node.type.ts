@@ -77,8 +77,8 @@ export abstract class JNBaseNode {
   /**
    * @desc return body
    */
-  public get body(): INodeBody {
-    return <INodeBody>this.formatter();
+  public get body() {
+    return this.formatter();
   }
 
   /**
@@ -113,7 +113,7 @@ export abstract class JNBaseNode {
    * @returns Promise
    * @desc serialize data model
    */
-  protected abstract formatter(): Object;
+  protected abstract formatter(): INodeBody;
   /**
    * @returns Object
    * @desc produce output data for publisher

@@ -13,27 +13,28 @@ import { JNUtils } from '../../../share/util';
 import { ISelectSetInput, JNSelectSetControl } from '../../../views/node-editor/components/controls/select-set/select-set.component';
 import { Input } from '@angular/core';
 import { LocationNodeService } from './location-node.service';
+import { JNNodeEditor } from '../../../core/models/node-editor-annotation';
 
-
+@JNNodeEditor({
+  title: 'nodeset.JNLocationNode.nodename',
+  formControls: {
+    location: {
+      input: <ISelectSetInput>{
+        set: [],
+        label: '位置'
+      },
+      controlType: JNSelectSetControl,
+      $validators: [],
+      formControl: new FormControl()
+    }
+  }
+})
 export class JNLocationNodeEditorModel extends JNEditorModel {
-  title: String = 'nodeset.JNRuleNode.nodename';
   buttons: IJNFormButton[];
   viewTemplate: String;
-  formControls: { [fieldName: string]: IJNFormControl };
   depth = 1;
 
   protected init() {
-    this.formControls = {
-      location: {
-        input: <ISelectSetInput>{
-          set: [],
-          label: '位置'
-        },
-        controlType: JNSelectSetControl,
-        $validators: [],
-        formControl: new FormControl()
-      }
-    };
   }
 
   protected parse(data: JNLocationNodeModel) {
@@ -68,8 +69,8 @@ export class JNLocationNodeEditorModel extends JNEditorModel {
       i++;
     }
     this.depth = i + 1;
-    (<ISelectSetInput>this.formControls['location'].input).set
-      = LocationNodeService.instance.buildSet(value, this.depth);
+    (<ISelectSetInput>this.getInput('location')).set =
+      LocationNodeService.instance.buildSet(value, this.depth);
   }
 
 }

@@ -11,7 +11,10 @@ const VALUE_ACCESSOR: any = {
 };
 
 export interface ITextInput extends IJNFormControlInput {
-  maxLength: number;
+  maxLength?: number;
+  max?: number;
+  min?: number;
+  type?: 'number' | 'text';
 }
 
 @JNControl({

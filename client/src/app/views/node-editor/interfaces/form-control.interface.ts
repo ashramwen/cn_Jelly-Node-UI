@@ -11,5 +11,5 @@ export interface IJNFormControl {
   maxLength?: number; // max length of input
   minLength?: number; // min length of input
   $validators?: IJNEditorFormValidator[];
-  formControl: FormControl;
+  formControl?: FormControl;
 }

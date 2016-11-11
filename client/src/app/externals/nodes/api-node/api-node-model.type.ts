@@ -11,5 +11,10 @@ export class JNApiNodeModel extends JNNodeModel {
 
   constructor() {
     super();
+    this.apiName = null;
+    this.apiUrl = null;
+    this.method = null;
+    this.body = null;
+    this.header = null;
   }
 }

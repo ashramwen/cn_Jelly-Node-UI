@@ -9,34 +9,34 @@ import { JNDevicePropertyNodeModel } from './device-property-node-model.type';
 import { RuleApplication } from '../../rule-application-core';
 import { JNUtils } from '../../../share/util';
 import { ISchemaProperty } from '../../resources/schema.type';
+import { JNNodeEditor } from '../../../core/models/node-editor-annotation';
 import {
   JNTextAreaControl,
   ITextareaInput
 } from '../../../views/node-editor/components/controls/textarea/textarea.component';
 
-
+@JNNodeEditor({
+  title: 'nodeset.JNDevicePropertyNode.nodename',
+  formControls: {
+    property: {
+      input: <ISelectInput>{
+        label: '设备属性',
+        options: []
+      },
+      controlType: JNTextControl,
+      $validators: [],
+    }
+  }
+})
 export class JNDevicePropertyNodeEditorModel extends JNEditorModel {
 
-  title: String = 'nodeset.JNDevicePropertyNode.nodename';
-
   protected init() {
-    this.formControls = {
-      property: {
-        input: <ISelectInput>{
-          label: '设备属性',
-          options: []
-        },
-        controlType: JNTextControl,
-        $validators: [],
-        formControl: new FormControl()
-      }
-    };
   }
 
   protected parse(data: JNDevicePropertyNodeModel) {
     let schema = RuleApplication.instance.resources.$schema.schemas[data.typeName];
     let properties = JNUtils.toArray<ISchemaProperty>(schema.content.statesSchema.properties);
-    (<ISelectInput>this.formControls['property'].input).options = properties
+    (<ISelectInput>this.getInput('property')).options = properties
       .map((property) => {
         return {
           text: property.value.displayNameCN,

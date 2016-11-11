@@ -19,12 +19,21 @@ export class JNDevicePropertyNode extends JNBaseNode {
   protected model: JNDevicePropertyNodeModel = new JNDevicePropertyNodeModel;
 
   protected connectRules: IConnectRuleSetting = {
-    global: [{
-      message: `<${JNDevicePropertyNode.title}>节点只接受一个<${JNDeviceTypeNode.title}>节点作为输入。`,
-      validator: () => {
-        let acceptedNodes = JNUtils.toArray<JNBaseNode>(this.nodeMap.accepted);
-        return !acceptedNodes.find(node => node.value.constructor === JNDeviceTypeNode);
-      }
+    global: [],
+    nodes: [{
+      nodeType: JNDeviceTypeNode,
+      rules: [{
+        message: `<${JNDevicePropertyNode.title}>节点只接受一个<${JNDeviceTypeNode.title}>节点作为输入。`,
+        validator: (target) => {
+          let deviceTypeNodes = JNUtils.toArray<JNBaseNode>(this.nodeMap.accepted)
+            .map(pair => pair.value)
+            .filter(node => node instanceof JNDeviceTypeNode);
+          if (deviceTypeNodes.length > 1) return false;
+          if (deviceTypeNodes.length === 0) return true;
+          if (this.hasAccepted(target)) return true;
+          return false;
+        }
+      }]
     }]
   };
 
@@ -44,8 +53,7 @@ export class JNDevicePropertyNode extends JNBaseNode {
 
   protected parser(data: Object): Promise<JNDevicePropertyNodeModel> {
     return new Promise<JNDevicePropertyNodeModel>((resolve, reject) => {
-      let result: JNDevicePropertyNodeModel =
-        <JNDevicePropertyNodeModel>JNDevicePropertyNodeModel.deserialize(data);
+      let result: JNDevicePropertyNodeModel = JNDevicePropertyNodeModel.deserialize(data);
       resolve(result);
     });
   }

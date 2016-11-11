@@ -15,6 +15,7 @@ import { JNConjunctionNodeEditorModel } from './conjunction-node-editor-model.ty
   paletteModel: null
 })
 export class JNConjunctionNode extends JNBaseNode  {
+  
   public get body (){
     return this.model.serialize();
   }
@@ -31,7 +32,7 @@ export class JNConjunctionNode extends JNBaseNode  {
     });
   }
 
-  protected formatter(): Promise<Object> {
+  protected formatter(): any {
     return null;
   }
 

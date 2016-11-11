@@ -35,7 +35,7 @@ interface IRadioOption {
     require('./radio.component.scss')
   ],
   template: `
-    <md-radio-group [(ngModel)]="value">
+    <md-radio-group [(ngModel)]="value" (ngModelChange)="modelChange(value)">
       <md-radio-button *ngFor="let d of options" [value]="d.value">
         {{d.text}}
       </md-radio-button>
@@ -52,4 +52,8 @@ export class JNRadioControl extends JNFormControl {
   protected label: String;
   @Input()
   protected options: Array<IRadioOption>;
+
+  modelChange(value) {
+    this.value = value;
+  }
 }

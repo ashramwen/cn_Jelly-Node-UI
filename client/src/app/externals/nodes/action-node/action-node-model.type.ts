@@ -3,7 +3,8 @@ import { Serializable } from '../../../../bin/JsonMapper';
 
 @Serializable()
 export class JNActionNodeModel extends JNNodeModel {
-  actionName: String;
+  actionName: string;
+  typeName: string;
   properties: Array<{
     propertyName: String;
     propertyValue: String | number | boolean;
@@ -11,5 +12,8 @@ export class JNActionNodeModel extends JNNodeModel {
 
   constructor() {
     super();
+    this.actionName = null;
+    this.typeName = null;
+    this.properties = null;
   }
 }

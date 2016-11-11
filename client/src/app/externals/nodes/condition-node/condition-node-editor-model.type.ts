@@ -10,28 +10,27 @@ import { JNUtils } from '../../../share/util';
 import { JNConditionNodeModel } from './condition-node-model.type';
 import { RulePropertyCondition, IPropertyConditionsInput } from '../../controls/property-condition/property-condition.component';
 import { ConditionNodeService } from './condition-node.service';
+import { JNNodeEditor } from '../../../core/models/node-editor-annotation';
 import {
   JNTextAreaControl,
   ITextareaInput
 } from '../../../views/node-editor/components/controls/textarea/textarea.component';
 
-
+@JNNodeEditor({
+  title: 'nodeset.JNDevicePropertyNode.nodename',
+  formControls: {
+    conjunction: {
+      input: <IPropertyConditionsInput>{
+        label: '连接表达式',
+        conditions: []
+      },
+      controlType: RulePropertyCondition,
+    }
+  }
+})
 export class JNConditionNodeEditorModel extends JNEditorModel {
 
-  title: String = 'nodeset.JNDevicePropertyNode.nodename';
-
   protected init() {
-    this.formControls = {
-      conjunction: {
-        input: <IPropertyConditionsInput>{
-          label: '连接表达式',
-          conditions: []
-        },
-        controlType: RulePropertyCondition,
-        $validators: [],
-        formControl: new FormControl()
-      }
-    };
   }
 
   protected parse(data: JNConditionNodeModel) {

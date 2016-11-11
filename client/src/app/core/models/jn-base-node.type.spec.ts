@@ -41,7 +41,7 @@ class JNTestNode2 extends JNBaseNode {
     });
   }
 
-  protected formatter(): Object {
+  protected formatter(): any {
     return this.model.serialize();
   }
 
@@ -79,7 +79,7 @@ class JNTestNode1 extends JNBaseNode {
     return null;
   }
 
-  protected formatter(): Object {
+  protected formatter(): any {
     return this.model.serialize();
   }
 

@@ -17,7 +17,7 @@ import {
 } from '../../../views/node-editor/components/controls/textarea/textarea.component';
 
 @JNNodeEditor({
-  title: 'nodeset.JNDevicePropertyNode.nodename',
+  title: 'nodeset.JNConditionNode.nodename',
   formControls: {
     conjunction: {
       input: <IPropertyConditionsInput>{

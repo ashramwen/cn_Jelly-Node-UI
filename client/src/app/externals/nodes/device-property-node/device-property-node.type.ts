@@ -3,6 +3,7 @@ import { JNDeviceTypeNode } from '../device-type-node/device-type-node.type';
 import { JNNode } from '../../../core/models/node-annotation';
 import { JNDevicePropertyNodeModel } from './device-property-node-model.type';
 import { JNUtils } from '../../../share/util';
+import { JNDevicePropertyNodeEditorModel } from './device-property-node-editor-model.type';
 
 @JNNode({
   title: 'JNDevicePropertyNode',
@@ -10,7 +11,7 @@ import { JNUtils } from '../../../share/util';
   color: '',
   borderColor: '',
   accepts: [JNDeviceTypeNode],
-  editorModel: null,
+  editorModel: JNDevicePropertyNodeEditorModel,
   infoPanelModel: null,
   paletteModel: null
 })

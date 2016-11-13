@@ -15,7 +15,7 @@ import {
 } from '../../../views/node-editor/components/controls/textarea/textarea.component';
 
 @JNNodeEditor({
-  title: 'nodeset.JNDevicePropertyNode.nodename',
+  title: 'nodeset.JNConjunctionNode.nodename',
   formControls: {
     conjunction: {
       input: <ISelectInput>{

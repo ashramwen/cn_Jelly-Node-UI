@@ -4,7 +4,7 @@ import { IRadioInput, JNRadioControl } from '../../../views/node-editor/componen
 import { FormControl } from '@angular/forms';
 import { JNTextControl, ITextInput } from '../../../views/node-editor/components/controls/text/text.component';
 import { JNEditorModel } from '../../../views/node-editor/interfaces/editor-model.type';
-import { ISelectInput } from '../../../views/node-editor/components/controls/select/select.component';
+import { ISelectInput, JNSelectControl } from '../../../views/node-editor/components/controls/select/select.component';
 import { JNDevicePropertyNodeModel } from './device-property-node-model.type';
 import { RuleApplication } from '../../rule-application-core';
 import { JNUtils } from '../../../share/util';
@@ -23,7 +23,7 @@ import {
         label: '设备属性',
         options: []
       },
-      controlType: JNTextControl,
+      controlType: JNSelectControl,
       $validators: [],
     }
   }
@@ -34,6 +34,7 @@ export class JNDevicePropertyNodeEditorModel extends JNEditorModel {
   }
 
   protected parse(data: JNDevicePropertyNodeModel) {
+    if (!data.typeName) return;
     let schema = RuleApplication.instance.resources.$schema.schemas[data.typeName];
     let properties = JNUtils.toArray<ISchemaProperty>(schema.content.statesSchema.properties);
     (<ISelectInput>this.getInput('property')).options = properties

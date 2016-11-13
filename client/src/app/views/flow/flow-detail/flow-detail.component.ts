@@ -4,6 +4,7 @@ import { Observable, Subscription } from 'rxjs';
 import { JNBaseNode } from '../../../core/models/jn-base-node.type';
 import { JNDeviceTypeNode } from '../../../externals/nodes/device-type-node/device-type-node.type';
 import { JNRuleNode } from '../../../externals/nodes/rule-node/rule-node.type';
+import { JNDevicePropertyNode } from '../../../externals/nodes/device-property-node/device-property-node.type';
 
 @Component({
   selector: 'app-flow-detail',
@@ -23,8 +24,8 @@ export class FlowDetailComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    this.selectedNode = new JNRuleNode;
-    this.selectedNode.init({ });
+    this.selectedNode = new JNDevicePropertyNode;
+    this.selectedNode.init({typeName: 'AirCondition' });
     this.subs = this.route.params.subscribe(params => this.id = params['id']);
   }
 

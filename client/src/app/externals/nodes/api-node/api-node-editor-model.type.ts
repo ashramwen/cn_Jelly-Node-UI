@@ -17,7 +17,7 @@ import {
 } from '../../../views/node-editor/components/controls/textarea/textarea.component';
 
 @JNNodeEditor({
-  title: 'nodeset.JNActionNode.nodename',
+  title: 'nodeset.JNApiNode.nodename',
   formControls: {
 
     apiName: {

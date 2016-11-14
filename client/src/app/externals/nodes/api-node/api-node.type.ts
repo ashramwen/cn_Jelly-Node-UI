@@ -7,14 +7,14 @@ import { JNApiNodeEditorModel } from './api-node-editor-model.type';
 import { JNApiNodeModel } from './api-node-model.type';
 
 @JNNode({
-  title: 'JNActionNode',
+  title: 'nodeset.JNApiNode.nodename',
   icon: '',
   color: '',
   borderColor: '',
-  accepts: [JNRuleNode],
   editorModel: JNApiNodeEditorModel,
   infoPanelModel: null,
-  paletteModel: null
+  paletteModel: null,
+  accepts: ['Rule']
 })
 export class JNApiNode extends JNBaseNode  {
 
@@ -22,7 +22,7 @@ export class JNApiNode extends JNBaseNode  {
     return this.model.serialize();
   }
 
-  protected model: JNApiNodeModel;
+  protected model: JNApiNodeModel = new JNApiNodeModel;
 
   protected buildOutput(): Promise<Object> {
     return new Promise((resolve) => {
@@ -36,12 +36,6 @@ export class JNApiNode extends JNBaseNode  {
 
   protected formatter() {
     return null;
-  }
-
-  protected parser(data: Object): Promise<JNApiNodeModel> {
-    return new Promise((resolve) => {
-      resolve(JNApiNodeModel.deserialize(data));
-    });
   }
 
   protected listener(data: Object) {

@@ -7,14 +7,18 @@ import { JNLocationNodeModel } from './location-node-model.type';
 import { JNDeviceTypeNode } from '../device-type-node/device-type-node.type';
 
 @JNNode({
-  title: 'JNLocationNode',
+  title: 'nodeset.JNLocationNode.nodename',
   icon: '',
   color: '',
   borderColor: '',
+<<<<<<< HEAD
   accepts: [JNDeviceTypeNode],
+=======
+>>>>>>> master
   editorModel: JNLocationNodeEditorModel,
   infoPanelModel: JNLocationInfoPanelModel.instance,
-  paletteModel: JNLocationPaletteModel.instance
+  paletteModel: JNLocationPaletteModel.instance,
+  accepts: []
 })
 export class JNLocationNode extends JNBaseNode {
 
@@ -36,7 +40,7 @@ export class JNLocationNode extends JNBaseNode {
     return this.model.serialize();
   }
 
-  protected parser(data: Object): Promise<JNLocationNodeModel> {
+  protected parser(data: Object) {
     return super.parser(data);
   }
 

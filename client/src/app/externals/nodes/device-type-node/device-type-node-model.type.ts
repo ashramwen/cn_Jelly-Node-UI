@@ -10,7 +10,8 @@ export interface IDeviceType  extends INodeBody {
 }
 
 @Serializable()
-export class JNDeviceTypeNodeModel extends JNNodeModel  implements IDeviceType {
+export class JNDeviceTypeNodeModel extends JNNodeModel<IDeviceType>  {
+  static deserialize: (data: any) => JNDeviceTypeNodeModel;
 
   typeName: string;
   typeDisplayName: string;

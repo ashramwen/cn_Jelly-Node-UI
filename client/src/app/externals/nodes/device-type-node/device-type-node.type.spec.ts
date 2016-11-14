@@ -33,12 +33,8 @@ describe('Device Type Node', function () {
       },
       nodeID: 123,
       nodeName: '类型-灯泡'
-    }).then(() => {
-      // expect(deviceType['model'].typeName).toEqual('Lighting');
-      // console.log(JSON.stringify(deviceType.body));
-      // expect(deviceType.body['typeName']).toEqual('Lighting');
-      expect(deviceType.body.position).toEqual({ x: 100, y: 100 });
     });
+    expect(deviceType.body.position).toEqual({ x: 100, y: 100 });
   }));
 
   it('accpet location node', async(() => {
@@ -50,9 +46,8 @@ describe('Device Type Node', function () {
       typeDisplayName: '灯泡',
       nodeID: 123,
       nodeName: '类型-灯泡'
-    }).then(() => {
-      expect(deviceNode.connectable(locationNode)).toEqual(null);
     });
+    expect(deviceNode.connectable(locationNode)).toEqual(null);
   }));
 
   it('should not accpet two location nodes', async(() => {
@@ -67,10 +62,9 @@ describe('Device Type Node', function () {
       typeDisplayName: '灯泡',
       nodeID: 123,
       nodeName: '类型-灯泡'
-    }).then(() => {
-      deviceNode.accept(locationNode1);
-      expect(!!deviceNode.connectable(locationNode2).message).toEqual(true);
     });
+    deviceNode.accept(locationNode1);
+    expect(!!deviceNode.connectable(locationNode2).message).toEqual(true);
   }));
 
 });

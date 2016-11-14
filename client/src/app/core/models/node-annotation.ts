@@ -9,9 +9,9 @@ export function JNNode(options: INodeOptions) {
     nodeClass.color = options.color;
     nodeClass.title = options.title;
     nodeClass.borderColor = options.borderColor;
-    nodeClass.accepts = options.accepts;
     nodeClass.editorModel = options.editorModel;
     nodeClass.infoModel = options.infoPanelModel;
     nodeClass.paletteModel = options.paletteModel;
+    nodeClass.accepts = options.accepts || [];
   };
 }

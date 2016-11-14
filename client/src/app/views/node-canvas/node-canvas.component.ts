@@ -17,7 +17,7 @@ import { JNLocationNode } from './../../externals/nodes/location-node/location-n
 })
 export class NodeCanvasComponent implements OnInit {
 
-  nodeFlow = new JNFlow();
+  nodeFlow: JNFlow;
 
   constructor(private d3Helper: D3HelperService) {
   }

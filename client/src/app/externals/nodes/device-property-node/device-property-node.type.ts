@@ -6,14 +6,14 @@ import { JNUtils } from '../../../share/util';
 import { JNDevicePropertyNodeEditorModel } from './device-property-node-editor-model.type';
 
 @JNNode({
-  title: 'JNDevicePropertyNode',
+  title: 'nodeset.JNDevicePropertyNode.nodename',
   icon: '',
   color: '',
   borderColor: '',
-  accepts: [JNDeviceTypeNode],
   editorModel: JNDevicePropertyNodeEditorModel,
   infoPanelModel: null,
-  paletteModel: null
+  paletteModel: null,
+  accepts: ['DeviceType']
 })
 export class JNDevicePropertyNode extends JNBaseNode {
 
@@ -50,13 +50,6 @@ export class JNDevicePropertyNode extends JNBaseNode {
 
   protected formatter() {
     return this.model.serialize();
-  }
-
-  protected parser(data: Object): Promise<JNDevicePropertyNodeModel> {
-    return new Promise<JNDevicePropertyNodeModel>((resolve, reject) => {
-      let result: JNDevicePropertyNodeModel = JNDevicePropertyNodeModel.deserialize(data);
-      resolve(result);
-    });
   }
 
   protected listener() {

@@ -5,17 +5,20 @@ import { JNException } from './exceptions/exception.type';
 import { INodeBody } from './interfaces/node-body.interface';
 
 @Serializable()
-export abstract class JNNodeModel implements INodeBody {
+export abstract class JNNodeModel<T extends INodeBody> implements INodeBody {
 
-  static deserialize: (obj: any) => JNNodeModel;
+  static deserialize: <V extends INodeBody>(obj: any) => JNNodeModel<V>;
 
   public $error: JNException;
   public $valid: boolean;
 
+  public accepts: number[];
+  public type: string;
   public position: INodePosition;
   public nodeName: String;
   public nodeID: number;
 
+  /*  
   @JsonProperty({
     serialize: (arr: Array<JNBaseNode>) => {
       return [];
@@ -25,8 +28,9 @@ export abstract class JNNodeModel implements INodeBody {
     }
   })
   public accepted: Array<JNBaseNode>;
+  */
 
-  public serialize: () => any;
+  public serialize: () => T;
 
   public extends(obj) {
     if (!obj) return;
@@ -45,6 +49,7 @@ export abstract class JNNodeModel implements INodeBody {
     this.nodeID = null;
     this.nodeName = null;
     this.position = null;
-    this.accepted = [];
+    this.accepts = [];
+    this.type = null;
   }
 }

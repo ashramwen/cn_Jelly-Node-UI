@@ -6,14 +6,20 @@ import { By } from '@angular/platform-browser';
 import { CoreModule } from '../core.module';
 import { Serializable, JsonProperty } from '../../../bin/JsonMapper';
 import { JNNodeModel } from './jn-node-model.type';
+import { INodeBody } from './interfaces/node-body.interface';
 
 ////////  SPECS  /////////////
 
+interface ITest extends INodeBody{
+    testName: string;
+    testProperty: number;
+}
+
 @Serializable()
-class TestModel extends JNNodeModel {
+class TestModel extends JNNodeModel<ITest> {
 
     @JsonProperty('serialName')
-    testName: String;
+    testName: string;
 
     @JsonProperty({
         name: 'testProperty',

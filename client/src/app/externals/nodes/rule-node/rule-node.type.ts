@@ -7,17 +7,18 @@ import { JNRuleNodeModel } from './rule-node-model.type';
 import { JNTimeNode } from '../time-node/time-node.type';
 
 @JNNode({
-  title: 'JNRuleNode',
+  title: 'nodeset.JNRuleNode.nodename',
   icon: '',
   color: '',
   borderColor: '',
-  accepts: [],
   editorModel: JNRuleNodeEditorModel,
   infoPanelModel: JNRuleInfoPanelModel.instance,
-  paletteModel: JNRulePaletteModel.instance
+  paletteModel: JNRulePaletteModel.instance,
+  accepts: ['Condition', 'Conjunction', 'Time']
 })
 export class JNRuleNode extends JNBaseNode  {
-  protected model: JNRuleNodeModel;
+
+  protected model: JNRuleNodeModel = new JNRuleNodeModel;
 
   protected connectRules: IConnectRuleSetting = {
     global: [],
@@ -44,12 +45,6 @@ export class JNRuleNode extends JNBaseNode  {
 
   protected formatter(): any {
     return this.model.serialize();
-  }
-
-  protected parser(data: Object): Promise<JNRuleNodeModel> {
-    return new Promise((resolve) => {
-      resolve(JNRuleNodeModel.deserialize(data));
-    });
   }
 
   protected listener() {

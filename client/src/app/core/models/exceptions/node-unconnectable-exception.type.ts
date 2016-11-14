@@ -10,8 +10,8 @@ export class JNNodeUnconnectableException extends JNException{
     let a = new Error;
     let nodeType1 = <typeof JNBaseNode>node1.constructor;
 
-    let types = nodeType1.accepts.map((type) => typeof type);
+    let types = nodeType1.accepts;
 
-    this.message = `target node only accepts:${types.join(',')}; but given type is ${typeof node2}`;
+    this.message = `${(<typeof JNBaseNode>node1.constructor).title} node only accepts:${types.join(',')}; but given type is ${(<typeof JNBaseNode>node2.constructor).title}`;
   }
 }

@@ -1,22 +1,32 @@
-import { JNBaseNode } from '../../../core/models/jn-base-node.type';
+import { JNBaseNode, IConnectRuleSetting } from '../../../core/models/jn-base-node.type';
 import { JNNode } from '../../../core/models/node-annotation';
 import { JNRuleNodeEditorModel } from './rule-node-editor-model.type';
 import { JNRuleInfoPanelModel } from './rule-node-info-panel-model.type';
 import { JNRulePaletteModel } from './rule-node-palette-model.type';
 import { JNRuleNodeModel } from './rule-node-model.type';
+import { JNTimeNode } from '../time-node/time-node.type';
 
 @JNNode({
-  title: 'JNRuleNode',
+  title: 'nodeset.JNRuleNode.nodename',
   icon: '',
   color: '',
   borderColor: '',
-  accepts: [],
   editorModel: JNRuleNodeEditorModel,
   infoPanelModel: JNRuleInfoPanelModel.instance,
-  paletteModel: JNRulePaletteModel.instance
+  paletteModel: JNRulePaletteModel.instance,
+  accepts: ['Condition', 'Conjunction', 'Time']
 })
 export class JNRuleNode extends JNBaseNode  {
-  protected model: JNRuleNodeModel;
+
+  protected model: JNRuleNodeModel = new JNRuleNodeModel;
+
+  protected connectRules: IConnectRuleSetting = {
+    global: [],
+    nodes: [{
+      nodeType: JNTimeNode,
+      rules: []
+    }]
+  };
 
   public get body (){
     return this.model.serialize();
@@ -33,14 +43,8 @@ export class JNRuleNode extends JNBaseNode  {
     return null;
   }
 
-  protected formatter(): Promise<Object> {
+  protected formatter(): any {
     return this.model.serialize();
-  }
-
-  protected parser(data: Object): Promise<JNRuleNodeModel> {
-    return new Promise((resolve) => {
-      resolve(JNRuleNodeModel.deserialize(data));
-    });
   }
 
   protected listener() {

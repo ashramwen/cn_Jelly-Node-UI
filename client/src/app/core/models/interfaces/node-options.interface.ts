@@ -8,8 +8,8 @@ export interface INodeOptions {
   color: String;
   borderColor: String;
   title: string;
-  accepts: Array<typeof JNBaseNode>;
   editorModel: typeof JNEditorModel;
   infoPanelModel: IJNInfoPanelModel;
   paletteModel: IJNPaletteModel;
+  accepts: string[];
 }

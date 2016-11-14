@@ -5,21 +5,22 @@ import { JNConditionNode } from '../condition-node/condition-node.type';
 import { JNConjunctionNodeEditorModel } from './conjunction-node-editor-model.type';
 
 @JNNode({
-  title: 'JNConjunctionNode',
+  title: 'nodeset.JNConjunctionNode.nodename',
   icon: '',
   color: '',
   borderColor: '',
-  accepts: [JNConditionNode, JNConjunctionNode],
   editorModel: JNConjunctionNodeEditorModel,
   infoPanelModel: null,
-  paletteModel: null
+  paletteModel: null,
+  accepts: ['Condition', 'Conjunction']
 })
 export class JNConjunctionNode extends JNBaseNode  {
+
   public get body (){
     return this.model.serialize();
   }
 
-  protected model: JNConjunctionNodeModel;
+  protected model: JNConjunctionNodeModel = new JNConjunctionNodeModel;
 
   protected whenReject() {
     return null;
@@ -31,14 +32,8 @@ export class JNConjunctionNode extends JNBaseNode  {
     });
   }
 
-  protected formatter(): Promise<Object> {
+  protected formatter(): any {
     return null;
-  }
-
-  protected parser(data: Object): Promise<JNConjunctionNodeModel> {
-    return new Promise((resolve) => {
-      resolve(JNConjunctionNodeModel.deserialize(data));
-    });
   }
 
   protected listener(data: Object) {

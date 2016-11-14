@@ -43,7 +43,7 @@ export abstract class JNBaseNode {
   static icon: String; // node icon diplay on canvas
   static color: String; // node color display on canvas
   static borderColor: String; // node border color on canvas
-  static accepts: Array<typeof JNBaseNode>; // node types that can be accepted;
+  static accepts: Array<string> = []; // node types that can be accepted;
   static nodeModel: typeof JNNodeModel;
   static editorModel: typeof JNEditorModel;
   static infoModel: IJNInfoPanelModel;
@@ -51,11 +51,13 @@ export abstract class JNBaseNode {
   static outputable: boolean;
 
   static connectable(left: typeof JNBaseNode, right: typeof JNBaseNode): boolean {
-    return right.accepts.indexOf(left) > -1;
+    return right.accepts
+      .map(nodeName => JNApplication.instance.nodeTypeMapper[nodeName])
+      .indexOf(left) > -1;
   }
 
   get name(): String {
-    return this.model.nodeName;
+    return (<typeof JNBaseNode>this.constructor).title;
   }
 
   get position(): INodePosition {
@@ -72,13 +74,13 @@ export abstract class JNBaseNode {
   };
 
 
-  protected abstract model: JNNodeModel; // node model
+  protected abstract model: JNNodeModel<any>; // node model
 
   /**
    * @desc return body
    */
-  public get body(): INodeBody {
-    return <INodeBody>this.formatter();
+  public get body() {
+    return this.formatter();
   }
 
   /**
@@ -103,17 +105,15 @@ export abstract class JNBaseNode {
    * @returns Promise
    * @desc deserialize raw data to data model
    */
-  protected parser(data: Object): Promise<JNNodeModel> {
-    return new Promise((resolve, reject) => {
-      resolve(this.model.extends(data));
-    });
+  protected parser(data: Object): JNNodeModel<any> {
+    return this.model.extends(data);
   }
 
   /**
    * @returns Promise
    * @desc serialize data model
    */
-  protected abstract formatter(): Object;
+  protected abstract formatter(): INodeBody;
   /**
    * @returns Object
    * @desc produce output data for publisher
@@ -173,23 +173,20 @@ export abstract class JNBaseNode {
    * @desc update node by given data and publish new body
    */
   public update(data: Object) {
-    this.parser(data).then((model) => {
-      this.model = model;
-      this.publishData();
-    });
+    this.model = this.parser(data);
+    this.publishData();
   };
 
   /**
    * @param  {Object} data
    */
   public init(data: Object) {
-    return this.parser(data).then((model) => {
-      if (!this.model) {
-        this.model = model;
-      } else {
-        this.model.extends(model);
-      }
-    });
+    let model = this.parser(data);
+    if (!this.model) {
+      this.model = model;
+    } else {
+      this.model.extends(model);
+    }
   }
 
   /**
@@ -258,7 +255,8 @@ export abstract class JNBaseNode {
    * @param  {typeof JNBaseNode} target
    */
   private _shouldReject(target: typeof JNBaseNode): {message: string} {
-    let accepts: Array<typeof JNBaseNode> = this.constructor['accepts'];
+    let accepts = (<typeof JNBaseNode>this.constructor).accepts
+      .map(nodeName => JNApplication.instance.nodeTypeMapper[nodeName]);
     if (!accepts || !accepts.length) {
       return {
         message: `<${(<typeof JNBaseNode>this.constructor).title}>节点不接受任何输入节点`
@@ -267,7 +265,7 @@ export abstract class JNBaseNode {
     if (accepts.indexOf(target) === -1) {
       return {
         message: `<${(<typeof JNBaseNode>this.constructor).title}>节点只支持与
-        ${(<typeof JNBaseNode>this.constructor).accepts.map((type) => `<${type.title}>`).join(',')}节点相连。`
+        ${accepts.map((type) => `<${type.title}>`).join(',')}节点相连。`
       };
     }
     return null;

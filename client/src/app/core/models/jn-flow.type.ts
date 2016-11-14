@@ -1,4 +1,6 @@
 import { JNBaseNode } from './jn-base-node.type';
+import { INodeBody } from './interfaces/node-body.interface';
+import { JNApplication } from '../services/application-core.service';
 
 export class JNFlow {
   flowID: number;
@@ -34,6 +36,26 @@ export class JNFlow {
     if (this.nodes.indexOf(node) > -1) {
       this.nodes.splice(this.nodes.indexOf(node), 1);
     }
+  }
+
+  loadData(data: INodeBody[]) {
+
+    this.nodes = data.map(d => {
+      let nodeType: typeof JNBaseNode = JNApplication.instance.nodeTypeMapper[d.type];
+      let node: JNBaseNode = new (<any>nodeType);
+      node.init(d);
+      return node;
+    });
+
+    this.nodes.forEach((node) => {
+      node.body.accepts
+        .map((id) => {
+          return this.nodes.find(n => n.body.nodeID === id);
+        })
+        .forEach((sourceNode) => {
+          node.accept(sourceNode);
+        });
+    });
   }
 
   redo() {

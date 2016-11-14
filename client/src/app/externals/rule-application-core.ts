@@ -10,6 +10,15 @@ import { AuthenHelperSerivce } from './services/authen-helper.service';
 import { Events } from '../core/services/event.service';
 import { ResourceService } from './resources/resources.service';
 import { CACHE_LOCATION } from './resources/location.type';
+import { JNLocationNode } from './nodes/location-node/location-node.type';
+import { JNDeviceTypeNode } from './nodes/device-type-node/device-type-node.type';
+import { JNDevicePropertyNode } from './nodes/device-property-node/device-property-node.type';
+import { JNConditionNode } from './nodes/condition-node/condition-node.type';
+import { JNConjunctionNode } from './nodes/conjunction-node/conjunction-node.type';
+import { JNRuleNode } from './nodes/rule-node/rule-node.type';
+import { JNActionNode } from './nodes/action-node/action-node.type';
+import { JNApiNode } from './nodes/api-node/api-node.type';
+import { JNTimeNode } from './nodes/time-node/time-node.type';
 
 @Injectable()
 export class RuleApplication extends JNApplication {
@@ -29,6 +38,18 @@ export class RuleApplication extends JNApplication {
   }
 
   protected init() {
+    this.nodeTypeMapper = {
+      Location: JNLocationNode,
+      DeviceType: JNDeviceTypeNode,
+      DeviceProperty: JNDevicePropertyNode,
+      Condition: JNConditionNode,
+      Conjunction: JNConjunctionNode,
+      Rule: JNRuleNode,
+      DeviceAction: JNActionNode,
+      Api: JNApiNode,
+      Time: JNTimeNode
+    };
+
     return new Promise((resolve, reject) => {
       this.authenHelper.storeCredential({
         accessToken: 'super_token'

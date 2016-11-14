@@ -12,10 +12,10 @@ export class JNTemplateBuilder {
 
     let validatorTemplates = [];
     validatorTemplates = validators.map((validator) => {
-      return `<div *ngIf="formControl.hasError('${validator.errorName}')">${validator.msg}</div>`;
+      return `<div [hidden]="inputs.hidden" *ngIf="formControl.hasError('${validator.errorName}')">${validator.msg}</div>`;
     });
     return `
-      <div>${type.template}</div>
+      <div [hidden]="inputs.hidden">${type.template}</div>
       ${validatorTemplates.join('\r\n')}
     `;
   }

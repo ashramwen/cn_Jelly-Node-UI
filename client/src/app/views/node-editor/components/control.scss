@@ -1,12 +1,31 @@
+@import '../../../../assets/styles/global';
 .jn-form{
   display: block;
+  padding: 0px 10px;
+  margin-bottom: 10px;
+
   .jn-form-label{
+    display: block;
+    height: 32px;
+    line-height: 32px;
     width: 120px;
   }
-  .jn-form-container{
-    flex: 1;
+  .jn-form-control{
+    width: 100%;
+    display: flex;
+  }
+
+  &.inline{
+    height: 32px;
+    line-height: 32px;
+    display: flex;
+    .jn-form-label{
+      width: 80px;
+      display: block;
+    }
     .jn-form-control{
-      width: 100%;
-    } 
+      flex: 1;
+      display: flex;
+    }
   }
 }

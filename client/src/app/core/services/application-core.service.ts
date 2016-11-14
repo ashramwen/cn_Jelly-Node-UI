@@ -14,7 +14,12 @@ export const APP_READY = 'app_ready';
 @Injectable()
 export abstract class JNApplication {
 
+  static instance: JNApplication;
+
   nodes: Array<JNBaseNode> = [];
+  nodeTypeMapper: {
+    [key: string]: typeof JNBaseNode
+  } = {};
 
   constructor(
     public applicationContext: ApplicationContextService,
@@ -23,6 +28,7 @@ export abstract class JNApplication {
     public http: Http,
     public events: Events
   ) {
+    JNApplication.instance = this;
     this._init();
   }
 

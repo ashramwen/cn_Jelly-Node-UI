@@ -10,6 +10,7 @@ import { JNFlow } from './../../core/models/jn-flow.type';
 import { JNBaseNode } from '../../core/models/jn-base-node.type';
 import { JNDeviceTypeNode } from './../../externals/nodes/device-type-node/device-type-node.type';
 import { JNLocationNode } from './../../externals/nodes/location-node/location-node.type';
+import { JNApplication } from '../../core/services/application-core.service';
 
 @Component({
   selector: 'jn-palette',
@@ -17,7 +18,7 @@ import { JNLocationNode } from './../../externals/nodes/location-node/location-n
   styleUrls: ['./palette.component.scss']
 })
 export class PaletteComponent implements OnInit, AfterViewInit {
-  constructor() { }
+  constructor(private application: JNApplication) { }
 
   nodes: JNBaseNode[]
 

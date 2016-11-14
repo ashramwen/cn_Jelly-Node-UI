@@ -10,13 +10,13 @@ import { IDeviceType } from '../device-type-node/device-type-node-model.type';
 
 @JNNode({
   icon: '',
-  title: 'JNCondtionNode',
+  title: 'nodeset.JNConditionNode.nodename',
   color: '',
   borderColor: '',
-  accepts: [JNDevicePropertyNode],
   editorModel: JNConditionNodeEditorModel,
   infoPanelModel: null,
-  paletteModel: null
+  paletteModel: null,
+  accepts: ['DeviceProperty']
 })
 export class JNConditionNode extends JNBaseNode  {
 
@@ -36,7 +36,7 @@ export class JNConditionNode extends JNBaseNode  {
 
             let typeName = (<IDeviceProperty>target.body).typeName;
 
-            return !!inputPropertyNodes.find((node) => {
+            return !inputPropertyNodes.find((node) => {
               let inputs = JNUtils.toArray<JNBaseNode>(node.nodeMap.accepted)
                 .map(r => r.value)
                 .filter(r => r instanceof JNDeviceTypeNode);
@@ -54,7 +54,7 @@ export class JNConditionNode extends JNBaseNode  {
     return this.model.serialize();
   }
 
-  protected model: JNConditionNodeModel;
+  protected model: JNConditionNodeModel = new JNConditionNodeModel;
 
   protected buildOutput(): Promise<Object> {
     return new Promise((resolve) => {
@@ -68,12 +68,6 @@ export class JNConditionNode extends JNBaseNode  {
 
   protected formatter(): any {
     return null;
-  }
-
-  protected parser(data: Object): Promise<JNConditionNodeModel> {
-    return new Promise((resolve) => {
-      resolve(JNConditionNodeModel.deserialize(data));
-    });
   }
 
   protected listener(data: Object) {

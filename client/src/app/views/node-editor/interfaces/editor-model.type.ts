@@ -22,7 +22,7 @@ export abstract class JNEditorModel {
     return this._formGroup;
   }
 
-  protected model: JNNodeModel;
+  protected model: JNNodeModel<any>;
 
   private _formControls: { [fieldName: string]: IJNFormControl };
   private _formGroup: FormGroup;
@@ -55,7 +55,7 @@ export abstract class JNEditorModel {
    * @desc data entrance
    * @param  {JNNodeModel} data
    */
-  public load(data: JNNodeModel) {
+  public load(data: JNNodeModel<any>) {
     this.model = data.clone();
     this.parse(data);
   }
@@ -104,13 +104,13 @@ export abstract class JNEditorModel {
    * @param  {JNNodeModel} data
    * @returns void
    */
-  protected abstract parse(data: JNNodeModel): void;
+  protected abstract parse(data: JNNodeModel<any>): void;
 
   /**
    * @desc to produce output
    * @returns JNNodeModel
    */
-  protected abstract formate(): JNNodeModel;
+  protected abstract formate(): JNNodeModel<any>;
 
   /**
    * @desc to update formControl value

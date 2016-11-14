@@ -1,4 +1,3 @@
-```json
 [
   {
     "locationID": "0807W-A01",
@@ -19,14 +18,14 @@
     "property": "brightness",
     "typeName": "EnvironmentSensor",
     "type": "DeviceProperty",
-    "nodeID": 3,
+    "nodeID": 30,
     "accepts": [2]
   },
   {
     "property": "humanity",
     "typeName": "EnvironmentSensor",
     "type": "DeviceProperty",
-    "nodeID": 3,
+    "nodeID": 31,
     "accepts": [2]
   },
   {
@@ -56,7 +55,7 @@
     "typeName": "EnvironmentSensor",
     "type": "DeviceProperty",
     "nodeID": 7,
-    "accepts": [6]
+    "accepts": [5]
   },
   {
     "conditions": [
@@ -75,7 +74,7 @@
     ],
     "type": "Condition",
     "nodeID": 8,
-    "accepts": [3]
+    "accepts": [30, 31]
   },
   {
     "conditions": [
@@ -94,7 +93,7 @@
     ],
     "type": "Condition",
     "nodeID": 9,
-    "accepts": [4]
+    "accepts": [6,7]
   },
   {
     "type": "Conjunction",
@@ -155,7 +154,6 @@
     },
     "type": "Api",
     "nodeID": 16,
-    "accepts": [14]
+    "accepts": [11]
   }
 ]
-```

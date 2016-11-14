@@ -8,14 +8,14 @@ import { JNLocationNode } from '../location-node/location-node.type';
 import { JNUtils } from '../../../share/util';
 
 @JNNode({
-  title: 'JNDeviceTypeNode',
+  title: 'nodeset.JNDeviceTypeNode.nodename',
   icon: '',
   color: '',
   borderColor: '',
-  accepts: [JNLocationNode],
   editorModel: JNDeviceTypeNodeEditorModel,
   infoPanelModel: JNDeviceTypeInfoPanelModel.instance,
-  paletteModel: JNDeviceTypePaletteModel.instance
+  paletteModel: JNDeviceTypePaletteModel.instance,
+  accepts: ['Location']
 })
 export class JNDeviceTypeNode extends JNBaseNode {
 
@@ -57,14 +57,6 @@ export class JNDeviceTypeNode extends JNBaseNode {
 
   protected formatter() {
     return this.model.serialize();
-  }
-
-  protected parser(data: Object): Promise<JNDeviceTypeNodeModel> {
-    return new Promise<JNDeviceTypeNodeModel>((resolve, reject) => {
-      let result: JNDeviceTypeNodeModel =
-        <JNDeviceTypeNodeModel>JNDeviceTypeNodeModel.deserialize(data);
-      resolve(result);
-    });
   }
 
   protected listener() {

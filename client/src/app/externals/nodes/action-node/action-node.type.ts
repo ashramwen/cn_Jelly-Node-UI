@@ -7,17 +7,16 @@ import { JNActionNodeEditorModel } from './action-node-editor-model.type';
 import { JNUtils } from '../../../share/util';
 
 @JNNode({
-  title: 'JNActionNode',
+  title: 'nodeset.JNActionNode.nodename',
   icon: '',
   color: '',
   borderColor: '',
-  accepts: [JNDevicePropertyNode, JNDeviceTypeNode],
   editorModel: JNActionNodeEditorModel,
   infoPanelModel: null,
-  paletteModel: null
+  paletteModel: null,
+  accepts: ['Rule', 'DeviceType']
 })
 export class JNActionNode extends JNBaseNode  {
-
 
   protected connectRules: IConnectRuleSetting = {
     global: [],
@@ -42,7 +41,7 @@ export class JNActionNode extends JNBaseNode  {
     return this.model.serialize();
   }
 
-  protected model: JNActionNodeModel;
+  protected model: JNActionNodeModel = new JNActionNodeModel;
 
   protected buildOutput(): Promise<Object> {
     return new Promise((resolve) => {
@@ -56,12 +55,6 @@ export class JNActionNode extends JNBaseNode  {
 
   protected formatter() {
     return null;
-  }
-
-  protected parser(data: Object): Promise<JNActionNodeModel> {
-    return new Promise((resolve) => {
-      resolve(JNActionNodeModel.deserialize(data));
-    });
   }
 
   protected listener(data: Object) {

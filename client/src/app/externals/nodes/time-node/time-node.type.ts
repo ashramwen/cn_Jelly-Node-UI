@@ -4,17 +4,17 @@ import { JNTimeNodeModel } from './time-node-model.type';
 import { JNTimeNodeEditorModel } from './time-node-editor-model.type';
 
 @JNNode({
-  title: 'JNRuleNode',
+  title: 'nodeset.JNTimeNode.nodename',
   icon: '',
   color: '',
   borderColor: '',
-  accepts: [],
   editorModel: JNTimeNodeEditorModel,
   infoPanelModel: null,
-  paletteModel: null
+  paletteModel: null,
+  accepts: []
 })
 export class JNTimeNode extends JNBaseNode  {
-  protected model: JNTimeNodeModel;
+  protected model: JNTimeNodeModel = new JNTimeNodeModel;
 
   public get body (){
     return this.model.serialize();
@@ -34,13 +34,7 @@ export class JNTimeNode extends JNBaseNode  {
   protected formatter(): any {
     return this.model.serialize();
   }
-
-  protected parser(data: Object): Promise<JNTimeNodeModel> {
-    return new Promise((resolve) => {
-      resolve(JNTimeNodeModel.deserialize(data));
-    });
-  }
-
+  
   protected listener() {
     
   }

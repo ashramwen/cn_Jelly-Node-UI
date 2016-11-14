@@ -6,14 +6,14 @@ import { JNLocationPaletteModel } from './location-node-palette-model.type';
 import { JNLocationNodeModel } from './location-node-model.type';
 
 @JNNode({
-  title: 'JNLocationNode',
+  title: 'nodeset.JNLocationNode.nodename',
   icon: '',
   color: '',
   borderColor: '',
-  accepts: [],
   editorModel: JNLocationNodeEditorModel,
   infoPanelModel: JNLocationInfoPanelModel.instance,
-  paletteModel: JNLocationPaletteModel.instance
+  paletteModel: JNLocationPaletteModel.instance,
+  accepts: []
 })
 export class JNLocationNode extends JNBaseNode {
 
@@ -35,7 +35,7 @@ export class JNLocationNode extends JNBaseNode {
     return this.model.serialize();
   }
 
-  protected parser(data: Object): Promise<JNLocationNodeModel> {
+  protected parser(data: Object) {
     return super.parser(data);
   }
 

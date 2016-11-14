@@ -1,4 +1,4 @@
-import { Component, ViewContainerRef, ViewChild, ElementRef, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, ViewContainerRef, ViewChild, ElementRef, OnInit, Input, OnChanges, SimpleChange } from '@angular/core';
 import { FormGroup, FormControl, Validators, AsyncValidatorFn } from '@angular/forms';
 
 import { ApplicationContextService } from '../../core/services';
@@ -88,11 +88,10 @@ export class JNEditFormComponent implements OnInit, OnChanges {
       }`
     });
     */
-
-    
   }
 
-  ngOnChanges(value) {
+  ngOnChanges(value: {[key: string]: SimpleChange}) {
+    if (!value['targetNode'].currentValue) return;
     this.events.on(APP_READY, () => {
       setTimeout(() => {
         this.editorModel = this.targetNode.createEditorModel();

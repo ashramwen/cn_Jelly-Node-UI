@@ -8,7 +8,7 @@ export interface IDeviceProperty extends INodeBody {
 }
 
 @Serializable()
-export class JNDevicePropertyNodeModel extends JNNodeModel implements IDeviceProperty {
+export class JNDevicePropertyNodeModel extends JNNodeModel<IDeviceProperty> {
 
   static deserialize: (data: any) => JNDevicePropertyNodeModel;
 

@@ -8,8 +8,8 @@ interface ILocationNodeModel extends INodeBody {
 }
 
 @Serializable()
-export class JNLocationNodeModel extends JNNodeModel implements ILocationNodeModel {
-  static deserialize: () => JNLocationNodeModel;
+export class JNLocationNodeModel extends JNNodeModel<ILocationNodeModel> {
+  static deserialize: (data: any) => JNLocationNodeModel;
 
   locationID: string;
   locationStr: Array<string>;

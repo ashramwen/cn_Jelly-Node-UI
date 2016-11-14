@@ -144,6 +144,10 @@ export class D3HelperService {
           let target = self.select_node;
           if (!d.connectable(target)) {
             d.accept(target);
+            self.shiftNodeLink({
+              source: { x: target.position.x, y: target.position.y },
+              target: { x: d.position.x, y: d.position.y }
+            });
           }
         })
         .on('drag', (d: any) => {

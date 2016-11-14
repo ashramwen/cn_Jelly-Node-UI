@@ -20,6 +20,7 @@ export class NodeCanvasComponent implements OnInit {
   nodeFlow: JNFlow;
 
   constructor(private d3Helper: D3HelperService) {
+    this.nodeFlow = new JNFlow();
   }
 
   ngOnInit() {

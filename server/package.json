@@ -1,5 +1,5 @@
 {
-  "name": "server",
+  "name": "jellyNodeServer",
   "private": true,
   "version": "0.0.0",
   "description": "a Sails application",
@@ -27,7 +27,9 @@
     "supertest": "2.0.1",
     "mocha": "3.1.2",
     "sails-mongo": "0.12.1",
-    "uuid": "2.0.3"
+    "uuid": "2.0.3",
+    "q": "1.4.1",
+    "assert": "1.4.1"
   },
   "scripts": {
     "debug": "node debug app.js",

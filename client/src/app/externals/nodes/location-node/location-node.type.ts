@@ -11,10 +11,6 @@ import { JNDeviceTypeNode } from '../device-type-node/device-type-node.type';
   icon: '',
   color: '',
   borderColor: '',
-<<<<<<< HEAD
-  accepts: [JNDeviceTypeNode],
-=======
->>>>>>> master
   editorModel: JNLocationNodeEditorModel,
   infoPanelModel: JNLocationInfoPanelModel.instance,
   paletteModel: JNLocationPaletteModel.instance,

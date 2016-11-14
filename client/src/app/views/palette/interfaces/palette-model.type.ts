@@ -1,19 +1,20 @@
 import { JNBaseNode } from '../../../core/models/jn-base-node.type';
 import { IJNPaletteNode } from '../palette-node.type';
-import { IJNPaletteConnection } from './palette-connections.type';
+import { IJNPaletteConnection } from '../palette-connections.type';
 
 export abstract class IJNPaletteModel {
-  staticPropertyTitle: String;
-  dynamicPropertyTitle: String;
+  static staticPropertyTitle: String = "nodes";
+  static dynamicPropertyTitle: String = "connections";
   nodes: Array<IJNPaletteNode>;
   connections: Array<IJNPaletteConnection>;
+  static containDynamicProperty: boolean = false;
 
-  getNodes(selectedNode: JNBaseNode, staticNodes: Array<JNBaseNode>) {
-    this.nodes = [];
-    staticNodes.forEach((node: JNBaseNode) => {
-      this.nodes.push(new IJNPaletteNode(selectedNode, node));
-    })
-    return this.nodes;
+  static createProperty(value: string, input?): Object {
+    return
+  }
+
+  static createConnection(selectedNode: typeof JNBaseNode, input?): IJNPaletteConnection {
+    return
   }
 
 }

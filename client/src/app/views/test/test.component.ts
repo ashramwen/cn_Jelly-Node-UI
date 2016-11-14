@@ -3,6 +3,7 @@ import { JNFlow } from '../../core/models/jn-flow.type';
 import { JNApplication, APP_READY } from '../../core/services/application-core.service';
 import { Events } from '../../core/services/event.service';
 import { JNBaseNode } from '../../core/models/jn-base-node.type';
+import { RuleApplication } from '../../externals/rule-application-core';
 
 @Component({
   selector: 'test',
@@ -32,7 +33,11 @@ export class TestComponent implements OnInit {
       let data = require('../../../assets/example.json');
       this.flow.loadData(data);
       console.log(this.flow.nodes);
+      
+      let schemas = RuleApplication.instance.resources.$schema.schemas;
+      console.log('schemas', schemas);
     });
+
   }
 
   private selectNode(node: JNBaseNode) {

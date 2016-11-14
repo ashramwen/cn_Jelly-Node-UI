@@ -2,11 +2,11 @@ import {
   IJNPaletteModel
 } from '../../../views/palette/interfaces';
 
-export class JNRulePaletteModel implements IJNPaletteModel {
+export class JNRulePaletteModel extends IJNPaletteModel {
   static instance = new JNRulePaletteModel();
 
   constructor() {
-    
+    super();
   }
 
 }

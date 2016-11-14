@@ -19,13 +19,16 @@ describe('Resources', function () {
   it('things', async(inject([BeehiveThing, JNApplication, Events],
     ($thing: BeehiveThing, application: JNApplication, events: Events) => {
       events.on(APP_READY, () => {
-        expect(false).toEqual(true);
         $thing.query({
           type: 'Lighting',
           locationPrefix: '08',
           includeSubLevel: true
         }, (things) => {
-          // expect(typeof things).toBe(Array);
+          console.log(things);
+          expect(typeof things).toBe(Array);
+        }).$observable
+        .toPromise()
+        .catch(() => {
           expect(false).toEqual(true);
         });
       });

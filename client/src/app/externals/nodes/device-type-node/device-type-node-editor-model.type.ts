@@ -7,10 +7,45 @@ import { FormControl } from '@angular/forms';
 import { RuleApplication } from '../../rule-application-core';
 import { ICheckTableInput, JNCheckTableControl } from '../../../views/node-editor/components/controls/check-table/check-table.component';
 import { IThingRequest } from '../../resources/thing.type';
+import { DeviceTypeNodeService } from './device-type-node.service';
+import { JNNodeEditor } from '../../../core/models/node-editor-annotation';
 
+@JNNodeEditor({
+  title: 'nodeset.JNDeviceTypeNode.nodename',
+  formControls: {
+    typeName: {
+      input: <ISelectInput>{
+        label: '设备种类',
+        options: []
+      },
+      controlType: JNSelectControl,
+      $validators: [],
+      formControl: new FormControl()
+    },
+    things: {
+      input: <ICheckTableInput>{
+        label: '设备选择列表',
+        tableFields: [{
+          displayName: 'ID',
+          fieldName: 'thingID'
+        }, {
+          displayName: '设备编号',
+          fieldName: 'vendorThingID'
+        }, {
+          displayName: '位置',
+          fieldName: 'location'
+        }],
+        tableData: [],
+        valueField: 'thingID'
+      },
+      controlType: JNCheckTableControl,
+      $validators: [],
+      formControl: new FormControl()
+    }
+  }
+})
 export class JNDeviceTypeNodeEditorModel extends JNEditorModel {
 
-  title: String = 'nodeset.JNRuleNode.nodename';
   locations: string[];
 
   protected init() {
@@ -22,44 +57,13 @@ export class JNDeviceTypeNodeEditorModel extends JNEditorModel {
       .map((type) => {
         return { value: type, text: schemas[type].content.statesSchema.title };
       });
-
-    this.formControls = {
-      typeName: {
-        input: <ISelectInput>{
-          label: '设备种类',
-          options: schemaOptions
-        },
-        controlType: JNSelectControl,
-        $validators: [],
-        formControl: new FormControl()
-      },
-      things: {
-        input: <ICheckTableInput>{
-          label: '设备种类',
-          tableFields: [{
-            displayName: 'ID',
-            fieldName: 'thingID'
-          }, {
-            displayName: '设备编号',
-            fieldName: 'vendorThingID'
-          }, {
-            displayName: '位置',
-            fieldName: 'location'
-          }],
-          tableData: [],
-          valueField: 'thingID'
-        },
-        controlType: JNCheckTableControl,
-        $validators: [],
-        formControl: new FormControl()
-      }
-    };
+    (<ISelectInput>this.getInput('typeName')).options = schemaOptions;
   }
 
   protected parse(data: JNDeviceTypeNodeModel) {
-    this.formControls['typeName'].formControl.setValue(data.typeName);
+    this.setValue('typeName', data.typeName);
+    this.setValue('things', data.things);
     this.locations = data.locations;
-    this.formControls['things'].formControl.setValue(data.things);
   }
 
   protected formate(): JNDeviceTypeNodeModel {
@@ -68,29 +72,16 @@ export class JNDeviceTypeNodeEditorModel extends JNEditorModel {
 
   protected updated(fieldName: string, value: any): void {
     if (fieldName === 'typeName') {
+      let typeName = value;
       if (!fieldName) return;
       if (!this.locations || !this.locations.length) return;
 
       let tableData = [];
-      let input: ICheckTableInput = <ICheckTableInput>this.formControls['things'].input;
-      let promises =this.locations.map((location) => {
-        let requestParam = {
-          type: value,
-          locationPrefix: location,
-          includeSubLevel: true
-        };
-
-        return RuleApplication.instance.resources.$thing.query(requestParam, (data) => {
-          data.forEach((row) => {
-            row['location'] = row.vendorThingID;
-            tableData.push(row);
-          });
-        }).$observable.toPromise();
-      });
-
-      Promise.all(promises).then(() => {
-        this.formControls['things'].input['tableData'] = tableData;
-      });
+      DeviceTypeNodeService.instance
+        .getThings(this.locations, typeName)
+        .then((tableData: any) => {
+          (<ICheckTableInput>this.getInput('things')).tableData = tableData;
+        });
     }
   }
 }

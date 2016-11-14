@@ -7,6 +7,7 @@ import { JNLocationNodeModel } from './location-node-model.type';
 import { JNDeviceTypeNode } from '../device-type-node/device-type-node.type';
 
 @JNNode({
+  title: 'JNLocationNode',
   icon: '',
   color: '',
   borderColor: '',
@@ -23,7 +24,7 @@ export class JNLocationNode extends JNBaseNode {
 
   protected model: JNLocationNodeModel = new JNLocationNodeModel;
 
-  protected whenRejected() {
+  protected whenReject() {
     return null;
   }
 
@@ -31,7 +32,7 @@ export class JNLocationNode extends JNBaseNode {
     return null;
   }
 
-  protected formatter(): Promise<Object> {
+  protected formatter() {
     return this.model.serialize();
   }
 

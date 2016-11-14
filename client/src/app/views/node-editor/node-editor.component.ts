@@ -1,6 +1,7 @@
-import { Component, ViewContainerRef, ViewChild, ElementRef, OnInit, Input } from '@angular/core';
-import { ApplicationContextService } from '../../core/services';
+import { Component, ViewContainerRef, ViewChild, ElementRef, OnInit, Input, OnChanges } from '@angular/core';
 import { FormGroup, FormControl, Validators, AsyncValidatorFn } from '@angular/forms';
+
+import { ApplicationContextService } from '../../core/services';
 import { JNTemplateBuilder } from './services/template-builder.service';
 import { JNControlLoader } from './services/control-loader.service';
 import { JNTextControl, ITextInput } from './components/controls/text/text.component';
@@ -13,16 +14,23 @@ import { JNLocationNode } from '../../externals/nodes/location-node/location-nod
 import { Events } from '../../core/services/event.service';
 import { APP_READY } from '../../core/services/application-core.service';
 import { JNDeviceTypeNode } from '../../externals/nodes/device-type-node/device-type-node.type';
+import { JNConjunctionNode } from '../../externals/nodes/conjunction-node/conjunction-node.type';
+import { JNConditionNode } from '../../externals/nodes/condition-node/condition-node.type';
+import { JNTimeNode } from '../../externals/nodes/time-node/time-node.type';
+import { JNActionNode } from '../../externals/nodes/action-node/action-node.type';
+import { JNApiNode } from '../../externals/nodes/api-node/api-node.type';
+import { JNBaseNode } from '../../core/models/jn-base-node.type';
 
 @Component({
   selector: 'jn-node-editor',
   template: require('./node-editor.component.html'),
   styles: [require('./node-editor.component.scss')]
 })
-export class JNEditFormComponent implements OnInit {
+export class JNEditFormComponent implements OnInit, OnChanges {
 
-  @Input()
   editorModel: JNEditorModel;
+  @Input()
+  targetNode: JNBaseNode;
 
   private controls: IJNFormControl[] = [];
   private formGroup: FormGroup = new FormGroup({});
@@ -36,13 +44,60 @@ export class JNEditFormComponent implements OnInit {
     // ruleNode.init({ ruleName: 'rule1', description: 'description', triggerWhen: 'TRUE_TO_FALSE' });
     // let locationNode = new JNLocationNode();
     // locationNode.init({ locationStr: ['08', '0801'] });
+    // let node = new JNDeviceTypeNode;
+    // node.init({ things: [5266], locations: ['08'], typeName: 'EnvironmentSensor' });
+    // let node = new JNConjunctionNode();
+    // node.init({conjunction: 'and'});
+    /*
+    let node = new JNConditionNode();
+    node.init({
+      thingType: 'AirCondition',
+      conditions: [{
+        property: 'Power',
+        value: 0,
+        operator: 'eq'
+      }, {
+        property: 'Temp',
+        value: 20,
+        operator: 'gte',
+        aggregation: 'avg'
+      }]
+    });
+    */
+    // let node = new JNTimeNode();
+    // node.init({timeType: 'schedule', cron: '0 9 * 3 ? 5', interval: 50, unit: 'day'});
+    /*
+    let node = new JNActionNode();
+    node.init({
+      actionName: 'turnPower',
+      typeName: 'AirCondition',
+      properties: null
+    });
+    */
+    /*
+    let node = new JNApiNode();
+    node.init({
+      apiName: 'api的名字',
+      apiUrl: 'http://www.example.com',
+      method: 'POST',
+      header: `{
+        "authorization": "Bearer super_token"
+      }`,
+      body: `{
+        "id": 5425
+      }`
+    });
+    */
 
-    let deviceTypeNode = new JNDeviceTypeNode;
-    deviceTypeNode.init({ things: [], locations: ['08'], typeName: 'EnvironmentSensor' });
+    
+  }
 
+  ngOnChanges(value) {
     this.events.on(APP_READY, () => {
       setTimeout(() => {
-        this.editorModel = deviceTypeNode.createEditorModel();
+        this.editorModel = this.targetNode.createEditorModel();
+        console.log(value);
+        // this.editorModel = node.createEditorModel();
         this.prepare();
       }, 50);
     });

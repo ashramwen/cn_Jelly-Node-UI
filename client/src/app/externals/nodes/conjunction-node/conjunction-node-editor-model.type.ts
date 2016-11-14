@@ -8,37 +8,38 @@ import { ISelectInput, JNSelectControl } from '../../../views/node-editor/compon
 import { RuleApplication } from '../../rule-application-core';
 import { JNUtils } from '../../../share/util';
 import { JNConjunctionNodeModel } from './conjunction-node-model.type';
+import { JNNodeEditor } from '../../../core/models/node-editor-annotation';
 import {
   JNTextAreaControl,
   ITextareaInput
 } from '../../../views/node-editor/components/controls/textarea/textarea.component';
 
+@JNNodeEditor({
+  title: 'nodeset.JNConjunctionNode.nodename',
+  formControls: {
+    conjunction: {
+      input: <ISelectInput>{
+        label: '连接表达式',
+        options: [{
+          text: '与',
+          value: 'and'
+        }, {
+          text: '或',
+          value: 'or'
+        }, {
+          text: '非',
+          value: 'nor'
+        }]
+      },
+      controlType: JNSelectControl,
+      formControl: new FormControl()
+    }
+  }
+})
+export class JNConjunctionNodeEditorModel extends JNEditorModel {
 
-export class JNDevicePropertyNodeEditorModel extends JNEditorModel {
-
-  title: String = 'nodeset.JNDevicePropertyNode.nodename';
 
   protected init() {
-    this.formControls = {
-      conjunction: {
-        input: <ISelectInput>{
-          label: '连接表达式',
-          options: [{
-            text: '与',
-            value: 'and'
-          }, {
-            text: '或',
-            value: 'or'
-          }, {
-            text: '非',
-            value: 'nor'
-          }]
-        },
-        controlType: JNSelectControl,
-        $validators: [],
-        formControl: new FormControl()
-      }
-    };
   }
 
   protected parse(data: JNConjunctionNodeModel) {

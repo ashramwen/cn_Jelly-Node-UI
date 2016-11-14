@@ -4,11 +4,18 @@ import { Serializable } from '../../../../bin/JsonMapper';
 @Serializable()
 export class JNConditionNodeModel extends JNNodeModel {
 
+  thingType: string;
   conditions: Array<{
     aggregation: 'sum' | 'max' | 'min' | 'avg' | 'count';
     percentage?: number;
-    property: String;
+    property: string;
     operator?: 'gte' | 'gt' | 'lt' | 'lte' | 'eq' | 'ne';
     value: any;
   }>;
+
+  constructor() {
+    super();
+    this.thingType = null;
+    this.conditions = null;
+  }
 }

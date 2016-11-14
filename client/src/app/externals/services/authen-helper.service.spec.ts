@@ -19,6 +19,7 @@ describe('Authen Helper', function () {
     // cacheContext = new CacheContextService(new LocalStorageService);
   });
 
+  /*  
   it('should login', async(
     inject([AuthenHelperSerivce, JNApplication, Events],
       (authHelper: AuthenHelperSerivce, application: JNApplication, events: Events) => {
@@ -31,5 +32,6 @@ describe('Authen Helper', function () {
         });
       })
   ));
+  */
 
 });

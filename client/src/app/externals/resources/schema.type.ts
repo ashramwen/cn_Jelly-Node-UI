@@ -21,7 +21,7 @@ export interface ISchemaProperty {
   enum?: { [key: string]: string | number };
   maximum?: number;
   minimum?: number;
-  type: 'int' | 'string' | 'boolean';
+  type: 'int' | 'float' | 'string' | 'boolean';
   unit: string;
   enumType: string;
 }

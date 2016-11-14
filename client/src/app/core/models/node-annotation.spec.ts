@@ -14,6 +14,7 @@ import { JNNode } from '../../core/models/node-annotation';
 
 
 @JNNode({
+  title: '',
   icon: 'icon',
   color: 'color',
   borderColor: 'borderColor',
@@ -30,11 +31,11 @@ export class JNTestNode2 extends JNBaseNode {
     return null;
   }
 
-  protected whenRejected() {
+  protected whenReject() {
     return null;
   }
 
-  protected formatter(): Object {
+  protected formatter(): any {
     return this.model.serialize();
   }
 
@@ -49,6 +50,7 @@ export class JNTestNode2 extends JNBaseNode {
 
 
 @JNNode({
+  title: '',
   icon: 'icon',
   color: 'color',
   borderColor: 'borderColor',
@@ -65,11 +67,11 @@ export class JNTestNode1 extends JNBaseNode {
     return null;
   }
 
-  protected whenRejected() {
+  protected whenReject() {
     return null;
   }
 
-  protected formatter(): Object {
+  protected formatter(): any {
     return this.model.serialize();
   }
 

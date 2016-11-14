@@ -1,0 +1,29 @@
+@import "../../../assets/styles/global";
+
+.node-editor{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  .node-editor-header{
+    height: 35px;
+    line-height: 35px;
+    background: #006621;
+    padding: 5px;
+    color: #f0f0f0;
+    border-bottom: solid 1px #ccc;
+  }
+
+  .node-editor-body{
+    flex: 1;
+    overflow: auto;
+    padding: 5px 0px;
+  }
+
+  .node-editor-footer{
+    padding: 5px;
+    border-top: 1px solid #ccc;
+    height: 35px;
+    background: #f0f0f0;
+    line-height: 35px;
+  }
+}

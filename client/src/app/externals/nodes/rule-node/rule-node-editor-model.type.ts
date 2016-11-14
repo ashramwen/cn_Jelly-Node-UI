@@ -6,68 +6,69 @@ import { JNTextControl, ITextInput } from '../../../views/node-editor/components
 import { JNEditorModel } from '../../../views/node-editor/interfaces/editor-model.type';
 import { JNRuleNode } from './rule-node.type';
 import { JNRuleNodeModel } from './rule-node-model.type';
+import { JNNodeEditor } from '../../../core/models/node-editor-annotation';
 import {
   JNTextAreaControl,
   ITextareaInput
 } from '../../../views/node-editor/components/controls/textarea/textarea.component';
 
-
+@JNNodeEditor({
+  title: 'nodeset.JNRuleNode.nodename',
+  formControls: {
+    ruleName: {
+      input: <ITextInput>{
+        label: '规则名称',
+        maxLength: 50
+      },
+      controlType: JNTextControl,
+      $validators: [{
+        validator: (fc: FormControl) => {
+          return new Promise((resolve, reject) => {
+            if (fc.value && fc.value.length > 10) {
+              resolve(false);
+              return;
+            }
+            resolve(true);
+          });
+        },
+        errorName: 'maxLength',
+        msg: '最大长度不可超过10'
+      }],
+      formControl: new FormControl()
+    },
+    triggerWhen: {
+      input: <IRadioInput>{
+        label: '何时触发',
+        options: [
+          { text: '由假转真', value: 'FALSE_TO_TRUE' },
+          { text: '由真转假', value: 'TRUE_TO_FALSE' },
+          { text: '改变', value: 'CHANGE' }
+        ]
+      },
+      controlType: JNRadioControl,
+      $validators: [],
+      formControl: new FormControl()
+    },
+    description: {
+      input: <ITextareaInput>{
+        label: '描述',
+        maxLength: 500
+      },
+      controlType: JNTextAreaControl,
+      $validators: [],
+      formControl: new FormControl()
+    }
+  }
+})
 export class JNRuleNodeEditorModel extends JNEditorModel {
 
-  title: String = 'nodeset.JNRuleNode.nodename';
-
   protected init() {
-    this.formControls = {
-      ruleName: {
-        input: <ITextInput>{
-          label: '规则名称',
-          maxLength: 50
-        },
-        controlType: JNTextControl,
-        $validators: [{
-          validator: (fc: FormControl) => {
-            return new Promise((resolve, reject) => {
-              if (fc.value && fc.value.length > 10) {
-                resolve(false);
-                return;
-              }
-              resolve(true);
-            });
-          },
-          errorName: 'maxLength',
-          msg: '最大长度不可超过10'
-        }],
-        formControl: new FormControl()
-      },
-      triggerWhen: {
-        input: <IRadioInput>{
-          label: '何时出发',
-          options: [
-            { text: '由假转真', value: 'FALSE_TO_TRUE' },
-            { text: '由真转假', value: 'TRUE_TO_FALSE' },
-            { text: '改变', value: 'CHANGE' }
-          ]
-        },
-        controlType: JNRadioControl,
-        $validators: [],
-        formControl: new FormControl()
-      },
-      description: {
-        input: <ITextareaInput>{
-          label: '描述',
-          maxLength: 500
-        },
-        controlType: JNTextAreaControl,
-        $validators: [],
-        formControl: new FormControl()
-      }
-    };
   }
 
   protected parse(data: JNRuleNodeModel) {
-    this.formControls['ruleName'].formControl.setValue(data.ruleName);
-    this.formControls['description'].formControl.setValue(data.description);
-    this.formControls['triggerWhen'].formControl.setValue(data.triggerWhen);
+    this.setValue('ruleName', data.ruleName);
+    this.setValue('description', data.description);
+    this.setValue('triggerWhen', data.triggerWhen);
   }
 
   protected formate(): JNRuleNodeModel {

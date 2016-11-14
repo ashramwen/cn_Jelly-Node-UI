@@ -2,24 +2,27 @@ import { JNBaseNode } from '../../../core/models/jn-base-node.type';
 import { JNNode } from '../../../core/models/node-annotation';
 import { JNConjunctionNodeModel } from './conjunction-node-model.type';
 import { JNConditionNode } from '../condition-node/condition-node.type';
+import { JNConjunctionNodeEditorModel } from './conjunction-node-editor-model.type';
 
 @JNNode({
+  title: 'JNConjunctionNode',
   icon: '',
   color: '',
   borderColor: '',
   accepts: [JNConditionNode, JNConjunctionNode],
-  editorModel: null,
+  editorModel: JNConjunctionNodeEditorModel,
   infoPanelModel: null,
   paletteModel: null
 })
 export class JNConjunctionNode extends JNBaseNode  {
+  
   public get body (){
-    return '';
+    return this.model.serialize();
   }
 
   protected model: JNConjunctionNodeModel;
 
-  protected whenRejected() {
+  protected whenReject() {
     return null;
   }
 
@@ -29,7 +32,7 @@ export class JNConjunctionNode extends JNBaseNode  {
     });
   }
 
-  protected formatter(): Promise<Object> {
+  protected formatter(): any {
     return null;
   }
 

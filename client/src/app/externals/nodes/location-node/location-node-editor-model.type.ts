@@ -12,29 +12,29 @@ import { CACHE_LOCATION, ILocation } from '../../resources/location.type';
 import { JNUtils } from '../../../share/util';
 import { ISelectSetInput, JNSelectSetControl } from '../../../views/node-editor/components/controls/select-set/select-set.component';
 import { Input } from '@angular/core';
+import { LocationNodeService } from './location-node.service';
+import { JNNodeEditor } from '../../../core/models/node-editor-annotation';
 
-
+@JNNodeEditor({
+  title: 'nodeset.JNLocationNode.nodename',
+  formControls: {
+    location: {
+      input: <ISelectSetInput>{
+        set: [],
+        label: '位置'
+      },
+      controlType: JNSelectSetControl,
+      $validators: [],
+      formControl: new FormControl()
+    }
+  }
+})
 export class JNLocationNodeEditorModel extends JNEditorModel {
-  title: String = 'nodeset.JNRuleNode.nodename';
   buttons: IJNFormButton[];
   viewTemplate: String;
-  formControls: { [fieldName: string]: IJNFormControl };
   depth = 1;
-  locationTree: ILocation;
 
   protected init() {
-    this.formControls = {
-      location: {
-        input: <ISelectSetInput>{
-          set: [],
-          label: '位置'
-        },
-        controlType: JNSelectSetControl,
-        $validators: [],
-        formControl: new FormControl()
-      }
-    };
-    this.locationTree = RuleApplication.instance.resources.$location.data;
   }
 
   protected parse(data: JNLocationNodeModel) {
@@ -56,10 +56,11 @@ export class JNLocationNodeEditorModel extends JNEditorModel {
       locationID = locationStr[i - 1];
     }
 
-    return <JNLocationNodeModel>JNLocationNodeModel.deserialize({
-      locationID: locationID,
-      locationStr: locationStr
-    });
+    let model: JNLocationNodeModel = <JNLocationNodeModel>this.model;
+    model.locationID = locationID;
+    model.locationStr = model.locationStr;
+
+    return model;
   }
 
   protected updated(fieldName: string, value: any): void {
@@ -68,38 +69,8 @@ export class JNLocationNodeEditorModel extends JNEditorModel {
       i++;
     }
     this.depth = i + 1;
-    (<ISelectSetInput>this.formControls['location'].input).set = this.buildSet(value);
-  }
-
-  buildSet(value) {
-    let labels = ['楼号', '层号', '区域', '区块', '工位'];
-    let tree = this.locationTree;
-    let set = [];
-    for (let i = 0; i < this.depth; i++) {
-      let subLocations = tree;
-      for (let j = 0; j < i; j++) {
-        subLocations = subLocations.subLocations[value[j]];
-      }
-      if (!subLocations
-        || !subLocations.subLocations
-        || !Object.keys(subLocations.subLocations).length) break;
-
-      let options = JNUtils.toArray(subLocations.subLocations).map((location) => {
-        return {
-          text: (<ILocation>location.value).location,
-          value: (<ILocation>location.value).location
-        };
-      });
-
-      options.unshift({ text: 'terms.pleaseSelect', value: null });
-
-      set.push({
-        label: labels[i],
-        options: options,
-        fieldName: i
-      });
-    }
-    return set;
+    (<ISelectSetInput>this.getInput('location')).set =
+      LocationNodeService.instance.buildSet(value, this.depth);
   }
 
 }

@@ -35,11 +35,15 @@ interface IRadioOption {
     require('./radio.component.scss')
   ],
   template: `
-    <md-radio-group [(ngModel)]="value">
-      <md-radio-button *ngFor="let d of options" [value]="d.value">
-        {{d.text}}
-      </md-radio-button>
-    </md-radio-group>
+    <div class="jn-form">
+      <label class="jn-form-label">{{label | translate}}</label>
+      <md-radio-group [(ngModel)]="value" (ngModelChange)="modelChange(value)">
+        <md-radio-button *ngFor="let d of options" [value]="d.value">
+          {{d.text | translate}}
+        </md-radio-button>
+      </md-radio-group>
+    </div>
+    
   `,
   providers: [VALUE_ACCESSOR]
 })
@@ -52,4 +56,8 @@ export class JNRadioControl extends JNFormControl {
   protected label: String;
   @Input()
   protected options: Array<IRadioOption>;
+
+  modelChange(value) {
+    this.value = value;
+  }
 }

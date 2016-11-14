@@ -1,13 +1,20 @@
-<p>
-    flow-detail works!
-</p>
-
-<div class="main-container clearfix">
-    <div class="palette">
-        <jn-palette></jn-palette>
+<div class="main-container">
+    <div class="main-header"></div>
+    <div class="main-body clearfix">
+        <div class="main-body-container">
+            <div class="palette">
+                <jn-palette></jn-palette>
+            </div>
+            <div class="canvas">
+                <jn-canvas></jn-canvas>
+            </div>
+            <div class="info-panel">info-panel</div>
+        </div>
+        <div class="editor-modal" [hidden]="!editorShown">
+            <div class="editor-modal-content" (click)="$event.stopPropagation()">
+                <jn-node-editor [targetNode]="selectedNode"></jn-node-editor>
+            </div>
+            <div class="editor-model-backdrop" (click)="hideEditor()"></div>
+        </div>
     </div>
-    <div class="canvas">
-        <jn-canvas></jn-canvas>
-    </div>
-    <div class="info-panel">info-panel</div>
 </div>

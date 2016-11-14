@@ -5,6 +5,15 @@ import { Serializable } from '../../../../bin/JsonMapper';
 export class JNTimeNodeModel extends JNNodeModel {
 
   timeType: 'interval' | 'schedule';
-  cron: String;
+  cron: string;
   interval: number;
+  unit: string;
+
+  constructor() {
+    super();
+    this.timeType = null;
+    this.cron = null;
+    this.interval = null;
+    this.unit = null;
+  }
 }

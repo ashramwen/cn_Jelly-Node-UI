@@ -1,1 +1,1 @@
-export * from './palette-model.interface';
+export * from './palette-model.type';

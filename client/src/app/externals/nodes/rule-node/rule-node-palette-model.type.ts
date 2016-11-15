@@ -1,12 +1,17 @@
-import {
-  IJNPaletteModel
-} from '../../../views/palette/interfaces';
+import { IJNPaletteService } from '../../services/palette.service';
+import { JNRuleNode } from './rule-node.type';
+import { IJNPaletteModel } from '../../../views/palette/interfaces/palette-model.type';
+import { JNRuleInfoPanelModel } from './rule-node-info-panel-model.type';
 
-export class JNRulePaletteModel implements IJNPaletteModel {
-  static instance = new JNRulePaletteModel();
+export class JNRulePaletteModel extends IJNPaletteModel {
+  
+  constructor(){
+    super();
+    this.init();
+  }
 
-  constructor() {
-    
+  protected init() {
+    this.nodes = IJNPaletteService.getNodes(JNRuleNode);
   }
 
 }

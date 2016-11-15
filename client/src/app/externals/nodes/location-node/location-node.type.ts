@@ -4,6 +4,7 @@ import { JNLocationNodeEditorModel } from './location-node-editor-model.type';
 import { JNLocationInfoPanelModel } from './location-node-info-panel-model.type';
 import { JNLocationPaletteModel } from './location-node-palette-model.type';
 import { JNLocationNodeModel } from './location-node-model.type';
+import { JNDeviceTypeNode } from '../device-type-node/device-type-node.type';
 
 @JNNode({
   title: 'nodeset.JNLocationNode.nodename',

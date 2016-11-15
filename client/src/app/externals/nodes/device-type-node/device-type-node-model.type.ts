@@ -25,4 +25,6 @@ export class JNDeviceTypeNodeModel extends JNNodeModel<IDeviceType>  {
     this.typeDisplayName = null;
     this.locations = [];
   }
+
+  
 }

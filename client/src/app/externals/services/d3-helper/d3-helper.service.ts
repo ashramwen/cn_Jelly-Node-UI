@@ -1,7 +1,9 @@
+import { Events } from './../../../core/services/event.service';
 import { Injectable } from '@angular/core';
 import * as d3 from 'd3';
 
 import { JNBaseNode } from '../../../core/models/jn-base-node.type';
+import { JNApplication } from '../../../core/services/application-core.service';
 
 @Injectable()
 export class D3HelperService {
@@ -25,7 +27,7 @@ export class D3HelperService {
   private input_dragging = false;
   private output_dragging = false;
 
-  constructor() {
+  constructor(private events: Events) {
 
   }
 
@@ -95,6 +97,9 @@ export class D3HelperService {
         d.y = d.position.y;
         return `translate(${d.position.x}, ${d.position.y})`;
       })
+      .on('dblclick', (d) => {
+        this.events.emit('node_dblclick', d);
+      })
       .call(this.drag);
 
     g.insert('svg:rect')
@@ -125,13 +130,13 @@ export class D3HelperService {
         d3.select(this).classed('hover', true);
         self.select_node = d;
         self.select_input = true;
-        console.log('node:', self.select_node);
+        // console.log('node:', self.select_node);
       })
       .on('mouseout', function (d) {
         d3.select(this).classed('hover', false);
         self.select_node = null;
         self.select_input = false;
-        console.log('node:', self.select_node);
+        // console.log('node:', self.select_node);
       })
       .call(d3.drag()
         .on('start', d => {
@@ -142,6 +147,7 @@ export class D3HelperService {
           this.input_dragging = false;
           if (!this.select_output) return;
           let target = self.select_node;
+          console.log(target.connectable(d));
           if (!d.connectable(target)) {
             d.accept(target);
             self.shiftNodeLink({
@@ -172,13 +178,13 @@ export class D3HelperService {
         d3.select(this).classed('hover', true);
         self.select_node = d;
         self.select_output = true;
-        console.log('node:', self.select_node);
+        // console.log('node:', self.select_node);
       })
       .on('mouseout', function (d) {
         d3.select(this).classed('hover', false);
         self.select_node = null;
         self.select_output = false;
-        console.log('node:', self.select_node);
+        // console.log('node:', self.select_node);
       })
       .call(d3.drag()
         .on('start', (d: any) => {
@@ -189,6 +195,7 @@ export class D3HelperService {
           this.output_dragging = false;
           if (!this.select_input) return;
           let target = self.select_node;
+          console.log(target.connectable(d));
           if (!target.connectable(d)) {
             target.accept(d);
             self.shiftNodeLink({

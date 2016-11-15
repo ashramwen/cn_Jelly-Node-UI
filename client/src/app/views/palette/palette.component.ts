@@ -20,22 +20,28 @@ import { JNApplication } from '../../core/services/application-core.service';
 export class PaletteComponent implements OnInit, AfterViewInit {
   constructor(private application: JNApplication) { }
 
-  nodes: JNBaseNode[]
+  // nodes: JNBaseNode[];
+  nodeFlow: JNFlow;
 
   ngOnInit() {
-    let nodeFlow = new JNFlow();
-    this.nodes = [];
-    this.nodes.push(nodeFlow.createNode(JNLocationNode));
-    this.nodes.push(nodeFlow.createNode(JNDeviceTypeNode));
+    this.nodeFlow = new JNFlow();
+    this.nodeFlow.createNode(JNLocationNode);
+    this.nodeFlow.createNode(JNDeviceTypeNode);
   }
 
   ngAfterViewInit() {
+    let self = this;
     $('.ui-draggable').draggable({
       helper: 'clone',
       appendTo: '#chart',
       // containment: '',
+      start: function (event, ui) {
+        let i = $(this).data('index');
+        $(this).data('node', self.nodeFlow.nodes[i]);
+      },
       drag: function (e, ui) {
         // console.log('palette drag start.');
+
       },
       stop: function (e, ui) {
         // console.log('palette drag stop.');

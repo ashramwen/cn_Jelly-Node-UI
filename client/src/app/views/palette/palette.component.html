@@ -1,9 +1,9 @@
 <div>
     palette
 </div>
-<div id="palette" *ngFor="let n of nodes">
+<div class="palette_node_group ui-draggable" *ngFor="let n of nodeFlow.nodes; let i=index; trackBy:index" attr.data-index="{{i}}">
     <div class="palette-function">
-        <div class="palette_node ui-draggable">
+        <div class="palette_node">
             <div class="palette_label" dir="">{{n.constructor.name}}</div>
             <div class="palette_icon">
                 <!--<div class="palette_icon" style="background-image: url(icons/function.png)"></div>-->

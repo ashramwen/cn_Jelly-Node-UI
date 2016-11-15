@@ -4,8 +4,11 @@ import { JNActionNode } from './action-node.type';
 
 export class JNActionPaletteModel extends IJNPaletteModel {
 
-  static instance = new JNActionPaletteModel();
-
+  constructor(){
+    super();
+    this.init();
+  }
+  
   public init() {
     this.nodes = IJNPaletteService.getNodes(JNActionNode);
   }

@@ -14,7 +14,11 @@ export class JNDeviceTypePaletteModel extends IJNPaletteModel {
   nodes = [];
   connections = [];
 
-  static instance = new JNDeviceTypePaletteModel();
+
+  constructor() {
+    super();
+    this.init();
+  }
 
   public init(inputDeviceType?) {
     let schemas = RuleApplication.instance.resources.$schema.schemas;

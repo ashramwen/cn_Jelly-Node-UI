@@ -12,7 +12,10 @@ export class JNDevicePropertyPaletteModel extends IJNPaletteModel {
   nodes = [];
   connections = [];
 
-  static instance = new JNDevicePropertyPaletteModel();
+  constructor() {
+    super();
+    this.init();
+  }
 
   public init() {
     this.nodes = IJNPaletteService.getNodes(JNDevicePropertyNode);
@@ -31,7 +34,7 @@ export class JNDevicePropertyPaletteModel extends IJNPaletteModel {
     let schemas = RuleApplication.instance.resources.$schema.schemas;
     let deviceTypes = Object.keys(schemas[deviceType].content.statesSchema.properties);
     let connection = new IJNPaletteConnection();
-    
+
     connection.title = "Device Property";
     connection.properties = [];
     deviceTypes.forEach(function (deviceProperty) {

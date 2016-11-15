@@ -12,7 +12,7 @@ export class IJNPaletteNode {
   directable: Boolean;
 
   constructor(selectedNodeType: typeof JNBaseNode, nodeType: typeof JNBaseNode, property?) {
-    this.type = selectedNodeType;
+    this.type = nodeType;
     if (property) {
       this.property = property;
     } else {

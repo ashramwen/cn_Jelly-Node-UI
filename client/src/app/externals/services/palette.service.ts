@@ -40,8 +40,6 @@ export class IJNPaletteService {
   static getNodes(selectedNodeType: typeof JNBaseNode): Array<IJNPaletteNode> {
     let nodes: Array<IJNPaletteNode> = [];
 
-
-    console.log(IJNPaletteService.allNodeTypeEntities);
     IJNPaletteService.allNodeTypeEntities.forEach(function (nodeType) {
       let node = new IJNPaletteNode(selectedNodeType, JNApplication.instance.nodeTypeMapper[nodeType]);
       nodes.push(node);

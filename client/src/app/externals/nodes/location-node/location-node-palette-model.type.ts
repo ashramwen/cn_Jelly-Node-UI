@@ -5,7 +5,10 @@ import { IJNPaletteService } from '../../services/palette.service';
 
 export class JNLocationPaletteModel extends IJNPaletteModel {
 
-  static instance = new JNLocationPaletteModel();
+  constructor(){
+    super();
+    this.init();
+  }
 
   public init() {
     this.nodes = IJNPaletteService.getNodes(JNLocationNode);

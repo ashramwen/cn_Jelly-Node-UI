@@ -4,7 +4,10 @@ import { JNConditionNode } from './condition-node.type';
 
 export class JNCondtionPaletteMode extends IJNPaletteModel {
 
-  static instance = new JNCondtionPaletteMode();
+  constructor(){
+    super();
+    this.init();
+  }
 
   public init() {
     this.nodes = IJNPaletteService.getNodes(JNConditionNode);

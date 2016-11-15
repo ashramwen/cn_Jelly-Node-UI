@@ -9,6 +9,7 @@ import { JNDevicePropertyPaletteModel } from '../../externals/nodes/device-prope
 import { JNDeviceTypePaletteModel } from '../../externals/nodes/device-type-node/device-type-node-palette-model.type';
 import { JNDeviceTypeNode } from '../../externals/nodes/device-type-node/device-type-node.type';
 import { JNLocationPaletteModel } from '../../externals/nodes/location-node/location-node-palette-model.type';
+import { JNRulePaletteModel } from '../../externals/nodes/rule-node/rule-node-palette-model.type';
 
 @Component({
   selector: 'test',
@@ -38,8 +39,9 @@ export class TestComponent implements OnInit {
       let data = require('../../../assets/example.json');
       this.flow.loadData(data);
       console.log(this.flow.nodes);
-      let deviceTypeNode = new JNLocationPaletteModel();
-      deviceTypeNode.init();
+      let deviceTypeNode = new JNRulePaletteModel();
+
+
       console.log(deviceTypeNode);
     });
 

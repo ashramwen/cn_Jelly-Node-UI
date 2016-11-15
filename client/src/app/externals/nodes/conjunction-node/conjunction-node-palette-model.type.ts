@@ -4,7 +4,10 @@ import { JNConjunctionNode } from './conjunction-node.type';
 
 export class JNConjunctionPaletteModel extends IJNPaletteModel {
 
-  static instance = new JNConjunctionPaletteModel();
+  constructor(){
+    super();
+    this.init();
+  }
 
   public init() {
     this.nodes = IJNPaletteService.getNodes(JNConjunctionNode);

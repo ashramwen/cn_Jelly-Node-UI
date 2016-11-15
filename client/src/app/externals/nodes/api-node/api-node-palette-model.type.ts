@@ -4,7 +4,10 @@ import { IJNPaletteService } from '../../services/palette.service';
 
 export class JNApiPaletteModel extends IJNPaletteModel {
 
-  static instance = new JNApiNode();
+  constructor(){
+    super();
+    this.init();
+  }
 
   public init() {
     this.nodes = IJNPaletteService.getNodes(JNApiNode);

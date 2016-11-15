@@ -125,18 +125,20 @@ module.exports = {
       "locations": ["0807W-A01"],
       "type": "DeviceType",
       "nodeID": 14,
-      "accepts": [13]
+      "accepts": [12, 13]
     }, {
       "actionName": "turnPower",
+      "delay": 0,
       "properties": [{
         "propertyName": "power",
         "propertyValue": 0
       }],
       "type": "DeviceAction",
       "nodeID": 15,
-      "accepts": [12, 14]
+      "accepts": [14]
     }, {
       "apiName": "切换白天模式",
+      "delay": 5,
       "apiUrl": "http://vsdfd.controls.com/api/mode",
       "method": "POST",
       "body": {

@@ -121,16 +121,6 @@ module.exports = {
   			conditionParser(nodeSet, [currentNode.nodeID], clauses, result.summarySource, 0)
   			result.predicate.condition = clauses[0]
   		} else if (currentNode.type == 'Conjunction') {
-  			/* assumes conjunction node only accepts condition nodes*/
-  			
-  			// var clauses = []
-  			// result.predicate.condition = {
-  			// 	clauses: [],
-  			// 	type: currentNode.conjunction
-  			// }
-  			// conditionParser(nodeSet, currentNode.accepts, clauses, result.summarySource)
-  			// result.predicate.condition.clauses = clauses
-
   			result.predicate.condition = {
 					clauses: [],
 					type: currentNode.conjunction
@@ -139,7 +129,41 @@ module.exports = {
 					result.summarySource, 0)
   		}
   		// TODO Target actions
-
+  		ruleNode.directs.forEach(function(actionNodeID) {
+  			currentNode = nodeSet[actionNodeID]
+  			if (currentNode.type == 'DeviceType') {
+  				var thingList = currentNode.things
+  				currentNode.directs.forEach(function(commandNodeID) {
+  					currentNode = nodeSet[commandNodeID]
+  					var target = {
+  						type: 'thingCommand',
+  						thingList: thingList,
+  						doubleCheck: false,
+  						delay: currentNode.delay,
+  						command: {
+  							actions: []
+  						}
+  					}
+  					var action = {}
+  					action[currentNode.actionName] = {}
+  					action[currentNode.actionName][currentNode.properties[0].propertyName] 
+  						= currentNode.properties[0].propertyValue
+  					target.command.actions.push(action)
+  					result.targets.push(target)
+  				})
+  			} else if (currentNode.type == 'Api') {
+  				var target = {
+  					type: 'HttpApiCall',
+  					url: currentNode.apiUrl,
+  					method: currentNode.method,
+  					headers: currentNode.header,
+  					content: JSON.stringify(currentNode.body),
+  					delay: currentNode.delay,
+  					doubleCheck: false
+  				}
+  				result.targets.push(target)
+  			}
+  		})
   	})
     return done(result)
   }

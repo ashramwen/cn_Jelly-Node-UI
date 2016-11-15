@@ -1,5 +1,6 @@
 var Q = require('q')
 
+// parse condition branch
 var conditionParser = function(nodeSet, conditionNodes, clauses, summarySource, depth) {
 	for (var i = 0; i < conditionNodes.length; i++) {
 		var condition = {
@@ -52,10 +53,11 @@ var conditionParser = function(nodeSet, conditionNodes, clauses, summarySource, 
 	}
 }
 
+// parse conjunction branch
 var conjunctionParser = function(nodeSet, currentNode, condition, summarySource, depth) {
 	currentNode.accepts.forEach(function (coin) {
 		currentNode = nodeSet[coin]
-		if (currentNode.type == 'Condition') {
+		if (currentNode.type == 'Condition') {	
 			var clauses = []
 			conditionParser(nodeSet, [currentNode.nodeID], clauses, summarySource, depth)
 			condition.clauses.push(clauses[0])
@@ -76,12 +78,15 @@ var conjunctionParser = function(nodeSet, currentNode, condition, summarySource,
 module.exports = {
 
   toRulesEngine: function (options, done) {
+  	// rule engine body skeleton
   	var result = {
   		triggerType: 'summary',
   		predicate: {},
   		summarySource: {},
   		targets: []
   	}
+
+  	// supportive variables
   	var nodeSet = {}
   	var primaryNodes = []
   	var currentNode = {}
@@ -110,13 +115,17 @@ module.exports = {
   		})
   	})
 
-  	primaryNodes.forEach(function (ruleNode) {
+  	primaryNodes.forEach(function (ruleNode) {	// loop through primary nodes
   		// TODO set rule name and description
+
   		result.predicate.triggersWhen = ruleNode.triggerWhen // set trigger when
-  		currentNode = nodeSet[ruleNode.accepts[0]]
+  		currentNode = nodeSet[ruleNode.accepts[0]]	// rule node only accept one node
+
+  		// set predicate and summary source
   		if (currentNode.type == 'Time') {
   			//TODO
-  		} else if (currentNode.type == 'Condition') {
+  			var todo = 'soon'
+  		} else if (currentNode.type == 'Condition') {	
   			var clauses = []
   			conditionParser(nodeSet, [currentNode.nodeID], clauses, result.summarySource, 0)
   			result.predicate.condition = clauses[0]
@@ -128,7 +137,8 @@ module.exports = {
 				conjunctionParser(nodeSet, currentNode, result.predicate.condition, 
 					result.summarySource, 0)
   		}
-  		// TODO Target actions
+
+  		// set targets
   		ruleNode.directs.forEach(function(actionNodeID) {
   			currentNode = nodeSet[actionNodeID]
   			if (currentNode.type == 'DeviceType') {

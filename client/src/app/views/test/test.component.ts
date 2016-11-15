@@ -4,6 +4,11 @@ import { JNApplication, APP_READY } from '../../core/services/application-core.s
 import { Events } from '../../core/services/event.service';
 import { JNBaseNode } from '../../core/models/jn-base-node.type';
 import { RuleApplication } from '../../externals/rule-application-core';
+import { JNDevicePropertyNode } from '../../externals/nodes/device-property-node/device-property-node.type';
+import { JNDevicePropertyPaletteModel } from '../../externals/nodes/device-property-node/device-property-node-palette-model.type';
+import { JNDeviceTypePaletteModel } from '../../externals/nodes/device-type-node/device-type-node-palette-model.type';
+import { JNDeviceTypeNode } from '../../externals/nodes/device-type-node/device-type-node.type';
+import { JNLocationPaletteModel } from '../../externals/nodes/location-node/location-node-palette-model.type';
 
 @Component({
   selector: 'test',
@@ -33,9 +38,9 @@ export class TestComponent implements OnInit {
       let data = require('../../../assets/example.json');
       this.flow.loadData(data);
       console.log(this.flow.nodes);
-      
-      let schemas = RuleApplication.instance.resources.$schema.schemas;
-      console.log('schemas', schemas);
+      let deviceTypeNode = new JNLocationPaletteModel();
+      deviceTypeNode.init();
+      console.log(deviceTypeNode);
     });
 
   }

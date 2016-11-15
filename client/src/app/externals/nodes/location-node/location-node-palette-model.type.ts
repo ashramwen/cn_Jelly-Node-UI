@@ -5,11 +5,12 @@ import { IJNPaletteService } from '../../services/palette.service';
 
 export class JNLocationPaletteModel extends IJNPaletteModel {
 
-  connections: Array<IJNPaletteConnection>;
-
   static instance = new JNLocationPaletteModel();
 
-  protected init() {
-    IJNPaletteService.getPaletteProperties(JNLocationNode);
+  public init() {
+    this.nodes = IJNPaletteService.getNodes(JNLocationNode);
   }
+
 }
+
+

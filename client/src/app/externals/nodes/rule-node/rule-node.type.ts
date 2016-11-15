@@ -13,7 +13,7 @@ import { JNTimeNode } from '../time-node/time-node.type';
   borderColor: '',
   editorModel: JNRuleNodeEditorModel,
   infoPanelModel: JNRuleInfoPanelModel.instance,
-  paletteModel: JNRulePaletteModel.instance,
+  paletteModel: null,
   accepts: ['Condition', 'Conjunction', 'Time']
 })
 export class JNRuleNode extends JNBaseNode  {

@@ -9,11 +9,12 @@ import { JNDeviceTypeInfoPanelModel } from '../device-type-node/device-type-node
 import { JNDeviceTypePaletteModel } from '../device-type-node/device-type-node-palette-model.type';
 
 export class JNDevicePropertyPaletteModel extends IJNPaletteModel {
-  static containDynamicProperties = true;
+  nodes = [];
+  connections = [];
 
   static instance = new JNDevicePropertyPaletteModel();
 
-  protected init() {
+  public init() {
     this.nodes = IJNPaletteService.getNodes(JNDevicePropertyNode);
     this.connections.push(JNDeviceTypePaletteModel.createConnection(JNDevicePropertyNode));
   }
@@ -28,13 +29,14 @@ export class JNDevicePropertyPaletteModel extends IJNPaletteModel {
 
   static createConnection(selectedNodeType: typeof JNBaseNode, deviceType: string): IJNPaletteConnection {
     let schemas = RuleApplication.instance.resources.$schema.schemas;
-    let deviceTypes = Object.keys(schemas[deviceType]);
-
+    let deviceTypes = Object.keys(schemas[deviceType].content.statesSchema.properties);
     let connection = new IJNPaletteConnection();
+    
     connection.title = "Device Property";
+    connection.properties = [];
     deviceTypes.forEach(function (deviceProperty) {
-      connection.properties.push(new IJNPaletteNode(selectedNodeType, JNDevicePropertyNode, 
-      JNDevicePropertyPaletteModel.createProperty(deviceType, deviceProperty)));
+      connection.properties.push(new IJNPaletteNode(selectedNodeType, JNDevicePropertyNode,
+        JNDevicePropertyPaletteModel.createProperty(deviceType, deviceProperty)));
     })
     return connection;
   }

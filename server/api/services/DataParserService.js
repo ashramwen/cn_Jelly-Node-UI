@@ -1,5 +1,13 @@
 var Q = require('q')
 
+var aggKeyMap = {
+  'avg': 'average',
+  'sum': 'sum',
+  'min': 'min',
+  'max': 'max',
+  'count': 'count'
+}
+
 // parse condition branch
 var conditionParser = function(nodeSet, conditionNodes, clauses, summarySource, depth) {
 	for (var i = 0; i < conditionNodes.length; i++) {
@@ -20,7 +28,7 @@ var conditionParser = function(nodeSet, conditionNodes, clauses, summarySource, 
 			//set summarySource -> expressList
 			summarySource[sourceKey].expressList[j] = {
 				stateName: currentNode.conditions[j].property,
-				function: currentNode.conditions[j].aggregation,
+				function: aggKeyMap[currentNode.conditions[j].aggregation],
 				summaryAlias: j.toString()
 			}
 			//set condition
@@ -80,9 +88,9 @@ module.exports = {
   toRulesEngine: function (options, done) {
   	// rule engine body skeleton
   	var result = {
-      triggerName: options.flowName,
+      name: options.flowName,
       description: options.flowDescription,
-  		triggerType: 'summary',
+  		type: 'Summary',
   		predicate: {},
   		summarySource: {},
   		targets: []
@@ -185,6 +193,5 @@ module.exports = {
     return Q.fcall(function(){
       return result
     })
-    // return done(result)
   }
 };

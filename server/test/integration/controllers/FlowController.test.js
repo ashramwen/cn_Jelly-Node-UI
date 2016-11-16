@@ -191,23 +191,7 @@ describe('Flow Controller', function () {
         });
     });
 
-    it('should get flows', function (done) {
-        request(sails.hooks.http.app)
-        .get('/flows')
-        .set({"authorization": "Bearer " + userAccessToken})
-        .expect(200)
-        .expect(function (res) {
-            if (!(typeof res.body == 'object')) throw new Error ("wrong body type");
-            if (!(res.body.length == 1)) throw new Error ("wrong number of flows");
-        })
-        .end(function (err, res) {
-            if (err) return done(err);
-            should.exist(res.body);
-            done();
-        });
-    });
-
-    it('should get a flow', function (done) {
+    it('should get a flow before publish', function (done) {
         request(sails.hooks.http.app)
         .get('/flows/' + flowID)
         .set({"authorization": "Bearer " + userAccessToken})
@@ -230,6 +214,41 @@ describe('Flow Controller', function () {
             done();
         });
     });
+
+    it('should get flows', function (done) {
+        request(sails.hooks.http.app)
+        .get('/flows')
+        .set({"authorization": "Bearer " + userAccessToken})
+        .expect(200)
+        .expect(function (res) {
+            if (!(typeof res.body == 'object')) throw new Error ("wrong body type");
+            if (!(res.body.length == 1)) throw new Error ("wrong number of flows");
+        })
+        .end(function (err, res) {
+            if (err) return done(err);
+            should.exist(res.body);
+            done();
+        });
+    });
+
+    it('should publish a flow', function(done) {
+        request(sails.hooks.http.app)
+        .post('/flows/' + flowID + '/publish')
+        .set({"authorization": "Bearer " + userAccessToken})
+        .send()
+        .expect(200)
+        .expect(function (res) {
+            if (!(typeof res.body == 'object')) throw new Error ("wrong body type");
+            if (!(res.body.published == true)) throw new Error ('published flag wrong')
+            if (!(res.body.synchronized == true)) throw new Error ('synchronized flag wrong')
+            if (!('externalID' in res.body)) throw new Error ('missing externalID')
+        })
+        .end(function (err, res) {
+            if (err) return done(err)
+            should.exist(res.body)
+            done()
+        })
+    })        
 
     it('should update a flow', function (done) {
         request(sails.hooks.http.app)

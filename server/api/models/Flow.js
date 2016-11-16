@@ -13,6 +13,10 @@ module.exports = {
     	required: true,
     	unique: true
   	},
+    externalID: {
+      type: 'string',
+      required: false
+    },
   	createdBy: {
   		type: 'string',
   		required: true

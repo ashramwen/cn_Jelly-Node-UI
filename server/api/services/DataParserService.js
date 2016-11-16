@@ -80,6 +80,8 @@ module.exports = {
   toRulesEngine: function (options, done) {
   	// rule engine body skeleton
   	var result = {
+      triggerName: options.flowName,
+      description: options.flowDescription,
   		triggerType: 'summary',
   		predicate: {},
   		summarySource: {},
@@ -92,7 +94,7 @@ module.exports = {
   	var currentNode = {}
 
   	// construct nodeSet and primaryNodes
-  	options.forEach(function(node) {
+  	options.nodes.forEach(function(node) {
   		node.nodeID = parseInt(node.nodeID)
   		if (node.type == 'rule')
   			primaryNodes.push(node)

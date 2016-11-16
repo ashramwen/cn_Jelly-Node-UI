@@ -1,7 +1,9 @@
 module.exports = {
 
   create: function (options, done) {
-    return done()
+    var ruleBody = options.flowData
+    var res = options.res
+    
   },
 
   update: function (options, done) {

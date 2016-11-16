@@ -169,17 +169,12 @@ describe('Flow Controller', function () {
     it('should save a flow', function (done) {
         request(sails.hooks.http.app)
         .post('/flows/save')
-        .send({
-            "flowType": "rule",
-            "flow": {
-                "key": "value"
-            }
-        })
+        .send(genericRuleFlowBody)
         .set({"authorization": "Bearer " + userAccessToken})
         .expect(201)
         .expect(function (res) {
             if (!('flowType' in res.body)) throw new Error("missing flowType key");
-            if (!('flow' in res.body)) throw new Error("missing flow key");
+            if (!('flowName' in res.body)) throw new Error("missing flow key");
             if (!('createdBy' in res.body)) throw new Error("missing createdBy key");
             if (!('flowID' in res.body)) throw new Error("missing flowID key");
             if (!(res.body.synchronized == false)) throw new Error("synchronized key wrong default value");
@@ -220,7 +215,7 @@ describe('Flow Controller', function () {
         .expect(function (res) {
             if (!(typeof res.body == 'object')) throw new Error ("wrong body type");
             if (!('flowType' in res.body)) throw new Error("missing flowType key");
-            if (!('flow' in res.body)) throw new Error("missing flow key");
+            if (!('flowName' in res.body)) throw new Error("missing flow key");
             if (!('createdBy' in res.body)) throw new Error("missing createdBy key");
             if (!('flowID' in res.body)) throw new Error("missing flowID key");
             if (!(res.body.synchronized == false)) throw new Error("synchronized key wrong default value");
@@ -240,16 +235,10 @@ describe('Flow Controller', function () {
         request(sails.hooks.http.app)
         .put('/flows/' + flowID)
         .set({"authorization": "Bearer " + userAccessToken})
-        .send({
-            "flowType": "rule",
-            "flow": {
-                "key2": "value2"
-            }
-        })
+        .send(genericRuleFlowBody)
         .expect(200)
         .expect(function (res) {
             if (!(typeof res.body == 'object')) throw new Error ("wrong body type");
-            if (!(res.body[0].flow.key2 == 'value2')) throw new Error ("update does not take effect");
         })
         .end(function (err, res) {
             if (err) return done(err);

@@ -1,9 +1,8 @@
-import { IJNPaletteConnection } from '../../../views/palette/palette-connections.type';
-import { IJNPaletteModel } from '../../../views/palette/interfaces/palette-model.type';
+import { JNPaletteConnection } from '../../../views/palette/palette-connections.type';
+import { JNPaletteModel } from '../../../views/palette/interfaces/palette-model.type';
 import { JNLocationNode } from './location-node.type';
-import { IJNPaletteService } from '../../services/palette.service';
 
-export class JNLocationPaletteModel extends IJNPaletteModel {
+export class JNLocationPaletteModel extends JNPaletteModel {
 
   constructor(){
     super();
@@ -11,7 +10,7 @@ export class JNLocationPaletteModel extends IJNPaletteModel {
   }
 
   public init() {
-    this.nodes = IJNPaletteService.getNodes(JNLocationNode);
+    this.nodes = JNPaletteModel.getNodes(JNLocationNode);
   }
 
 }

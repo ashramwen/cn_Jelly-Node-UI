@@ -99,12 +99,10 @@ export class JNEditFormComponent implements OnInit, OnChanges {
   ngOnChanges(value: {[key: string]: SimpleChange}) {
     if (!value['targetNode'].currentValue) return;
     this.events.on(APP_READY, () => {
-      setTimeout(() => {
-        this.editorModel = this.targetNode.createEditorModel();
-        console.log(value);
-        // this.editorModel = node.createEditorModel();
-        this.prepare();
-      }, 50);
+      this.editorModel = this.targetNode.createEditorModel();
+      console.log(value);
+      // this.editorModel = node.createEditorModel();
+      this.prepare();
     });
   }
 

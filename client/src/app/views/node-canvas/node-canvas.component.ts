@@ -2,7 +2,7 @@ import * as $ from 'jquery';
 import 'jqueryui';
 
 import { Directive, OnInit, Component, ViewEncapsulation } from '@angular/core';
-import { D3HelperService } from './../../externals/services/d3-helper/d3-helper.service';
+import { D3HelperService } from './services';
 import { JNFlow } from './../../core/models/jn-flow.type';
 
 import { JNBaseNode } from './../../core/models/jn-base-node.type';
@@ -35,16 +35,6 @@ export class NodeCanvasComponent implements OnInit {
       }
     });
 
-    this.d3Helper.start();
-
-    // let node = this.nodeFlow.createNode(JNLocationNode, { position: { x: 200, y: 200 } });
-    // let node2 = this.nodeFlow.createNode(JNDeviceTypeNode, { position: { x: 300, y: 200 } });
-    // let node3 = this.nodeFlow.createNode(JNDeviceTypeNode, { position: { x: 400, y: 200 } });
-    let a = 1;
-
-
-    // this.d3Helper.drawNode(this.nodeFlow.nodes);
-
-    // this.d3Helper.drawLink(node2, node);
+    this.d3Helper.init();
   }
 }

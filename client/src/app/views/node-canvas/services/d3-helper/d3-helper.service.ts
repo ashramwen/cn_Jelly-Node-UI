@@ -1,9 +1,8 @@
-import { Events } from './../../../core/services/event.service';
+import { JNFlow } from './../../../../core/models/jn-flow.type';
+import { Events } from './../../../../core/services/event.service';
+import { JNBaseNode } from '../../../../core/models/jn-base-node.type'
 import { Injectable } from '@angular/core';
 import * as d3 from 'd3';
-
-import { JNBaseNode } from '../../../core/models/jn-base-node.type';
-import { JNApplication } from '../../../core/services/application-core.service';
 
 @Injectable()
 export class D3HelperService {
@@ -27,11 +26,13 @@ export class D3HelperService {
   private input_dragging = false;
   private output_dragging = false;
 
-  constructor(private events: Events) {
+  nodeFlow: JNFlow;
 
+  constructor(private events: Events) {
+    this.nodeFlow = new JNFlow();
   }
 
-  start() {
+  init() {
     let self = this;
     // let NODE_WIDTH = this.NODE_WIDTH;
     // let NODE_HEIGHT = this.NODE_HEIGHT;
@@ -40,7 +41,7 @@ export class D3HelperService {
     //   space_width = 960 - margin.right - margin.left,
     //   space_height = 500 - margin.top - margin.bottom;
     let space_width = 960;
-    let space_height = 500;
+    let space_height = 640;
 
     var svg = d3.select('svg')
       .attr('width', space_width)

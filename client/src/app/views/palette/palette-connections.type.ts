@@ -1,6 +1,6 @@
-import { IJNPaletteNode } from './palette-node.type';
+import { JNPaletteNode } from './palette-node.type';
 
-export class IJNPaletteConnection {
+export class JNPaletteConnection {
   title: String;
-  properties: Array<IJNPaletteNode>;
+  properties: Array<JNPaletteNode>;
 }

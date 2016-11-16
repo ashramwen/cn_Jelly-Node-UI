@@ -1,8 +1,7 @@
-import { IJNPaletteModel } from '../../../views/palette/interfaces/palette-model.type';
-import { IJNPaletteService } from '../../services/palette.service';
+import { JNPaletteModel } from '../../../views/palette/interfaces/palette-model.type';
 import { JNConditionNode } from './condition-node.type';
 
-export class JNCondtionPaletteMode extends IJNPaletteModel {
+export class JNCondtionPaletteMode extends JNPaletteModel {
 
   constructor(){
     super();
@@ -10,7 +9,7 @@ export class JNCondtionPaletteMode extends IJNPaletteModel {
   }
 
   public init() {
-    this.nodes = IJNPaletteService.getNodes(JNConditionNode);
+    this.nodes = JNPaletteModel.getNodes(JNConditionNode);
   }
 
 }

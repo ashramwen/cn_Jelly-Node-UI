@@ -3,26 +3,26 @@ import { Serializable } from '../../../../bin/JsonMapper';
 import { INodeBody } from '../../../core/models/interfaces/node-body.interface';
 
 export interface ITime extends INodeBody {
-  timeType: 'interval' | 'schedule';
+  timeType: 'interval' | 'cron';
   cron: string;
   interval: number;
-  unit: string;
+  timeUnit: string;
 }
 
 @Serializable()
-export class JNTimeNodeModel extends JNNodeModel<ITime> {
+export class JNTimeNodeModel extends JNNodeModel<ITime> implements ITime {
   static deserialize: (data: any) => JNTimeNodeModel;
 
-  timeType: 'interval' | 'schedule';
+  timeType: 'interval' | 'cron';
   cron: string;
   interval: number;
-  unit: string;
+  timeUnit: string;
 
   constructor() {
     super();
     this.timeType = null;
     this.cron = null;
     this.interval = null;
-    this.unit = null;
+    this.timeUnit = null;
   }
 }

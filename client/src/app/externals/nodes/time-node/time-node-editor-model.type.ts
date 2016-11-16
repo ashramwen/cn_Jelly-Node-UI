@@ -24,7 +24,7 @@ import {
           value: 'interval'
         }, {
           text: '定时定点',
-          value: 'schedule'
+          value: 'cron'
         }]
       },
       controlType: JNRadioControl,
@@ -73,7 +73,7 @@ export class JNTimeNodeEditorModel extends JNEditorModel {
 
   protected parse(data: JNTimeNodeModel) {
     this.setValue('timeType', data.timeType);
-    this.setValue('unit', data.unit);
+    this.setValue('unit', data.timeUnit);
     this.setValue('cron', data.cron);
     this.setValue('interval', data.interval);
   }
@@ -90,7 +90,7 @@ export class JNTimeNodeEditorModel extends JNEditorModel {
           this.getInput('unit').hidden = false;
           this.getInput('interval').hidden = false;
           break;
-        case 'schedule':
+        case 'cron':
           this.getInput('cron').hidden = false;
           this.getInput('unit').hidden = true;
           this.getInput('interval').hidden = true;

@@ -1,7 +1,6 @@
 import { INodePosition, IJNNodePayload } from './interfaces';
 import { Observable, Subscriber } from 'rxjs';
 import { IJNInfoPanelModel } from '../../views/info-panel/interfaces';
-import { IJNPaletteModel } from '../../views/palette/interfaces';
 import {
   ApplicationContextService,
   CacheContextService,
@@ -15,6 +14,7 @@ import { JNEditorModel } from '../../views/node-editor/interfaces/editor-model.t
 import { INodeBody } from './interfaces/node-body.interface';
 import { JNUtils } from '../../share/util';
 import { INodeError } from './interfaces/node-error.interface';
+import { JNPaletteModel } from '../../views/palette/interfaces/palette-model.type';
 
 export interface INodeMap {
   accepted: {
@@ -48,7 +48,7 @@ export abstract class JNBaseNode {
   static nodeModel: typeof JNNodeModel;
   static editorModel: typeof JNEditorModel;
   static infoModel: IJNInfoPanelModel;
-  static paletteModel: IJNPaletteModel;
+  static paletteModel: JNPaletteModel;
   static outputable: boolean;
   static modelRules: { message: string, validator: (model: JNNodeModel<any>) => boolean }[];
   static connectRules: IConnectRuleSetting;
@@ -59,7 +59,17 @@ export abstract class JNBaseNode {
       .indexOf(left) > -1;
   }
 
-  get name(): String {
+  static getName(nodeType: new() => JNBaseNode, data?: any): string {
+    return JNBaseNode.factory(nodeType, data).name;
+  }
+
+  static factory<T extends JNBaseNode>(type: new() => T, data: any):  T {
+    let node = new type;
+    if (data) node.init(data);
+    return node;
+  }
+
+  get name(): string {
     return this.getTitle();
   }
 

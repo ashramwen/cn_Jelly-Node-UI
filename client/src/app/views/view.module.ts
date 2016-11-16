@@ -4,7 +4,7 @@ import { MaterialModule } from '@angular/material';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NodeEditorModule } from './node-editor';
 
-import { D3HelperService } from './../externals/services/d3-helper/d3-helper.service';
+import { D3HelperService } from './node-canvas/services';
 
 import { FlowComponent } from './flow/flow.component';
 import { FlowDetailComponent } from './flow/flow-detail/flow-detail.component';

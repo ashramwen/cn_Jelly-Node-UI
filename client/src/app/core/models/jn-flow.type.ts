@@ -16,8 +16,8 @@ export class JNFlow {
    * @param  {JNBaseNode} nodeType
    * @desc create new node
    */
-  createNode<T extends JNBaseNode>(nodeType: { new(): T }, data?) {
-    let node = new nodeType();
+  createNode<T extends JNBaseNode>(nodeType: new() => T , data?) {
+    let node = JNBaseNode.factory(nodeType, data);
     if (data) {
       node.init(data);
     } else {

@@ -7,8 +7,8 @@ import { AuthenHelperSerivce } from '../services/authen-helper.service';
 import { CacheContextService } from '../../core/services/cache-context.service';
 
 export interface ILocation {
-  location: String;
-  displayName: String;
+  location: string;
+  displayName: string;
   subLocations: { [key: string]: ILocation };
 }
 

@@ -24,8 +24,7 @@ import { JNNodeEditor } from '../../../core/models/node-editor-annotation';
         label: '位置'
       },
       controlType: JNSelectSetControl,
-      $validators: [],
-      formControl: new FormControl()
+      $validators: []
     }
   }
 })
@@ -58,16 +57,17 @@ export class JNLocationNodeEditorModel extends JNEditorModel {
 
     let model: JNLocationNodeModel = <JNLocationNodeModel>this.model;
     model.locationID = locationID;
-    model.locationStr = model.locationStr;
+    model.locationStr = locationStr;
 
     return model;
   }
 
   protected updated(fieldName: string, value: any): void {
     let i = 0;
-    while (value[i]) {
+    while (value[i.toLocaleString()]) {
       i++;
     }
+    value.splice(i);
     this.depth = i + 1;
     (<ISelectSetInput>this.getInput('location')).set =
       LocationNodeService.instance.buildSet(value, this.depth);

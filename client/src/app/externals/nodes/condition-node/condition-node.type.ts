@@ -7,6 +7,7 @@ import { JNDeviceTypeNode } from '../device-type-node/device-type-node.type';
 import { JNUtils } from '../../../share/util';
 import { IDeviceProperty } from '../device-property-node/device-property-node-model.type';
 import { IDeviceType } from '../device-type-node/device-type-node-model.type';
+import { IJNNodePayload } from '../../../core/models/interfaces/node-payload.interface';
 
 @JNNode({
   icon: '',
@@ -16,19 +17,27 @@ import { IDeviceType } from '../device-type-node/device-type-node-model.type';
   editorModel: JNConditionNodeEditorModel,
   infoPanelModel: null,
   paletteModel: null,
-  accepts: ['DeviceProperty']
-})
-export class JNConditionNode extends JNBaseNode  {
-
-  protected connectRules: IConnectRuleSetting = {
+  accepts: ['DeviceProperty'],
+  modelRules: [{
+    message: '属性条件值不能为空',
+    validator: (model: JNConditionNodeModel) => {
+      for (let condition of model.conditions) {
+        if (JNUtils.isBlank(condition.value)) {
+          return false;
+        }
+      }
+      return true;
+    }
+  }],
+  connectRules: {
     global: [],
     nodes: [{
-      nodeType: JNDevicePropertyNode,
+      nodeType: 'DeviceProperty',
       rules: [
         {
-          message: `<${JNConditionNode.title}>节点只接受来自同一<${JNDeviceTypeNode.title}>节点的<${JNDevicePropertyNode.title}>节点。`,
-          validator: (target: JNDevicePropertyNode) => {
-            let inputPropertyNodes = JNUtils.toArray<JNBaseNode>(this.nodeMap.accepted)
+          message: `<Condition>节点只接受来自同一<DeviceType>节点的<DeviceProperty>节点。`,
+          validator: (node: JNConditionNode, target: JNDevicePropertyNode) => {
+            let inputPropertyNodes = JNUtils.toArray<JNBaseNode>(node.nodeMap.accepted)
               .map(r => r.value)
               .filter(r => r instanceof JNDevicePropertyNode);
 
@@ -36,8 +45,8 @@ export class JNConditionNode extends JNBaseNode  {
 
             let typeName = (<IDeviceProperty>target.body).typeName;
 
-            return !inputPropertyNodes.find((node) => {
-              let inputs = JNUtils.toArray<JNBaseNode>(node.nodeMap.accepted)
+            return !inputPropertyNodes.find((n) => {
+              let inputs = JNUtils.toArray<JNBaseNode>(n.nodeMap.accepted)
                 .map(r => r.value)
                 .filter(r => r instanceof JNDeviceTypeNode);
               if (inputs.length > 1) return true;
@@ -48,19 +57,15 @@ export class JNConditionNode extends JNBaseNode  {
         }
       ]
     }]
-  };
+  }
+})
+export class JNConditionNode extends JNBaseNode  {
 
   public get body (){
     return this.model.serialize();
   }
 
   protected model: JNConditionNodeModel = new JNConditionNodeModel;
-
-  protected buildOutput(): Promise<Object> {
-    return new Promise((resolve) => {
-      resolve(null);
-    });
-  }
 
   protected whenReject() {
     return null;
@@ -70,7 +75,48 @@ export class JNConditionNode extends JNBaseNode  {
     return null;
   }
 
-  protected listener(data: Object) {
-    console.log(data);
+  protected listener(payload: IJNNodePayload) {
+    return new Promise((resolve) => {
+      this.model.conditions = this.model.conditions || [];
+      if (payload.type === JNDevicePropertyNode) {
+        if (payload.data['typeName'] !== this.model.typeName) {
+          let propertyNodes: JNDevicePropertyNode[] = JNUtils.toArray<JNBaseNode>(this.nodeMap.accepted)
+            .filter(pair => pair.value instanceof JNDevicePropertyNode)
+            .map((pair) => <JNDevicePropertyNode>pair.value);
+
+          let flag = false;
+          propertyNodes.forEach((propertyNode) => {
+            flag = payload.data['typeName'] !== propertyNode.body.typeName;
+          });
+
+          if (flag) {
+            this.model.typeName = null;
+            this.model.conditions = [];
+            resolve(true);
+            return;
+          }
+          this.model.typeName = payload.data['typeName'];
+
+          let hasProperty = !!this.model.conditions
+            .find((condition) => condition.property === payload.data['property']);
+          if (!hasProperty) {
+            this.model.conditions.push({
+              aggregation: null,
+              operator: null,
+              property: payload.data['proprerty'],
+              value: null
+            });
+          }
+
+          this.model.conditions = this.model.conditions.filter((condition) => {
+            return propertyNodes.find((propertyNode) => {
+              return propertyNode.body.property === condition.property;
+            });
+          });
+
+        }
+      }
+      resolve(true);
+    });
   }
 }

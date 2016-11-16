@@ -1,8 +1,15 @@
 import { RuleApplication } from '../../rule-application-core';
+
+export interface IThingTable {
+  location: string;
+  vendorThingID: string;
+  thingID: number;
+}
+
 export class DeviceTypeNodeService {
   static instance = new DeviceTypeNodeService;
 
-  getThings(locations: string[], typeName: string) {
+  getThings(locations: string[], typeName: string): Promise<IThingTable[]> {
     return new Promise((resolve, reject) => {
       let promises = locations.map((location) => {
         let requestParam = {

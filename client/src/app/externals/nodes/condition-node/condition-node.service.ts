@@ -7,7 +7,8 @@ export class ConditionNodeService {
   static instance = new ConditionNodeService;
 
   buildConditions(data: JNConditionNodeModel): IPropertyCondition[] {
-    let schema = RuleApplication.instance.resources.$schema.schemas[data.thingType];
+    let schema = RuleApplication.instance.resources.$schema.schemas[data.typeName];
+    if (!data.typeName || !schema) return [];
     return data.conditions.map((condition) => {
       let propertySchema = schema.content.statesSchema.properties[condition.property];
       return {
@@ -56,5 +57,4 @@ export class ConditionNodeService {
       value: false
     }];
   }
-
 }

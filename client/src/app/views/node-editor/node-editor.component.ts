@@ -1,4 +1,8 @@
-import { Component, ViewContainerRef, ViewChild, ElementRef, OnInit, Input, OnChanges, SimpleChange } from '@angular/core';
+import {
+  Component, ViewContainerRef, ViewChild,
+  ElementRef, OnInit, Input, Output, OnChanges, SimpleChange,
+  EventEmitter
+} from '@angular/core';
 import { FormGroup, FormControl, Validators, AsyncValidatorFn } from '@angular/forms';
 
 import { ApplicationContextService } from '../../core/services';
@@ -15,7 +19,6 @@ import { Events } from '../../core/services/event.service';
 import { APP_READY } from '../../core/services/application-core.service';
 import { JNDeviceTypeNode } from '../../externals/nodes/device-type-node/device-type-node.type';
 import { JNConjunctionNode } from '../../externals/nodes/conjunction-node/conjunction-node.type';
-import { JNConditionNode } from '../../externals/nodes/condition-node/condition-node.type';
 import { JNTimeNode } from '../../externals/nodes/time-node/time-node.type';
 import { JNActionNode } from '../../externals/nodes/action-node/action-node.type';
 import { JNApiNode } from '../../externals/nodes/api-node/api-node.type';
@@ -31,6 +34,9 @@ export class JNEditFormComponent implements OnInit, OnChanges {
   editorModel: JNEditorModel;
   @Input()
   targetNode: JNBaseNode;
+
+  @Output()
+  submitted = new EventEmitter();
 
   private controls: IJNFormControl[] = [];
   private formGroup: FormGroup = new FormGroup({});
@@ -109,6 +115,8 @@ export class JNEditFormComponent implements OnInit, OnChanges {
   }
 
   submit() {
-    console.log(this.editorModel.submit());
+    let result = this.editorModel.submit();
+    this.targetNode.update(result);
+    this.submitted.emit(result);
   }
 }

@@ -1,7 +1,7 @@
 [
   {
     "locationID": "0807W-A01",
-    "locationStr": ["08", "0807", "0807W", "0807W-A01"],
+    "locationStr": ["08", "0807", "0807W", "0807W-A", "0807W-A01"],
     "type": "Location",
     "nodeID": 1,
     "accepts": []
@@ -15,14 +15,14 @@
     "accepts": [1]
   },
   {
-    "property": "brightness",
+    "property": "Bri",
     "typeName": "EnvironmentSensor",
     "type": "DeviceProperty",
     "nodeID": 30,
     "accepts": [2]
   },
   {
-    "property": "humanity",
+    "property": "Humidity",
     "typeName": "EnvironmentSensor",
     "type": "DeviceProperty",
     "nodeID": 31,
@@ -44,14 +44,14 @@
     "accepts": [4]
   },
   {
-    "property": "brightness",
+    "property": "Bri",
     "typeName": "EnvironmentSensor",
     "type": "DeviceProperty",
     "nodeID": 6,
     "accepts": [5]
   },
   {
-    "property": "humanity",
+    "property": "Humidity",
     "typeName": "EnvironmentSensor",
     "type": "DeviceProperty",
     "nodeID": 7,
@@ -61,18 +61,19 @@
     "conditions": [
       {
         "aggregation": "avg",
-        "property": "brightness",
+        "property": "Bri",
         "operator": "gte",
         "value": 50
       },
       {
         "aggregation": "min",
-        "property": "humanity",
+        "property": "Humidity",
         "operator": "lte",
         "value": 100
       }
     ],
     "type": "Condition",
+    "typeName": "EnvironmentSensor",
     "nodeID": 8,
     "accepts": [30, 31]
   },
@@ -80,18 +81,19 @@
     "conditions": [
       {
         "aggregation": "avg",
-        "property": "brightness",
+        "property": "Bri",
         "operator": "gte",
         "value": 50
       },
       {
         "aggregation": "min",
-        "property": "humanity",
+        "property": "Humidity",
         "operator": "lte",
         "value": 100
       }
     ],
     "type": "Condition",
+    "typeName": "EnvironmentSensor",
     "nodeID": 9,
     "accepts": [6,7]
   },
@@ -135,9 +137,10 @@
   {
     "actionName": "turnPower",
     "properties": [{
-      "propertyName": "power",
+      "propertyName": "Power",
       "propertyValue": 0
     }],
+    "typeName": "Lighting",
     "type": "DeviceAction",
     "nodeID": 15,
     "accepts": [14]

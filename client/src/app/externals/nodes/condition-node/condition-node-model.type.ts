@@ -17,7 +17,7 @@ interface ICondition extends INodeBody {
 export class JNConditionNodeModel extends JNNodeModel<ICondition> {
   static deserialize: (obj: any) => JNConditionNodeModel;
 
-  thingType: string;
+  typeName: string;
   conditions: Array<{
     aggregation: 'sum' | 'max' | 'min' | 'avg' | 'count';
     percentage?: number;
@@ -28,7 +28,7 @@ export class JNConditionNodeModel extends JNNodeModel<ICondition> {
 
   constructor() {
     super();
-    this.thingType = null;
+    this.typeName = null;
     this.conditions = null;
   }
 }

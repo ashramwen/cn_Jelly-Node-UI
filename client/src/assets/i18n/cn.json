@@ -1,5 +1,8 @@
 {
   "APP_NAME": "Jelly-Node",
+  "terms": {
+    "pleaseSelect": "--请选择--"
+  },
   "nodeset": {
     "JNRuleNode": {
       "nodename": "规则节点"

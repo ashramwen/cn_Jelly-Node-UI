@@ -14,7 +14,23 @@ import { JNApiNodeModel } from './api-node-model.type';
   editorModel: JNApiNodeEditorModel,
   infoPanelModel: null,
   paletteModel: null,
-  accepts: ['Rule']
+  accepts: ['Rule'],
+  modelRules: [{
+    message: 'API名称不能为空',
+    validator: (model: JNApiNodeModel) => {
+      return !!model.apiName;
+    }
+  }, {
+    message: 'API URL不能为空',
+    validator: (model: JNApiNodeModel) => {
+      return !!model.apiUrl;
+    }
+  }, {
+    message: 'API 请求方式不能为空',
+    validator: (model: JNApiNodeModel) => {
+      return !!model.method;
+    }
+  }]
 })
 export class JNApiNode extends JNBaseNode  {
 
@@ -22,13 +38,11 @@ export class JNApiNode extends JNBaseNode  {
     return this.model.serialize();
   }
 
-  protected model: JNApiNodeModel = new JNApiNodeModel;
-
-  protected buildOutput(): Promise<Object> {
-    return new Promise((resolve) => {
-      resolve(null);
-    });
+  public get name(): string{
+    return this.body.apiName || this.getTitle();
   }
+
+  protected model: JNApiNodeModel = new JNApiNodeModel;
 
   protected whenReject() {
     return null;
@@ -39,6 +53,8 @@ export class JNApiNode extends JNBaseNode  {
   }
 
   protected listener(data: Object) {
-    console.log(data);
+    return new Promise((resolve) => {
+      resolve(true);
+    });
   }
 }

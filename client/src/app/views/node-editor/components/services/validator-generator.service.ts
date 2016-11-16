@@ -8,6 +8,7 @@ export class ValidatorGenerator {
 
   public generate(formValidators: IJNEditorFormValidator[]): Array<JNFormValidator>  {
     let validators: JNFormValidator[] = [];
+    if (!formValidators) return validators;
 
     formValidators.forEach((formValidator) => {
       let cb = function (fc: FormControl) {

@@ -14,6 +14,7 @@ import { JNException } from './exceptions/exception.type';
 import { JNEditorModel } from '../../views/node-editor/interfaces/editor-model.type';
 import { INodeBody } from './interfaces/node-body.interface';
 import { JNUtils } from '../../share/util';
+import { INodeError } from './interfaces/node-error.interface';
 
 export interface INodeMap {
   accepted: {
@@ -26,13 +27,13 @@ export interface INodeMap {
 
 export interface IConnectRule {
   message: string;
-  validator: (target: JNBaseNode) => boolean;
+  validator: (node: JNBaseNode, target: JNBaseNode) => boolean;
 }
 
 export interface IConnectRuleSetting {
   global?: Array<IConnectRule>;
   nodes?: Array<{
-    nodeType: typeof JNBaseNode;
+    nodeType: string;
     rules: Array<IConnectRule>;
   }>;
 }
@@ -49,6 +50,8 @@ export abstract class JNBaseNode {
   static infoModel: IJNInfoPanelModel;
   static paletteModel: IJNPaletteModel;
   static outputable: boolean;
+  static modelRules: { message: string, validator: (model: JNNodeModel<any>) => boolean }[];
+  static connectRules: IConnectRuleSetting;
 
   static connectable(left: typeof JNBaseNode, right: typeof JNBaseNode): boolean {
     return right.accepts
@@ -57,7 +60,7 @@ export abstract class JNBaseNode {
   }
 
   get name(): String {
-    return (<typeof JNBaseNode>this.constructor).title;
+    return this.getTitle();
   }
 
   get position(): INodePosition {
@@ -84,21 +87,10 @@ export abstract class JNBaseNode {
   }
 
   /**
-   * @desc connect rules setting.
-   *  global rules will be challenged before node rules
-   */
-  protected connectRules: IConnectRuleSetting = {};
-
-  private stream: Subscriber<IJNNodePayload>; // stream publisher
-  private output = new Observable((subscriber: Subscriber<IJNNodePayload>) => {
-    this.stream = subscriber;
-  });
-
-  /**
    * @returns void
    * @desc listens all published messages in the linked road
    */
-  protected abstract listener(payload: Object): void; // listener
+  protected abstract listener(payload: IJNNodePayload): Promise<any>; // listener
 
   /**
    * @param  {Object} data
@@ -114,11 +106,6 @@ export abstract class JNBaseNode {
    * @desc serialize data model
    */
   protected abstract formatter(): INodeBody;
-  /**
-   * @returns Object
-   * @desc produce output data for publisher
-   */
-  protected abstract buildOutput(): Promise<Object>;
 
   /**
    * @desc update node body when when node is disconnected
@@ -126,6 +113,23 @@ export abstract class JNBaseNode {
    * @returns Promise
    */
   protected abstract whenReject(node: JNBaseNode): Promise<boolean>;
+
+  /**
+   * @desc get static node tilte
+   */
+  protected getTitle() {
+    return (<typeof JNBaseNode>this.constructor).title;
+  }
+
+  /**
+   * @returns IJNNodePayload
+   * @desc produce output data for publisher
+   */
+  protected buildOutput(): Promise<IJNNodePayload> {
+    return new Promise((resolve) => {
+      resolve(this.model);
+    });
+  }
 
   /**
    * @param  {JNBaseNode} node
@@ -137,7 +141,16 @@ export abstract class JNBaseNode {
     }
     this.nodeMap.accepted[node.body.nodeID] = node;
     node.nodeMap.outputTo[this.body.nodeID] = this;
-    node.output.subscribe(this.listener.bind(this));
+    let _self = this;
+
+    /*    
+    node.output.subscribe((payload) => {
+      _self.listener.bind(_self)(payload).then(() => {
+        _self.validate();
+        _self.buildOutput();
+      });
+    });
+    */
   }
 
   /**
@@ -149,6 +162,7 @@ export abstract class JNBaseNode {
       this.whenReject(node).then(() => {
         delete this.nodeMap.accepted[node.body.nodeID];
         delete node.nodeMap.outputTo[this.body.nodeID];
+        this.validate();
         resolve(node);
         this.publishData();
       }, (err) => {
@@ -162,7 +176,10 @@ export abstract class JNBaseNode {
    * @param  {JNBaseNode} node
    */
   public hasAccepted(node: JNBaseNode): boolean {
-    return !!JNUtils.toArray<JNBaseNode>(this.nodeMap).find(r => r.value === node);
+    return !!JNUtils.toArray<JNBaseNode>(this.nodeMap.accepted)
+      .find(r => {
+        return r.value === node;
+      });
   }
 
   constructor(
@@ -174,6 +191,7 @@ export abstract class JNBaseNode {
    */
   public update(data: Object) {
     this.model = this.parser(data);
+    this.validate();
     this.publishData();
   };
 
@@ -216,22 +234,27 @@ export abstract class JNBaseNode {
     if (typeValid) return typeValid;
 
     // global rule
-    let globalRules = this.connectRules.global;
+    let connectRules = (<typeof JNBaseNode>this.constructor).connectRules;
+    let globalRules = connectRules.global;
     if (globalRules && globalRules.length) {
       for (let rule of globalRules) {
-        if (!rule.validator(target)) {
+        if (!rule.validator(this, target)) {
           return { message: rule.message };
         }
       }
     }
 
     // node rule
-    if (this.connectRules.nodes && this.connectRules.nodes.length) {
-      let node = this.connectRules.nodes.find(_node => _node.nodeType === (<typeof JNBaseNode>target.constructor));
+    if (connectRules.nodes && connectRules.nodes.length) {
+      let node = connectRules.nodes
+        .find(_node =>
+          JNApplication.instance.nodeTypeMapper[_node.nodeType]
+          === (<typeof JNBaseNode>target.constructor));
+
       if (!node) return null;
       let nodeRules = node.rules;
       for (let rule of nodeRules) {
-        if (!rule.validator(target)) {
+        if (!rule.validator(this, target)) {
           return { message: rule.message };
         }
       }
@@ -246,8 +269,27 @@ export abstract class JNBaseNode {
   public createEditorModel() {
     let clazz = <typeof JNBaseNode>(this.constructor);
     let editorModel: JNEditorModel = new (<any>clazz.editorModel);
-    editorModel.load(this.model);
+    editorModel.load(this.model.clone());
     return editorModel;
+  }
+
+  public createPaletteModel() {
+    
+  }
+
+  public createInfoPanelModel() {
+    
+  }
+
+  /**
+   * @desc subscribe input data
+   * @param  {IJNNodePayload} payload
+   */
+  protected subscriber(payload: IJNNodePayload) {
+    this.listener(payload).then(() => {
+      this.validate();
+      this.buildOutput();
+    });
   }
 
   /**
@@ -270,17 +312,47 @@ export abstract class JNBaseNode {
     }
     return null;
   }
-
+  /**
+   * @desc publish data 
+   */
   private publishData() {
     this.buildOutput().then((output) => {
       let payload: IJNNodePayload = {
         type: this.constructor,
         data: output,
         valid: this.model.$valid,
-        error: this.model.$error
+        error: this.model.$errors
       };
-      this.stream.next(payload);
+      JNUtils.toArray<JNBaseNode>(this.nodeMap.outputTo)
+        .map(pair => pair.value)
+        .forEach((node) => {
+          node.subscriber(payload);
+        });
     });
+  }
+
+  /**
+   * @desc validate accepted nodes and node's body; update node's status
+   */
+  private validate() {
+    let errors = JNUtils.toArray<JNBaseNode>(this.nodeMap.accepted)
+      .map(pair => pair.value)
+      .map((node) => {
+        return this.connectable(node);
+      });
+
+    let nodeType = <typeof JNBaseNode>this.constructor;
+    let modelErrors = nodeType.modelRules
+      .map(rule => {
+        return rule.validator(this.model) ? null : { message: rule.message };
+      });
+
+    errors = errors.concat(modelErrors).filter((err) => {
+      return !!err;
+    });
+
+    this.model.$errors = errors;
+    this.model.$valid = !!errors.length;
   }
 
 }

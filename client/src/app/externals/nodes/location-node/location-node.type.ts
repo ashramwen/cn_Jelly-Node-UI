@@ -11,11 +11,22 @@ import { JNLocationNodeModel } from './location-node-model.type';
   color: '',
   borderColor: '',
   editorModel: JNLocationNodeEditorModel,
-  infoPanelModel: JNLocationInfoPanelModel.instance,
-  paletteModel: JNLocationPaletteModel.instance,
-  accepts: []
+  infoPanelModel: null,
+  paletteModel: null,
+  accepts: [],
+  modelRules: [{
+    message: '必须选择一个地址',
+    validator: (model: JNLocationNodeModel) => {
+      return !!model.locationID;
+    }
+  }]
 })
 export class JNLocationNode extends JNBaseNode {
+
+  get name() {
+    if (!this.model.locationID) return this.getTitle();
+    return this.model.locationID;
+  }
 
   public get body() {
     return this.model.serialize();
@@ -24,10 +35,6 @@ export class JNLocationNode extends JNBaseNode {
   protected model: JNLocationNodeModel = new JNLocationNodeModel;
 
   protected whenReject() {
-    return null;
-  }
-
-  protected buildOutput(): Promise<Object> {
     return null;
   }
 
@@ -40,6 +47,6 @@ export class JNLocationNode extends JNBaseNode {
   }
 
   protected listener() {
-
+    return null;
   }
 }

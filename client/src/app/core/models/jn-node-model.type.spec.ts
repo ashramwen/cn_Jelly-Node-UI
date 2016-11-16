@@ -10,7 +10,7 @@ import { INodeBody } from './interfaces/node-body.interface';
 
 ////////  SPECS  /////////////
 
-interface ITest extends INodeBody{
+interface ITest extends INodeBody {
     testName: string;
     testProperty: number;
 }

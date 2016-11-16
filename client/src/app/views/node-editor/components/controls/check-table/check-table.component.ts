@@ -51,9 +51,9 @@ interface ITableField {
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let row of tableData">
+          <tr *ngFor="let row of tableData" (click)="rowCheckChange(row, $event)">
             <td>
-              <input type="checkbox" [(ngModel)]="row._checked" (change)="rowCheckChange(row, $event)" />
+              <input type="checkbox" [(ngModel)]="row._checked" />
             </td>
             <td *ngFor="let field of tableFields">
               {{row[field.fieldName]}}
@@ -89,12 +89,13 @@ export class JNCheckTableControl extends JNFormControl {
     }
   }
 
-  rowCheckChange(row, value) {
-    row._checked = value;
+  rowCheckChange(row, $event: Event) {
+    row._checked = !row._checked;
     if (!this._value) this._value = {};
     this.value = this.tableData
       .filter(r => r['_checked'])
       .map(r => r[this.valueField]);
+    $event.stopPropagation();
   }
 
   ngOnChanges(changes: { [propName: string]: SimpleChange }) {

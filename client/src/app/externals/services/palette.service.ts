@@ -18,7 +18,7 @@ export class IJNPaletteService {
     'Location', 'DeviceType', 'DeviceProperty',
     'Condition', 'Conjunction', 'Time', 'Rule', 'DeviceAction', 'Api'];
 
-  static getPaletteProperties(selectedNodeType: typeof JNBaseNode): Object {
+  static getPaletteProperties(selectedNodeType: typeof JNBaseNode) {
 
     // let nodes: Array<IJNPaletteNode> = [];
     // let connections: Array<IJNPaletteConnection>;

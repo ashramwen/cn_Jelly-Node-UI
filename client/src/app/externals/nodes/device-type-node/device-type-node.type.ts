@@ -18,7 +18,7 @@ import { DeviceTypeNodeService } from './device-type-node.service';
   editorModel: JNDeviceTypeNodeEditorModel,
   infoPanelModel: null,
   paletteModel: null,
-  accepts: ['Location'],
+  accepts: ['Location', 'Rule'],
   modelRules: [{
     message: '必须选择一个设备类型',
     validator: (model: JNDeviceTypeNodeModel) => {

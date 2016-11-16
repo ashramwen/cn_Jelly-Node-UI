@@ -6,6 +6,7 @@ import { JNUtils } from '../../../share/util';
 import { JNDevicePropertyNodeEditorModel } from './device-property-node-editor-model.type';
 import { RuleApplication } from '../../rule-application-core';
 import { IJNNodePayload } from '../../../core/models/interfaces/node-payload.interface';
+import { JNActionNode } from '../action-node/action-node.type';
 
 @JNNode({
   title: 'nodeset.JNDevicePropertyNode.nodename',
@@ -51,6 +52,13 @@ import { IJNNodePayload } from '../../../core/models/interfaces/node-payload.int
           if (node.hasAccepted(target)) return true;
           return false;
         }
+      }, {
+          message: `当<DeviceType>节点不能同时与<Action>节点与<DeviceProperty>相连。`,
+          validator: (node: JNDevicePropertyNode, target: JNDeviceTypeNode) => {
+            let nodes = JNUtils.toArray(target.nodeMap.outputTo)
+              .filter(pair => pair.value instanceof JNActionNode);
+            return !nodes.length;
+          }
       }]
     }]
   }

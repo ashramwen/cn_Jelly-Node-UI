@@ -132,7 +132,7 @@
     "locations": ["0807W-A01"],
     "type": "DeviceType",
     "nodeID": 14,
-    "accepts": [13]
+    "accepts": [13, 11]
   },
   {
     "actionName": "turnPower",

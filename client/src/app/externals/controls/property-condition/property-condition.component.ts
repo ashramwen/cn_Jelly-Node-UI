@@ -148,6 +148,9 @@ export class RulePropertyCondition extends JNFormControl {
 
   modelChange() {
     this.value = this.conditions.map((condition) => {
+      if (condition.type === 'range') {
+        condition.value = parseFloat(condition.value);
+      }
       return {
         value: condition.value,
         property: condition.property,

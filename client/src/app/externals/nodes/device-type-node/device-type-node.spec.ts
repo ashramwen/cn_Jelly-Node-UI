@@ -6,13 +6,14 @@ import { By } from '@angular/platform-browser';
 import { JNApplication } from '../../../core/services/application-core.service';
 import { JNLocationNode } from '../location-node/location-node.type';
 import { JNFlow } from '../../../core/models/jn-flow.type';
+import { AppModule } from '../../../app.module';
 
 ////////  SPECS  /////////////
 
 describe('Device Type Node', function () {
 
   beforeEach(() => {
-    TestBed.configureTestingModule({ imports: [CoreModule] });
+    TestBed.configureTestingModule({ imports: [AppModule] });
     // appContext = new ApplicationContextService;
     // cacheContext = new CacheContextService(new LocalStorageService);
   });

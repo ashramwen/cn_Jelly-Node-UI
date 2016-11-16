@@ -33,8 +33,7 @@ import {
         },
         errorName: 'maxLength',
         msg: '最大长度不可超过10'
-      }],
-      formControl: new FormControl()
+      }]
     },
     triggerWhen: {
       input: <IRadioInput>{
@@ -46,8 +45,7 @@ import {
         ]
       },
       controlType: JNRadioControl,
-      $validators: [],
-      formControl: new FormControl()
+      $validators: []
     },
     description: {
       input: <ITextareaInput>{
@@ -55,8 +53,7 @@ import {
         maxLength: 500
       },
       controlType: JNTextAreaControl,
-      $validators: [],
-      formControl: new FormControl()
+      $validators: []
     }
   }
 })
@@ -76,7 +73,7 @@ export class JNRuleNodeEditorModel extends JNEditorModel {
   }
 
   protected updated(fieldName: string, value: any): void {
-    
+
   }
 
 }

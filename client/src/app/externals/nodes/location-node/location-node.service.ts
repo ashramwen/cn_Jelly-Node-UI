@@ -27,12 +27,12 @@ export class LocationNodeService {
         };
       });
 
-      options.unshift({ text: 'terms.pleaseSelect', value: null });
+      options.unshift({ text: 'terms.pleaseSelect', value: '' });
 
       set.push({
         label: labels[i],
         options: options,
-        fieldName: i
+        fieldName: i.toLocaleString()
       });
     }
     return set;

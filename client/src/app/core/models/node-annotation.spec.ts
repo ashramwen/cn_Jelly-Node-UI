@@ -39,12 +39,8 @@ export class JNTestNode2 extends JNBaseNode {
     return this.model.serialize();
   }
 
-  protected parser(data: Object) {
-    return null;
-  }
-
   protected listener() {
-
+    return new Promise(() => { });
   }
 }
 
@@ -54,7 +50,7 @@ export class JNTestNode2 extends JNBaseNode {
   icon: 'icon',
   color: 'color',
   borderColor: 'borderColor',
-  accepts: [JNTestNode2],
+  accepts: ['JNTestNode2'],
   editorModel: null,
   infoPanelModel: null,
   paletteModel: null
@@ -75,12 +71,8 @@ export class JNTestNode1 extends JNBaseNode {
     return this.model.serialize();
   }
 
-  protected parser(data: Object) {
-    return null;
-  }
-
   protected listener() {
-
+    return new Promise(()=>{});
   }
 }
 
@@ -100,7 +92,7 @@ describe('Node Annotation', function () {
 
   it('Should have accepts', function () {
     // expect(JNTestNode1.accepts.length).toEqual(1);
-    expect(JNTestNode1.accepts[0]).toEqual(JNTestNode2);
+    expect(JNTestNode1.accepts[0]).toEqual('JNTestNode2');
   });
 
 });

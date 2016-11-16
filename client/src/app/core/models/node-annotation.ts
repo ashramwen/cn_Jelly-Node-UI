@@ -13,5 +13,7 @@ export function JNNode(options: INodeOptions) {
     nodeClass.infoModel = options.infoPanelModel;
     nodeClass.paletteModel = options.paletteModel;
     nodeClass.accepts = options.accepts || [];
+    nodeClass.modelRules = options.modelRules || [];
+    nodeClass.connectRules = options.connectRules || {};
   };
 }

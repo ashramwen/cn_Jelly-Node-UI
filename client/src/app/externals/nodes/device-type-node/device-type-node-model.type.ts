@@ -3,10 +3,9 @@ import { Serializable, JsonProperty } from '../../../../bin/JsonMapper';
 import { INodeBody } from '../../../core/models/interfaces/node-body.interface';
 
 export interface IDeviceType  extends INodeBody {
-  typeName: string;
-  typeDisplayName: string;
-  things: Array<number>;
-  locations: Array<string>;
+  typeName?: string;
+  things?: Array<number>;
+  locations?: Array<string>;
 }
 
 @Serializable()
@@ -14,7 +13,6 @@ export class JNDeviceTypeNodeModel extends JNNodeModel<IDeviceType>  {
   static deserialize: (data: any) => JNDeviceTypeNodeModel;
 
   typeName: string;
-  typeDisplayName: string;
   things: Array<number>;
   locations: Array<string>;
 
@@ -22,7 +20,6 @@ export class JNDeviceTypeNodeModel extends JNNodeModel<IDeviceType>  {
     super();
     this.things = null;
     this.typeName = null;
-    this.typeDisplayName = null;
     this.locations = [];
   }
 

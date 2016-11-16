@@ -25,7 +25,7 @@ describe('Resources', function () {
           includeSubLevel: true
         }, (things) => {
           console.log(things);
-          expect(typeof things).toBe(Array);
+          expect(things instanceof Array).toBe(true);
         }).$observable
         .toPromise()
         .catch(() => {

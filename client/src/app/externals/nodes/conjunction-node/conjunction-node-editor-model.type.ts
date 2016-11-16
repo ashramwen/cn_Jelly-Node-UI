@@ -32,7 +32,6 @@ import {
         }]
       },
       controlType: JNSelectControl,
-      formControl: new FormControl()
     }
   }
 })

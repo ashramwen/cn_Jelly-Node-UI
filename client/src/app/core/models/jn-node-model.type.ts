@@ -3,13 +3,14 @@ import { JNBaseNode } from './jn-base-node.type';
 import { JsonProperty, MapUtils, Serializable } from '../../../bin/JsonMapper';
 import { JNException } from './exceptions/exception.type';
 import { INodeBody } from './interfaces/node-body.interface';
+import { INodeError } from './interfaces/node-error.interface';
 
 @Serializable()
 export abstract class JNNodeModel<T extends INodeBody> implements INodeBody {
 
   static deserialize: <V extends INodeBody>(obj: any) => JNNodeModel<V>;
 
-  public $error: JNException;
+  public $errors: INodeError[];
   public $valid: boolean;
 
   public accepts: number[];

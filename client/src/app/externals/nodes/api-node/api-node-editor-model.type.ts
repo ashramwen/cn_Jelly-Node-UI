@@ -93,5 +93,7 @@ export class JNApiNodeEditorModel extends JNEditorModel {
   }
 
   protected updated(fieldName: string, value: any): void {
+    let model: JNApiNodeModel = <JNApiNodeModel>this.model;
+    model[fieldName] = value;
   }
 }

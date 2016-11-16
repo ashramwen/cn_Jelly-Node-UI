@@ -28,8 +28,7 @@ import {
         }]
       },
       controlType: JNRadioControl,
-      $validators: [],
-      formControl: new FormControl()
+      $validators: []
     },
     cron: {
       input: <ITextInput>{
@@ -37,8 +36,7 @@ import {
         maxLength: 11
       },
       controlType: JNTextControl,
-      $validators: [],
-      formControl: new FormControl()
+      $validators: []
     },
     interval: {
       input: <ITextareaInput>{
@@ -46,8 +44,7 @@ import {
         maxLength: 500
       },
       controlType: JNTextControl,
-      $validators: [],
-      formControl: new FormControl()
+      $validators: []
     },
     unit: {
       input: <ISelectInput>{
@@ -64,8 +61,7 @@ import {
         }]
       },
       controlType: JNSelectControl,
-      $validators: [],
-      formControl: new FormControl()
+      $validators: []
     }
   }
 })

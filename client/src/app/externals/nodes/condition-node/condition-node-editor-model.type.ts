@@ -9,8 +9,8 @@ import { RuleApplication } from '../../rule-application-core';
 import { JNUtils } from '../../../share/util';
 import { JNConditionNodeModel } from './condition-node-model.type';
 import { RulePropertyCondition, IPropertyConditionsInput } from '../../controls/property-condition/property-condition.component';
-import { ConditionNodeService } from './condition-node.service';
 import { JNNodeEditor } from '../../../core/models/node-editor-annotation';
+import { ConditionNodeService } from './condition-node.service';
 import {
   JNTextAreaControl,
   ITextareaInput
@@ -19,23 +19,26 @@ import {
 @JNNodeEditor({
   title: 'nodeset.JNConditionNode.nodename',
   formControls: {
-    conjunction: {
+    conditionGroup: {
       input: <IPropertyConditionsInput>{
         label: '连接表达式',
         conditions: []
       },
-      controlType: RulePropertyCondition,
+      controlType: RulePropertyCondition
     }
   }
 })
 export class JNConditionNodeEditorModel extends JNEditorModel {
+
+  model: JNConditionNodeModel;
 
   protected init() {
   }
 
   protected parse(data: JNConditionNodeModel) {
     let conditions = ConditionNodeService.instance.buildConditions(data);
-    (<IPropertyConditionsInput>this.getInput('conjunction')).conditions = conditions;
+    (<IPropertyConditionsInput>this.getInput('conditionGroup')).conditions = conditions;
+    this.setValue('conditionGroup', data.conditions);
   }
 
   protected formate(): JNConditionNodeModel {
@@ -43,6 +46,15 @@ export class JNConditionNodeEditorModel extends JNEditorModel {
   }
 
   protected updated(fieldName: string, value: any): void {
+    if (!value) return;
+    (<Array<any>>value).forEach((_c) => {
+      let condition = this.model.conditions.find((c) => {
+        return c.property === _c.property;
+      });
+      condition.aggregation = _c.aggregation;
+      condition.operator = _c.operator;
+      condition.value = _c.value;
+    });
   }
 
 }

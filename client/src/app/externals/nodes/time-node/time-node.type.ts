@@ -11,7 +11,23 @@ import { JNTimeNodeEditorModel } from './time-node-editor-model.type';
   editorModel: JNTimeNodeEditorModel,
   infoPanelModel: null,
   paletteModel: null,
-  accepts: []
+  accepts: [],
+  modelRules: [{
+    message: '必须选择一种间隔类型',
+    validator: (model: JNTimeNodeModel) => {
+      return !!model.timeType;
+    }
+  }, {
+    message: '间隔格式不正确',
+    validator: (model: JNTimeNodeModel) => {
+      if (!model.timeType) return true;
+      if (model.timeType === 'interval') {
+        return !!model.interval && !!model.unit;
+      } else {
+        return !!model.cron && model.cron.length === 11;
+      }
+    }
+  }]
 })
 export class JNTimeNode extends JNBaseNode  {
   protected model: JNTimeNodeModel = new JNTimeNodeModel;
@@ -26,16 +42,13 @@ export class JNTimeNode extends JNBaseNode  {
     });
   }
 
-
-  protected buildOutput(): Promise<Object> {
-    return null;
-  }
-
   protected formatter(): any {
     return this.model.serialize();
   }
-  
+
   protected listener() {
-    
+    return new Promise((resolve) => {
+      resolve(true);
+    });
   }
 }

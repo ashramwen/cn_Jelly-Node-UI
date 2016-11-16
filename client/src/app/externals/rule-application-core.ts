@@ -35,6 +35,7 @@ export class RuleApplication extends JNApplication {
   ) {
     super(applicationContext, cacheContext, configContext, http, events);
     RuleApplication.instance = this;
+    JNApplication.instance = this;
   }
 
   protected init() {

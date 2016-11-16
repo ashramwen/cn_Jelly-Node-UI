@@ -9,6 +9,8 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { JNNodeModel } from '../../../core/models/jn-node-model.type';
 import { JNUtils } from '../../../share/util';
 import { Subscriber, Subscription } from 'rxjs';
+let _ = require('lodash');
+
 
 export abstract class JNEditorModel {
 
@@ -140,7 +142,7 @@ export abstract class JNEditorModel {
     if (!constructor.formControls) {
       this._formControls = {};
     } else {
-      this._buildControls(constructor.formControls);
+      this._buildControls(_.cloneDeep(constructor.formControls));
     }
     this.init();
   }

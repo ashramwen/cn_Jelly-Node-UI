@@ -7,7 +7,7 @@ import { JNEditorModel } from '../../../views/node-editor/interfaces/editor-mode
 import { ISelectInput, JNSelectControl } from '../../../views/node-editor/components/controls/select/select.component';
 import { RuleApplication } from '../../rule-application-core';
 import { JNUtils } from '../../../share/util';
-import { ISchemaProperty } from '../../resources/schema.type';
+import { ISchemaProperty, ISchema, ISchemaAction } from '../../resources/schema.type';
 import { JNActionNodeModel } from './action-node-model.type';
 import { JNFormControl } from '../../../views/node-editor/components/control.component';
 import { JNNodeEditor } from '../../../core/models/node-editor-annotation';
@@ -26,17 +26,26 @@ export class JNActionNodeEditorModel extends JNEditorModel {
   }
 
   protected parse(data: JNActionNodeModel) {
-    let action = RuleApplication.instance.resources.$schema.schemas[data.typeName].content.actions[data.actionName];
-    let formControls = this.generateControls(action.in.properties);
-    JNUtils.toArray<IJNFormControl>(formControls)
-      .forEach(r => {
-        let fieldName = r.key;
-        let formControl = r.value;
-        formControl.model = data.properties
-          .find(property => property.propertyName === fieldName)
-          .propertyValue;
-      });
-    this.buildControls(formControls);
+    let schema = RuleApplication.instance.resources.$schema.schemas[data.typeName];
+    let controls: { [fieldName: string]: IJNFormControl } = {};
+    let actionControl = this.generateActionControl(schema);
+    actionControl.model = data.actionName;
+    controls['actionName'] = actionControl;
+
+    if (!!data.actionName) {
+      let action = schema.content.actions[data.actionName];
+      let propertyControls = this.generateControls(action.in.properties);
+      JNUtils.toArray<IJNFormControl>(propertyControls)
+        .forEach(r => {
+          let fieldName = r.key;
+          let formControl = r.value;
+          formControl.model = data.properties
+            .find(property => property.propertyName === fieldName)
+            .propertyValue;
+        });
+      Object.assign(controls, propertyControls);
+    }
+    this.buildControls(controls);
   }
 
   protected formate(): JNActionNodeModel {
@@ -44,14 +53,32 @@ export class JNActionNodeEditorModel extends JNEditorModel {
   }
 
   protected updated(fieldName: string, value: any): void {
-    let _property = (<JNActionNodeModel>this.model)
-      .properties
-      .find(property => property.propertyName === fieldName);
-    _property.propertyValue = value;
+    if (fieldName !== 'actionName') {
+      let _property = (<JNActionNodeModel>this.model)
+        .properties
+        .find(property => property.propertyName === fieldName);
+      _property.propertyValue = value;
+    } else {
+      (<JNActionNodeModel>this.model).actionName = value;
+    }
+  }
+
+  private generateActionControl(schema: ISchema): IJNFormControl {
+    return {
+      input: <ISelectInput>{
+        label: '设备行为',
+        options: JNUtils.toArray<ISchemaAction>(schema.content.actions)
+          .map(pair => {
+            return { text: pair.value.displayNameCN, value: pair.key };
+          })
+      },
+      controlType: JNSelectControl
+    };
   }
 
   private generateControls(properties: {[key: string]: ISchemaProperty}) {
     let controls: { [fieldName: string]: IJNFormControl } = {};
+
     JNUtils.toArray<ISchemaProperty>(properties)
       .forEach((r) => {
         let propertyName = r.key;

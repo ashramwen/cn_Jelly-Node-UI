@@ -19,8 +19,7 @@ import { JNNodeEditor } from '../../../core/models/node-editor-annotation';
         options: []
       },
       controlType: JNSelectControl,
-      $validators: [],
-      formControl: new FormControl()
+      $validators: []
     },
     things: {
       input: <ICheckTableInput>{
@@ -39,8 +38,7 @@ import { JNNodeEditor } from '../../../core/models/node-editor-annotation';
         valueField: 'thingID'
       },
       controlType: JNCheckTableControl,
-      $validators: [],
-      formControl: new FormControl()
+      $validators: []
     }
   }
 })
@@ -66,13 +64,17 @@ export class JNDeviceTypeNodeEditorModel extends JNEditorModel {
     this.locations = data.locations;
   }
 
-  protected formate(): JNDeviceTypeNodeModel {
-    return <JNDeviceTypeNodeModel> JNDeviceTypeNodeModel.deserialize(this.formGroup.value);
+  protected formate() {
+    return this.model;
   }
 
   protected updated(fieldName: string, value: any): void {
     if (fieldName === 'typeName') {
       let typeName = value;
+      this.model.extends({
+        typeName: typeName,
+        things: []
+      });
       if (!fieldName) return;
       if (!this.locations || !this.locations.length) return;
 
@@ -82,6 +84,12 @@ export class JNDeviceTypeNodeEditorModel extends JNEditorModel {
         .then((tableData: any) => {
           (<ICheckTableInput>this.getInput('things')).tableData = tableData;
         });
+    }
+
+    if (fieldName === 'things') {
+      this.model.extends({
+        things: value
+      });
     }
   }
 }

@@ -12,21 +12,24 @@ import { JNTimeNode } from '../time-node/time-node.type';
   color: '',
   borderColor: '',
   editorModel: JNRuleNodeEditorModel,
-  infoPanelModel: JNRuleInfoPanelModel.instance,
+  infoPanelModel: null,
   paletteModel: null,
-  accepts: ['Condition', 'Conjunction', 'Time']
+  accepts: ['Condition', 'Conjunction', 'Time'],
+  modelRules: [{
+    message: '必须包含规则名称',
+    validator: (model: JNRuleNodeModel) => {
+      return !!model.ruleName;
+    }
+  }, {
+    message: '必须包含规则触发条件',
+    validator: (model: JNRuleNodeModel) => {
+      return !!model.triggerWhen;
+    }
+  }]
 })
 export class JNRuleNode extends JNBaseNode  {
 
   protected model: JNRuleNodeModel = new JNRuleNodeModel;
-
-  protected connectRules: IConnectRuleSetting = {
-    global: [],
-    nodes: [{
-      nodeType: JNTimeNode,
-      rules: []
-    }]
-  };
 
   public get body (){
     return this.model.serialize();
@@ -38,16 +41,13 @@ export class JNRuleNode extends JNBaseNode  {
     });
   }
 
-
-  protected buildOutput(): Promise<Object> {
-    return null;
-  }
-
   protected formatter(): any {
     return this.model.serialize();
   }
 
   protected listener() {
-    
+    return new Promise((resolve) => {
+      resolve(true);
+    });
   }
 }

@@ -10,7 +10,7 @@ const VALUE_ACCESSOR: any = {
     multi: true
 };
 
-export interface ISelectInput extends IJNFormControlInput{
+export interface ISelectInput extends IJNFormControlInput {
   options: Array<ISelectOption>;
   selectedByDefault?: boolean;
 }
@@ -42,7 +42,7 @@ interface ISelectOption {
         <select 
           [(ngModel)]="value"
           [disabled]="disabled">
-          <option *ngFor="let o of options" [value]="o.value">{{o.text}}</option>
+          <option *ngFor="let o of options" [value]="o.value">{{o.text | translate}}</option>
         </select>
       </div>
     </div>

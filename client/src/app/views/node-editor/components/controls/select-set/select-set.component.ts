@@ -49,7 +49,7 @@ interface ISelectOption {
           (ngModelChange)="selectOnChange(r.fieldName, $event)"
           [(ngModel)]="value[r.fieldName]"
           [disabled]="r.disabled">
-          <option *ngFor="let o of r.options" [value]="o.value">{{o.text}}</option>
+          <option *ngFor="let o of r.options" [value]="o.value">{{o.text | translate}}</option>
         </select>
       </div>
     </div>
@@ -64,11 +64,25 @@ export class JNSelectSetControl extends JNFormControl {
   @Input()
   protected label: string;
   @Input()
-  protected set: ISelectSetInput;
+  protected set: {
+    label: string;
+    options: Array<ISelectOption>;
+    fieldName: string | number;
+    selectedByDefault?: boolean;
+    disabled?: boolean;
+  }[];
 
   selectOnChange(fieldName, value) {
+    let _self = this;
     setTimeout(() => {
-      this.onChange(this.value);
+      let fields = Object.keys(_self._value);
+      let setFields = _self.set.map(r => r.fieldName);
+      fields.forEach((field) => {
+        if (!setFields.find(f => f === field)) {
+          delete _self._value[field];
+        }
+      });
+      _self.onChange(_self.value);
     });
   }
 

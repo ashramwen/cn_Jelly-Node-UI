@@ -15,12 +15,12 @@ import { JNRulePaletteModel } from '../../externals/nodes/rule-node/rule-node-pa
   selector: 'test',
   template: `
     <div *ngFor="let node of flow.nodes">
-      <div class="node" (click)="selectNode(node)">{{node.name | translate}}</div>
+      <div class="node" [title]="node.body.$errors | json" [class.error]="hasError(node)" (click)="selectNode(node)">{{node.name | translate}}</div>
     </div>
 
     <div class="editor-modal" [hidden]="!editorShown">
       <div class="editor-modal-content" (click)="$event.stopPropagation()">
-        <jn-node-editor [targetNode]="selectedNode"></jn-node-editor>
+        <jn-node-editor [targetNode]="selectedNode" (submitted)="hideEditor()"></jn-node-editor>
       </div>
       <div class="editor-model-backdrop" (click)="hideEditor()"></div>
     </div>
@@ -50,9 +50,14 @@ export class TestComponent implements OnInit {
   private selectNode(node: JNBaseNode) {
     this.selectedNode = node;
     this.editorShown = true;
+    console.log(node.body);
   }
 
   private hideEditor() {
     this.editorShown = false;
+  }
+
+  private hasError(node: JNBaseNode) {
+    return node.body.$errors && node.body.$errors.length;
   }
 }

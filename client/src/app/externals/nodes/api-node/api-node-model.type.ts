@@ -3,8 +3,8 @@ import { Serializable } from '../../../../bin/JsonMapper';
 import { INodeBody } from '../../../core/models/interfaces/node-body.interface';
 
 export interface IApi extends INodeBody {
-  apiName: String;
-  apiUrl: String;
+  apiName: string;
+  apiUrl: string;
   method: 'POST' | 'GET' | 'DELETE' | 'PUT';
   body: any;
   header: any;
@@ -14,8 +14,8 @@ export interface IApi extends INodeBody {
 export class JNApiNodeModel extends JNNodeModel<IApi> {
   static deserialize: (obj: any) => JNApiNodeModel;
 
-  apiName: String;
-  apiUrl: String;
+  apiName: string;
+  apiUrl: string;
   method: 'POST' | 'GET' | 'DELETE' | 'PUT';
   body: any;
   header: any;

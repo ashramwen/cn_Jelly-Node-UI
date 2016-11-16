@@ -1,6 +1,142 @@
 var request = require('supertest'),
     should = require('should');
 
+var genericRuleFlowBody = {
+    "flowType": "genericRule",
+    "flowName": "virgine rule",
+    "flowDescription": "",
+    "nodes": [{
+        "locationID": "0807W-A01",
+        "locationStr": ["08", "0807", "0807W", "0807W-A01"],
+        "type": "Location",
+        "nodeID": 1,
+        "accepts": []
+    }, {
+        "typeName": "EnvironmentSensor",
+        "things": [1093, 1234, 5332],
+        "locations": ["0807W-A01"],
+        "type": "DeviceType",
+        "nodeID": 2,
+        "accepts": [1]
+    }, {
+        "property": "brightness",
+        "typeName": "EnvironmentSensor",
+        "type": "DeviceProperty",
+        "nodeID": 3,
+        "accepts": [2]
+    }, {
+        "property": "humanity",
+        "typeName": "EnvironmentSensor",
+        "type": "DeviceProperty",
+        "nodeID": 4,
+        "accepts": [2]
+    }, {
+        "locationID": "0807W-A02",
+        "locationStr": ["08", "0807", "0807W", "0807W-A02"],
+        "type": "Location",
+        "nodeID": 5,
+        "accepts": []
+    }, {
+        "typeName": "EnvironmentSensor",
+        "things": [4423, 5642, 5523],
+        "locations": ["0807W-A02"],
+        "type": "DeviceType",
+        "nodeID": 6,
+        "accepts": [5]
+    }, {
+        "property": "brightness",
+        "typeName": "EnvironmentSensor",
+        "type": "DeviceProperty",
+        "nodeID": 7,
+        "accepts": [6]
+    }, {
+        "property": "humanity",
+        "typeName": "EnvironmentSensor",
+        "type": "DeviceProperty",
+        "nodeID": 8,
+        "accepts": [6]
+    }, {
+        "conditions": [{
+            "aggregation": "avg",
+            "property": "brightness",
+            "operator": "gte",
+            "value": 50
+        }, {
+            "aggregation": "min",
+            "property": "humanity",
+            "operator": "lte",
+            "value": 100
+        }],
+        "type": "Condition",
+        "nodeID": 9,
+        "accepts": [3, 4]
+    }, {
+        "conditions": [{
+            "aggregation": "avg",
+            "property": "brightness",
+            "operator": "gte",
+            "value": 50
+        }, {
+            "aggregation": "min",
+            "property": "humanity",
+            "operator": "lte",
+            "value": 100
+        }],
+        "type": "Condition",
+        "nodeID": 10,
+        "accepts": [7, 8]
+    }, {
+        "type": "Conjunction",
+        "nodeID": 11,
+        "accepts": [9, 10],
+        "conjunction": "and"
+    }, {
+        "ruleName": "亮度控制",
+        "description": "这是一条描述",
+        "triggerWhen": "CONDITION_FALSE_TO_TRUE",
+        "type": "rule",
+        "nodeID": 12,
+        "accepts": [11]
+    }, {
+        "locationID": "0807W-A01",
+        "locationStr": ["08", "0807", "0807W", "0807W-A01"],
+        "type": "Location",
+        "nodeID": 13,
+        "accepts": []
+    }, {
+        "typeName": "Lighting",
+        "things": [8634],
+        "locations": ["0807W-A01"],
+        "type": "DeviceType",
+        "nodeID": 14,
+        "accepts": [12, 13]
+    }, {
+        "actionName": "turnPower",
+        "delay": 0,
+        "properties": [{
+            "propertyName": "power",
+            "propertyValue": 0
+        }],
+        "type": "DeviceAction",
+        "nodeID": 15,
+        "accepts": [14]
+    }, {
+        "apiName": "切换白天模式",
+        "delay": 5,
+        "apiUrl": "http://vsdfd.controls.com/api/mode",
+        "method": "POST",
+        "body": {
+            "mode": "daytime"
+        },
+        "header": {
+            "Authorization": "Bearer super_token"
+        },
+        "type": "Api",
+        "nodeID": 16,
+        "accepts": [12]
+    }]
+}
+
 describe('Flow Controller', function () {
 
     var flowID = '';
@@ -33,17 +169,12 @@ describe('Flow Controller', function () {
     it('should save a flow', function (done) {
         request(sails.hooks.http.app)
         .post('/flows/save')
-        .send({
-            "flowType": "rule",
-            "flow": {
-                "key": "value"
-            }
-        })
+        .send(genericRuleFlowBody)
         .set({"authorization": "Bearer " + userAccessToken})
         .expect(201)
         .expect(function (res) {
             if (!('flowType' in res.body)) throw new Error("missing flowType key");
-            if (!('flow' in res.body)) throw new Error("missing flow key");
+            if (!('flowName' in res.body)) throw new Error("missing flow key");
             if (!('createdBy' in res.body)) throw new Error("missing createdBy key");
             if (!('flowID' in res.body)) throw new Error("missing flowID key");
             if (!(res.body.synchronized == false)) throw new Error("synchronized key wrong default value");
@@ -84,7 +215,7 @@ describe('Flow Controller', function () {
         .expect(function (res) {
             if (!(typeof res.body == 'object')) throw new Error ("wrong body type");
             if (!('flowType' in res.body)) throw new Error("missing flowType key");
-            if (!('flow' in res.body)) throw new Error("missing flow key");
+            if (!('flowName' in res.body)) throw new Error("missing flow key");
             if (!('createdBy' in res.body)) throw new Error("missing createdBy key");
             if (!('flowID' in res.body)) throw new Error("missing flowID key");
             if (!(res.body.synchronized == false)) throw new Error("synchronized key wrong default value");
@@ -104,16 +235,10 @@ describe('Flow Controller', function () {
         request(sails.hooks.http.app)
         .put('/flows/' + flowID)
         .set({"authorization": "Bearer " + userAccessToken})
-        .send({
-            "flowType": "rule",
-            "flow": {
-                "key2": "value2"
-            }
-        })
+        .send(genericRuleFlowBody)
         .expect(200)
         .expect(function (res) {
             if (!(typeof res.body == 'object')) throw new Error ("wrong body type");
-            if (!(res.body[0].flow.key2 == 'value2')) throw new Error ("update does not take effect");
         })
         .end(function (err, res) {
             if (err) return done(err);

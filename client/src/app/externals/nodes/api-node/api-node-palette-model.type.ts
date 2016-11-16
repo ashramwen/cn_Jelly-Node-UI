@@ -1,8 +1,7 @@
-import { IJNPaletteModel } from '../../../views/palette/interfaces/palette-model.type';
+import { JNPaletteModel } from '../../../views/palette/interfaces/palette-model.type';
 import { JNApiNode } from './api-node.type';
-import { IJNPaletteService } from '../../services/palette.service';
 
-export class JNApiPaletteModel extends IJNPaletteModel {
+export class JNApiPaletteModel extends JNPaletteModel {
 
   constructor(){
     super();
@@ -10,7 +9,7 @@ export class JNApiPaletteModel extends IJNPaletteModel {
   }
 
   public init() {
-    this.nodes = IJNPaletteService.getNodes(JNApiNode);
+    this.nodes = JNPaletteModel.getNodes(JNApiNode);
   }
 
 }

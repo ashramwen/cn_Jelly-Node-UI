@@ -1,9 +1,8 @@
-import { IJNPaletteService } from '../../services/palette.service';
 import { JNRuleNode } from './rule-node.type';
-import { IJNPaletteModel } from '../../../views/palette/interfaces/palette-model.type';
+import { JNPaletteModel } from '../../../views/palette/interfaces/palette-model.type';
 import { JNRuleInfoPanelModel } from './rule-node-info-panel-model.type';
 
-export class JNRulePaletteModel extends IJNPaletteModel {
+export class JNRulePaletteModel extends JNPaletteModel {
   
   constructor(){
     super();
@@ -11,7 +10,7 @@ export class JNRulePaletteModel extends IJNPaletteModel {
   }
 
   protected init() {
-    this.nodes = IJNPaletteService.getNodes(JNRuleNode);
+    this.nodes = JNPaletteModel.getNodes(JNRuleNode);
   }
 
 }

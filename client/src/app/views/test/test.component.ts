@@ -39,7 +39,7 @@ export class TestComponent implements OnInit {
       let data = require('../../../assets/example.json');
       this.flow.loadData(data);
       console.log(this.flow.nodes);
-      let deviceTypeNode = new JNRulePaletteModel();
+      let deviceTypeNode = new JNDeviceTypePaletteModel();
 
 
       console.log(deviceTypeNode);

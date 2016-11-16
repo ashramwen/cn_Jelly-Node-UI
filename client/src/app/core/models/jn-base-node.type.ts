@@ -1,7 +1,6 @@
 import { INodePosition, IJNNodePayload } from './interfaces';
 import { Observable, Subscriber } from 'rxjs';
 import { IJNInfoPanelModel } from '../../views/info-panel/interfaces';
-import { IJNPaletteModel } from '../../views/palette/interfaces';
 import {
   ApplicationContextService,
   CacheContextService,
@@ -14,6 +13,7 @@ import { JNException } from './exceptions/exception.type';
 import { JNEditorModel } from '../../views/node-editor/interfaces/editor-model.type';
 import { INodeBody } from './interfaces/node-body.interface';
 import { JNUtils } from '../../share/util';
+import { JNPaletteModel } from '../../views/palette/interfaces/palette-model.type';
 
 export interface INodeMap {
   accepted: {
@@ -47,7 +47,7 @@ export abstract class JNBaseNode {
   static nodeModel: typeof JNNodeModel;
   static editorModel: typeof JNEditorModel;
   static infoModel: IJNInfoPanelModel;
-  static paletteModel: IJNPaletteModel;
+  static paletteModel: JNPaletteModel;
   static outputable: boolean;
 
   static connectable(left: typeof JNBaseNode, right: typeof JNBaseNode): boolean {

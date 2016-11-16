@@ -1,14 +1,13 @@
-import { IJNPaletteModel } from '../../../views/palette/interfaces/palette-model.type';
+import { JNPaletteModel } from '../../../views/palette/interfaces/palette-model.type';
 import { JNBaseNode } from '../../../core/models/jn-base-node.type';
-import { IJNPaletteConnection } from '../../../views/palette/palette-connections.type';
+import { JNPaletteConnection } from '../../../views/palette/palette-connections.type';
 import { RuleApplication } from '../../rule-application-core';
 import { JNDevicePropertyNode } from './device-property-node.type';
-import { IJNPaletteNode } from '../../../views/palette/palette-node.type';
-import { IJNPaletteService } from '../../services/palette.service';
+import { JNPaletteNode } from '../../../views/palette/palette-node.type';
 import { JNDeviceTypeInfoPanelModel } from '../device-type-node/device-type-node-info-panel-model.type';
 import { JNDeviceTypePaletteModel } from '../device-type-node/device-type-node-palette-model.type';
 
-export class JNDevicePropertyPaletteModel extends IJNPaletteModel {
+export class JNDevicePropertyPaletteModel extends JNPaletteModel {
   nodes = [];
   connections = [];
 
@@ -18,7 +17,7 @@ export class JNDevicePropertyPaletteModel extends IJNPaletteModel {
   }
 
   public init() {
-    this.nodes = IJNPaletteService.getNodes(JNDevicePropertyNode);
+    this.nodes = JNPaletteModel.getNodes(JNDevicePropertyNode);
     this.connections.push(JNDeviceTypePaletteModel.createConnection(JNDevicePropertyNode));
   }
 
@@ -30,15 +29,15 @@ export class JNDevicePropertyPaletteModel extends IJNPaletteModel {
     return property;
   }
 
-  static createConnection(selectedNodeType: typeof JNBaseNode, deviceType: string): IJNPaletteConnection {
+  static createConnection(selectedNodeType: typeof JNBaseNode, deviceType: string): JNPaletteConnection {
     let schemas = RuleApplication.instance.resources.$schema.schemas;
     let deviceTypes = Object.keys(schemas[deviceType].content.statesSchema.properties);
-    let connection = new IJNPaletteConnection();
+    let connection = new JNPaletteConnection();
 
-    connection.title = "Device Property";
+    connection.title = deviceType;
     connection.properties = [];
     deviceTypes.forEach(function (deviceProperty) {
-      connection.properties.push(new IJNPaletteNode(selectedNodeType, JNDevicePropertyNode,
+      connection.properties.push(new JNPaletteNode(selectedNodeType, JNDevicePropertyNode,
         JNDevicePropertyPaletteModel.createProperty(deviceType, deviceProperty)));
     })
     return connection;

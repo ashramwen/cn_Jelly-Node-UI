@@ -1,7 +1,7 @@
 import { JNBaseNode } from '../../core/models/jn-base-node.type';
 import { JNLocationNode } from '../../externals/nodes/location-node/location-node.type';
 
-export class IJNPaletteNode {
+export class JNPaletteNode {
   type: typeof JNBaseNode;
   property: Object;
   icon: String;

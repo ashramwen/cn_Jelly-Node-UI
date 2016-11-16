@@ -1,8 +1,7 @@
-import { IJNPaletteModel } from '../../../views/palette/interfaces/palette-model.type';
-import { IJNPaletteService } from '../../services/palette.service';
 import { JNActionNode } from './action-node.type';
+import { JNPaletteModel } from '../../../views/palette/interfaces/palette-model.type';
 
-export class JNActionPaletteModel extends IJNPaletteModel {
+export class JNActionPaletteModel extends JNPaletteModel {
 
   constructor(){
     super();
@@ -10,7 +9,7 @@ export class JNActionPaletteModel extends IJNPaletteModel {
   }
   
   public init() {
-    this.nodes = IJNPaletteService.getNodes(JNActionNode);
+    this.nodes = JNPaletteModel.getNodes(JNActionNode);
   }
 
 }

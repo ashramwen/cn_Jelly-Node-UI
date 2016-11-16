@@ -59,8 +59,8 @@ export abstract class JNBaseNode {
       .indexOf(left) > -1;
   }
 
-  static getName(nodeType: new() => JNBaseNode, data?: any): string {
-    return JNBaseNode.factory(nodeType, data).name;
+  static getName(nodeType: typeof JNBaseNode, data?: any): string {
+    return JNBaseNode.factory(<any>nodeType, data).name;
   }
 
   static factory<T extends JNBaseNode>(type: new() => T, data: any):  T {

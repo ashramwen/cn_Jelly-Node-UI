@@ -3,24 +3,29 @@ import { JNPaletteNode } from '../palette-node.type';
 import { JNPaletteConnection } from '../palette-connections.type';
 import { JNApplication } from '../../../core/services/application-core.service';
 import { JNUtils } from '../../../share/util';
+import { JNDeviceTypeNode } from '../../../externals/nodes/device-type-node/device-type-node.type';
+import { ConditionNodeService } from '../../../externals/nodes/condition-node/condition-node.service';
 
-export abstract class JNPaletteModel {
-  static staticPropertyTitle: String = "nodes";
-  static dynamicPropertyTitle: String = "connections";
+export class JNPaletteModel {
+  staticPropertyTitle: String = "nodes";
+  dynamicPropertyTitle: String = "connections";
   nodes: Array<JNPaletteNode>;
   connections: Array<JNPaletteConnection>;
-  static containDynamicProperty;
 
   static getNodes(selectedNodeType: typeof JNBaseNode): Array<JNPaletteNode> {
     let nodes: Array<JNPaletteNode> = [];
-
     let types = JNUtils.toArray<typeof JNBaseNode>(JNApplication.instance.nodeTypeMapper).map(pair => pair.value);
+
     types.forEach(nodeType => {
-      console.log('nodeType', nodeType);
-      let node = new JNPaletteNode(selectedNodeType, nodeType);
+      let node = new JNPaletteNode(selectedNodeType, nodeType, JNBaseNode.getName(nodeType, null));
       nodes.push(node);
     })
     return nodes;
+  }
+
+  constructor(){
+    this.nodes = JNPaletteModel.getNodes(null);
+    this.connections = [];
   }
 
   static createProperty(value: string, input?): Object {

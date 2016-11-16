@@ -4,6 +4,7 @@ import { JNLocationNode } from '../../externals/nodes/location-node/location-nod
 export class JNPaletteNode {
   type: typeof JNBaseNode;
   property: Object;
+  name: string;
   icon: String;
   color: String;
   borderColor: String;
@@ -11,8 +12,9 @@ export class JNPaletteNode {
   acceptable: Boolean;
   directable: Boolean;
 
-  constructor(selectedNodeType: typeof JNBaseNode, nodeType: typeof JNBaseNode, property?) {
+  constructor(selectedNodeType: typeof JNBaseNode, nodeType: typeof JNBaseNode, name: string, property?: Object) {
     this.type = nodeType;
+    this.name = name;
     if (property) {
       this.property = property;
     } else {
@@ -29,9 +31,9 @@ export class JNPaletteNode {
       } else {
         this.disabled = false;
       }
-    }else{
-      this.acceptable = false;
-      this.directable = false;
+    } else {
+      this.acceptable = true;
+      this.directable = true;
       this.disabled = false;
     }
   }

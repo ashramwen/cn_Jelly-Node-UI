@@ -27,17 +27,18 @@ module.exports = {
         return {req: req, flowData: flowData}
       })
     }
-    Flow.findOne({
-      "flowID": flowID
-    })
+    Flow.findOne({"flowID": flowID})
     .then(function (value) {
       if (value.flowType == 'genericRule') {
         DataParserService.toRulesEngine(value)
         .then(serviceInputFormat)
-        .then(RulesEngineService.create)
+        .then(value.published == false ? 
+          RulesEngineService.create : 
+          RulesEngineService.update)
         .then(function(result) {
           if (result.res.statusCode == 200) {
-            value.externalID = JSON.parse(result.body).triggerID
+            value.externalID = JSON.parse(result.body).triggerID 
+            || value.externalID
             value.published = true
             value.synchronized = true
             Flow.update({
@@ -68,7 +69,8 @@ module.exports = {
   retrieve: function (req, res) {
     var flowID = req.params.flowID
     Flow.findOne({
-      "flowID": flowID
+      "flowID": flowID,
+      "createdBy": req.userID
     })
     .then (function (value) {
       return res.ok(value)
@@ -97,11 +99,15 @@ module.exports = {
 
   update: function (req, res) {
     var flowID = req.params.flowID
+    req.body.synchronized = false
+    var flowData = req.body
+
     Flow.update({
-      "flowID": flowID
-    }, req.body)
+      "flowID": flowID,
+      "createdBy": req.userID
+    }, flowData)
     .then (function (value) {
-      return res.ok(value)
+      return res.ok(value[0])
     })
     .catch (function (err) {
       return res.serverError(err)

@@ -27,7 +27,7 @@ module.exports = {
         return {req: req, flowData: flowData}
       })
     }
-    Flow.findOne({"flowID": flowID})
+    Flow.findOne({"flowID": flowID, "createdBy": req.userID})
     .then(function (value) {
       if (value.flowType == 'genericRule') {
         DataParserService.toRulesEngine(value)
@@ -116,14 +116,46 @@ module.exports = {
 
   delete: function (req, res) {
     var flowID = req.params.flowID
-    Flow.destroy({
-      "flowID": flowID
+    var flowType = undefined
+    Flow.findOne({
+      flowID: flowID,
+      createdBy: req.userID
+    })
+    .then(function(value) {
+      var externalID = value.externalID
+      flowType = value.flowType
+      return Q.fcall(function(){
+        return {
+          externalID: externalID,
+          req: req
+        }
+      })
+    })
+    .then(function(result){
+      if (flowType == 'genericRule')
+        return RulesEngineService.delete(result)
+    })
+    .then(function(result) {
+      if (result.res.statusCode == '200') {        
+        Q.fcall(function(){
+          return result
+        })}
+      else
+        Q.fcall(function(){
+          throw new Error(result.body)
+        })
+    })
+    .then(function(result){     
+      return Flow.destroy({
+        "flowID": flowID,
+        "createdBy": req.userID
+      })      
     })
     .then (function (value) {
       return res.noContent()
     })
-    .catch (function (err) {
-      return res.notFound(err)
+    .catch(function(err) {
+      return res.serverError(err)
     })
   },
 

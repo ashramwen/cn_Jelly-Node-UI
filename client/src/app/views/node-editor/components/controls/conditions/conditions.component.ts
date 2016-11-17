@@ -1,5 +1,5 @@
 import { forwardRef, Component, Input, Output } from '@angular/core';
-import { JNFormControl } from '../../control.component';
+import { JNEditorFormControl } from '../../control.component';
 import { FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { JNControl } from '../../control.annotation';
 import { IJNFormControlInput } from '../../../interfaces/form-control-input.interface';
@@ -63,7 +63,7 @@ export interface IConditionResult {
   `,
   providers: [VALUE_ACCESSOR]
 })
-export class JNConditionsControl extends JNFormControl {
+export class JNConditionsControl extends JNEditorFormControl {
   @Input()
   protected disabled: boolean;
   @Input()

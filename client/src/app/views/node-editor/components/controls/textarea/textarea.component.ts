@@ -1,5 +1,5 @@
 import { forwardRef, Component, Input, Output } from '@angular/core';
-import { JNFormControl } from '../../control.component';
+import { JNEditorFormControl } from '../../control.component';
 import { FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { JNControl } from '../../control.annotation';
 import { IJNFormControlInput } from '../../../interfaces/form-control-input.interface';
@@ -16,16 +16,16 @@ export interface ITextareaInput extends IJNFormControlInput {
 
 @JNControl({
   template: `
-    <jn-textarea 
+    <jn-editor-textarea 
       [label]="inputs.label" 
       [disabled]="inputs.disabled" 
       [maxLength]="inputs.maxLength"
       [formControl]="formControl">
-    </jn-textarea>
+    </jn-editor-textarea>
   `
 })
 @Component({
-  selector: 'jn-textarea',
+  selector: 'jn-editor-textarea',
   styles: [
     require('./textarea.component.scss')
   ],
@@ -45,7 +45,7 @@ export interface ITextareaInput extends IJNFormControlInput {
   `,
   providers: [VALUE_ACCESSOR]
 })
-export class JNTextAreaControl extends JNFormControl {
+export class JNTextAreaControl extends JNEditorFormControl {
   @Input()
   protected disabled: boolean;
   @Input()

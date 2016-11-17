@@ -22,7 +22,7 @@ import { JNTimeNodeEditorModel } from './time-node-editor-model.type';
     validator: (model: JNTimeNodeModel) => {
       if (!model.timeType) return true;
       if (model.timeType === 'interval') {
-        return !!model.interval && !!model.unit;
+        return !!model.interval && !!model.timeUnit;
       } else {
         return !!model.cron && model.cron.length === 11;
       }

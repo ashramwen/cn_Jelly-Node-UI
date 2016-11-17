@@ -1,8 +1,8 @@
-import { forwardRef, Component, Input, Output } from '@angular/core';
+import { forwardRef, Component, Input, Output, ViewEncapsulation } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IJNFormControlInput } from '../../../views/node-editor/interfaces/form-control-input.interface';
 import { JNControl } from '../../../views/node-editor/components/control.annotation';
-import { JNFormControl } from '../../../views/node-editor/components/control.component';
+import { JNEditorFormControl } from '../../../views/node-editor/components/control.component';
 
 const VALUE_ACCESSOR: any = {
     provide: NG_VALUE_ACCESSOR,
@@ -47,21 +47,28 @@ export interface IConditionResult {
 @Component({
   selector: 'rule-conditions',
   styles: [
+    require('../../../views/node-editor/components/control.scss'),
     require('./property-condition.component.scss')
   ],
   template: `
     <div *ngFor="let condition of conditions">
-      <div [ngSwitch]="condition.type">
+      <div [ngSwitch]="condition.type" class="jn-form inline">
         <!-- range type row -->
         <template [ngSwitchCase]="'range'">
-          <label>{{condition.text}}</label>
-          <select [(ngModel)]="condition.aggregation" (ngModelChange)="modelChange($event)">
-            <option *ngFor="let o of aggregationOptions" [value]="o.value">{{o.text}}</option>
-          </select>
-          <select [(ngModel)]="condition.operator" (ngModelChange)="modelChange($event)">
-            <option *ngFor="let o of getOperators(condition.type)" [value]="o.value">{{o.text}}</option>
-          </select>
-          <input type="text" [(ngModel)]="condition.value" (ngModelChange)="modelChange($event)" />
+          <label class="jn-form-label">{{condition.text}}</label>
+          <jn-select 
+            class="aggregation" 
+            [(ngModel)]="condition.aggregation" 
+            (ngModelChange)="modelChange($event)"
+            [options]="aggregationOptions"
+          ></jn-select>
+          <jn-select 
+            class="operator" 
+            [(ngModel)]="condition.operator" 
+            (ngModelChange)="modelChange($event)"
+            [options]="getOperators(condition.type)"
+          ></jn-select>
+          <input class="jn-form-control jn-text" type="text" [(ngModel)]="condition.value" (ngModelChange)="modelChange($event)" />
         </template>
 
         <!-- enum type row -->
@@ -87,9 +94,10 @@ export interface IConditionResult {
       </div>
     </div>
   `,
-  providers: [VALUE_ACCESSOR]
+  providers: [VALUE_ACCESSOR],
+  encapsulation: ViewEncapsulation.None
 })
-export class RulePropertyCondition extends JNFormControl {
+export class RulePropertyCondition extends JNEditorFormControl {
   @Input()
   protected disabled: boolean;
   @Input()
@@ -106,16 +114,16 @@ export class RulePropertyCondition extends JNFormControl {
     text: '≠',
     value: 'ne'
   }, {
-    text: '>',
+    text: '＞',
     value: 'gt'
   }, {
-    text: '>=',
+    text: '≥',
     value: 'gte',
   }, {
-    text: '<',
+    text: '＜',
     value: 'lt'
   }, {
-    text: '<=',
+    text: '≤',
     value: 'lte'
   }];
 

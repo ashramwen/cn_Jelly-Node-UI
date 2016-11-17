@@ -1,13 +1,27 @@
 @import '../../control.scss';
 
-.md-radio-container{
-  input{
-    display: none;
-  }
-}
+md-radio-group{
+  
 
-md-radio-button{
-  &.md-radio-checked{
+  md-radio-button{
+    margin-right: 10px;
+    .md-radio-container{
+      top: 5px;
+    }
+    &.md-radio-checked{
+      .md-radio-container{
+        
+        .md-radio-outer-circle{
+          border-color: red;
+        }
+        .md-radio-inner-circle{
+          background-color: red;
+        }
+      }
+    }
 
+    input[type=radio]{
+      display: none;
+    }
   }
 }

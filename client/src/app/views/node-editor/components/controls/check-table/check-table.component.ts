@@ -1,5 +1,5 @@
 import { forwardRef, Component, Input, Output, SimpleChange, OnChanges } from '@angular/core';
-import { JNFormControl } from '../../control.component';
+import { JNEditorFormControl } from '../../control.component';
 import { FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { JNControl } from '../../control.annotation';
 import { IJNFormControlInput } from '../../../interfaces/form-control-input.interface';
@@ -23,18 +23,18 @@ interface ITableField {
 
 @JNControl({
   template: `
-    <jn-check-table 
+    <jn-editor-check-table 
       [label]="inputs.label" 
       [tableFields]="inputs.tableFields"
       [tableData]="inputs.tableData"
       [valueField]="inputs.valueField"
       [disabled]="inputs.disabled"
       [formControl]="formControl">
-    </jn-check-table>
+    </jn-editor-check-table>
   `
 })
 @Component({
-  selector: 'jn-check-table',
+  selector: 'jn-editor-check-table',
   styles: [
     require('./check-table.component.scss')
   ],
@@ -65,7 +65,7 @@ interface ITableField {
   `,
   providers: [VALUE_ACCESSOR]
 })
-export class JNCheckTableControl extends JNFormControl {
+export class JNCheckTableControl extends JNEditorFormControl {
   @Input()
   protected disabled: boolean;
   @Input()

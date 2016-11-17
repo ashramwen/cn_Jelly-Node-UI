@@ -23,6 +23,7 @@ import { JNTimeNode } from '../../externals/nodes/time-node/time-node.type';
 import { JNActionNode } from '../../externals/nodes/action-node/action-node.type';
 import { JNApiNode } from '../../externals/nodes/api-node/api-node.type';
 import { JNBaseNode } from '../../core/models/jn-base-node.type';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'jn-node-editor',
@@ -40,6 +41,7 @@ export class JNEditFormComponent implements OnInit, OnChanges {
 
   private controls: IJNFormControl[] = [];
   private formGroup: FormGroup = new FormGroup({});
+  private subscription: Subscription;
 
   constructor(
     private events: Events
@@ -101,8 +103,14 @@ export class JNEditFormComponent implements OnInit, OnChanges {
 
   ngOnChanges(value: { [key: string]: SimpleChange }) {
     if (!value['targetNode'].currentValue) return;
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
     this.events.on(APP_READY, () => {
       this.editorModel = this.targetNode.createEditorModel();
+      this.subscription = this.editorModel.viewModelChange.subscribe(() => {
+        this.controls = this.editorModel.controlsToArray();
+      });
       console.log(value);
       // this.editorModel = node.createEditorModel();
       this.prepare();

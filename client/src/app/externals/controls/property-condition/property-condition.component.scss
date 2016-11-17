@@ -1,0 +1,35 @@
+@import '../../../../assets/styles/global';
+
+bm-ng2-select{
+  margin-right: 15px;
+  md-input{
+    .md-input-wrapper{
+      margin: 0px;
+    }
+    .md-input-infix{
+      input{
+        border-radius: 5px;
+        border: solid 1px #ccc;
+        padding-left: 10px;
+        cursor: pointer;
+        box-shadow: 2px 2px 5px 1px rgba(0,0,0,0.08);
+      }
+    }
+    .md-input-underline{
+      display: none;
+    }
+  }
+  .options{
+    min-width: 50px;
+  }
+  md-icon.fa-times{
+    display: none;
+  }
+}
+
+.aggregation{
+  width: 80px;
+}
+.operator{
+  width: 50px;
+}

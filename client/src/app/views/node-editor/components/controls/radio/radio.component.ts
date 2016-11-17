@@ -1,5 +1,5 @@
-import { forwardRef, Component, Input, Output } from '@angular/core';
-import { JNFormControl } from '../../control.component';
+import { forwardRef, Component, Input, Output, ViewEncapsulation } from '@angular/core';
+import { JNEditorFormControl } from '../../control.component';
 import { FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { JNControl } from '../../control.annotation';
 import { IJNFormControlInput } from '../../../interfaces/form-control-input.interface';
@@ -21,16 +21,16 @@ interface IRadioOption {
 
 @JNControl({
   template: `
-    <jn-radio 
+    <jn-editor-radio 
       [label]="inputs.label" 
       [options]="inputs.options"
       [disabled]="inputs.disabled"
       [formControl]="formControl">
-    </jn-radio>
+    </jn-editor-radio>
   `
 })
 @Component({
-  selector: 'jn-radio',
+  selector: 'jn-editor-radio',
   styles: [
     require('./radio.component.scss')
   ],
@@ -45,9 +45,10 @@ interface IRadioOption {
     </div>
     
   `,
-  providers: [VALUE_ACCESSOR]
+  providers: [VALUE_ACCESSOR],
+  encapsulation: ViewEncapsulation.None
 })
-export class JNRadioControl extends JNFormControl {
+export class JNRadioControl extends JNEditorFormControl {
   @Input()
   protected disabled: boolean;
   @Input()

@@ -26,6 +26,7 @@ import { JNActionNode } from '../action-node/action-node.type';
     message: '属性值与所属设备类型不符',
     validator: (model: JNDevicePropertyNodeModel) => {
       if (!model.typeName) return true;
+      if (!model.property) return true;
 
       let schema = RuleApplication.instance.resources.$schema
         .schemas[model.typeName];

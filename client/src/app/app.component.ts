@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { TranslateService } from 'ng2-translate';
 import { cn, en } from '../assets/i18n';
 
@@ -18,7 +18,12 @@ import {
 
 @Component({
     selector: 'app',
-    template: '<router-outlet></router-outlet>'
+    template: '<router-outlet></router-outlet>',
+    styles: [
+        require('jsoneditor/dist/jsoneditor.min.css'),
+        require('../assets/styles/theme.scss')
+    ],
+    encapsulation: ViewEncapsulation.None
 })
 export class AppComponent implements OnInit {
 

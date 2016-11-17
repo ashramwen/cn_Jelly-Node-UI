@@ -52,17 +52,31 @@ export abstract class JNBaseNode {
   static outputable: boolean;
   static modelRules: { message: string, validator: (model: JNNodeModel<any>) => boolean }[];
   static connectRules: IConnectRuleSetting;
-
+  
+  /**
+   * @desc test two node is connectable or not
+   * @param  {typeofJNBaseNode} left
+   * @param  {typeofJNBaseNode} right
+   */
   static connectable(left: typeof JNBaseNode, right: typeof JNBaseNode): boolean {
     return right.accepts
       .map(nodeName => JNApplication.instance.nodeTypeMapper[nodeName])
       .indexOf(left) > -1;
   }
 
-  static getName(nodeType: new() => JNBaseNode, data?: any): string {
-    return JNBaseNode.factory(nodeType, data).name;
+  /**
+   * @desc get node's name with given data
+   * @param  {typeof JNBaseNode} nodeType
+   * @param {any} data
+   */
+  static getName(nodeType: typeof JNBaseNode, data?: any): string {
+    return JNBaseNode.factory(<any>nodeType, data).name;
   }
 
+  /**
+   * @param  {type of JNBaseNode} type
+   * @desc factory a node
+   */
   static factory<T extends JNBaseNode>(type: new() => T, data: any):  T {
     let node = new type;
     if (data) node.init(data);
@@ -284,7 +298,9 @@ export abstract class JNBaseNode {
   }
 
   public createPaletteModel() {
-    
+    let clazz = <typeof JNBaseNode>(this.constructor);
+    let paletteModel: JNPaletteModel = new (<any>clazz.paletteModel);
+    return paletteModel;
   }
 
   public createInfoPanelModel() {
@@ -298,7 +314,7 @@ export abstract class JNBaseNode {
   protected subscriber(payload: IJNNodePayload) {
     this.listener(payload).then(() => {
       this.validate();
-      this.buildOutput();
+      this.publishData();
     });
   }
 

@@ -4,8 +4,7 @@ import { MaterialModule } from '@angular/material';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from 'ng2-translate';
 
-import { JNFormControl } from '../components/control.component';
-import { JNControlModule } from '../components/control.module';
+import { JNEditorControlModule } from '../components/control.module';
 import { IJNFormControlInput } from '../interfaces/form-control-input.interface';
 import { IJNFormControl } from '../interfaces/form-control.interface';
 import { JNTemplateBuilder } from './template-builder.service';
@@ -13,6 +12,7 @@ import { ValidatorGenerator } from '../components/services/validator-generator.s
 import { BrowserModule } from '@angular/platform-browser';
 import { JNEditorModel } from '../interfaces/editor-model.type';
 import { Request } from '@angular/http';
+import { JNControlsModule } from '../../controls/controls.module';
 
 interface IDynamicComponent {
   inputs: IJNFormControlInput;
@@ -98,7 +98,7 @@ export class JNControlLoader {
   private createComponentModule (componentType: any) {
       @NgModule({
         imports: [
-          JNControlModule,
+          JNEditorControlModule,
           ReactiveFormsModule,
           BrowserModule
         ],

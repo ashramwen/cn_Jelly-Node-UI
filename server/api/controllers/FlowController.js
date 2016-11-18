@@ -160,10 +160,96 @@ module.exports = {
   },
 
   enable: function (req, res) {
-    
+    var flowID = req.params.flowID
+    var flowType = undefined
+    Flow.findOne({
+      flowID: flowID,
+      createdBy: req.userID
+    })
+    .then(function(value) {
+      var externalID = value.externalID
+      flowType = value.flowType
+      return Q.fcall(function(){
+        return {
+          externalID: externalID,
+          req: req
+        }
+      })
+    })
+    .then(function(result){
+      if (flowType == 'genericRule')
+        return RulesEngineService.enable(result)
+    })
+    .then(function(result){
+      if (result.res.statusCode == '200') {        
+        Q.fcall(function(){
+          return result
+        })}
+      else
+        Q.fcall(function(){
+          throw new Error(result.body)
+        })
+    })
+    .then(function(result){
+      return Flow.update({
+        flowID: flowID,
+        createdBy: req.userID
+      }, {
+        enabled: true
+      })
+    })
+    .then (function (value){
+      return res.ok(value[0])
+    })
+    .catch(function(err){
+      return res.serverError(err)
+    })
   },
 
   disable: function (req, res) {
-    
+    var flowID = req.params.flowID
+    var flowType = undefined
+    Flow.findOne({
+      flowID: flowID,
+      createdBy: req.userID
+    })
+    .then(function(value) {
+      var externalID = value.externalID
+      flowType = value.flowType
+      return Q.fcall(function(){
+        return {
+          externalID: externalID,
+          req: req
+        }
+      })
+    })
+    .then(function(result){
+      if (flowType == 'genericRule')
+        return RulesEngineService.disable(result)
+    })
+    .then(function(result){
+      if (result.res.statusCode == '200') {        
+        Q.fcall(function(){
+          return result
+        })}
+      else
+        Q.fcall(function(){
+          throw new Error(result.body)
+        })
+    })
+    .then(function(result){
+      return Flow.update({
+        flowID: flowID,
+        createdBy: req.userID
+      }, {
+        enabled: false
+      })
+    })
+    .then (function (value){
+      return res.ok(value[0])
+    })
+    .catch(function(err){
+      return res.serverError(err)
+    })
   }
 };

@@ -86,10 +86,44 @@ module.exports = {
   },
 
   enable: function (options, done) {
-    return done()
+    var externalID = options.externalID
+    var req = options.req
+    var deferred = Q.defer()
+
+    var options = {
+      method: 'PUT',
+      url: beehiveBase + '/beehive-portal/api/triggers/' + externalID + '/enable',
+      headers: {
+        authorization: req.headers.authorization
+      }
+    }
+
+    request(options, function (err, res, body) {
+      if(err) deferred.reject(new Error(err))
+        deferred.resolve({res: res, body: body})
+    })
+
+    return deferred.promise
   },
 
   disable: function (options, done) {
-    return done()
+    var externalID = options.externalID
+    var req = options.req
+    var deferred = Q.defer()
+
+    var options = {
+      method: 'PUT',
+      url: beehiveBase + '/beehive-portal/api/triggers/' + externalID + '/disable',
+      headers: {
+        authorization: req.headers.authorization
+      }
+    }
+
+    request(options, function (err, res, body) {
+      if(err) deferred.reject(new Error(err))
+        deferred.resolve({res: res, body: body})
+    })
+
+    return deferred.promise
   }
 };

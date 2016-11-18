@@ -273,8 +273,6 @@ var genericRuleFlowBodyUpdate = {
     }]
 }
 
-
-
 describe('Flow Controller', function () {
 
     var flowID = '';
@@ -421,6 +419,40 @@ describe('Flow Controller', function () {
             if (!(res.body.published == true)) throw new Error ('published flag wrong')
             if (!(res.body.synchronized == true)) throw new Error ('synchronized flag wrong')
             if (!('externalID' in res.body)) throw new Error ('missing externalID')
+        })
+        .end(function (err, res) {
+            if (err) return done(err)
+            should.exist(res.body)
+            done()
+        })
+    })  
+
+    it('should enable a flow', function(done) {
+        request(sails.hooks.http.app)
+        .put('/flows/' + flowID + '/enable')
+        .set({"authorization": "Bearer " + userAccessToken})
+        .send()
+        .expect(200)
+        .expect(function (res) {
+            if (!(typeof res.body == 'object')) throw new Error ("wrong body type");
+            if (!(res.body.enabled == true)) throw new Error ('enabled flag wrong')
+        })
+        .end(function (err, res) {
+            if (err) return done(err)
+            should.exist(res.body)
+            done()
+        })
+    })  
+
+    it('should disable a flow', function(done) {
+        request(sails.hooks.http.app)
+        .put('/flows/' + flowID + '/disable')
+        .set({"authorization": "Bearer " + userAccessToken})
+        .send()
+        .expect(200)
+        .expect(function (res) {
+            if (!(typeof res.body == 'object')) throw new Error ("wrong body type");
+            if (!(res.body.enabled == false)) throw new Error ('enabled flag wrong')
         })
         .end(function (err, res) {
             if (err) return done(err)

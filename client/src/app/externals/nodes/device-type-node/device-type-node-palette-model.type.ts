@@ -13,7 +13,6 @@ export class JNDeviceTypePaletteModel extends JNPaletteModel {
   nodes = [];
   connections = [];
 
-
   constructor() {
     super();
     this.init();
@@ -49,17 +48,23 @@ export class JNDeviceTypePaletteModel extends JNPaletteModel {
     return property;
   }
 
+  static getName(nodeType: new () => JNBaseNode, data?: any): string {
+    return JNBaseNode.factory(nodeType, data).name;
+  }
+
   static createConnection(selectedNodeType: typeof JNBaseNode): JNPaletteConnection {
     let schemas = RuleApplication.instance.resources.$schema.schemas;
     let deviceTypes = Object.keys(schemas);
     let connection = new JNPaletteConnection();
+    let data: Object = {};
 
     connection.title = "Device Type";
     connection.properties = [];
     deviceTypes.forEach(function (deviceType) {
+      data = JNDeviceTypePaletteModel.createProperty(deviceType);
       if (schemas[deviceType]) {
         connection.properties.push(new JNPaletteNode(selectedNodeType, JNDeviceTypeNode,
-          JNDeviceTypePaletteModel.createProperty(deviceType)))
+          JNBaseNode.getName(JNDeviceTypeNode, data)));
       }
     })
     return connection;

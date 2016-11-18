@@ -14,7 +14,8 @@ export class D3HelperService {
   private drag: any;
 
   private data: JNBaseNode[] = [];
-  private links: number[][];
+  private links: any[];
+  private inputs: number[][];
   private outputs: number[][];
 
   private select_node: JNBaseNode = null;
@@ -30,6 +31,9 @@ export class D3HelperService {
 
   constructor(private events: Events) {
     this.nodeFlow = new JNFlow();
+    this.links = [];
+    this.inputs = [];
+    this.outputs = [];
   }
 
   init() {
@@ -40,8 +44,8 @@ export class D3HelperService {
     // var margin = { top: 20, right: 120, bottom: 20, left: 120 },
     //   space_width = 960 - margin.right - margin.left,
     //   space_height = 500 - margin.top - margin.bottom;
-    let space_width = 960;
-    let space_height = 640;
+    let space_width = 1464;
+    let space_height = 444;
 
     var svg = d3.select('svg')
       .attr('width', space_width)
@@ -62,7 +66,6 @@ export class D3HelperService {
       .on('end', dragended);
 
     function dragstarted(d) {
-      console.log('drag start');
       d3.select(this).raise().classed('active', true);
     }
 
@@ -77,7 +80,17 @@ export class D3HelperService {
           d.y = d.position.y;
           return `translate(${d.position.x}, ${d.position.y})`;
         });
-      // self.updateLink(self.data[1], self.data[0]);
+
+      let i = self.data.indexOf(d);
+      self.inputs[i].forEach(i => {
+        self.links[i].target.x = d.position.x - 5;
+        self.links[i].target.y = d.position.y + self.NODE_HEIGHT / 2;
+      });
+      self.outputs[i].forEach(i => {
+        self.links[i].source.x = d.position.x + self.NODE_WIDTH + 5;;
+        self.links[i].source.y = d.position.y + self.NODE_HEIGHT / 2;;
+      });
+      self.moveNodeLink();
     }
 
     function dragended(d) {
@@ -85,11 +98,17 @@ export class D3HelperService {
     }
   }
 
+  addNode() {
+    this.inputs.push([]);
+    this.outputs.push([]);
+  }
+
   drawNode(node: any) {
     let self = this;
     this.data = node;
     let rects = this.vis.selectAll('g.node_group').data(this.data);
     rects.exit().remove();
+
     let g = rects.enter()
       .append('svg:g')
       .classed('node_group', true)
@@ -97,6 +116,9 @@ export class D3HelperService {
         d.x = d.position.x;
         d.y = d.position.y;
         return `translate(${d.position.x}, ${d.position.y})`;
+      })
+      .on('click', (d) => {
+        this.events.emit('node_click', d);
       })
       .on('dblclick', (d) => {
         this.events.emit('node_dblclick', d);
@@ -148,21 +170,14 @@ export class D3HelperService {
           this.input_dragging = false;
           if (!this.select_output) return;
           let target = self.select_node;
-          console.log(target.connectable(d));
-          if (!d.connectable(target)) {
-            d.accept(target);
-            self.shiftNodeLink({
-              source: { x: target.position.x, y: target.position.y },
-              target: { x: d.position.x, y: d.position.y }
-            });
-          }
+          createLink(d, target);
         })
         .on('drag', (d: any) => {
           // let rect = d3.select(this).attr('transform');
           // let t = rect.substring(rect.indexOf("(") + 1, rect.indexOf(")")).split(",");
           let linkData = {
-            target: { x: d.x - 5, y: d.y + this.NODE_HEIGHT / 2 },
-            source: { x: d3.event.x, y: d3.event.y + this.NODE_HEIGHT / 2 }
+            source: { x: d3.event.x, y: d3.event.y + this.NODE_HEIGHT / 2 },
+            target: { x: d.x - 5, y: d.y + this.NODE_HEIGHT / 2 }
           };
           this.mouseLink(linkData);
         })
@@ -196,14 +211,7 @@ export class D3HelperService {
           this.output_dragging = false;
           if (!this.select_input) return;
           let target = self.select_node;
-          console.log(target.connectable(d));
-          if (!target.connectable(d)) {
-            target.accept(d);
-            self.shiftNodeLink({
-              source: { x: d.position.x, y: d.position.y },
-              target: { x: target.position.x, y: target.position.y }
-            });
-          }
+          createLink(target, d);
         })
         .on('drag', (d: any) => {
           let linkData = {
@@ -213,6 +221,27 @@ export class D3HelperService {
           this.mouseLink(linkData);
         })
       );
+
+    let createLink = (s: JNBaseNode, t: JNBaseNode) => {
+      let connectable = s.connectable(t);
+      console.log('connectable', connectable);
+      if (!connectable) {
+        s.accept(t);
+        let newLink = {
+          source: { x: t.position.x, y: t.position.y },
+          target: { x: s.position.x, y: s.position.y }
+        };
+        let i = this.data.indexOf(s);
+        this.inputs[i].push(this.links.length);
+        i = this.data.indexOf(t);
+        this.outputs[i].push(this.links.length);
+        this.links.push(newLink);
+        this.shiftNodeLink(newLink);
+        // console.log(this.links);
+        // console.log(this.inputs);
+        // console.log(this.outputs);
+      }
+    }
   }
 
   private mouseLink = (linkData) => {
@@ -231,10 +260,11 @@ export class D3HelperService {
     linkData.source.y += this.NODE_HEIGHT / 2;
     linkData.target.x -= 5;
     linkData.target.y += this.NODE_HEIGHT / 2;
-    this.nodeLink(linkData);
+    this.nodeLink();
   }
-  private nodeLink = (linkData) => {
-    let path = this.vis.selectAll('g.link').data([linkData]);
+
+  private nodeLink = () => {
+    let path = this.vis.selectAll('g.link').data(this.links);
     path.enter()
       .insert('svg:g')
       .classed('link', true)
@@ -242,11 +272,12 @@ export class D3HelperService {
 
       })
       .append('svg:path')
+      .attr('stroke-width', 2)
       .attr('d', this.genLinkPathValue)
   }
 
-  private moveNodeLink = (linkData) => {
-    let path = this.vis.selectAll('g.link').selectAll('path').data([linkData]);
+  private moveNodeLink = () => {
+    let path = this.vis.selectAll('g.link').data(this.links).selectAll('path');
     path.attr('d', this.genLinkPathValue);
   }
 

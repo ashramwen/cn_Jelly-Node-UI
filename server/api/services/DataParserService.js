@@ -1,5 +1,13 @@
 var Q = require('q')
 
+var aggKeyMap = {
+  'avg': 'average',
+  'sum': 'sum',
+  'min': 'min',
+  'max': 'max',
+  'count': 'count'
+}
+
 // parse condition branch
 var conditionParser = function(nodeSet, conditionNodes, clauses, summarySource, depth) {
 	for (var i = 0; i < conditionNodes.length; i++) {
@@ -20,7 +28,7 @@ var conditionParser = function(nodeSet, conditionNodes, clauses, summarySource, 
 			//set summarySource -> expressList
 			summarySource[sourceKey].expressList[j] = {
 				stateName: currentNode.conditions[j].property,
-				function: currentNode.conditions[j].aggregation,
+				function: aggKeyMap[currentNode.conditions[j].aggregation],
 				summaryAlias: j.toString()
 			}
 			//set condition
@@ -80,7 +88,9 @@ module.exports = {
   toRulesEngine: function (options, done) {
   	// rule engine body skeleton
   	var result = {
-  		triggerType: 'summary',
+      name: options.flowName,
+      description: options.flowDescription,
+  		type: 'Summary',
   		predicate: {},
   		summarySource: {},
   		targets: []
@@ -92,7 +102,7 @@ module.exports = {
   	var currentNode = {}
 
   	// construct nodeSet and primaryNodes
-  	options.forEach(function(node) {
+  	options.nodes.forEach(function(node) {
   		node.nodeID = parseInt(node.nodeID)
   		if (node.type == 'rule')
   			primaryNodes.push(node)
@@ -116,15 +126,19 @@ module.exports = {
   	})
 
   	primaryNodes.forEach(function (ruleNode) {	// loop through primary nodes
-  		// TODO set rule name and description
-
+      // result.triggerName = ruleNode.ruleName
+      // result.description = ruleNode.description
   		result.predicate.triggersWhen = ruleNode.triggerWhen // set trigger when
   		currentNode = nodeSet[ruleNode.accepts[0]]	// rule node only accept one node
 
   		// set predicate and summary source
   		if (currentNode.type == 'Time') {
-  			//TODO
-  			var todo = 'soon'
+  			result.predicate.schedule = {
+          type: currentNode.timeType,
+          cron: currentNode.cron,
+          timeunit: currentNode.timeUnit,
+          interval: currentNode.interval
+        }
   		} else if (currentNode.type == 'Condition') {	
   			var clauses = []
   			conditionParser(nodeSet, [currentNode.nodeID], clauses, result.summarySource, 0)
@@ -175,6 +189,9 @@ module.exports = {
   			}
   		})
   	})
-    return done(result)
+
+    return Q.fcall(function(){
+      return result
+    })
   }
 };

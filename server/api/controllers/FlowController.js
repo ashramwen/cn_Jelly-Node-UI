@@ -1,3 +1,5 @@
+var Q = require('q')
+
 module.exports = {
 
 	save: function (req, res) {
@@ -13,159 +15,68 @@ module.exports = {
 	},
 
 	publish: function (req, res) {
-    //TODO
-    // DataParserService.toRulesEngine(value)
-    // .then (function (value) {
-    //   RulesEngineService.create()
-    // })    
-    // .catch(function (err) {
-
-    // })
-    var body = [{
-      "locationID": "0807W-A01",
-      "locationStr": ["08", "0807", "0807W", "0807W-A01"],
-      "type": "Location",
-      "nodeID": 1,
-      "accepts": []
-    }, {
-      "typeName": "EnvironmentSensor",
-      "things": [1093, 1234, 5332],
-      "locations": ["0807W-A01"],
-      "type": "DeviceType",
-      "nodeID": 2,
-      "accepts": [1]
-    }, {
-      "property": "brightness",
-      "typeName": "EnvironmentSensor",
-      "type": "DeviceProperty",
-      "nodeID": 3,
-      "accepts": [2]
-    }, {
-      "property": "humanity",
-      "typeName": "EnvironmentSensor",
-      "type": "DeviceProperty",
-      "nodeID": 4,
-      "accepts": [2]
-    }, {
-      "locationID": "0807W-A02",
-      "locationStr": ["08", "0807", "0807W", "0807W-A02"],
-      "type": "Location",
-      "nodeID": 5,
-      "accepts": []
-    }, {
-      "typeName": "EnvironmentSensor",
-      "things": [4423, 5642, 5523],
-      "locations": ["0807W-A02"],
-      "type": "DeviceType",
-      "nodeID": 6,
-      "accepts": [5]
-    }, {
-      "property": "brightness",
-      "typeName": "EnvironmentSensor",
-      "type": "DeviceProperty",
-      "nodeID": 7,
-      "accepts": [6]
-    }, {
-      "property": "humanity",
-      "typeName": "EnvironmentSensor",
-      "type": "DeviceProperty",
-      "nodeID": 8,
-      "accepts": [6]
-    }, {
-      "conditions": [{
-        "aggregation": "avg",
-        "property": "brightness",
-        "operator": "gte",
-        "value": 50
-      }, {
-        "aggregation": "min",
-        "property": "humanity",
-        "operator": "lte",
-        "value": 100
-      }],
-      "type": "Condition",
-      "nodeID": 9,
-      "accepts": [3, 4]
-    }, {
-      "conditions": [{
-        "aggregation": "avg",
-        "property": "brightness",
-        "operator": "gte",
-        "value": 50
-      }, {
-        "aggregation": "min",
-        "property": "humanity",
-        "operator": "lte",
-        "value": 100
-      }],
-      "type": "Condition",
-      "nodeID": 10,
-      "accepts": [7, 8]
-    }, {
-      "type": "Conjunction",
-      "nodeID": 11,
-      "accepts": [9, 10],
-      "conjunction": "and"
-    }, {
-      "ruleName": "亮度控制",
-      "description": "这是一条描述",
-      "triggerWhen": "CONDITION_FALSE_TO_TRUE",
-      "type": "rule",
-      "nodeID": 12,
-      "accepts": [11]
-    }, {
-      "locationID": "0807W-A01",
-      "locationStr": ["08", "0807", "0807W", "0807W-A01"],
-      "type": "Location",
-      "nodeID": 13,
-      "accepts": []
-    }, {
-      "typeName": "Lighting",
-      "things": [8634],
-      "locations": ["0807W-A01"],
-      "type": "DeviceType",
-      "nodeID": 14,
-      "accepts": [12, 13]
-    }, {
-      "actionName": "turnPower",
-      "delay": 0,
-      "properties": [{
-        "propertyName": "power",
-        "propertyValue": 0
-      }],
-      "type": "DeviceAction",
-      "nodeID": 15,
-      "accepts": [14]
-    }, {
-      "apiName": "切换白天模式",
-      "delay": 5,
-      "apiUrl": "http://vsdfd.controls.com/api/mode",
-      "method": "POST",
-      "body": {
-        "mode": "daytime"
-      },
-      "header": {
-        "Authorization": "Bearer super_token"
-      },
-      "type": "Api",
-      "nodeID": 16,
-      "accepts": [12]
-    }]
-    DataParserService.toRulesEngine(body, function(result) {
-      res.ok(result)
+    //1. get flow object with flowID
+    //2. select data parser according to flow type
+    //3. parse data with data parser service
+    //4. use API router to execute external API
+    //5. modify house keeping values
+    //6. return response
+    var flowID = req.params.flowID
+    var serviceInputFormat = function(flowData) {
+      return Q.fcall(function(){
+        return {req: req, flowData: flowData}
+      })
+    }
+    Flow.findOne({"flowID": flowID, "createdBy": req.userID})
+    .then(function (value) {
+      if (value.flowType == 'genericRule') {
+        DataParserService.toRulesEngine(value)
+        .then(serviceInputFormat)
+        .then(value.published == false ? 
+          RulesEngineService.create : 
+          RulesEngineService.update)
+        .then(function(result) {
+          if (result.res.statusCode == 200) {
+            value.externalID = JSON.parse(result.body).triggerID 
+            || value.externalID
+            value.published = true
+            value.synchronized = true
+            Flow.update({
+              "flowID": flowID
+            }, value)
+            .then(function(value) {
+              return res.ok(value[0])
+            })
+            .catch(function (err) {
+              return res.serverError(err)
+            })
+          } else {
+            res.badRequest(body)
+          }
+        })
+        .catch(function(err) {
+          return res.serverError(err)
+        })
+      } else {
+        res.badRequest('wrong flow type')
+      }
+    })
+    .catch (function (err) {
+      return res.serverError(err)
     })
   },
 
   retrieve: function (req, res) {
     var flowID = req.params.flowID
     Flow.findOne({
-      "flowID": flowID
+      "flowID": flowID,
+      "createdBy": req.userID
     })
     .then (function (value) {
       return res.ok(value)
     })
     .catch (function (err) {
-      return res.serviceError(err)
+      return res.serverError(err)
     });
   },
 
@@ -182,41 +93,163 @@ module.exports = {
       return res.ok(value)
     })
     .catch (function (err) {
-      return res.serviceError(err)
+      return res.serverError(err)
     });
   },
 
   update: function (req, res) {
     var flowID = req.params.flowID
+    req.body.synchronized = false
+    var flowData = req.body
+
     Flow.update({
-      "flowID": flowID
-    }, req.body)
+      "flowID": flowID,
+      "createdBy": req.userID
+    }, flowData)
     .then (function (value) {
-      return res.ok(value)
+      return res.ok(value[0])
     })
     .catch (function (err) {
-      return res.serviceError(err)
+      return res.serverError(err)
     })
   },
 
   delete: function (req, res) {
     var flowID = req.params.flowID
-    Flow.destroy({
-      "flowID": flowID
+    var flowType = undefined
+    Flow.findOne({
+      flowID: flowID,
+      createdBy: req.userID
+    })
+    .then(function(value) {
+      var externalID = value.externalID
+      flowType = value.flowType
+      return Q.fcall(function(){
+        return {
+          externalID: externalID,
+          req: req
+        }
+      })
+    })
+    .then(function(result){
+      if (flowType == 'genericRule')
+        return RulesEngineService.delete(result)
+    })
+    .then(function(result) {
+      if (result.res.statusCode == '200') {        
+        Q.fcall(function(){
+          return result
+        })}
+      else
+        Q.fcall(function(){
+          throw new Error(result.body)
+        })
+    })
+    .then(function(result){     
+      return Flow.destroy({
+        "flowID": flowID,
+        "createdBy": req.userID
+      })      
     })
     .then (function (value) {
       return res.noContent()
     })
-    .catch (function (err) {
-      return res.notFound(err)
+    .catch(function(err) {
+      return res.serverError(err)
     })
   },
 
   enable: function (req, res) {
-    
+    var flowID = req.params.flowID
+    var flowType = undefined
+    Flow.findOne({
+      flowID: flowID,
+      createdBy: req.userID
+    })
+    .then(function(value) {
+      var externalID = value.externalID
+      flowType = value.flowType
+      return Q.fcall(function(){
+        return {
+          externalID: externalID,
+          req: req
+        }
+      })
+    })
+    .then(function(result){
+      if (flowType == 'genericRule')
+        return RulesEngineService.enable(result)
+    })
+    .then(function(result){
+      if (result.res.statusCode == '200') {        
+        Q.fcall(function(){
+          return result
+        })}
+      else
+        Q.fcall(function(){
+          throw new Error(result.body)
+        })
+    })
+    .then(function(result){
+      return Flow.update({
+        flowID: flowID,
+        createdBy: req.userID
+      }, {
+        enabled: true
+      })
+    })
+    .then (function (value){
+      return res.ok(value[0])
+    })
+    .catch(function(err){
+      return res.serverError(err)
+    })
   },
 
   disable: function (req, res) {
-    
+    var flowID = req.params.flowID
+    var flowType = undefined
+    Flow.findOne({
+      flowID: flowID,
+      createdBy: req.userID
+    })
+    .then(function(value) {
+      var externalID = value.externalID
+      flowType = value.flowType
+      return Q.fcall(function(){
+        return {
+          externalID: externalID,
+          req: req
+        }
+      })
+    })
+    .then(function(result){
+      if (flowType == 'genericRule')
+        return RulesEngineService.disable(result)
+    })
+    .then(function(result){
+      if (result.res.statusCode == '200') {        
+        Q.fcall(function(){
+          return result
+        })}
+      else
+        Q.fcall(function(){
+          throw new Error(result.body)
+        })
+    })
+    .then(function(result){
+      return Flow.update({
+        flowID: flowID,
+        createdBy: req.userID
+      }, {
+        enabled: false
+      })
+    })
+    .then (function (value){
+      return res.ok(value[0])
+    })
+    .catch(function(err){
+      return res.serverError(err)
+    })
   }
 };

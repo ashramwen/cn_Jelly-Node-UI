@@ -33,12 +33,14 @@ export class JNDevicePropertyPaletteModel extends JNPaletteModel {
     let schemas = RuleApplication.instance.resources.$schema.schemas;
     let deviceTypes = Object.keys(schemas[deviceType].content.statesSchema.properties);
     let connection = new JNPaletteConnection();
+    let data: Object = {};
 
     connection.title = deviceType;
     connection.properties = [];
     deviceTypes.forEach(function (deviceProperty) {
+      data = JNDevicePropertyPaletteModel.createProperty(deviceType, deviceProperty);
       connection.properties.push(new JNPaletteNode(selectedNodeType, JNDevicePropertyNode,
-        JNDevicePropertyPaletteModel.createProperty(deviceType, deviceProperty)));
+        JNBaseNode.getName(JNDevicePropertyNode, data), data));
     })
     return connection;
   }

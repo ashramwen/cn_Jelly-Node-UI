@@ -220,7 +220,9 @@ export class D3HelperService {
       );
 
     let createLink = (s: JNBaseNode, t: JNBaseNode) => {
-      if (!s.connectable(t)) {
+      let connectable = s.connectable(t);
+      console.log('connectable', connectable);
+      if (!connectable) {
         s.accept(t);
         let newLink = {
           source: { x: t.position.x, y: t.position.y },

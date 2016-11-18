@@ -29,9 +29,9 @@ export class NodeCanvasComponent implements OnInit {
       accept: ".palette_node_group",
       drop: function (event, ui) {
         let left = $(this).position().left;
-        let node = self.nodeFlow.createNode(ui.draggable.data('node').constructor, { position: { x: ui.position.left - left, y: ui.position.top } });
-        self.d3Helper.addNode();
-        self.d3Helper.drawNode(self.nodeFlow.nodes);
+        let node = self.nodeFlow.createNode(ui.draggable.data('node').constructor);
+        node.position = { x: ui.position.left - left, y: ui.position.top };
+        self.d3Helper.addNode(self.nodeFlow.nodes);
       }
     });
 

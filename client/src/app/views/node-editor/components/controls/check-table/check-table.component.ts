@@ -1,8 +1,8 @@
 import { forwardRef, Component, Input, Output, SimpleChange, OnChanges } from '@angular/core';
 import { JNEditorFormControl } from '../../control.component';
 import { FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { JNControl } from '../../control.annotation';
-import { IJNFormControlInput } from '../../../interfaces/form-control-input.interface';
+import { JNEditorControl } from '../../control.annotation';
+import { IJNEditorFormControlInput } from '../../../interfaces/form-control-input.interface';
 
 const VALUE_ACCESSOR: any = {
     provide: NG_VALUE_ACCESSOR,
@@ -10,7 +10,7 @@ const VALUE_ACCESSOR: any = {
     multi: true
 };
 
-export interface ICheckTableInput extends IJNFormControlInput {
+export interface ICheckTableInput extends IJNEditorFormControlInput {
   tableFields: ITableField[];
   tableData: { [key: string]: any }[];
   valueField: string;
@@ -21,7 +21,7 @@ interface ITableField {
   fieldName: string;
 }
 
-@JNControl({
+@JNEditorControl({
   template: `
     <jn-editor-check-table 
       [label]="inputs.label" 

@@ -7,6 +7,7 @@ import { JNEditorModel } from '../../../views/node-editor/interfaces/editor-mode
 import { ISelectInput, JNSelectControl } from '../../../views/node-editor/components/controls/select/select.component';
 import { JNTimeNodeModel } from './time-node-model.type';
 import { JNNodeEditor } from '../../../core/models/node-editor-annotation';
+import { RuleCron } from '../../controls/cron/cron.component';
 
 import {
   JNTextAreaControl,
@@ -31,11 +32,10 @@ import {
       $validators: []
     },
     cron: {
-      input: <ITextInput>{
-        label: '表达式',
-        maxLength: 11
+      input: {
+        label: '表达式'
       },
-      controlType: JNTextControl,
+      controlType: RuleCron,
       $validators: []
     },
     interval: {

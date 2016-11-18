@@ -1,0 +1,84 @@
+<div class="cron-row">
+  <div class="select-group">
+    <jn-select [(ngModel)]="yearValue"  [options]="yearOptions" (selectionChanged)="change($event)"></jn-select>
+    <jn-select [(ngModel)]="monthValue" [options]="monthOptions" (selectionChanged)="change($event)"></jn-select>
+    <jn-select [(ngModel)]="weekValue" [options]="weekOptions" (ngModelChange)="weekChange($event)" (selectionChanged)="change($event)"></jn-select>
+    <jn-select [(ngModel)]="dayValue" [options]="dayOptions" (selectionChanged)="change($event)"></jn-select>
+  </div>
+</div>
+
+<hr/>
+
+<!-- year -->
+<div class="jn-form" [hidden]="yearValue !== 'enum'">
+  <label class="jn-form-label">
+    年份
+  </label>
+  <jn-button-toggle-group class="jn-form-control"
+    (ngModelChange)="change($event)"
+    [(ngModel)]="yearEnumValue" 
+    [options]="cronService.yearEnums">
+  </jn-button-toggle-group>
+</div>
+
+<!-- month -->
+<div class="jn-form" [hidden]="monthValue !== 'enum'">
+  <label class="jn-form-label">
+    月份
+  </label>
+  <jn-button-toggle-group class="jn-form-control" 
+    (ngModelChange)="change($event)"
+    [(ngModel)]="monthEnumValue" 
+    [options]="cronService.monthEnums">
+  </jn-button-toggle-group>
+</div>
+
+<!-- week -->
+<div class="jn-form" [hidden]="weekValue !== 'enum'">
+  <label class="jn-form-label">
+    第几周
+  </label>
+  <jn-button-toggle-group class="jn-form-control" 
+    (ngModelChange)="change($event)"
+    [(ngModel)]="weekEnumValue" 
+    [options]="cronService.weekEnum">
+  </jn-button-toggle-group>
+</div>
+
+<!-- day -->
+<div class="jn-form" [hidden]="dayValue !== 'enum'">
+  <label class="jn-form-label">
+    第几天
+  </label>
+  <jn-button-toggle-group class="jn-form-control" 
+    (ngModelChange)="change($event)"
+    [(ngModel)]="dayEnumValue" 
+    [options]="cronService.getDayEnum(weekValue!=='?')">
+  </jn-button-toggle-group>
+</div>
+
+
+<!-- Hour -->
+<div class="jn-form">
+  <label class="jn-form-label">
+    第几小时
+  </label>
+  <jn-button-toggle-group class="jn-form-control" 
+    (ngModelChange)="change($event)"
+    [(ngModel)]="hourEnumValue" 
+    [options]="cronService.hourEnum">
+  </jn-button-toggle-group>
+</div>
+
+
+<!-- Minutes -->
+<div class="jn-form">
+  <label class="jn-form-label">
+    第几分钟
+  </label>
+  <jn-button-toggle-group class="jn-form-control" 
+    (ngModelChange)="change($event)"
+    [(ngModel)]="minEnumValue" 
+    [options]="cronService.minEnum">
+  </jn-button-toggle-group>
+</div>

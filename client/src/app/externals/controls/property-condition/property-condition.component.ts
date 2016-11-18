@@ -1,7 +1,7 @@
 import { forwardRef, Component, Input, Output, ViewEncapsulation } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { IJNFormControlInput } from '../../../views/node-editor/interfaces/form-control-input.interface';
-import { JNControl } from '../../../views/node-editor/components/control.annotation';
+import { IJNEditorFormControlInput } from '../../../views/node-editor/interfaces/form-control-input.interface';
+import { JNEditorControl } from '../../../views/node-editor/components/control.annotation';
 import { JNEditorFormControl } from '../../../views/node-editor/components/control.component';
 
 const VALUE_ACCESSOR: any = {
@@ -10,7 +10,7 @@ const VALUE_ACCESSOR: any = {
     multi: true
 };
 
-export interface IPropertyConditionsInput extends IJNFormControlInput {
+export interface IPropertyConditionsInput extends IJNEditorFormControlInput {
   conditions: Array<IPropertyCondition>;
 }
 
@@ -34,7 +34,7 @@ export interface IConditionResult {
   aggregation: 'sum' | 'count' | 'avg' | 'max' | 'min';
 }
 
-@JNControl({
+@JNEditorControl({
   template: `
     <rule-conditions 
       [label]="inputs.label" 

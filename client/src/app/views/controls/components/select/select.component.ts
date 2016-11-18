@@ -9,9 +9,10 @@ const VALUE_ACCESSOR: any = {
     multi: true
 };
 
-interface ISelectOption {
+export interface ISelectOption {
   text: string;
-  value: string;
+  value: any;
+  disabled?: boolean;
 }
 
 @Component({
@@ -21,7 +22,7 @@ interface ISelectOption {
   ],
   template: `
       <bm-ng2-select [(ngModel)]="value" (selectionChanged)="selectChanged($event)">
-        <bm-ng2-option *ngFor="let o of options" [value]="o.value">{{o.text | translate}}</bm-ng2-option>
+        <bm-ng2-option *ngFor="let o of options" [value]="o.value" [disabled]="o.disabled">{{o.text | translate}}</bm-ng2-option>
       </bm-ng2-select>
   `,
   providers: [VALUE_ACCESSOR],

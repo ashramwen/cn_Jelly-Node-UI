@@ -10,7 +10,6 @@ import { JNTemplateBuilder } from './services/template-builder.service';
 import { JNControlLoader } from './services/control-loader.service';
 import { JNTextControl, ITextInput } from './components/controls/text/text.component';
 import { IJNFormControl } from './interfaces/form-control.interface';
-import { IJNFormControlInput } from './interfaces/form-control-input.interface';
 import { IRadioInput, JNRadioControl } from './components/controls/radio/radio.component';
 import { JNEditorModel } from './interfaces/editor-model.type';
 import { JNRuleNode } from '../../externals/nodes/rule-node/rule-node.type';

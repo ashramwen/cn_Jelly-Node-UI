@@ -1,8 +1,8 @@
 import { forwardRef, Component, Input, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { JNEditorFormControl } from '../../control.component';
 import { FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { JNControl } from '../../control.annotation';
-import { IJNFormControlInput } from '../../../interfaces/form-control-input.interface';
+import { JNEditorControl } from '../../control.annotation';
+import { IJNEditorFormControlInput } from '../../../interfaces/form-control-input.interface';
 import { JsonEditorComponent, JsonEditorOptions } from 'ng2-jsoneditor';
 
 const VALUE_ACCESSOR: any = {
@@ -11,11 +11,11 @@ const VALUE_ACCESSOR: any = {
     multi: true
 };
 
-export interface IJSONEditorInput extends IJNFormControlInput {
+export interface IJSONEditorInput extends IJNEditorFormControlInput {
   schema?: any;
 }
 
-@JNControl({
+@JNEditorControl({
   template: `
     <jn-editor-json-editor 
       [label]="inputs.label" 

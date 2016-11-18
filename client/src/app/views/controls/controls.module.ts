@@ -4,10 +4,11 @@ import { Angular2SelectModule, Angular2OptionComponent, Angular2SelectComponent 
 import { TranslateModule } from 'ng2-translate';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
+import { MaterialModule } from '@angular/material';
 
 
 @NgModule({
-  imports: [TranslateModule, Angular2SelectModule, FormsModule, BrowserModule],
+  imports: [TranslateModule, Angular2SelectModule, FormsModule, BrowserModule, MaterialModule],
   exports: [...JNCONTROLS],
   declarations: [...JNCONTROLS],
   providers: [],

@@ -1,4 +1,5 @@
 bm-ng2-select{
+  margin-right: 0px !important;
   md-input{
     .md-input-wrapper{
       margin: 0px;
@@ -7,13 +8,16 @@ bm-ng2-select{
       input{
         border-radius: 5px;
         border: solid 1px #ccc;
-        padding-left: 10px;
         cursor: pointer;
         box-shadow: 2px 2px 5px 1px rgba(0,0,0,0.08);
+        text-indent: 10px;
       }
     }
     .md-input-underline{
       display: none;
     }
+  }
+  .fa-times{
+    display: none;
   }
 }

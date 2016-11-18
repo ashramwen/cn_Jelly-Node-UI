@@ -1,0 +1,23 @@
+jn-button-toggle-group{
+  display: block;
+  md-button-toggle-group{
+    flex-wrap: wrap;
+    width: 100%;
+    md-button-toggle{
+      flex: 1;
+      min-width: 34px;
+      label.md-button-toggle-label{
+        .md-button-toggle-label-content{
+          width: 100%;
+          text-align: center;
+          padding: 0px;
+        }
+      }
+    }
+    border-right: solid 1px #ccc;
+
+    &:last{
+      border-right: none;
+    }
+  }
+}

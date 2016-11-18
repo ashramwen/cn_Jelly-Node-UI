@@ -30,7 +30,7 @@ export class NodeCanvasComponent implements OnInit {
       drop: function (event, ui) {
         let left = $(this).position().left;
         let node = self.nodeFlow.createNode(ui.draggable.data('node').constructor, { position: { x: ui.position.left - left, y: ui.position.top } });
-        node.position = { x: ui.position.left - left, y: ui.position.top };
+        self.d3Helper.addNode();
         self.d3Helper.drawNode(self.nodeFlow.nodes);
       }
     });

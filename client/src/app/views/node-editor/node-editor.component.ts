@@ -94,9 +94,12 @@ export class JNEditFormComponent implements OnInit, OnChanges {
       }`
     });
     */
+    this.events.on('node_click', node => {
+      console.log('node_click', node);
+    });
     this.events.on('node_dblclick', node => {
       console.log('node_dblclick', node);
-    })
+    });
   }
 
   ngOnChanges(value: { [key: string]: SimpleChange }) {

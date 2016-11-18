@@ -117,6 +117,9 @@ export class D3HelperService {
         d.y = d.position.y;
         return `translate(${d.position.x}, ${d.position.y})`;
       })
+      .on('click', (d) => {
+        this.events.emit('node_click', d);
+      })
       .on('dblclick', (d) => {
         this.events.emit('node_dblclick', d);
       })
@@ -269,6 +272,7 @@ export class D3HelperService {
 
       })
       .append('svg:path')
+      .attr('stroke-width', 2)
       .attr('d', this.genLinkPathValue)
   }
 

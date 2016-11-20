@@ -77,15 +77,7 @@ export class D3HelperService {
 
     function mouseup() {
       console.log('global mouseup')
-
       self.vis.selectAll('g.new_link').remove();
-      if (self.output_dragging && self.select_input && self.select_node) {
-        self.createLink(self.select_input, self.select_node);
-      }
-      if (self.input_dragging && self.select_output && self.select_node) {
-        self.createLink(self.select_node, self.select_output);
-      }
-
       self.select_node = null;
       self.select_input = null;
       self.select_output = null;
@@ -102,7 +94,7 @@ export class D3HelperService {
           source: { x: position[0], y: position[1] },
           target: { x: d.x - 5, y: d.y + self.NODE_HEIGHT / 2 }
         };
-        self.mouseLink(linkData);
+        self.moveMouseLink(linkData);
         return;
       }
 
@@ -111,7 +103,7 @@ export class D3HelperService {
           source: { x: d.x + self.NODE_WIDTH + 5, y: d.y + self.NODE_HEIGHT / 2 },
           target: { x: position[0], y: position[1] }
         };
-        self.mouseLink(linkData);
+        self.moveMouseLink(linkData);
         return;
       }
 
@@ -161,6 +153,7 @@ export class D3HelperService {
     let rects = this.vis.selectAll('g.node_group').data(this.data);
     rects.exit().remove();
 
+    // node group
     let g = rects.enter()
       .append('svg:g')
       .classed('node_group', true)
@@ -183,6 +176,7 @@ export class D3HelperService {
         this.select_node = null;
       });
 
+    // node rect
     g.insert('svg:rect')
       .classed('node', true)
       .attr('width', this.NODE_WIDTH)
@@ -190,6 +184,7 @@ export class D3HelperService {
       .attr('rx', 10)
       .attr('ry', 10);
 
+    // node text
     g.insert('svg:text')
       .attr('x', 50)
       .attr('y', 20)
@@ -197,47 +192,52 @@ export class D3HelperService {
         return this.nodeFlow.nodes[d.id].constructor.name;
       });
 
+    // node icon right path
     g.insert('svg:path')
       .attr('d', 'M 40 1 l 0 40');
 
-    g.insert('svg:rect')
+    // node input
+    g.insert('svg:g')
       .classed('port input', true)
-      .attr('width', 10)
-      .attr('height', 10)
-      .attr('rx', 3)
-      .attr('ry', 3)
       .attr('transform', 'translate(-5, 15)')
       .on('mouseenter', function (d) {
         d3.select(this).classed('hover', true);
         self.select_input = d;
       })
-      .on('mouseout', function (d) {
+      .on('mouseleave', function (d) {
         d3.select(this).classed('hover', false);
+        self.select_input = null;
       })
       .on('mousedown', function (d) {
-        console.log('input down');
+        // console.log('input down');
         self.select_node = d;
         self.input_dragging = true;
       })
       .on('mouseup', function (d) {
         console.log('input up');
+        if (self.output_dragging && self.select_input && self.select_node) {
+          self.createLink(self.select_input, self.select_node);
+        }
         self.select_node = null;
         self.input_dragging = false;
-      });
-
-    g.insert('svg:rect')
-      .classed('port output', true)
+      })
+      .insert('svg:rect')
       .attr('width', 10)
       .attr('height', 10)
       .attr('rx', 3)
-      .attr('ry', 3)
+      .attr('ry', 3);
+
+    // node output
+    g.insert('svg:g')
+      .classed('port output', true)
       .attr('transform', 'translate(175, 15)')
       .on('mouseenter', function (d) {
         d3.select(this).classed('hover', true);
         self.select_output = d;
       })
-      .on('mouseout', function (d) {
+      .on('mouseleave', function (d) {
         d3.select(this).classed('hover', false);
+        self.select_output = null;
       })
       .on('mousedown', function (d) {
         console.log('output down');
@@ -246,19 +246,29 @@ export class D3HelperService {
       })
       .on('mouseup', function (d) {
         console.log('output up');
+        if (self.input_dragging && self.select_output && self.select_node) {
+          self.createLink(self.select_node, self.select_output);
+        }
         self.select_node = null;
         self.output_dragging = false;
-      });
+      })
+      .insert('svg:rect')
+      .attr('width', 10)
+      .attr('height', 10)
+      .attr('rx', 3)
+      .attr('ry', 3);
   }
 
-  private mouseLink = (linkData) => {
+  private moveMouseLink = (linkData) => {
     let link = this.vis.selectAll('g.new_link').data([linkData]);
-    link.select('path')
-      .attr('d', this.genLinkPathValue);
     link.exit().remove();
-    link.enter().insert('svg:g')
-      .classed('new_link link', true)
-      .append('svg:path')
+    link.enter().insert('svg:g', ':first-child')
+      .classed('new_link', true)
+      .insert('svg:path')
+      .style('opacity', 0)
+      .attr('d', this.genLinkPathValue);
+    link.select('path')
+      .style('opacity', 1)
       .attr('d', this.genLinkPathValue);
   }
 
@@ -292,13 +302,13 @@ export class D3HelperService {
 
   private nodeLink = () => {
     let path = this.vis.selectAll('g.link').data(this.links);
-    path.enter()
-      .insert('svg:g')
+    path.exit().remove();
+    path.enter().insert('svg:g', ':first-child')
       .classed('link', true)
-      .on('mousedown', function () {
+      .on('click', function () {
 
       })
-      .append('svg:path')
+      .insert('svg:path')
       .attr('stroke-width', 2)
       .attr('d', this.genLinkPathValue)
   }

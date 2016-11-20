@@ -16,22 +16,19 @@ import { JNLocationNode } from './../../externals/nodes/location-node/location-n
   encapsulation: ViewEncapsulation.None
 })
 export class NodeCanvasComponent implements OnInit {
-
-  nodeFlow: JNFlow;
-
   constructor(private d3Helper: D3HelperService) {
-    this.nodeFlow = new JNFlow();
+
   }
 
   ngOnInit() {
     let self = this;
-    $("#chart").droppable({
-      accept: ".palette_node_group",
+    $('#chart').droppable({
+      accept: '.palette_node_group',
       drop: function (event, ui) {
         let left = $(this).position().left;
-        let node = self.nodeFlow.createNode(ui.draggable.data('node').constructor);
-        node.position = { x: ui.position.left - left, y: ui.position.top };
-        self.d3Helper.addNode(self.nodeFlow.nodes);
+        let _x = ui.position.left - left;
+        let _y = ui.position.top - 30
+        self.d3Helper.addNode(ui.draggable.data('node').constructor, { position: { x: _x >= 5 ? _x : 5, y: _y >= 0 ? _y : 0 } });
       }
     });
 

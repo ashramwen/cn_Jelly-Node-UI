@@ -1,6 +1,6 @@
 [
   {
-    "locationID": "0807W-A01",
+    "locationID": "0807W",
     "locationStr": ["08", "0807", "0807W", "0807W-A", "0807W-A01"],
     "type": "Location",
     "nodeID": 1,
@@ -8,8 +8,8 @@
   },
   {
     "typeName": "EnvironmentSensor",
-    "things": [1093, 1234, 5332],
-    "locations": ["0807W-A01"],
+    "things": [5266, 5286],
+    "locations": ["0807W"],
     "type": "DeviceType",
     "nodeID": 2,
     "accepts": [1]
@@ -29,7 +29,7 @@
     "accepts": [2]
   },
   {
-    "locationID": "0807W-A02",
+    "locationID": "0807W",
     "locationStr": ["08", "0807", "0807W", "0807W-A02"],
     "type": "Location",
     "nodeID": 4,
@@ -37,8 +37,8 @@
   },
   {
     "typeName": "EnvironmentSensor",
-    "things": [4423,5642,5523],
-    "locations": ["0807W-A02"],
+    "things": [5287,5292],
+    "locations": ["0807W"],
     "type": "DeviceType",
     "nodeID": 5,
     "accepts": [4]
@@ -128,11 +128,11 @@
   },
   {
     "typeName": "Lighting",
-    "things": [8634],
-    "locations": ["0807W-A01"],
+    "things": [5282, 5283],
+    "locations": ["0807W"],
     "type": "DeviceType",
     "nodeID": 14,
-    "accepts": [13]
+    "accepts": [13, 11]
   },
   {
     "actionName": "turnPower",

@@ -13,17 +13,29 @@ module.exports = {
     	required: true,
     	unique: true
   	},
+    externalID: {
+      type: 'string',
+      required: false
+    },
   	createdBy: {
   		type: 'string',
   		required: true
   	},
   	flowType: {
   		type: 'string',
-  		enum: ['rule', 'reporting'],
+  		enum: ['genericRule', 'envRule', 'reporting'],
   		required: true
   	},
-  	flow: {
-  		type: 'json',
+    flowName: {
+      type: 'string',
+      required: true
+    },
+    flowDescription: {
+      type: 'string',
+      required: false
+    },
+  	nodes: {
+  		type: 'array',
   		required: true
   	},
   	published: {

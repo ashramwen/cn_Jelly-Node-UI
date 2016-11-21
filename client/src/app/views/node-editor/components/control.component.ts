@@ -4,58 +4,11 @@ import {
 } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, FormControl, ControlValueAccessor } from '@angular/forms';
 import { IControlOptions } from './control.annotation';
+import { JNFormControl } from '../../controls/interfaces/control.component';
 
-export abstract class JNFormControl implements ControlValueAccessor {
+export abstract class JNEditorFormControl extends JNFormControl implements ControlValueAccessor {
   static template: string;
-  @Input()
   protected abstract disabled: boolean;
-  @Input()
   protected abstract hidden: boolean;
-  @Input()
   protected abstract label: String;
-
-  protected _value = null;
-  protected onChange = (_: any) => {};
-  protected onTouched = () => {};
-
-  constructor(
-    private el: ElementRef,
-    public renderer: Renderer,
-    private _zone: NgZone) {
-    this.init();
-  }
-
-  protected init() { }
-
-  // get accessor
-  get value(): any {
-    return this._value;
-  };
-
-  // set accessor including call the onchange callback
-  set value(v: any) {
-    if (v !== this._value) {
-      this._value = v;
-      if (this.onChange) {
-        this.onChange(v);
-      }
-    }
-  }
-
-  // From ControlValueAccessor interface
-  writeValue(value: any) {
-    if (value !== this.value) {
-      this.value = value;
-    }
-  }
-
-  // From ControlValueAccessor interface
-  registerOnChange(fn: any) {
-    this.onChange = fn;
-  }
-
-  // From ControlValueAccessor interface
-  registerOnTouched(fn: any) {
-    this.onTouched = fn;
-  }
 }

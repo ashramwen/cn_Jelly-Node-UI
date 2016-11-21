@@ -8,9 +8,9 @@ import { ISelectInput, JNSelectControl } from '../../../views/node-editor/compon
 import { RuleApplication } from '../../rule-application-core';
 import { JNUtils } from '../../../share/util';
 import { ISchemaProperty } from '../../resources/schema.type';
-import { JNFormControl } from '../../../views/node-editor/components/control.component';
 import { JNApiNodeModel } from './api-node-model.type';
 import { JNNodeEditor } from '../../../core/models/node-editor-annotation';
+import { IJSONEditorInput, JNJSONEditorControl } from '../../../views/node-editor/components/controls/json-editor/json-editor.component';
 import {
   JNTextAreaControl,
   ITextareaInput
@@ -57,19 +57,17 @@ import {
       $validators: []
     },
     header: {
-      input: <ITextareaInput>{
+      input: <IJSONEditorInput>{
         label: 'Header',
-        maxLength: 0,
       },
-      controlType: JNTextAreaControl,
+      controlType: JNJSONEditorControl,
       $validators: []
     },
     body: {
-      input: <ITextareaInput>{
+      input: <IJSONEditorInput>{
         label: 'Body',
-        maxLength: 0,
       },
-      controlType: JNTextAreaControl,
+      controlType: JNJSONEditorControl,
       $validators: []
     }
   }

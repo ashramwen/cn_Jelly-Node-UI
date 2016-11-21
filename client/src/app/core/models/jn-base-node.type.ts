@@ -53,13 +53,37 @@ export abstract class JNBaseNode {
   static modelRules: { message: string, validator: (model: JNNodeModel<any>) => boolean }[];
   static connectRules: IConnectRuleSetting;
 
+  /**
+   * @desc test two node is connectable or not
+   * @param  {typeofJNBaseNode} left
+   * @param  {typeofJNBaseNode} right
+   */
   static connectable(left: typeof JNBaseNode, right: typeof JNBaseNode): boolean {
     return right.accepts
       .map(nodeName => JNApplication.instance.nodeTypeMapper[nodeName])
       .indexOf(left) > -1;
   }
 
-  get name(): String {
+  /**
+   * @desc get node's name with given data
+   * @param  {typeof JNBaseNode} nodeType
+   * @param {any} data
+   */
+  static getName(nodeType: typeof JNBaseNode, data?: any): string {
+    return JNBaseNode.factory(<any>nodeType, data).name;
+  }
+
+  /**
+   * @param  {type of JNBaseNode} type
+   * @desc factory a node
+   */
+  static factory<T extends JNBaseNode>(type: new() => T, data: any):  T {
+    let node = new type;
+    if (data) node.init(data);
+    return node;
+  }
+
+  get name(): string {
     return this.getTitle();
   }
 
@@ -105,7 +129,9 @@ export abstract class JNBaseNode {
    * @returns Promise
    * @desc serialize data model
    */
-  protected abstract formatter(): INodeBody;
+  protected formatter(): INodeBody {
+    return this.model.serialize();
+  };
 
   /**
    * @desc update node body when when node is disconnected
@@ -136,7 +162,7 @@ export abstract class JNBaseNode {
    * @desc description
    */
   public accept(node: JNBaseNode) {
-    if (!!this.connectable(node)) {
+    if (!JNBaseNode.connectable(<typeof JNBaseNode>node.constructor, <typeof JNBaseNode>this.constructor)) {
       throw new JNNodeUnconnectableException(this, node);
     }
     this.nodeMap.accepted[node.body.nodeID] = node;
@@ -259,7 +285,6 @@ export abstract class JNBaseNode {
         }
       }
     }
-
     return null;
   }
 
@@ -274,7 +299,9 @@ export abstract class JNBaseNode {
   }
 
   public createPaletteModel() {
-    
+    let clazz = <typeof JNBaseNode>(this.constructor);
+    let paletteModel: JNPaletteModel = new (<any>clazz.paletteModel);
+    return paletteModel;
   }
 
   public createInfoPanelModel() {
@@ -288,7 +315,7 @@ export abstract class JNBaseNode {
   protected subscriber(payload: IJNNodePayload) {
     this.listener(payload).then(() => {
       this.validate();
-      this.buildOutput();
+      this.publishData();
     });
   }
 
@@ -354,5 +381,4 @@ export abstract class JNBaseNode {
     this.model.$errors = errors;
     this.model.$valid = !!errors.length;
   }
-
 }

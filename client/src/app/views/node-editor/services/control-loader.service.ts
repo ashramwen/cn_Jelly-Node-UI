@@ -4,18 +4,18 @@ import { MaterialModule } from '@angular/material';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from 'ng2-translate';
 
-import { JNFormControl } from '../components/control.component';
-import { JNControlModule } from '../components/control.module';
-import { IJNFormControlInput } from '../interfaces/form-control-input.interface';
+import { JNEditorControlModule } from '../components/control.module';
+import { IJNEditorFormControlInput } from '../interfaces/form-control-input.interface';
 import { IJNFormControl } from '../interfaces/form-control.interface';
 import { JNTemplateBuilder } from './template-builder.service';
 import { ValidatorGenerator } from '../components/services/validator-generator.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { JNEditorModel } from '../interfaces/editor-model.type';
 import { Request } from '@angular/http';
+import { JNControlsModule } from '../../controls/controls.module';
 
 interface IDynamicComponent {
-  inputs: IJNFormControlInput;
+  inputs: IJNEditorFormControlInput;
   formControl: FormControl;
 }
 
@@ -62,7 +62,7 @@ export class JNControlLoader {
     });
   }
 
-  private injectInputs(component: IDynamicComponent, formInputs: IJNFormControlInput) {
+  private injectInputs(component: IDynamicComponent, formInputs: IJNEditorFormControlInput) {
     component.inputs = formInputs;
   }
 
@@ -88,7 +88,7 @@ export class JNControlLoader {
     })
     class CustomDynamicComponent  implements IDynamicComponent {
 
-      @Input() public inputs: IJNFormControlInput;
+      @Input() public inputs: IJNEditorFormControlInput;
       @Input() public formControl: FormControl;
     };
     // a component for this particular template
@@ -98,7 +98,7 @@ export class JNControlLoader {
   private createComponentModule (componentType: any) {
       @NgModule({
         imports: [
-          JNControlModule,
+          JNEditorControlModule,
           ReactiveFormsModule,
           BrowserModule
         ],

@@ -4,7 +4,7 @@ import { JNDevicePropertyNode } from '../device-property-node/device-property-no
 import { JNDeviceTypeNode } from '../device-type-node/device-type-node.type';
 import { JNRuleNode } from '../rule-node/rule-node.type';
 import { JNApiNodeEditorModel } from './api-node-editor-model.type';
-import { JNApiNodeModel } from './api-node-model.type';
+import { JNApiNodeModel, IApi } from './api-node-model.type';
 
 @JNNode({
   title: 'nodeset.JNApiNode.nodename',
@@ -34,9 +34,7 @@ import { JNApiNodeModel } from './api-node-model.type';
 })
 export class JNApiNode extends JNBaseNode  {
 
-  public get body (){
-    return this.model.serialize();
-  }
+  public readonly body: IApi;
 
   public get name(): string{
     return this.body.apiName || this.getTitle();
@@ -45,10 +43,6 @@ export class JNApiNode extends JNBaseNode  {
   protected model: JNApiNodeModel = new JNApiNodeModel;
 
   protected whenReject() {
-    return null;
-  }
-
-  protected formatter() {
     return null;
   }
 

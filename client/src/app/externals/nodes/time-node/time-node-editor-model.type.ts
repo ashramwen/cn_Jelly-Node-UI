@@ -7,6 +7,7 @@ import { JNEditorModel } from '../../../views/node-editor/interfaces/editor-mode
 import { ISelectInput, JNSelectControl } from '../../../views/node-editor/components/controls/select/select.component';
 import { JNTimeNodeModel } from './time-node-model.type';
 import { JNNodeEditor } from '../../../core/models/node-editor-annotation';
+import { RuleCron } from '../../controls/cron/cron.component';
 
 import {
   JNTextAreaControl,
@@ -24,18 +25,17 @@ import {
           value: 'interval'
         }, {
           text: '定时定点',
-          value: 'schedule'
+          value: 'cron'
         }]
       },
       controlType: JNRadioControl,
       $validators: []
     },
     cron: {
-      input: <ITextInput>{
-        label: '表达式',
-        maxLength: 11
+      input: {
+        label: '表达式'
       },
-      controlType: JNTextControl,
+      controlType: RuleCron,
       $validators: []
     },
     interval: {
@@ -73,7 +73,7 @@ export class JNTimeNodeEditorModel extends JNEditorModel {
 
   protected parse(data: JNTimeNodeModel) {
     this.setValue('timeType', data.timeType);
-    this.setValue('unit', data.unit);
+    this.setValue('unit', data.timeUnit);
     this.setValue('cron', data.cron);
     this.setValue('interval', data.interval);
   }
@@ -90,7 +90,7 @@ export class JNTimeNodeEditorModel extends JNEditorModel {
           this.getInput('unit').hidden = false;
           this.getInput('interval').hidden = false;
           break;
-        case 'schedule':
+        case 'cron':
           this.getInput('cron').hidden = false;
           this.getInput('unit').hidden = true;
           this.getInput('interval').hidden = true;

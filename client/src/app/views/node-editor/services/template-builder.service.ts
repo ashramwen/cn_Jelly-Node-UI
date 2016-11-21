@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { JNFormControl } from '../components/control.component';
 import { IJNFormControl } from '../interfaces/form-control.interface';
 import { FormControl } from '@angular/forms';
 

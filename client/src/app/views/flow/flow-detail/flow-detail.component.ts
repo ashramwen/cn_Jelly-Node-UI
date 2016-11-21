@@ -19,7 +19,7 @@ export class FlowDetailComponent implements OnInit, OnDestroy {
   editorShown: boolean;
 
   constructor(private router: Router, private route: ActivatedRoute) {
-    this.editorShown = true;
+    this.editorShown = false;
   }
 
 

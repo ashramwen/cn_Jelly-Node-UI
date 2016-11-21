@@ -10,7 +10,6 @@ import { JNTemplateBuilder } from './services/template-builder.service';
 import { JNControlLoader } from './services/control-loader.service';
 import { JNTextControl, ITextInput } from './components/controls/text/text.component';
 import { IJNFormControl } from './interfaces/form-control.interface';
-import { IJNFormControlInput } from './interfaces/form-control-input.interface';
 import { IRadioInput, JNRadioControl } from './components/controls/radio/radio.component';
 import { JNEditorModel } from './interfaces/editor-model.type';
 import { JNRuleNode } from '../../externals/nodes/rule-node/rule-node.type';
@@ -23,6 +22,7 @@ import { JNTimeNode } from '../../externals/nodes/time-node/time-node.type';
 import { JNActionNode } from '../../externals/nodes/action-node/action-node.type';
 import { JNApiNode } from '../../externals/nodes/api-node/api-node.type';
 import { JNBaseNode } from '../../core/models/jn-base-node.type';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'jn-node-editor',
@@ -40,6 +40,7 @@ export class JNEditFormComponent implements OnInit, OnChanges {
 
   private controls: IJNFormControl[] = [];
   private formGroup: FormGroup = new FormGroup({});
+  private subscription: Subscription;
 
   constructor(
     private events: Events
@@ -104,8 +105,14 @@ export class JNEditFormComponent implements OnInit, OnChanges {
 
   ngOnChanges(value: { [key: string]: SimpleChange }) {
     if (!value['targetNode'].currentValue) return;
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
     this.events.on(APP_READY, () => {
       this.editorModel = this.targetNode.createEditorModel();
+      this.subscription = this.editorModel.viewModelChange.subscribe(() => {
+        this.controls = this.editorModel.controlsToArray();
+      });
       console.log(value);
       // this.editorModel = node.createEditorModel();
       this.prepare();

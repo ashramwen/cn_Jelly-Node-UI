@@ -1,0 +1,98 @@
+@import './global.scss';
+
+@import '~@angular/material/core/theming/all-theme';
+// Plus imports for other components in your app.
+
+// Include the base styles for Angular Material core. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+@include md-core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue.
+$app-primary: md-palette($md-indigo);
+$app-accent:  md-palette($md-pink, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$app-warn:    md-palette($md-red);
+
+// Create the theme object (a Sass map containing all of the palettes).
+$app-theme: md-light-theme($app-primary, $app-accent, $app-warn);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include angular-material-theme($app-theme);
+
+*{
+  font-size: 13px;
+  color: $color-dark;
+}
+
+/* layout */
+.pull-right{
+  float: right;
+}
+.pull-left{
+  float: left;
+}
+.clearfix{
+  overflow: auto;
+}
+
+/* button */
+.jn-btn{
+  padding: 8px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: $color-grey;
+  &.btn-danger{
+    background: $color-danger;
+    color: $color-light;
+  }
+  &.btn-success{
+    background: $color-success;
+    color: $color-light;
+  }
+}
+
+/* table */
+table.jn-table{
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid #ddd;
+  thead>tr>th, tbody>tr>td{
+    padding: 5px;
+    margin: 0px;
+    border: 1px solid #ddd;
+  }
+  tbody{
+    tr:nth-child(odd){
+      background-color: #f3f4f5;
+    }
+    tr:nth-child(even):hover{
+      background-color: #f5f5f5;
+    }
+  } 
+}
+
+/* text */
+input.jn-text{
+  border: solid 1px #ccc;
+  border-radius: 5px;
+  width: 100%;
+  height: 25px;
+  line-height: 25px;
+  padding: 4px;
+  flex: 1;
+}
+
+/* textarea */
+textarea.jn-textarea{
+  border: solid 1px #ccc;
+  border-radius: 5px;
+  width: 100%;
+  min-height: 50px;
+  padding: 4px;
+  flex: 1;
+}

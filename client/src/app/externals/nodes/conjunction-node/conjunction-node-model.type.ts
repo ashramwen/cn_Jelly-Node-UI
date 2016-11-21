@@ -2,7 +2,7 @@ import { JNNodeModel } from '../../../core/models/jn-node-model.type';
 import { Serializable } from '../../../../bin/JsonMapper';
 import { INodeBody } from '../../../core/models/interfaces/node-body.interface';
 
-export interface IConjunction extends INodeBody{
+export interface IConjunction extends INodeBody {
   conjunction: 'and' | 'or' | 'nore';
 }
 

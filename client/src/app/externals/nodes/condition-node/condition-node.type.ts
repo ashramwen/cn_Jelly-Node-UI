@@ -1,7 +1,7 @@
 import { JNBaseNode, IConnectRuleSetting } from '../../../core/models/jn-base-node.type';
 import { JNNode } from '../../../core/models/node-annotation';
 import { JNDevicePropertyNode } from '../device-property-node/device-property-node.type';
-import { JNConditionNodeModel } from './condition-node-model.type';
+import { JNConditionNodeModel, ICondition } from './condition-node-model.type';
 import { JNConditionNodeEditorModel } from './condition-node-editor-model.type';
 import { JNDeviceTypeNode } from '../device-type-node/device-type-node.type';
 import { JNUtils } from '../../../share/util';
@@ -28,6 +28,11 @@ import { IJNNodePayload } from '../../../core/models/interfaces/node-payload.int
       }
       return true;
     }
+  }, {
+      message: '至少选择包含一个条件',
+      validator: (model: JNConditionNodeModel) => {
+        return !!model.conditions && !!model.conditions.length;
+      }
   }],
   connectRules: {
     global: [],
@@ -61,9 +66,7 @@ import { IJNNodePayload } from '../../../core/models/interfaces/node-payload.int
 })
 export class JNConditionNode extends JNBaseNode  {
 
-  public get body (){
-    return this.model.serialize();
-  }
+  public readonly body: ICondition;
 
   protected model: JNConditionNodeModel = new JNConditionNodeModel;
 
@@ -71,50 +74,47 @@ export class JNConditionNode extends JNBaseNode  {
     return null;
   }
 
-  protected formatter(): any {
-    return null;
-  }
-
   protected listener(payload: IJNNodePayload) {
     return new Promise((resolve) => {
       this.model.conditions = this.model.conditions || [];
       if (payload.type === JNDevicePropertyNode) {
-        if (payload.data['typeName'] !== this.model.typeName) {
-          let propertyNodes: JNDevicePropertyNode[] = JNUtils.toArray<JNBaseNode>(this.nodeMap.accepted)
-            .filter(pair => pair.value instanceof JNDevicePropertyNode)
-            .map((pair) => <JNDevicePropertyNode>pair.value);
+        let propertyNodes: JNDevicePropertyNode[] = JNUtils.toArray<JNBaseNode>(this.nodeMap.accepted)
+          .filter(pair => pair.value instanceof JNDevicePropertyNode)
+          .map((pair) => <JNDevicePropertyNode>pair.value)
+          .filter(n => !!n.body.typeName);
 
-          let flag = false;
-          propertyNodes.forEach((propertyNode) => {
-            flag = payload.data['typeName'] !== propertyNode.body.typeName;
-          });
-
-          if (flag) {
-            this.model.typeName = null;
-            this.model.conditions = [];
-            resolve(true);
-            return;
-          }
-          this.model.typeName = payload.data['typeName'];
-
-          let hasProperty = !!this.model.conditions
-            .find((condition) => condition.property === payload.data['property']);
-          if (!hasProperty) {
-            this.model.conditions.push({
-              aggregation: null,
-              operator: null,
-              property: payload.data['proprerty'],
-              value: null
-            });
-          }
-
-          this.model.conditions = this.model.conditions.filter((condition) => {
-            return propertyNodes.find((propertyNode) => {
-              return propertyNode.body.property === condition.property;
-            });
-          });
-
+        if (!propertyNodes.length) {
+          this.model.typeName = null;
+          this.model.conditions = [];
+          resolve(true);
+          return;
         }
+
+        let properties = propertyNodes.filter(n => n.body.typeName === this.model.typeName);
+
+        if (!properties.length) {
+          this.model.typeName = propertyNodes[0].body.typeName;
+          properties = propertyNodes.filter(n => n.body.typeName === this.model.typeName);
+        }
+
+        let newPros = properties
+          .filter((p) => {
+            return !!p.body.property && !this.model.conditions.find(c => c.property === p.body.property);
+          });
+
+        newPros.forEach((p) => {
+          this.model.conditions.push({
+            aggregation: null,
+            percentage: null,
+            property: p.body.property,
+            operator: null,
+            value: null
+          });
+        });
+
+        this.model.conditions =  this.model.conditions.filter((c) => {
+          return !!properties.find(p => p.body.property === c.property);
+        });
       }
       resolve(true);
     });

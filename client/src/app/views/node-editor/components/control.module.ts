@@ -1,23 +1,26 @@
 import { NgModule, Provider }      from '@angular/core';
-import { JNCONTROLS } from './controls/index';
+import { JN_EDITOR_CONTROLS } from './controls/index';
 import { TranslateModule } from 'ng2-translate';
 import { MaterialModule } from '@angular/material';
 import { FormsModule } from '@angular/forms';
 import { EDITOR_CONTROL_SERVICES } from './services/index';
 import { BrowserModule } from '@angular/platform-browser';
+import { JSONEditorModule } from 'ng2-jsoneditor';
+import { JNControlsModule } from '../../controls/controls.module';
 
 @NgModule({
-  imports: [TranslateModule, MaterialModule, FormsModule, BrowserModule],
+  imports: [TranslateModule, MaterialModule,
+    FormsModule, BrowserModule, JSONEditorModule, JNControlsModule],
   providers: [],
-  declarations: [...JNCONTROLS],
-  exports: [...JNCONTROLS]
+  declarations: [...JN_EDITOR_CONTROLS],
+  exports: [...JN_EDITOR_CONTROLS]
 })
-export class JNControlModule {
+export class JNEditorControlModule {
   static forRoot() {
     return {
-      ngModule: JNControlModule,
+      ngModule: JNEditorControlModule,
       providers: [...EDITOR_CONTROL_SERVICES],
-      exports: [...JNCONTROLS]
+      exports: [...JN_EDITOR_CONTROLS]
     };
   }
 }

@@ -1,11 +1,12 @@
 import { JNBaseNode, IConnectRuleSetting } from '../../../core/models/jn-base-node.type';
 import { JNDeviceTypeNode } from '../device-type-node/device-type-node.type';
 import { JNNode } from '../../../core/models/node-annotation';
-import { JNDevicePropertyNodeModel } from './device-property-node-model.type';
+import { JNDevicePropertyNodeModel, IDeviceProperty } from './device-property-node-model.type';
 import { JNUtils } from '../../../share/util';
 import { JNDevicePropertyNodeEditorModel } from './device-property-node-editor-model.type';
 import { RuleApplication } from '../../rule-application-core';
 import { IJNNodePayload } from '../../../core/models/interfaces/node-payload.interface';
+import { JNActionNode } from '../action-node/action-node.type';
 
 @JNNode({
   title: 'nodeset.JNDevicePropertyNode.nodename',
@@ -25,6 +26,7 @@ import { IJNNodePayload } from '../../../core/models/interfaces/node-payload.int
     message: '属性值与所属设备类型不符',
     validator: (model: JNDevicePropertyNodeModel) => {
       if (!model.typeName) return true;
+      if (!model.property) return true;
 
       let schema = RuleApplication.instance.resources.$schema
         .schemas[model.typeName];
@@ -51,6 +53,13 @@ import { IJNNodePayload } from '../../../core/models/interfaces/node-payload.int
           if (node.hasAccepted(target)) return true;
           return false;
         }
+      }, {
+          message: `当<DeviceType>节点不能同时与<Action>节点与<DeviceProperty>相连。`,
+          validator: (node: JNDevicePropertyNode, target: JNDeviceTypeNode) => {
+            let nodes = JNUtils.toArray(target.nodeMap.outputTo)
+              .filter(pair => pair.value instanceof JNActionNode);
+            return !nodes.length;
+          }
       }]
     }]
   }
@@ -66,9 +75,7 @@ export class JNDevicePropertyNode extends JNBaseNode {
     return property.displayNameCN;
   }
 
-  get body() {
-    return this.model.serialize();
-  }
+  public readonly body: IDeviceProperty;
 
   protected model: JNDevicePropertyNodeModel = new JNDevicePropertyNodeModel;
 
@@ -83,10 +90,6 @@ export class JNDevicePropertyNode extends JNBaseNode {
       }
     }
     return Promise.resolve(true);
-  }
-
-  protected formatter() {
-    return this.model.serialize();
   }
 
   protected listener(payload: IJNNodePayload) {

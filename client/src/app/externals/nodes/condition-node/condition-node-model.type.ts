@@ -2,7 +2,7 @@ import { JNNodeModel } from '../../../core/models/jn-node-model.type';
 import { Serializable } from '../../../../bin/JsonMapper';
 import { INodeBody } from '../../../core/models/interfaces/node-body.interface';
 
-interface ICondition extends INodeBody {
+export interface ICondition extends INodeBody {
   thingType: string;
   conditions: Array<{
     aggregation: 'sum' | 'max' | 'min' | 'avg' | 'count';

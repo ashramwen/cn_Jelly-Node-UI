@@ -8,7 +8,7 @@ import { IJNEditorFormFormatter } from './formatter.interface';
 import { FormGroup, FormControl } from '@angular/forms';
 import { JNNodeModel } from '../../../core/models/jn-node-model.type';
 import { JNUtils } from '../../../share/util';
-import { Subscriber, Subscription } from 'rxjs';
+import { Subscriber, Observable, Subscription } from 'rxjs';
 let _ = require('lodash');
 
 
@@ -18,6 +18,11 @@ export abstract class JNEditorModel {
   static buttons: IJNFormButton[];
   static viewTemplate: string;
   static formControls: { [fieldName: string]: IJNFormControl };
+
+  public viewModelChangeEmitter: Subscriber<JNEditorModel>;
+  public viewModelChange = new Observable((subscriber: Subscriber<JNEditorModel>) => {
+    this.viewModelChangeEmitter = subscriber;
+  });
 
   title: string;
   get formGroup() {
@@ -160,6 +165,7 @@ export abstract class JNEditorModel {
         let controlSchema = r.value;
         this._buildControl(controlSchema, fieldName);
       });
+    if(this.viewModelChangeEmitter) this.viewModelChangeEmitter.next(this);
   }
 
   /**

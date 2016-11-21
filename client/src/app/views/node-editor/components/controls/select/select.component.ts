@@ -1,8 +1,8 @@
-import { forwardRef, Component, Input, Output } from '@angular/core';
-import { JNFormControl } from '../../control.component';
+import { forwardRef, Component, Input, Output, ViewEncapsulation, EventEmitter } from '@angular/core';
+import { JNEditorFormControl } from '../../control.component';
 import { FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { JNControl } from '../../control.annotation';
-import { IJNFormControlInput } from '../../../interfaces/form-control-input.interface';
+import { JNEditorControl } from '../../control.annotation';
+import { IJNEditorFormControlInput } from '../../../interfaces/form-control-input.interface';
 
 const VALUE_ACCESSOR: any = {
     provide: NG_VALUE_ACCESSOR,
@@ -10,7 +10,7 @@ const VALUE_ACCESSOR: any = {
     multi: true
 };
 
-export interface ISelectInput extends IJNFormControlInput {
+export interface ISelectInput extends IJNEditorFormControlInput {
   options: Array<ISelectOption>;
   selectedByDefault?: boolean;
 }
@@ -20,18 +20,18 @@ interface ISelectOption {
   value: string;
 }
 
-@JNControl({
+@JNEditorControl({
   template: `
-    <jn-select 
+    <jn-editor-select 
       [label]="inputs.label" 
       [disabled]="inputs.disabled"
       [options]="inputs.options"
       [formControl]="formControl">
-    </jn-select>
+    </jn-editor-select>
   `
 })
 @Component({
-  selector: 'jn-select',
+  selector: 'jn-editor-select',
   styles: [
     require('./select.component.scss')
   ],
@@ -39,17 +39,15 @@ interface ISelectOption {
     <div class="jn-form inline">
       <label class="jn-form-label">{{label | translate}}</label>
       <div class="jn-form-control">
-        <select 
-          [(ngModel)]="value"
-          [disabled]="disabled">
-          <option *ngFor="let o of options" [value]="o.value">{{o.text | translate}}</option>
-        </select>
+        <jn-select [(ngModel)]="value" (selectionChanged)="selectionChanged($event)" [options]="options">
+        </jn-select>
       </div>
     </div>
   `,
-  providers: [VALUE_ACCESSOR]
+  providers: [VALUE_ACCESSOR],
+  encapsulation: ViewEncapsulation.None
 })
-export class JNSelectControl extends JNFormControl {
+export class JNSelectControl extends JNEditorFormControl {
   @Input()
   protected disabled: boolean;
   @Input()
@@ -60,4 +58,9 @@ export class JNSelectControl extends JNFormControl {
   protected data: any;
   @Input()
   protected options: ISelectOption;
+  @Output() selectChange: EventEmitter<any> = new EventEmitter();
+
+  selectionChanged($event) {
+    this.selectChange.emit($event);
+  }
 }

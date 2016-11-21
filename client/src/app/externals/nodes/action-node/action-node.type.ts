@@ -18,7 +18,7 @@ import { INodeError } from '../../../core/models/interfaces/node-error.interface
   editorModel: JNActionNodeEditorModel,
   infoPanelModel: null,
   paletteModel: null,
-  accepts: ['Rule', 'DeviceType'],
+  accepts: ['DeviceType'],
   modelRules: [{
     message: '必须选择一个行为',
     validator: (model: JNActionNodeModel) => {
@@ -59,6 +59,13 @@ import { INodeError } from '../../../core/models/interfaces/node-error.interface
           if (node.hasAccepted(target)) return true;
           return false;
         }
+      }, {
+        message: `当<DeviceType>节点不能同时与<Action>节点与<DeviceProperty>相连。`,
+        validator: (node: JNActionNode, target: JNDeviceTypeNode) => {
+          let nodes = JNUtils.toArray(target.nodeMap.outputTo)
+            .filter(pair => pair.value instanceof JNDeviceTypeNode);
+          return !nodes.length;
+        }
       }]
     }]
   }
@@ -85,7 +92,7 @@ export class JNActionNode extends JNBaseNode  {
   }
 
   protected formatter() {
-    return null;
+    return this.model.serialize();
   }
 
   protected listener(payload: IJNNodePayload) {

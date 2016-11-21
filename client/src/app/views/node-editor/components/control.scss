@@ -1,6 +1,5 @@
 @import '../../../../assets/styles/global';
 .jn-form{
-  display: block;
   padding: 0px 10px;
   margin-bottom: 10px;
 
@@ -9,6 +8,8 @@
     height: 32px;
     line-height: 32px;
     width: 120px;
+    font-weight: bold;
+    font-size: 14px;
   }
   .jn-form-control{
     width: 100%;
@@ -16,8 +17,8 @@
   }
 
   &.inline{
-    height: 32px;
-    line-height: 32px;
+    height: 34px;
+    line-height: 34px;
     display: flex;
     .jn-form-label{
       width: 80px;

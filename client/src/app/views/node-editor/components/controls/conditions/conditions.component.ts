@@ -1,8 +1,8 @@
 import { forwardRef, Component, Input, Output } from '@angular/core';
-import { JNFormControl } from '../../control.component';
+import { JNEditorFormControl } from '../../control.component';
 import { FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { JNControl } from '../../control.annotation';
-import { IJNFormControlInput } from '../../../interfaces/form-control-input.interface';
+import { JNEditorControl } from '../../control.annotation';
+import { IJNEditorFormControlInput } from '../../../interfaces/form-control-input.interface';
 
 const VALUE_ACCESSOR: any = {
     provide: NG_VALUE_ACCESSOR,
@@ -10,7 +10,7 @@ const VALUE_ACCESSOR: any = {
     multi: true
 };
 
-export interface IConditionsInput extends IJNFormControlInput {
+export interface IConditionsInput extends IJNEditorFormControlInput {
   conditions: Array<ICondition>;
 }
 
@@ -32,7 +32,7 @@ export interface IConditionResult {
   };
 }
 
-@JNControl({
+@JNEditorControl({
   template: `
     <jn-conditions 
       [label]="inputs.label" 
@@ -63,7 +63,7 @@ export interface IConditionResult {
   `,
   providers: [VALUE_ACCESSOR]
 })
-export class JNConditionsControl extends JNFormControl {
+export class JNConditionsControl extends JNEditorFormControl {
   @Input()
   protected disabled: boolean;
   @Input()

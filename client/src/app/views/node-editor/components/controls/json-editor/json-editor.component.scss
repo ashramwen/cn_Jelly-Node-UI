@@ -1,0 +1,11 @@
+@import '../../control.scss';
+
+json-editor{
+  height: 300px;
+}
+
+div.jsoneditor-menu  {
+  a.jsoneditor-poweredBy {
+    display: none;
+  }
+}

@@ -140,7 +140,7 @@ module.exports = function(options) {
         /* File loader for supporting images, for example, in CSS files.
          */
         {
-          test: /\.(jpg|png|gif)$/,
+          test: /\.(jpg|png|gif|svg)$/,
           loader: 'file'
         },
         {
@@ -158,6 +158,7 @@ module.exports = function(options) {
      * See: http://webpack.github.io/docs/configuration.html#plugins
      */
     plugins: [
+      new webpack.IgnorePlugin(/regenerator|nodent|js-beautify/, /ajv/),
       new webpack.ProvidePlugin({
         $: "jquery",
         jQuery: "jquery"

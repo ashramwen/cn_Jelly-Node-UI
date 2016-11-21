@@ -1,8 +1,8 @@
 import { forwardRef, Component, Input, Output } from '@angular/core';
-import { JNFormControl } from '../../control.component';
+import { JNEditorFormControl } from '../../control.component';
 import { FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { JNControl } from '../../control.annotation';
-import { IJNFormControlInput } from '../../../interfaces/form-control-input.interface';
+import { JNEditorControl } from '../../control.annotation';
+import { IJNEditorFormControlInput } from '../../../interfaces/form-control-input.interface';
 
 const VALUE_ACCESSOR: any = {
     provide: NG_VALUE_ACCESSOR,
@@ -10,25 +10,25 @@ const VALUE_ACCESSOR: any = {
     multi: true
 };
 
-export interface ITextInput extends IJNFormControlInput {
+export interface ITextInput extends IJNEditorFormControlInput {
   maxLength?: number;
   max?: number;
   min?: number;
   type?: 'number' | 'text';
 }
 
-@JNControl({
+@JNEditorControl({
   template: `
-    <jn-text 
+    <jn-editor-text 
       [label]="inputs.label" 
       [disabled]="inputs.disabled" 
       [maxLength]="inputs.maxLength"
       [formControl]="formControl">
-    </jn-text>
+    </jn-editor-text>
   `
 })
 @Component({
-  selector: 'jn-text',
+  selector: 'jn-editor-text',
   styles: [
     require('./text.component.scss')
   ],
@@ -54,7 +54,7 @@ export interface ITextInput extends IJNFormControlInput {
   `,
   providers: [VALUE_ACCESSOR]
 })
-export class JNTextControl extends JNFormControl {
+export class JNTextControl extends JNEditorFormControl {
   @Input()
   protected disabled: boolean;
   @Input()

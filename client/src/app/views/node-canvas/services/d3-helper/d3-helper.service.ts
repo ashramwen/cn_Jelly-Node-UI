@@ -7,10 +7,12 @@ import * as d3 from 'd3';
 @Injectable()
 export class D3HelperService {
 
-  private readonly NODE_WIDTH = 180;
-  private readonly NODE_HEIGHT = 40;
   private space_width = 1464;
   private space_height = 944;
+  private readonly NODE_WIDTH = 120;
+  private readonly NODE_HEIGHT = 30;
+  private readonly HANDLER_WIDTH = 10;
+  private readonly HANDLER_HEIGHT = 10;
 
   private vis: any;
   private drag: any;
@@ -41,9 +43,6 @@ export class D3HelperService {
   init(_nodeFlow: JNFlow) {
     let self = this;
     self.nodeFlow = _nodeFlow;
-    // let NODE_WIDTH = this.NODE_WIDTH;
-    // let NODE_HEIGHT = this.NODE_HEIGHT;
-
     // var margin = { top: 20, right: 120, bottom: 20, left: 120 },
     //   space_width = 960 - margin.right - margin.left,
     //   space_height = 500 - margin.top - margin.bottom;
@@ -186,20 +185,20 @@ export class D3HelperService {
 
     // node text
     g.insert('svg:text')
-      .attr('x', 45)
-      .attr('y', 20)
+      .attr('x', 25)
+      .attr('y', 15)
       .text(d => {
         return `${d.id}:${this.nodeFlow.nodes[d.id].constructor.name}`;
       });
 
     // node icon right path
     g.insert('svg:path')
-      .attr('d', 'M 40 1 l 0 40');
+      .attr('d', `M ${this.NODE_HEIGHT} 1 l 0 ${this.NODE_HEIGHT}`);
 
     // node input
     g.insert('svg:g')
       .classed('port input', true)
-      .attr('transform', 'translate(-5, 15)')
+      .attr('transform', `translate(-${Math.floor(this.HANDLER_WIDTH / 2)}, ${Math.floor(this.NODE_HEIGHT - this.HANDLER_HEIGHT) / 2})`)
       .on('mouseenter', function (d) {
         d3.select(this).classed('hover', true);
         self.select_input = d;
@@ -222,15 +221,15 @@ export class D3HelperService {
         self.input_dragging = false;
       })
       .insert('svg:rect')
-      .attr('width', 10)
-      .attr('height', 10)
+      .attr('width', this.HANDLER_WIDTH)
+      .attr('height', this.HANDLER_HEIGHT)
       .attr('rx', 3)
       .attr('ry', 3);
 
     // node output
     g.insert('svg:g')
       .classed('port output', true)
-      .attr('transform', 'translate(175, 15)')
+      .attr('transform', `translate(${this.NODE_WIDTH - Math.floor(this.HANDLER_WIDTH / 2)}, ${Math.floor(this.NODE_HEIGHT - this.HANDLER_HEIGHT) / 2})`)
       .on('mouseenter', function (d) {
         d3.select(this).classed('hover', true);
         self.select_output = d;
@@ -253,8 +252,8 @@ export class D3HelperService {
         self.output_dragging = false;
       })
       .insert('svg:rect')
-      .attr('width', 10)
-      .attr('height', 10)
+      .attr('width', this.HANDLER_WIDTH)
+      .attr('height', this.HANDLER_HEIGHT)
       .attr('rx', 3)
       .attr('ry', 3);
   }
@@ -294,9 +293,9 @@ export class D3HelperService {
 
   private shiftNodeLink = (linkData) => {
     linkData.source.x += this.NODE_WIDTH + 5;
-    linkData.source.y += this.NODE_HEIGHT / 2;
+    linkData.source.y += Math.floor(this.NODE_HEIGHT / 2);
     linkData.target.x -= 5;
-    linkData.target.y += this.NODE_HEIGHT / 2;
+    linkData.target.y += Math.floor(this.NODE_HEIGHT / 2);
     this.nodeLink();
   }
 
@@ -338,7 +337,7 @@ export class D3HelperService {
     }
 
     // let v = `M${d.source.x + self.NODE_WIDTH + 5} ${d.source.y + self.NODE_HEIGHT / 2} C ${d.source.x + self.NODE_WIDTH + scale * self.NODE_WIDTH} ${d.source.y + self.NODE_HEIGHT / 2 + scaleY * self.NODE_HEIGHT} ${d.target.x - scale * self.NODE_WIDTH} ${d.target.y + self.NODE_HEIGHT / 2 - scaleY * self.NODE_HEIGHT} ${d.target.x - 5} ${d.target.y + self.NODE_HEIGHT / 2}`;
-    let v = `M${d.source.x} ${d.source.y} C ${d.source.x + scale * self.NODE_WIDTH} ${d.source.y + scaleY * self.NODE_HEIGHT} ${d.target.x - scale * self.NODE_WIDTH} ${d.target.y - scaleY * self.NODE_HEIGHT} ${d.target.x} ${d.target.y}`;
+    let v = `M${d.source.x} ${d.source.y} C ${d.source.x + scale * self.NODE_WIDTH / 2} ${d.source.y + scaleY * self.NODE_HEIGHT} ${d.target.x - scale * self.NODE_WIDTH / 2} ${d.target.y - scaleY * self.NODE_HEIGHT} ${d.target.x} ${d.target.y}`;
     return v;
   }
 }

@@ -2,6 +2,7 @@ import { JNBaseNode } from '../../../core/models/jn-base-node.type';
 import { JNNode } from '../../../core/models/node-annotation';
 import { JNConjunctionNodeModel, IConjunction } from './conjunction-node-model.type';
 import { JNConjunctionNodeEditorModel } from './conjunction-node-editor-model.type';
+import { JNConjunctionPaletteModel } from './conjunction-node-palette-model.type';
 
 @JNNode({
   title: 'nodeset.JNConjunctionNode.nodename',
@@ -10,7 +11,7 @@ import { JNConjunctionNodeEditorModel } from './conjunction-node-editor-model.ty
   borderColor: '',
   editorModel: JNConjunctionNodeEditorModel,
   infoPanelModel: null,
-  paletteModel: null,
+  paletteModel: new JNConjunctionPaletteModel(),
   accepts: ['Condition', 'Conjunction'],
   modelRules: [{
     message: '连接表达式不能为空',

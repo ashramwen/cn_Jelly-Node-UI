@@ -7,8 +7,10 @@ import * as d3 from 'd3';
 @Injectable()
 export class D3HelperService {
 
-  private readonly NODE_WIDTH = 180;
-  private readonly NODE_HEIGHT = 40;
+  private readonly NODE_WIDTH = 120;
+  private readonly NODE_HEIGHT = 30;
+  private readonly HANDLER_WIDTH = 10;
+  private readonly HANDLER_HEIGHT = 10;
 
   private vis: any;
   private drag: any;
@@ -140,15 +142,15 @@ export class D3HelperService {
       });
 
     g.insert('svg:path')
-      .attr('d', 'M 40 1 l 0 40');
+      .attr('d', `M ${this.NODE_HEIGHT} 1 l 0 ${this.NODE_HEIGHT}`);
 
     g.insert('svg:rect')
       .classed('port input', true)
-      .attr('width', 10)
-      .attr('height', 10)
+      .attr('width', this.HANDLER_WIDTH)
+      .attr('height', this.HANDLER_HEIGHT)
       .attr('rx', 3)
       .attr('ry', 3)
-      .attr('transform', 'translate(-5, 15)')
+      .attr('transform', `translate(-${Math.floor(this.HANDLER_WIDTH / 2)}, ${Math.floor(this.NODE_HEIGHT - this.HANDLER_HEIGHT) / 2})`)
       .on('mouseenter', function (d) {
         d3.select(this).classed('hover', true);
         self.select_node = d;
@@ -176,8 +178,8 @@ export class D3HelperService {
           // let rect = d3.select(this).attr('transform');
           // let t = rect.substring(rect.indexOf("(") + 1, rect.indexOf(")")).split(",");
           let linkData = {
-            source: { x: d3.event.x, y: d3.event.y + this.NODE_HEIGHT / 2 },
-            target: { x: d.x - 5, y: d.y + this.NODE_HEIGHT / 2 }
+            source: { x: d3.event.x, y: d3.event.y + Math.floor(this.NODE_HEIGHT / 2) },
+            target: { x: d.x - Math.floor(this.HANDLER_WIDTH / 2), y: d.y + this.HANDLER_HEIGHT / 2 }
           };
           this.mouseLink(linkData);
         })
@@ -185,11 +187,11 @@ export class D3HelperService {
 
     g.insert('svg:rect')
       .classed('port output', true)
-      .attr('width', 10)
-      .attr('height', 10)
+      .attr('width', this.HANDLER_WIDTH)
+      .attr('height', this.HANDLER_HEIGHT)
       .attr('rx', 3)
       .attr('ry', 3)
-      .attr('transform', 'translate(175, 15)')
+      .attr('transform', `translate(${this.NODE_WIDTH - Math.floor(this.HANDLER_WIDTH / 2)}, ${Math.floor(this.NODE_HEIGHT - this.HANDLER_HEIGHT) / 2})`)
       .on('mouseenter', function (d) {
         d3.select(this).classed('hover', true);
         self.select_node = d;
@@ -215,8 +217,8 @@ export class D3HelperService {
         })
         .on('drag', (d: any) => {
           let linkData = {
-            source: { x: d.x + this.NODE_WIDTH + 5, y: d.y + this.NODE_HEIGHT / 2 },
-            target: { x: d3.event.x + this.NODE_WIDTH, y: d3.event.y + this.NODE_HEIGHT / 2 }
+            source: { x: d.x + this.NODE_WIDTH + 5, y: d.y + Math.floor(this.NODE_HEIGHT / 2) },
+            target: { x: d3.event.x + this.NODE_WIDTH, y: d3.event.y + Math.floor(this.NODE_HEIGHT / 2) }
           };
           this.mouseLink(linkData);
         })
@@ -257,9 +259,9 @@ export class D3HelperService {
 
   private shiftNodeLink = (linkData) => {
     linkData.source.x += this.NODE_WIDTH + 5;
-    linkData.source.y += this.NODE_HEIGHT / 2;
+    linkData.source.y += Math.floor(this.NODE_HEIGHT / 2);
     linkData.target.x -= 5;
-    linkData.target.y += this.NODE_HEIGHT / 2;
+    linkData.target.y += Math.floor(this.NODE_HEIGHT / 2);
     this.nodeLink();
   }
 
@@ -301,7 +303,7 @@ export class D3HelperService {
     }
 
     // let v = `M${d.source.x + self.NODE_WIDTH + 5} ${d.source.y + self.NODE_HEIGHT / 2} C ${d.source.x + self.NODE_WIDTH + scale * self.NODE_WIDTH} ${d.source.y + self.NODE_HEIGHT / 2 + scaleY * self.NODE_HEIGHT} ${d.target.x - scale * self.NODE_WIDTH} ${d.target.y + self.NODE_HEIGHT / 2 - scaleY * self.NODE_HEIGHT} ${d.target.x - 5} ${d.target.y + self.NODE_HEIGHT / 2}`;
-    let v = `M${d.source.x} ${d.source.y} C ${d.source.x + scale * self.NODE_WIDTH} ${d.source.y + scaleY * self.NODE_HEIGHT} ${d.target.x - scale * self.NODE_WIDTH} ${d.target.y - scaleY * self.NODE_HEIGHT} ${d.target.x} ${d.target.y}`;
+    let v = `M${d.source.x} ${d.source.y} C ${d.source.x + scale * self.NODE_WIDTH / 2} ${d.source.y + scaleY * self.NODE_HEIGHT} ${d.target.x - scale * self.NODE_WIDTH / 2} ${d.target.y - scaleY * self.NODE_HEIGHT} ${d.target.x} ${d.target.y}`;
     return v;
   }
 }

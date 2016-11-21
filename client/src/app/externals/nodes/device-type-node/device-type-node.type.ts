@@ -3,7 +3,7 @@ import { JNNode } from '../../../core/models/node-annotation';
 import { JNDeviceTypeNodeEditorModel } from './device-type-node-editor-model.type';
 import { JNDeviceTypeInfoPanelModel } from './device-type-node-info-panel-model.type';
 import { JNDeviceTypePaletteModel } from './device-type-node-palette-model.type';
-import { JNDeviceTypeNodeModel } from './device-type-node-model.type';
+import { JNDeviceTypeNodeModel, IDeviceType } from './device-type-node-model.type';
 import { JNLocationNode } from '../location-node/location-node.type';
 import { JNUtils } from '../../../share/util';
 import { RuleApplication } from '../../rule-application-core';
@@ -40,6 +40,8 @@ import { DeviceTypeNodeService } from './device-type-node.service';
 })
 export class JNDeviceTypeNode extends JNBaseNode {
 
+  public readonly body: IDeviceType;
+
   get name(): string{
     if (!this.model.typeName) return this.getTitle();
     let schema = RuleApplication.instance
@@ -62,10 +64,6 @@ export class JNDeviceTypeNode extends JNBaseNode {
     });
 
     return Promise.resolve(true);
-  }
-
-  protected formatter() {
-    return this.model.serialize();
   }
 
   protected listener(event: IJNNodePayload) {

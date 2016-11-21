@@ -52,7 +52,7 @@ export abstract class JNBaseNode {
   static outputable: boolean;
   static modelRules: { message: string, validator: (model: JNNodeModel<any>) => boolean }[];
   static connectRules: IConnectRuleSetting;
-  
+
   /**
    * @desc test two node is connectable or not
    * @param  {typeofJNBaseNode} left
@@ -129,7 +129,9 @@ export abstract class JNBaseNode {
    * @returns Promise
    * @desc serialize data model
    */
-  protected abstract formatter(): INodeBody;
+  protected formatter(): INodeBody {
+    return this.model.serialize();
+  };
 
   /**
    * @desc update node body when when node is disconnected
@@ -160,7 +162,7 @@ export abstract class JNBaseNode {
    * @desc description
    */
   public accept(node: JNBaseNode) {
-    if (!!this.connectable(node)) {
+    if (!JNBaseNode.connectable(<typeof JNBaseNode>node.constructor, <typeof JNBaseNode>this.constructor)) {
       throw new JNNodeUnconnectableException(this, node);
     }
     this.nodeMap.accepted[node.body.nodeID] = node;
@@ -283,7 +285,6 @@ export abstract class JNBaseNode {
         }
       }
     }
-
     return null;
   }
 
@@ -380,5 +381,4 @@ export abstract class JNBaseNode {
     this.model.$errors = errors;
     this.model.$valid = !!errors.length;
   }
-
 }

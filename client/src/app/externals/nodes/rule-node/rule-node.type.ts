@@ -3,7 +3,7 @@ import { JNNode } from '../../../core/models/node-annotation';
 import { JNRuleNodeEditorModel } from './rule-node-editor-model.type';
 import { JNRuleInfoPanelModel } from './rule-node-info-panel-model.type';
 import { JNRulePaletteModel } from './rule-node-palette-model.type';
-import { JNRuleNodeModel } from './rule-node-model.type';
+import { JNRuleNodeModel, IRule } from './rule-node-model.type';
 import { JNTimeNode } from '../time-node/time-node.type';
 
 @JNNode({
@@ -31,18 +31,12 @@ export class JNRuleNode extends JNBaseNode  {
 
   protected model: JNRuleNodeModel = new JNRuleNodeModel;
 
-  public get body (){
-    return this.model.serialize();
-  }
+  public readonly body: IRule;
 
   protected whenReject() {
     return new Promise((resolve) => {
       resolve(true);
     });
-  }
-
-  protected formatter(): any {
-    return this.model.serialize();
   }
 
   protected listener() {

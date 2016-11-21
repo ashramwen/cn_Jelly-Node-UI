@@ -1,7 +1,7 @@
 import { JNBaseNode, IConnectRuleSetting } from '../../../core/models/jn-base-node.type';
 import { JNDeviceTypeNode } from '../device-type-node/device-type-node.type';
 import { JNNode } from '../../../core/models/node-annotation';
-import { JNDevicePropertyNodeModel } from './device-property-node-model.type';
+import { JNDevicePropertyNodeModel, IDeviceProperty } from './device-property-node-model.type';
 import { JNUtils } from '../../../share/util';
 import { JNDevicePropertyNodeEditorModel } from './device-property-node-editor-model.type';
 import { RuleApplication } from '../../rule-application-core';
@@ -75,9 +75,7 @@ export class JNDevicePropertyNode extends JNBaseNode {
     return property.displayNameCN;
   }
 
-  get body() {
-    return this.model.serialize();
-  }
+  public readonly body: IDeviceProperty;
 
   protected model: JNDevicePropertyNodeModel = new JNDevicePropertyNodeModel;
 
@@ -92,10 +90,6 @@ export class JNDevicePropertyNode extends JNBaseNode {
       }
     }
     return Promise.resolve(true);
-  }
-
-  protected formatter() {
-    return this.model.serialize();
   }
 
   protected listener(payload: IJNNodePayload) {

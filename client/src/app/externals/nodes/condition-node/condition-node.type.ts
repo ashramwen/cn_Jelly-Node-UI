@@ -1,7 +1,7 @@
 import { JNBaseNode, IConnectRuleSetting } from '../../../core/models/jn-base-node.type';
 import { JNNode } from '../../../core/models/node-annotation';
 import { JNDevicePropertyNode } from '../device-property-node/device-property-node.type';
-import { JNConditionNodeModel } from './condition-node-model.type';
+import { JNConditionNodeModel, ICondition } from './condition-node-model.type';
 import { JNConditionNodeEditorModel } from './condition-node-editor-model.type';
 import { JNDeviceTypeNode } from '../device-type-node/device-type-node.type';
 import { JNUtils } from '../../../share/util';
@@ -66,17 +66,11 @@ import { IJNNodePayload } from '../../../core/models/interfaces/node-payload.int
 })
 export class JNConditionNode extends JNBaseNode  {
 
-  public get body (){
-    return this.model.serialize();
-  }
+  public readonly body: ICondition;
 
   protected model: JNConditionNodeModel = new JNConditionNodeModel;
 
   protected whenReject() {
-    return null;
-  }
-
-  protected formatter(): any {
     return null;
   }
 

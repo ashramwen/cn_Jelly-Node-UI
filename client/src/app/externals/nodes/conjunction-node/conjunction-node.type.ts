@@ -1,6 +1,6 @@
 import { JNBaseNode } from '../../../core/models/jn-base-node.type';
 import { JNNode } from '../../../core/models/node-annotation';
-import { JNConjunctionNodeModel } from './conjunction-node-model.type';
+import { JNConjunctionNodeModel, IConjunction } from './conjunction-node-model.type';
 import { JNConjunctionNodeEditorModel } from './conjunction-node-editor-model.type';
 
 @JNNode({
@@ -21,17 +21,11 @@ import { JNConjunctionNodeEditorModel } from './conjunction-node-editor-model.ty
 })
 export class JNConjunctionNode extends JNBaseNode  {
 
-  public get body (){
-    return this.model.serialize();
-  }
+  public readonly body: IConjunction;
 
   protected model: JNConjunctionNodeModel = new JNConjunctionNodeModel;
 
   protected whenReject() {
-    return null;
-  }
-
-  protected formatter(): any {
     return null;
   }
 

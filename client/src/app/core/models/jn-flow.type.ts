@@ -18,11 +18,18 @@ export class JNFlow {
    */
   createNode<T extends JNBaseNode>(nodeType: new() => T , data?) {
     let node = JNBaseNode.factory(nodeType, data);
+    let _data;
     if (data) {
-      node.init(data);
+      if (!data.nodeID) {
+        _data = {
+          nodeID: this._generateNodeID()
+        };
+        Object.assign(_data, data);
+      }
     } else {
-      node.init({ nodeID: this._generateNodeID() });
+      _data = { nodeID: this._generateNodeID() };
     }
+    node.init(_data);
     this.nodes.push(node);
 
     return node;

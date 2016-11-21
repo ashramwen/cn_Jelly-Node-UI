@@ -15,4 +15,16 @@ export class JNUtils {
     if (arr.indexOf(v) === -1) return;
     arr.splice(arr.indexOf(v), 1);
   }
+
+  static log() {
+    console.log.apply(this, arguments);
+  }
+
+  static debug() {
+    console.log.apply(this, arguments);
+  }
+
+  static warning() {
+    console.log.apply(this, arguments);
+  }
 }

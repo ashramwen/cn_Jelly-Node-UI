@@ -6,6 +6,7 @@ import { JNUtils } from '../../../share/util';
 import { JNDevicePropertyNodeEditorModel } from './device-property-node-editor-model.type';
 import { RuleApplication } from '../../rule-application-core';
 import { IJNNodePayload } from '../../../core/models/interfaces/node-payload.interface';
+import { JNDevicePropertyPaletteModel } from './device-property-node-palette-model.type';
 
 @JNNode({
   title: 'nodeset.JNDevicePropertyNode.nodename',
@@ -14,7 +15,7 @@ import { IJNNodePayload } from '../../../core/models/interfaces/node-payload.int
   borderColor: '',
   editorModel: JNDevicePropertyNodeEditorModel,
   infoPanelModel: null,
-  paletteModel: null,
+  paletteModel: new JNDevicePropertyPaletteModel(),
   accepts: ['DeviceType'],
   modelRules: [{
     message: '必须选择一个属性',

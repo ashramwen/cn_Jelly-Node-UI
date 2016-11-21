@@ -63,7 +63,7 @@ export abstract class JNBaseNode {
     return JNBaseNode.factory(<any>nodeType, data).name;
   }
 
-  static factory<T extends JNBaseNode>(type: new() => T, data: any):  T {
+  static factory<T extends JNBaseNode>(type: new () => T, data: any): T {
     let node = new type;
     if (data) node.init(data);
     return node;
@@ -221,12 +221,12 @@ export abstract class JNBaseNode {
    * @desc remove node
    */
   public remove() {
-    JNUtils.toArray(this.nodeMap.accepted).forEach((t: { key: string; value: JNBaseNode}) => {
+    JNUtils.toArray(this.nodeMap.accepted).forEach((t: { key: string; value: JNBaseNode }) => {
       let node = t.value;
       delete node.nodeMap.outputTo[node.body.nodeID];
     });
 
-    JNUtils.toArray(this.nodeMap.outputTo).forEach((t: { key: string; value: JNBaseNode}) => {
+    JNUtils.toArray(this.nodeMap.outputTo).forEach((t: { key: string; value: JNBaseNode }) => {
       let node = t.value;
       delete node.nodeMap.accepted[node.body.nodeID];
       node.reject(this);
@@ -284,11 +284,15 @@ export abstract class JNBaseNode {
   }
 
   public createPaletteModel() {
-    
+    let clazz = <typeof JNBaseNode>(this.constructor);
+    let paletteModel: JNPaletteModel = <any>clazz.paletteModel;
+    paletteModel.init(this.body);
+    return paletteModel;
+
   }
 
   public createInfoPanelModel() {
-    
+
   }
 
   /**
@@ -306,7 +310,7 @@ export abstract class JNBaseNode {
    * @desc type-level connectable check
    * @param  {typeof JNBaseNode} target
    */
-  private _shouldReject(target: typeof JNBaseNode): {message: string} {
+  private _shouldReject(target: typeof JNBaseNode): { message: string } {
     let accepts = (<typeof JNBaseNode>this.constructor).accepts
       .map(nodeName => JNApplication.instance.nodeTypeMapper[nodeName]);
     if (!accepts || !accepts.length) {

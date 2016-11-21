@@ -9,6 +9,7 @@ import { JNApplication } from '../../../core/services/application-core.service';
 import { RuleApplication } from '../../rule-application-core';
 import { IJNNodePayload } from '../../../core/models/interfaces/node-payload.interface';
 import { INodeError } from '../../../core/models/interfaces/node-error.interface';
+import { JNActionPaletteModel } from './action-node-palette-model.type';
 
 @JNNode({
   title: 'nodeset.JNActionNode.nodename',
@@ -17,7 +18,7 @@ import { INodeError } from '../../../core/models/interfaces/node-error.interface
   borderColor: '',
   editorModel: JNActionNodeEditorModel,
   infoPanelModel: null,
-  paletteModel: null,
+  paletteModel: new JNActionPaletteModel(),
   accepts: ['Rule', 'DeviceType'],
   modelRules: [{
     message: '必须选择一个行为',

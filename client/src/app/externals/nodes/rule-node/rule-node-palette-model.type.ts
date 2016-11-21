@@ -6,10 +6,9 @@ export class JNRulePaletteModel extends JNPaletteModel {
   
   constructor(){
     super();
-    this.init();
-  }
+}
 
-  protected init() {
+  public init(body) {
     this.nodes = JNPaletteModel.getNodes(JNRuleNode);
   }
 

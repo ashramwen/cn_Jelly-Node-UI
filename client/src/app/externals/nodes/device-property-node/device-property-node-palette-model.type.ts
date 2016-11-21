@@ -1,11 +1,11 @@
 import { JNPaletteModel } from '../../../views/palette/interfaces/palette-model.type';
 import { JNBaseNode } from '../../../core/models/jn-base-node.type';
-import { JNPaletteConnection } from '../../../views/palette/palette-connections.type';
 import { RuleApplication } from '../../rule-application-core';
 import { JNDevicePropertyNode } from './device-property-node.type';
-import { JNPaletteNode } from '../../../views/palette/palette-node.type';
 import { JNDeviceTypeInfoPanelModel } from '../device-type-node/device-type-node-info-panel-model.type';
 import { JNDeviceTypePaletteModel } from '../device-type-node/device-type-node-palette-model.type';
+import { JNPaletteConnection } from '../../../views/palette/interfaces/palette-connections.type';
+import { JNPaletteNode } from '../../../views/palette/interfaces/palette-node.type';
 
 export class JNDevicePropertyPaletteModel extends JNPaletteModel {
   nodes = [];
@@ -13,10 +13,9 @@ export class JNDevicePropertyPaletteModel extends JNPaletteModel {
 
   constructor() {
     super();
-    this.init();
   }
 
-  public init() {
+  public init(body) {
     this.nodes = JNPaletteModel.getNodes(JNDevicePropertyNode);
     this.connections.push(JNDeviceTypePaletteModel.createConnection(JNDevicePropertyNode));
   }
@@ -31,13 +30,12 @@ export class JNDevicePropertyPaletteModel extends JNPaletteModel {
 
   static createConnection(selectedNodeType: typeof JNBaseNode, deviceType: string): JNPaletteConnection {
     let schemas = RuleApplication.instance.resources.$schema.schemas;
-    let deviceTypes = Object.keys(schemas[deviceType].content.statesSchema.properties);
+    let deviceProperties = Object.keys(schemas[deviceType].content.statesSchema.properties);
     let connection = new JNPaletteConnection();
     let data: Object = {};
-
     connection.title = deviceType;
     connection.properties = [];
-    deviceTypes.forEach(function (deviceProperty) {
+    deviceProperties.forEach(function (deviceProperty) {
       data = JNDevicePropertyPaletteModel.createProperty(deviceType, deviceProperty);
       connection.properties.push(new JNPaletteNode(selectedNodeType, JNDevicePropertyNode,
         JNBaseNode.getName(JNDevicePropertyNode, data), data));

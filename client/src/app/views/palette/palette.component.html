@@ -1,15 +1,43 @@
-<div>
-    palette
-</div>
-<div class="palette_node_group ui-draggable" *ngFor="let n of nodeFlow.nodes; let i=index; trackBy:index" attr.data-index="{{i}}">
-    <div class="palette-function">
-        <div class="palette_node">
-            <div class="palette_label" dir="">{{n.constructor.name}}</div>
-            <div class="palette_icon">
-                <!--<div class="palette_icon" style="background-image: url(icons/function.png)"></div>-->
-            </div>
-            <div class="palette_port output"></div>
-            <div class="palette_port input"></div>
-        </div>
+<div class="palette">
+  <div class="palette_property">
+    <div class="palette_title">
+      {{palette.staticPropertyTitle}}
     </div>
+    <div class="palette_node-group ui-draggable" *ngFor="let n of palette.nodes; let i=index; trackBy:index" attr.data-index="{{i}}">
+      <div class="palette-function">
+        <div class="palette_node">
+          <div class="palette_label" dir="">{{n.name}}</div>
+          <div class="palette_icon">
+            <!--<div class="palette_icon" style="background-image: url(icons/function.png)"></div>-->
+          </div>
+          <div class="palette_port output"></div>
+          <div class="palette_port input"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="palette_property" *ngIf="palette.connections && palette.connections.length > 0">
+    <div class="palette_title">
+      {{palette.dynamicPropertyTitle}}
+    </div>
+    <div class="palette_node-group" *ngFor="let c of palette.connections; let j=index; trackBy:index" attr.data-index="{{j}}">
+      <div class="palette_connection">
+        <div class="palette_connection-title">
+          {{c.title}}
+        </div>
+        <div class="palette_node_group ui-draggable" *ngFor="let n of c.properties; let m=index; trackBy:index" attr.data-index="{{m}}">
+          <div class="palette-function">
+            <div class="palette_node">
+              <div class="palette_label" dir="">{{n.name}}</div>
+              <div class="palette_icon">
+                <!--<div class="palette_icon" style="background-image: url(icons/function.png)"></div>-->
+              </div>
+              <div class="palette_port output"></div>
+              <div class="palette_port input"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

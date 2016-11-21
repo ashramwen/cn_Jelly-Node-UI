@@ -1,10 +1,10 @@
 import { JNBaseNode } from '../../../core/models/jn-base-node.type';
-import { JNPaletteNode } from '../palette-node.type';
-import { JNPaletteConnection } from '../palette-connections.type';
 import { JNApplication } from '../../../core/services/application-core.service';
 import { JNUtils } from '../../../share/util';
 import { JNDeviceTypeNode } from '../../../externals/nodes/device-type-node/device-type-node.type';
 import { ConditionNodeService } from '../../../externals/nodes/condition-node/condition-node.service';
+import { JNPaletteConnection } from './palette-connections.type';
+import { JNPaletteNode } from './palette-node.type';
 
 export class JNPaletteModel {
   staticPropertyTitle: String = "nodes";
@@ -23,7 +23,10 @@ export class JNPaletteModel {
     return nodes;
   }
 
-  constructor(){
+  constructor() {
+  }
+
+  public init(input?) {
     this.nodes = JNPaletteModel.getNodes(null);
     this.connections = [];
   }

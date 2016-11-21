@@ -1,5 +1,4 @@
-import { JNBaseNode } from '../../core/models/jn-base-node.type';
-import { JNLocationNode } from '../../externals/nodes/location-node/location-node.type';
+import { JNBaseNode } from '../../../core/models/jn-base-node.type';
 
 export class JNPaletteNode {
   type: typeof JNBaseNode;

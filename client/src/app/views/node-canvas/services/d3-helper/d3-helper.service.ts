@@ -186,10 +186,10 @@ export class D3HelperService {
 
     // node text
     g.insert('svg:text')
-      .attr('x', 50)
+      .attr('x', 45)
       .attr('y', 20)
       .text(d => {
-        return this.nodeFlow.nodes[d.id].constructor.name;
+        return `${d.id}:${this.nodeFlow.nodes[d.id].constructor.name}`;
       });
 
     // node icon right path

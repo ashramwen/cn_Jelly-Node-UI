@@ -31,10 +31,15 @@ svg {
         stroke-width: 2px;
         fill: transparent;
     }
-    g.link path {
-        stroke: #000;
-        stroke-width: 2px;
-        fill: transparent;
+    g.link {
+        path {
+            stroke: #000;
+            stroke-width: 2px;
+            fill: transparent;
+        }
+        &.active path {
+            stroke: #ffa500;
+        }
     }
 }
 

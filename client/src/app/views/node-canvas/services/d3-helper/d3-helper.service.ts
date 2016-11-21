@@ -32,15 +32,15 @@ export class D3HelperService {
   nodeFlow: JNFlow;
 
   constructor(private events: Events) {
-    this.nodeFlow = new JNFlow();
     this.data = [];
     this.links = [];
     this.inputs = [];
     this.outputs = [];
   }
 
-  init() {
+  init(_nodeFlow: JNFlow) {
     let self = this;
+    self.nodeFlow = _nodeFlow;
     // let NODE_WIDTH = this.NODE_WIDTH;
     // let NODE_HEIGHT = this.NODE_HEIGHT;
 

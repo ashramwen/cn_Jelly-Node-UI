@@ -17,7 +17,7 @@ import { JNCondtionPaletteMode } from './condition-node-palette-model.type';
   borderColor: '',
   editorModel: JNConditionNodeEditorModel,
   infoPanelModel: null,
-  paletteModel: new JNCondtionPaletteMode(),
+  paletteModel: JNCondtionPaletteMode,
   accepts: ['DeviceProperty'],
   modelRules: [{
     message: '属性条件值不能为空',

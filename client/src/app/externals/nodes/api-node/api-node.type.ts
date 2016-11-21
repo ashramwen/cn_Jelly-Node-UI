@@ -14,7 +14,7 @@ import { JNApiPaletteModel } from './api-node-palette-model.type';
   borderColor: '',
   editorModel: JNApiNodeEditorModel,
   infoPanelModel: null,
-  paletteModel: new JNApiPaletteModel(),
+  paletteModel: JNApiPaletteModel,
   accepts: ['Rule'],
   modelRules: [{
     message: 'API名称不能为空',

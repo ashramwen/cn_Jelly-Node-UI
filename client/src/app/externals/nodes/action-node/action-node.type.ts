@@ -18,7 +18,7 @@ import { JNActionPaletteModel } from './action-node-palette-model.type';
   borderColor: '',
   editorModel: JNActionNodeEditorModel,
   infoPanelModel: null,
-  paletteModel: new JNActionPaletteModel(),
+  paletteModel: JNActionPaletteModel,
   accepts: ['DeviceType'],
   modelRules: [{
     message: '必须选择一个行为',

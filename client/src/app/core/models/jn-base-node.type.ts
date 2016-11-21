@@ -300,7 +300,7 @@ export abstract class JNBaseNode {
 
   public createPaletteModel() {
     let clazz = <typeof JNBaseNode>(this.constructor);
-    let paletteModel: JNPaletteModel = <any>clazz.paletteModel;
+    let paletteModel: JNPaletteModel = new (<any>clazz.paletteModel);
     paletteModel.init(this.body);
     return paletteModel;
   }

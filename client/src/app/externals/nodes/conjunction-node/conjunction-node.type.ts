@@ -11,7 +11,7 @@ import { JNConjunctionPaletteModel } from './conjunction-node-palette-model.type
   borderColor: '',
   editorModel: JNConjunctionNodeEditorModel,
   infoPanelModel: null,
-  paletteModel: new JNConjunctionPaletteModel(),
+  paletteModel: JNConjunctionPaletteModel,
   accepts: ['Condition', 'Conjunction'],
   modelRules: [{
     message: '连接表达式不能为空',

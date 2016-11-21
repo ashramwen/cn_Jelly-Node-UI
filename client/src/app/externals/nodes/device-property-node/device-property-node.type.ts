@@ -16,7 +16,7 @@ import { JNDevicePropertyPaletteModel } from './device-property-node-palette-mod
   borderColor: '',
   editorModel: JNDevicePropertyNodeEditorModel,
   infoPanelModel: null,
-  paletteModel: new JNDevicePropertyPaletteModel(),
+  paletteModel: JNDevicePropertyPaletteModel,
   accepts: ['DeviceType'],
   modelRules: [{
     message: '必须选择一个属性',

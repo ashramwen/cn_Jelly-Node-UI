@@ -13,7 +13,7 @@ import { JNTimeNode } from '../time-node/time-node.type';
   borderColor: '',
   editorModel: JNRuleNodeEditorModel,
   infoPanelModel: null,
-  paletteModel: new JNRulePaletteModel(),
+  paletteModel: JNRulePaletteModel,
   accepts: ['Condition', 'Conjunction', 'Time'],
   modelRules: [{
     message: '必须包含规则名称',

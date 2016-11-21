@@ -11,7 +11,7 @@ import { JNTimePaletteModel } from './time-node-palette-mode.type';
   borderColor: '',
   editorModel: JNTimeNodeEditorModel,
   infoPanelModel: null,
-  paletteModel: new JNTimePaletteModel(),
+  paletteModel: JNTimePaletteModel,
   accepts: [],
   modelRules: [{
     message: '必须选择一种间隔类型',

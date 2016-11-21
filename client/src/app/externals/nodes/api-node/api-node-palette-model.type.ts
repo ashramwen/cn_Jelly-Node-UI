@@ -5,10 +5,9 @@ export class JNApiPaletteModel extends JNPaletteModel {
 
   constructor(){
     super();
-    this.init();
   }
 
-  public init() {
+  public init(body) {
     this.nodes = JNPaletteModel.getNodes(JNApiNode);
   }
 

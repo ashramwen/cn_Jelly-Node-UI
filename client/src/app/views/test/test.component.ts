@@ -21,7 +21,6 @@ import { JNPaletteModel } from '../palette/interfaces/palette-model.type';
 
     <div class="editor-modal" [hidden]="!editorShown">
       <div class="editor-modal-content" (click)="$event.stopPropagation()">
-        <jn-node-editor [targetNode]="selectedNode" (submitted)="hideEditor()"></jn-node-editor>
       </div>
       <div class="editor-model-backdrop" (click)="hideEditor()"></div>
     </div>

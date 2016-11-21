@@ -29,14 +29,11 @@ import { Subscription } from 'rxjs';
   template: require('./node-editor.component.html'),
   styles: [require('./node-editor.component.scss')]
 })
-export class JNEditFormComponent implements OnInit, OnChanges {
+export class JNEditFormComponent implements OnInit {
 
-  editorModel: JNEditorModel;
-  @Input()
-  targetNode: JNBaseNode;
-
-  @Output()
-  submitted = new EventEmitter();
+  private editorModel: JNEditorModel;
+  private targetNode: JNBaseNode;
+  private editorShown: boolean;
 
   private controls: IJNFormControl[] = [];
   private formGroup: FormGroup = new FormGroup({});
@@ -95,16 +92,11 @@ export class JNEditFormComponent implements OnInit, OnChanges {
       }`
     });
     */
-    this.events.on('node_click', node => {
-      console.log('node_click', node);
-    });
-    this.events.on('node_dblclick', node => {
-      console.log('node_dblclick', node);
-    });
   }
 
-  ngOnChanges(value: { [key: string]: SimpleChange }) {
-    if (!value['targetNode'].currentValue) return;
+  public show(node: JNBaseNode) {
+    this.targetNode = node;
+    this.editorShown = true;
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
@@ -113,21 +105,29 @@ export class JNEditFormComponent implements OnInit, OnChanges {
       this.subscription = this.editorModel.viewModelChange.subscribe(() => {
         this.controls = this.editorModel.controlsToArray();
       });
-      console.log(value);
       // this.editorModel = node.createEditorModel();
       this.prepare();
     });
   }
 
-  prepare() {
+  public hide() {
+    this.editorShown = false;
+    this.editorModel = null;
+  }
+
+  private prepare() {
     if (!this.editorModel) return;
     this.formGroup = this.editorModel.formGroup;
     this.controls = this.editorModel.controlsToArray();
   }
 
-  submit() {
+  private submit() {
     let result = this.editorModel.submit();
     this.targetNode.update(result);
-    this.submitted.emit(result);
+    this.hideEditor();
+  }
+
+  private hideEditor() {
+    this.editorShown = false;
   }
 }

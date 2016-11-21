@@ -1,30 +1,55 @@
 @import "../../../assets/styles/global";
 
-.node-editor{
-  display: flex;
-  flex-direction: column;
+.editor-modal{
+  width: 100%;
   height: 100%;
-  .node-editor-header{
-    height: 35px;
-    line-height: 35px;
-    background: #006621;
-    padding: 5px;
-    color: #f0f0f0;
-    border-bottom: solid 1px #ccc;
-  }
+  top: 0px;
+  position: absolute;
 
-  .node-editor-body{
-    flex: 1;
-    overflow: auto;
-    padding: 5px 0px;
+  .editor-model-backdrop{
+    background: rgba(0,0,0, 0.3);
+    width: 100%;
+    height: 100%;
+    z-index: 1;
   }
+  .editor-modal-content{
+    height: 100%;
+    position: absolute;
+    right: 0px;
+    width: 450px;
+    border-left: 1px solid #666;
+    background: #fff;
+    z-index: 2;
+    display: flex;
+        
+    .node-editor{
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      .node-editor-header{
+        height: 35px;
+        line-height: 35px;
+        background: #006621;
+        padding: 5px;
+        color: #f0f0f0;
+        border-bottom: solid 1px #ccc;
+      }
 
-  .node-editor-footer{
-    box-shadow: 2px 1px 5px 1px rgba(0,0,0, 0.2);
-    padding: 5px;
-    border-top: 1px solid #ccc;
-    height: 35px;
-    background: #f0f0f0;
-    line-height: 35px;
+      .node-editor-body{
+        flex: 1;
+        overflow: auto;
+        padding: 5px 0px;
+      }
+
+      .node-editor-footer{
+        box-shadow: 2px 1px 5px 1px rgba(0,0,0, 0.2);
+        padding: 5px;
+        border-top: 1px solid #ccc;
+        height: 35px;
+        background: #f0f0f0;
+        line-height: 35px;
+      }
+    }
   }
 }

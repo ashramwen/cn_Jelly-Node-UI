@@ -11,7 +11,7 @@ import { JNPaletteNode } from '../../../views/palette/interfaces/palette-node.ty
 
 export class JNDeviceTypePaletteModel extends JNPaletteModel {
 
-  protected createConnection(): JNPaletteConnection[] {
+  protected createConnections(): JNPaletteConnection[] {
     let typeName = (<JNDeviceTypeNode>this.node).body.typeName;
     if (!typeName) return [];
 

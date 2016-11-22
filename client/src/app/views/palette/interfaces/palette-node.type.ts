@@ -30,8 +30,8 @@ export class JNPaletteNode {
     this.color = (<typeof JNBaseNode>nodeType.constructor).color;
     this.borderColor = (<typeof JNBaseNode>nodeType.constructor).borderColor;
     if (selectedNodeType) {
-      this.acceptable = selectedNodeType.connectable(nodeType, selectedNodeType);
-      this.directable = selectedNodeType.connectable(selectedNodeType, nodeType);
+      this.acceptable = selectedNodeType.connectable(selectedNodeType, nodeType);
+      this.directable = selectedNodeType.connectable(nodeType, selectedNodeType);
       if (!this.acceptable && !this.directable) {
         this.disabled = true;
       } else {

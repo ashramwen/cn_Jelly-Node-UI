@@ -15,7 +15,7 @@ export abstract class JNPaletteModel {
     return this.getNodes();
   }
 
-  get connections(): JNPaletteConnection[]{
+  get connections(): JNPaletteConnection[] {
     return this.createConnections();
   }
 

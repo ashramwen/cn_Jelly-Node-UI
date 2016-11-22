@@ -10,7 +10,7 @@ import { JNDeviceTypeNode } from '../device-type-node/device-type-node.type';
 
 export class JNDevicePropertyPaletteModel extends JNPaletteModel {
 
-  createConnection(): JNPaletteConnection[] {
+  createConnections(): JNPaletteConnection[] {
     let schemas = RuleApplication.instance.resources.$schema.schemas;
     let deviceTypes = Object.keys(schemas);
     let connection = new JNPaletteConnection();

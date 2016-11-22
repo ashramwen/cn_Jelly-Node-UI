@@ -1,5 +1,4 @@
 import * as $ from 'jquery';
-import 'jqueryui';
 
 import { Directive, OnInit, Component, ViewEncapsulation, Input, ElementRef } from '@angular/core';
 import { JNFlow } from './../../core/models/jn-flow.type';
@@ -55,7 +54,7 @@ export class NodeCanvasComponent implements OnInit {
       }
     });
     */
-    this.canvas = $(this.elementRef.nativeElement).find('svg')[0];
+    this.canvas = this.elementRef.nativeElement.querySelector('svg');
     this.d3Helper.init(this.canvas);
   }
 

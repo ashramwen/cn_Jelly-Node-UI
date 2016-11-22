@@ -45,6 +45,6 @@ export class NodeCanvasComponent implements OnInit {
     let property = e.dragData.property || {};
     Object.assign(property, { position: position });
     let node = this.nodeFlow.createNode(<any>nodeType, property);
-    this.d3Helper.drawNode(this.nodeFlow.nodes);
+    this.d3Helper.addNode(node);
   }
 }

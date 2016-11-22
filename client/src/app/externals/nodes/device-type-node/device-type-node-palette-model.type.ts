@@ -10,52 +10,26 @@ import { JNPaletteConnection } from '../../../views/palette/interfaces/palette-c
 import { JNPaletteNode } from '../../../views/palette/interfaces/palette-node.type';
 
 export class JNDeviceTypePaletteModel extends JNPaletteModel {
-  nodes = [];
-  connections = [];
-  static connectionTitle = '设备种类';
 
-  constructor() {
-    super();
-  }
+  protected createConnection(): JNPaletteConnection[] {
+    let typeName = (<JNDeviceTypeNode>this.node).body.typeName;
+    if (!typeName) return [];
 
-  public init(body) {
-    this.nodes = JNPaletteModel.getNodes(JNDeviceTypeNode);
-    this.connections = [];
-    let connection = {};
-    let connections = [];
-    if (body.typeName) {
-      connection = JNDevicePropertyPaletteModel.createConnection(JNDeviceTypeNode, body.typeName);
-      connections.push(connection);
-    }
-    this.connections = connections;
-  }
-
-  static createProperty(value: string): Object {
-    let property = {
-      "typeName": value
-    }
-    return property;
-  }
-
-  static getName(nodeType: new () => JNBaseNode, data?: any): string {
-    return JNBaseNode.factory(nodeType, data).name;
-  }
-
-  static createConnection(selectedNodeType: typeof JNBaseNode): JNPaletteConnection {
     let schemas = RuleApplication.instance.resources.$schema.schemas;
-    let deviceTypes = Object.keys(schemas);
+    let deviceProperties = Object.keys(schemas[typeName].content.statesSchema.properties);
     let connection = new JNPaletteConnection();
-    let data: Object = {};
-
-    connection.title = JNDeviceTypePaletteModel.connectionTitle;
+    connection.title = '设备属性';
     connection.properties = [];
-    deviceTypes.forEach(function (deviceType) {
-      data = JNDeviceTypePaletteModel.createProperty(deviceType);
-      if (schemas[deviceType]) {
-        connection.properties.push(new JNPaletteNode(selectedNodeType, JNDeviceTypeNode,
-          JNBaseNode.getName(JNDeviceTypeNode, data)));
-      }
-    })
-    return connection;
+    deviceProperties.forEach((deviceProperty) => {
+      let data: Object = {};
+      data = {
+        typeName: typeName,
+        property: deviceProperty
+      };
+      connection.properties.push(new JNPaletteNode(<typeof JNBaseNode>this.node.constructor, JNDevicePropertyNode,
+        JNBaseNode.getName(JNDevicePropertyNode, data), data));
+    });
+
+    return [connection];
   }
 }

@@ -1,25 +1,25 @@
 .palette {
   overflow: scroll !important;
-  .palette_property {
+  .palette-property {
     border-bottom: 1px solid;
-    .palette_title {
+    .palette-title {
       padding: 10px 0;
       text-align: center;
       background-color: #e1e1e1;
       font-size: 16px;
       border-bottom: 1px solid;
     }
-    .palette_connection {
+    .palette-connection {
       border-bottom: 1px solid;
-      .palette_connection-title {
+      .palette-connection-title {
         padding: 5px 0;
         font-size: 14px;
         text-align: center;
         border-bottom: 1px solid;
       }
     }
-    .palette_node-group {
-      .palette_node {
+    .palette-node-group {
+      .palette-node {
         position: relative;
         width: 180px;
         height: 40px;
@@ -31,14 +31,14 @@
         background-position: 5% 50%;
         background-repeat: no-repeat;
         background-size: contain;
-        .palette_label {
+        .palette-label {
           font-size: 14px;
           margin-left: 40px;
           line-height: 40px;
           overflow: hidden;
           text-align: center;
         }
-        .palette_icon {
+        .palette-icon {
           position: absolute;
           text-align: center;
           top: 0;
@@ -48,7 +48,7 @@
           border-right: 1px solid #000;
           /*background-color: rgba(0, 0, 0, 0.05);*/
         }
-        .palette_port {
+        .palette-port {
           position: absolute;
           top: 15px;
           left: -5px;

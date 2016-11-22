@@ -1,7 +1,11 @@
 import { JNBaseNode } from '../../../core/models/jn-base-node.type';
+import { JNApiNode } from '../../../externals/nodes/api-node/api-node.type';
+import { JNApplication } from '../../../core/services/application-core.service';
+import { JNUtils } from '../../../share/util';
 
 export class JNPaletteNode {
   type: typeof JNBaseNode;
+  typeName: string;
   property: Object;
   name: string;
   icon: String;
@@ -13,6 +17,9 @@ export class JNPaletteNode {
 
   constructor(selectedNodeType: typeof JNBaseNode, nodeType: typeof JNBaseNode, name: string, property?: Object) {
     this.type = nodeType;
+    this.typeName = JNUtils.toArray<typeof JNBaseNode>(JNApplication.instance.nodeTypeMapper)
+      .find(p => p.value === this.type).key;
+
     this.name = name;
     if (property) {
       this.property = property;

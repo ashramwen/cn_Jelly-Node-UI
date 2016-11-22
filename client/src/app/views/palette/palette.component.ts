@@ -19,6 +19,8 @@ import { JNApplication, APP_READY } from '../../core/services/application-core.s
 import { JNPaletteModel } from './interfaces/palette-model.type';
 import { Events } from '../../core/services/event.service';
 import { JNDeviceTypePaletteModel } from '../../externals/nodes/device-type-node/device-type-node-palette-model.type';
+import { JNPaletteNode } from './interfaces/palette-node.type';
+import { JNPaletteConnection } from './interfaces/palette-connections.type';
 
 @Component({
   selector: 'jn-palette',
@@ -26,49 +28,49 @@ import { JNDeviceTypePaletteModel } from '../../externals/nodes/device-type-node
   styleUrls: ['./palette.component.scss']
 })
 export class PaletteComponent implements OnInit, AfterViewInit {
-  constructor(private application: JNApplication, private events: Events) { }
 
-  nodeFlow: JNFlow;
-  palette: JNPaletteModel;
+  flowNodes: JNPaletteNode[];
+  connections: JNPaletteConnection[];
+
+  constructor(private application: JNApplication, private events: Events) {
+    this.flowNodes = [];
+    this.connections = [];
+  }
 
   ngOnInit() {
-    this.nodeFlow = new JNFlow();
-    this.nodeFlow.createNode(JNLocationNode);
-    this.nodeFlow.createNode(JNDeviceTypeNode);
-    console.log('node flow', this.nodeFlow);
-
-    //init
-    this.palette = new JNPaletteModel();
     this.events.on(APP_READY, () => {
-      this.palette.init();
-      //test
-      let node = new JNDevicePropertyNode();
-      this.palette = node.createPaletteModel();
-      console.log('palette', this.palette);
-      //node selected
-      this.events.on('node_click', node => {
-        this.palette = node.createPaletteModel();
+      this.flowNodes = JNPaletteModel.getNodes();
+      this.events.on('node_click', (node: JNBaseNode) => {
+        let palette = node.createPaletteModel();
+        this.flowNodes = palette.nodes;
+        this.connections = palette.connections;
+      });
     });
-    })
   }
 
   ngAfterViewInit() {
     let self = this;
-    $('.ui-draggable').draggable({
-      helper: 'clone',
-      appendTo: '#chart',
-      // containment: '',
-      start: function (event, ui) {
-        let i = $(this).data('index');
-        $(this).data('node', self.nodeFlow.nodes[i]);
-      },
-      drag: function (e, ui) {
-        // console.log('palette drag start.');
+    this.events.on(APP_READY, () => {
+      /*
+      setTimeout(() => {
+        $('.ui-draggable').draggable({
+          helper: 'clone',
+          appendTo: '#chart',
+          // containment: '',
+          start: function (event, ui) {
+            let i = $(this).data('index');
+            $(this).data('node', self.flowNodes[i]);
+          },
+          drag: function (e, ui) {
+            // console.log('palette drag start.');
 
-      },
-      stop: function (e, ui) {
-        // console.log('palette drag stop.');
-      }
+          },
+          stop: function (e, ui) {
+            // console.log('palette drag stop.');
+          }
+        });
+      }, 2000);
+      */
     });
   }
 }

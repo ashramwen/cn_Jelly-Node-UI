@@ -40,11 +40,6 @@ export class TestComponent implements OnInit {
       let data = require('../../../assets/example.json');
       this.flow.loadData(data);
       console.log(this.flow.nodes);
-      let deviceTypeNode = new JNLocationPaletteModel();
-      let nodesWithNoSelected = new JNPaletteModel();
-
-      console.log(deviceTypeNode);
-      console.log(nodesWithNoSelected);
     });
 
   }

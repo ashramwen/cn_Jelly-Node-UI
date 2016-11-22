@@ -1,6 +1,3 @@
-import * as $ from 'jquery';
-import 'jqueryui';
-import * as d3 from "d3";
 import { ApplicationContextService } from './../../core/services/application-context.service';
 import { ConfigContextService } from './../../core/services/config-context.service';
 import { CacheContextService } from './../../core/services/cache-context.service';
@@ -27,7 +24,7 @@ import { JNPaletteConnection } from './interfaces/palette-connections.type';
   templateUrl: './palette.component.html',
   styleUrls: ['./palette.component.scss']
 })
-export class PaletteComponent implements OnInit, AfterViewInit {
+export class PaletteComponent implements OnInit {
 
   flowNodes: JNPaletteNode[];
   connections: JNPaletteConnection[];
@@ -45,32 +42,6 @@ export class PaletteComponent implements OnInit, AfterViewInit {
         this.flowNodes = palette.nodes;
         this.connections = palette.connections;
       });
-    });
-  }
-
-  ngAfterViewInit() {
-    let self = this;
-    this.events.on(APP_READY, () => {
-      /*
-      setTimeout(() => {
-        $('.ui-draggable').draggable({
-          helper: 'clone',
-          appendTo: '#chart',
-          // containment: '',
-          start: function (event, ui) {
-            let i = $(this).data('index');
-            $(this).data('node', self.flowNodes[i]);
-          },
-          drag: function (e, ui) {
-            // console.log('palette drag start.');
-
-          },
-          stop: function (e, ui) {
-            // console.log('palette drag stop.');
-          }
-        });
-      }, 2000);
-      */
     });
   }
 }

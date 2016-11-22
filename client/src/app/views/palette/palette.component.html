@@ -4,7 +4,7 @@
       {{'节点面板' | translate}}
     </div>
     <div class="palette-node-container">
-      <div draggable class="palette-node-group" [dragData]="node" *ngFor="let node of flowNodes;">
+      <div jn-draggable class="palette-node-group" [dragData]="node" *ngFor="let node of flowNodes;">
         <div class="palette-function">
           <div class="palette-node">
             <div class="palette-label" dir="">{{node.name | translate}}</div>
@@ -28,7 +28,7 @@
           {{connection.title}}
         </div>
         <div class="palette-node-container">
-          <div draggable [dragData]="node" class="palette-node-group ui-draggable" *ngFor="let node of c.properties;">
+          <div jn-draggable [dragData]="node" class="palette-node-group" *ngFor="let node of c.properties;">
             <div class="palette-function">
               <div class="palette-node">
                 <div class="palette-label" dir="">{{node.name}}</div>

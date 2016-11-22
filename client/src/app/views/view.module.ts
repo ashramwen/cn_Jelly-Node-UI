@@ -2,9 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { MaterialModule } from '@angular/material';
 import { ReactiveFormsModule } from '@angular/forms';
+
 import { NodeEditorModule } from './node-editor';
-
-
 import { FlowComponent } from './flow/flow.component';
 import { FlowDetailComponent } from './flow/flow-detail/flow-detail.component';
 import { PaletteComponent } from './palette/palette.component';
@@ -15,9 +14,9 @@ import { PaletteModule } from './palette/palette.module';
 @NgModule({
   imports: [
     BrowserModule, MaterialModule.forRoot(), ReactiveFormsModule,
-    NodeEditorModule, NodeCanvasModule, PaletteModule
+    NodeEditorModule, NodeCanvasModule, PaletteModule, PaletteModule
   ],
-  exports: [MaterialModule],
+  exports: [MaterialModule, PaletteModule],
   declarations: [
     FlowComponent,
     FlowDetailComponent

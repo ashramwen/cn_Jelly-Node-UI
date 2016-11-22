@@ -66,17 +66,19 @@ export class Droppable {
     }
 
     @HostListener('drop', ['$event'])
-    drop(e) {
-        e.target.classList.remove(this.dragOverClass);
+    drop(e: DragEvent) {
+        (<Element>e.target).classList.remove(this.dragOverClass);
         e.preventDefault();
         e.stopPropagation();
         let data;
+        let offset;
         try {
+            offset = JSON.parse(e.dataTransfer.getData('offset'));
             data = JSON.parse(e.dataTransfer.getData('application/json'));
         } catch (e) {
             data = e;
         }
-        this.onDrop.emit(new DropEvent(e, data));
+        this.onDrop.emit(new DropEvent(e, data, offset));
     }
 
     allowDrop(e): boolean {

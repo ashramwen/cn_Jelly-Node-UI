@@ -63,12 +63,13 @@ export class Draggable implements AfterViewInit {
 
     private mouseOverElement: any;
 
-    dragStart(e) {
+    dragStart(e: DragEvent) {
         if (this.allowDrag()) {
-            e.target.classList.add(this.dragOverClass);
+            (<Element>e.target).classList.add(this.dragOverClass);
             e.dataTransfer.setData('application/json', JSON.stringify(this.dragData));
             e.dataTransfer.setData(this.dragScope, this.dragScope);
-            // e.stopPropagation();
+            e.dataTransfer.setData('offset', JSON.stringify({ x: e.offsetX, y: e.offsetY }));
+            e.stopPropagation();
             this.onDragStart.emit(e);
         } else {
             e.preventDefault();
@@ -84,7 +85,7 @@ export class Draggable implements AfterViewInit {
     dragEnd(e) {
         e.target.classList.remove(this.dragOverClass);
         this.onDragEnd.emit(e);
-        // e.stopPropagation();
+        e.stopPropagation();
         e.preventDefault();
     }
 

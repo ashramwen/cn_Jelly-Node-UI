@@ -2,7 +2,7 @@ import { Directive, ElementRef, HostListener, Input, Output, EventEmitter, After
 import * as $ from 'jquery';
 
 @Directive({
-    selector: '[jn-draggable]',
+    selector: '[draggable]',
     host: {
         '[draggable]': 'true'
         // '[stype.user-drag]': ''

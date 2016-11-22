@@ -11,7 +11,7 @@ export interface INodeOptions {
   title: string;
   editorModel: typeof JNEditorModel;
   infoPanelModel: IJNInfoPanelModel;
-  paletteModel: JNPaletteModel;
+  paletteModel: typeof JNPaletteModel;
   accepts: string[];
   modelRules?: { message: string, validator: (model: JNNodeModel<any>) => boolean }[];
   connectRules?: IConnectRuleSetting;

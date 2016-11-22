@@ -1,8 +1,11 @@
-import { JNBaseNode } from '../../core/models/jn-base-node.type';
-import { JNLocationNode } from '../../externals/nodes/location-node/location-node.type';
+import { JNBaseNode } from '../../../core/models/jn-base-node.type';
+import { JNApiNode } from '../../../externals/nodes/api-node/api-node.type';
+import { JNApplication } from '../../../core/services/application-core.service';
+import { JNUtils } from '../../../share/util';
 
 export class JNPaletteNode {
   type: typeof JNBaseNode;
+  typeName: string;
   property: Object;
   name: string;
   icon: String;
@@ -14,6 +17,9 @@ export class JNPaletteNode {
 
   constructor(selectedNodeType: typeof JNBaseNode, nodeType: typeof JNBaseNode, name: string, property?: Object) {
     this.type = nodeType;
+    this.typeName = JNUtils.toArray<typeof JNBaseNode>(JNApplication.instance.nodeTypeMapper)
+      .find(p => p.value === this.type).key;
+
     this.name = name;
     if (property) {
       this.property = property;
@@ -24,8 +30,8 @@ export class JNPaletteNode {
     this.color = (<typeof JNBaseNode>nodeType.constructor).color;
     this.borderColor = (<typeof JNBaseNode>nodeType.constructor).borderColor;
     if (selectedNodeType) {
-      this.acceptable = selectedNodeType.connectable(nodeType, selectedNodeType);
-      this.directable = selectedNodeType.connectable(selectedNodeType, nodeType);
+      this.acceptable = selectedNodeType.connectable(selectedNodeType, nodeType);
+      this.directable = selectedNodeType.connectable(nodeType, selectedNodeType);
       if (!this.acceptable && !this.directable) {
         this.disabled = true;
       } else {

@@ -3,13 +3,4 @@ import { JNPaletteModel } from '../../../views/palette/interfaces/palette-model.
 
 export class JNActionPaletteModel extends JNPaletteModel {
 
-  constructor(){
-    super();
-    this.init();
-  }
-  
-  public init() {
-    this.nodes = JNPaletteModel.getNodes(JNActionNode);
-  }
-
 }

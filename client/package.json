@@ -89,6 +89,7 @@
     "jquery": "^3.1.1",
     "jqueryui": "^1.11.1",
     "lodash": "^4.15.0",
+    "ng2-drag-drop": "~0.4.0",
     "ng2-jsoneditor": "^0.1.0",
     "ng2-resource-rest": "^1.5.1",
     "ng2-select": "^1.1.2",
@@ -98,9 +99,10 @@
     "zone.js": "^0.6.12"
   },
   "devDependencies": {
+    "@types/core-js": "^0.9.34",
+    "@types/d3": "^3.5.36",
     "@types/d3-drag": "^1.0.5",
     "@types/d3-selection": "^1.0.5",
-    "@types/core-js": "^0.9.34",
     "@types/hammerjs": "^2.0.33",
     "@types/jasmine": "^2.2.34",
     "@types/jquery": "^2.0.33",
@@ -112,8 +114,8 @@
     "@types/source-map": "^0.1.27",
     "@types/uglify-js": "^2.0.27",
     "@types/webpack": "^1.12.34",
-    "@types/d3": "^3.5.36",
     "angular2-template-loader": "^0.5.0",
+    "angular2-router-loader": "^0.3.4",
     "awesome-typescript-loader": "^2.2.4",
     "codelyzer": "^1.0.0-beta.3",
     "compression-webpack-plugin": "^0.3.1",
@@ -160,7 +162,7 @@
     "url-loader": "^0.5.7",
     "webpack": "2.1.0-beta.25",
     "webpack-dev-middleware": "^1.6.1",
-    "webpack-dev-server": "^2.1.0-beta.9",
+    "webpack-dev-server": "2.1.0-beta.9",
     "webpack-md5-hash": "^0.0.5",
     "webpack-merge": "^0.15.0"
   },

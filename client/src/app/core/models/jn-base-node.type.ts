@@ -48,7 +48,7 @@ export abstract class JNBaseNode {
   static nodeModel: typeof JNNodeModel;
   static editorModel: typeof JNEditorModel;
   static infoModel: IJNInfoPanelModel;
-  static paletteModel: JNPaletteModel;
+  static paletteModel: typeof JNPaletteModel;
   static outputable: boolean;
   static modelRules: { message: string, validator: (model: JNNodeModel<any>) => boolean }[];
   static connectRules: IConnectRuleSetting;
@@ -237,12 +237,12 @@ export abstract class JNBaseNode {
    * @desc remove node
    */
   public remove() {
-    JNUtils.toArray(this.nodeMap.accepted).forEach((t: { key: string; value: JNBaseNode}) => {
+    JNUtils.toArray(this.nodeMap.accepted).forEach((t: { key: string; value: JNBaseNode }) => {
       let node = t.value;
       delete node.nodeMap.outputTo[node.body.nodeID];
     });
 
-    JNUtils.toArray(this.nodeMap.outputTo).forEach((t: { key: string; value: JNBaseNode}) => {
+    JNUtils.toArray(this.nodeMap.outputTo).forEach((t: { key: string; value: JNBaseNode }) => {
       let node = t.value;
       delete node.nodeMap.accepted[node.body.nodeID];
       node.reject(this);
@@ -291,21 +291,21 @@ export abstract class JNBaseNode {
   /**
    * @desc create an editor model instance
    */
-  public createEditorModel() {
+  public createEditorModel(): JNEditorModel {
     let clazz = <typeof JNBaseNode>(this.constructor);
     let editorModel: JNEditorModel = new (<any>clazz.editorModel);
     editorModel.load(this.model.clone());
     return editorModel;
   }
 
-  public createPaletteModel() {
+  public createPaletteModel(): JNPaletteModel {
     let clazz = <typeof JNBaseNode>(this.constructor);
-    let paletteModel: JNPaletteModel = new (<any>clazz.paletteModel);
+    let paletteModel: JNPaletteModel = new (<any>clazz.paletteModel)(this);
     return paletteModel;
   }
 
   public createInfoPanelModel() {
-    
+
   }
 
   /**
@@ -323,7 +323,7 @@ export abstract class JNBaseNode {
    * @desc type-level connectable check
    * @param  {typeof JNBaseNode} target
    */
-  private _shouldReject(target: typeof JNBaseNode): {message: string} {
+  private _shouldReject(target: typeof JNBaseNode): { message: string } {
     let accepts = (<typeof JNBaseNode>this.constructor).accepts
       .map(nodeName => JNApplication.instance.nodeTypeMapper[nodeName]);
     if (!accepts || !accepts.length) {

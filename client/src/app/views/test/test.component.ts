@@ -11,6 +11,7 @@ import { JNDeviceTypeNode } from '../../externals/nodes/device-type-node/device-
 import { JNLocationPaletteModel } from '../../externals/nodes/location-node/location-node-palette-model.type';
 import { JNRulePaletteModel } from '../../externals/nodes/rule-node/rule-node-palette-model.type';
 import { JNPaletteModel } from '../palette/interfaces/palette-model.type';
+import { JNLocationNode } from '../../externals/nodes/location-node/location-node.type';
 
 @Component({
   selector: 'test',
@@ -21,7 +22,6 @@ import { JNPaletteModel } from '../palette/interfaces/palette-model.type';
 
     <div class="editor-modal" [hidden]="!editorShown">
       <div class="editor-modal-content" (click)="$event.stopPropagation()">
-        <jn-node-editor [targetNode]="selectedNode" (submitted)="hideEditor()"></jn-node-editor>
       </div>
       <div class="editor-model-backdrop" (click)="hideEditor()"></div>
     </div>
@@ -40,11 +40,6 @@ export class TestComponent implements OnInit {
       let data = require('../../../assets/example.json');
       this.flow.loadData(data);
       console.log(this.flow.nodes);
-      let deviceTypeNode = new JNDevicePropertyPaletteModel();
-      let nodesWithNoSelected = new JNPaletteModel();
-
-      console.log(deviceTypeNode);
-      console.log(nodesWithNoSelected);
     });
 
   }

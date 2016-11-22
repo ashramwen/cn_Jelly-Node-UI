@@ -13,7 +13,7 @@ import { JNDeviceTypeNode } from '../device-type-node/device-type-node.type';
   borderColor: '',
   editorModel: JNLocationNodeEditorModel,
   infoPanelModel: null,
-  paletteModel: null,
+  paletteModel: JNLocationPaletteModel,
   accepts: [],
   modelRules: [{
     message: '必须选择一个地址',

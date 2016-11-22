@@ -13,8 +13,8 @@ import { JNControlContainer } from './components/control-container/control-conta
 @NgModule({
   declarations: [JNEditFormComponent, JNControlContainer],
   imports: [
-    JNEditorControlModule.forRoot(), FormsModule,
-    ReactiveFormsModule, MaterialModule, TranslateModule, BrowserModule
+    JNEditorControlModule.forRoot(), ReactiveFormsModule, MaterialModule,
+    FormsModule, TranslateModule, BrowserModule
   ],
   exports: [JNEditFormComponent],
   providers: [...EDITOR_PROVIDERS, COMPILER_PROVIDERS]

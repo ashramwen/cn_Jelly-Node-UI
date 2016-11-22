@@ -6,15 +6,10 @@
                 <jn-palette></jn-palette>
             </div>
             <div class="canvas">
-                <jn-canvas></jn-canvas>
+                <jn-canvas [nodeFlow]="nodeFlow"></jn-canvas>
             </div>
             <div class="info-panel">info-panel</div>
         </div>
-        <div class="editor-modal" [hidden]="!editorShown">
-            <div class="editor-modal-content" (click)="$event.stopPropagation()">
-                <jn-node-editor [targetNode]="selectedNode"></jn-node-editor>
-            </div>
-            <div class="editor-model-backdrop" (click)="hideEditor()"></div>
-        </div>
+        <jn-node-editor #nodeEditor></jn-node-editor>
     </div>
 </div>

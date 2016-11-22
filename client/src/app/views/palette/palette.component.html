@@ -1,15 +1,46 @@
-<div>
-    palette
-</div>
-<div class="palette_node_group ui-draggable" *ngFor="let n of nodeFlow.nodes; let i=index; trackBy:index" attr.data-index="{{i}}">
-    <div class="palette-function">
-        <div class="palette_node">
-            <div class="palette_label" dir="">{{n.constructor.name}}</div>
-            <div class="palette_icon">
-                <!--<div class="palette_icon" style="background-image: url(icons/function.png)"></div>-->
-            </div>
-            <div class="palette_port output"></div>
-            <div class="palette_port input"></div>
-        </div>
+<div class="palette">
+  <div class="palette-property">
+    <div class="palette-title">
+      {{'节点面板' | translate}}
     </div>
+    <div class="palette-node-container">
+      <div draggable class="palette-node-group" [dragData]="node" *ngFor="let node of flowNodes;">
+        <div class="palette-function">
+          <div class="palette-node">
+            <div class="palette-label" dir="">{{node.name | translate}}</div>
+            <div class="palette-icon">
+              <!--<div class="palette-icon" style="background-image: url(icons/function.png)"></div>-->
+            </div>
+            <div class="palette-port output" [ngClass]="{'connectable': node.directable}"></div>
+            <div class="palette-port input" [ngClass]="{'connectable': node.acceptable}"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="palette-property" *ngIf="connections && connections.length > 0">
+    <div class="palette-title">
+      {{palette.dynamicPropertyTitle}}
+    </div>
+    <div *ngFor="let connection of connections; let j=index;">
+      <div class="palette-connection">
+        <div class="palette-connection-title">
+          {{connection.title}}
+        </div>
+        <div class="palette-node-container">
+          <div draggable [dragData]="node" class="palette-node-group ui-draggable" *ngFor="let node of connection.properties;">
+            <div class="palette-function">
+              <div class="palette-node">
+                <div class="palette-label" dir="">{{node.name}}</div>
+                <div class="palette-icon">
+                </div>
+                <div class="palette-port output" [ngClass]="{'connectable': node.directable}"></div>
+                <div class="palette-port input" [ngClass]="{'connectable': node.acceptable}"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

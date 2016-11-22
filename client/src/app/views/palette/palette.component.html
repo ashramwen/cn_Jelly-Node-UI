@@ -10,8 +10,8 @@
           <div class="palette_icon">
             <!--<div class="palette_icon" style="background-image: url(icons/function.png)"></div>-->
           </div>
-          <div class="palette_port output"></div>
-          <div class="palette_port input"></div>
+          <div class="palette_port output" [ngClass]="{'black': n.directable}"></div>
+          <div class="palette_port input" [ngClass]="{'black': n.acceptable}"></div>
         </div>
       </div>
     </div>
@@ -32,8 +32,8 @@
               <div class="palette_icon">
                 <!--<div class="palette_icon" style="background-image: url(icons/function.png)"></div>-->
               </div>
-              <div class="palette_port output"></div>
-              <div class="palette_port input"></div>
+              <div class="palette_port output" [ngClass]="{'black': n.directable}"></div>
+              <div class="palette_port input" [ngClass]="{'black': n.acceptable}"></div>
             </div>
           </div>
         </div>

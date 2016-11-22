@@ -4,6 +4,7 @@ import { JNBaseNode } from '../../../../core/models/jn-base-node.type';
 import { Injectable } from '@angular/core';
 import * as d3 from 'd3';
 import { JNUtils } from '../../../../share/util';
+import { TranslateService } from 'ng2-translate';
 
 interface CanvasPoint {
   x: number;
@@ -48,7 +49,7 @@ export class D3HelperService {
   private output_dragging = false;
 
 
-  constructor(private events: Events) {
+  constructor(private events: Events, private translate: TranslateService) {
     this.nodeFlow = new JNFlow();
     this.links = [];
   }
@@ -108,9 +109,6 @@ export class D3HelperService {
     }
   }
 
-  addNode() {
-  }
-
   drawNode(node: any) {
     let self = this;
     this.data = node;
@@ -145,8 +143,12 @@ export class D3HelperService {
     g.insert('svg:text')
       .attr('x', this.NODE_ICON_HOLDER_WIDTH + this.NODE_PADDING)
       .style('font-size', this.FONT_SIZE)
-      .text(d => {
-        return d.constructor.name;
+      .text((d: JNBaseNode) => {
+        let name = d.name;
+        this.translate.get(name).subscribe((nameTranslated) => {
+          name = nameTranslated || name;
+        });
+        return name;
       }).each((data, i, e) => {
         let textEle = e[i];
         let textLength = textEle.getComputedTextLength(),

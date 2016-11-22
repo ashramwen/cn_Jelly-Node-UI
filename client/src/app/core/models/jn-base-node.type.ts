@@ -48,7 +48,7 @@ export abstract class JNBaseNode {
   static nodeModel: typeof JNNodeModel;
   static editorModel: typeof JNEditorModel;
   static infoModel: IJNInfoPanelModel;
-  static paletteModel: JNPaletteModel;
+  static paletteModel: typeof JNPaletteModel;
   static outputable: boolean;
   static modelRules: { message: string, validator: (model: JNNodeModel<any>) => boolean }[];
   static connectRules: IConnectRuleSetting;
@@ -291,17 +291,16 @@ export abstract class JNBaseNode {
   /**
    * @desc create an editor model instance
    */
-  public createEditorModel() {
+  public createEditorModel(): JNEditorModel {
     let clazz = <typeof JNBaseNode>(this.constructor);
     let editorModel: JNEditorModel = new (<any>clazz.editorModel);
     editorModel.load(this.model.clone());
     return editorModel;
   }
 
-  public createPaletteModel() {
+  public createPaletteModel(): JNPaletteModel {
     let clazz = <typeof JNBaseNode>(this.constructor);
-    let paletteModel: JNPaletteModel = new (<any>clazz.paletteModel);
-    paletteModel.init(this.body);
+    let paletteModel: JNPaletteModel = new (<any>clazz.paletteModel)(this);
     return paletteModel;
   }
 

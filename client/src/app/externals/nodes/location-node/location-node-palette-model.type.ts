@@ -5,18 +5,6 @@ import { JNDevicePropertyNode } from '../device-property-node/device-property-no
 
 export class JNLocationPaletteModel extends JNPaletteModel {
 
-  nodes = [];
-  connections = [];
-
-  constructor() {
-    super();
-  }
-
-  public init(body) {
-    this.nodes = JNPaletteModel.getNodes(JNLocationNode);
-    this.connections.push(JNDeviceTypePaletteModel.createConnection(JNDevicePropertyNode));
-  }
-
 }
 
 

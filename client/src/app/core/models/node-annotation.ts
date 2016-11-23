@@ -1,5 +1,7 @@
 import { INodeOptions } from './interfaces';
 import { JNBaseNode } from './jn-base-node.type';
+import { JNApplication } from '../services/application-core.service';
+import { JNUtils } from '../../share/util';
 
 declare const Reflect: any;
 
@@ -15,5 +17,17 @@ export function JNNode(options: INodeOptions) {
     nodeClass.accepts = options.accepts || [];
     nodeClass.modelRules = options.modelRules || [];
     nodeClass.connectRules = options.connectRules || {};
+
+    nodeClass.hasInput = () => {
+      return !!nodeClass.accepts.length;
+    };
+
+    nodeClass.hasOutput = () => {
+      return !!JNUtils.toArray<typeof JNBaseNode>(JNApplication.instance.nodeTypeMapper)
+        .map(p => p.value)
+        .find((n) => {
+          return !!n.accepts.find(t => JNApplication.instance.nodeTypeMapper[t] === nodeClass);
+        });
+    };
   };
 }

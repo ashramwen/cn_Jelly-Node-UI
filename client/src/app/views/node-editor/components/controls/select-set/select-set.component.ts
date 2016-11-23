@@ -42,7 +42,7 @@ interface ISelectOption {
   ],
   template: `
     <div class="jn-form">
-      <label>{{label | translate}}</label>
+      <label class="jn-form-label">{{label | translate}}</label>
       <div class="jn-form" *ngFor="let r of set">
         <jn-editor-select 
           [label]="r.label" 

@@ -6,7 +6,7 @@ import { JNFlow } from './../../core/models/jn-flow.type';
 import { JNBaseNode } from './../../core/models/jn-base-node.type';
 import { JNDeviceTypeNode } from './../../externals/nodes/device-type-node/device-type-node.type';
 import { JNLocationNode } from './../../externals/nodes/location-node/location-node.type';
-import { Events } from '../../core/services/event.service';
+import { Events, NODE_EVENTS } from '../../core/services/event.service';
 import { D3HelperService } from './services/d3-helper/d3-helper.service';
 import { JNPaletteNode } from '../palette/interfaces/palette-node.type';
 import { JNApplication } from '../../core/services/application-core.service';
@@ -34,6 +34,7 @@ export class NodeCanvasComponent implements OnInit {
     let self = this;
     this.canvas = this.elementRef.nativeElement.querySelector('svg');
     this.d3Helper.init(this.canvas);
+    this.events.on(NODE_EVENTS.NODE_CHANGED, this.d3Helper.drawNode.bind(this.d3Helper));
   }
 
   onItemDrop(e: DropEvent) {

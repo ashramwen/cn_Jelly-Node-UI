@@ -20,7 +20,7 @@
   </div>
   <div class="palette-property" *ngIf="connections && connections.length > 0">
     <div class="palette-title">
-      {{palette.dynamicPropertyTitle}}
+      {{'Connections' | translate}}
     </div>
     <div *ngFor="let connection of connections; let j=index;">
       <div class="palette-connection">
@@ -28,7 +28,7 @@
           {{connection.title}}
         </div>
         <div class="palette-node-container">
-          <div class="palette-node-group" *ngFor="let node of c.properties;">
+          <div class="palette-node-group" *ngFor="let node of connection.properties;">
             <div class="palette-function">
               <div draggable [dragData]="node" class="palette-node">
                 <div class="palette-label" dir="">{{node.name}}</div>

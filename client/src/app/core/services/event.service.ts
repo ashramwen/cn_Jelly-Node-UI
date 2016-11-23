@@ -1,6 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subscriber } from 'rxjs';
 
+export const NODE_EVENTS = {
+  NODE_CHANGED: 'NODE_CHANGED',
+  NODE_CLICK: 'NODE_CLICK',
+  NODE_DBLCLICK: 'NODE_DBLCLICK',
+  CANVAS_KEYPRESS: 'CANVAS_KEYPRESS'
+};
+
 @Injectable()
 export class Events {
   private subscriber: Subscriber<any>;

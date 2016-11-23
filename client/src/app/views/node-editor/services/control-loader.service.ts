@@ -13,6 +13,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { JNEditorModel } from '../interfaces/editor-model.type';
 import { Request } from '@angular/http';
 import { JNControlsModule } from '../../controls/controls.module';
+import { ApplicationContextService } from '../../../core/services/application-context.service';
 
 interface IDynamicComponent {
   inputs: IJNEditorFormControlInput;
@@ -25,7 +26,8 @@ export class JNControlLoader {
   constructor(
     private compiler: RuntimeCompiler,
     private templateBuilder: JNTemplateBuilder,
-    private validatorGenerator: ValidatorGenerator
+    private validatorGenerator: ValidatorGenerator,
+    private applicationContext: ApplicationContextService
   ) { }
 
   /*  
@@ -41,7 +43,6 @@ export class JNControlLoader {
   public buildComponent(controlSchema: IJNFormControl, dynamicComponentTarget: ViewContainerRef) {
     return new Promise<IDynamicComponent>((resolve) => {
       let template = this.templateBuilder.prepareTemplate(controlSchema);
-
       // here we get Factory (just compiled or from cache)
       this.createComponentFactory(template)
         .then((factory) => {
@@ -57,6 +58,7 @@ export class JNControlLoader {
           formControl.setAsyncValidators(validators.map(validator => validator.$validator));
 
           this.injectInputs(component, controlSchema.input);
+
           resolve(component);
         });
     });
@@ -70,12 +72,15 @@ export class JNControlLoader {
      // unknown template ... let's create a Type for it
     let type = this.createNewComponent(template);
     let myModule = this.createComponentModule(type);
+    let _factory = this.applicationContext.get(template);
+    if (_factory) return Promise.resolve(_factory);
 
     return new Promise((resolve) => {
         this.compiler
             .compileModuleAndAllComponentsAsync(myModule)
             .then((moduleWithFactories) => {
               let factory = moduleWithFactories.componentFactories.find(e => e.componentType === type);
+              this.applicationContext.set(template, factory);
               resolve(factory);
             });
     });

@@ -21,7 +21,7 @@ export class FlowDetailComponent implements OnInit, OnDestroy {
   selectedNode: JNBaseNode;
   nodeFlow: JNFlow;
 
-  @ViewChild('')
+  @ViewChild('nodeEditor')
   nodeEditor: JNEditFormComponent;
 
   constructor(private router: Router, private route: ActivatedRoute, private events: Events) {

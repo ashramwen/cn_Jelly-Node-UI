@@ -14,7 +14,7 @@ import { IRadioInput, JNRadioControl } from './components/controls/radio/radio.c
 import { JNEditorModel } from './interfaces/editor-model.type';
 import { JNRuleNode } from '../../externals/nodes/rule-node/rule-node.type';
 import { JNLocationNode } from '../../externals/nodes/location-node/location-node.type';
-import { Events } from '../../core/services/event.service';
+import { Events, NODE_EVENTS } from '../../core/services/event.service';
 import { APP_READY } from '../../core/services/application-core.service';
 import { JNDeviceTypeNode } from '../../externals/nodes/device-type-node/device-type-node.type';
 import { JNConjunctionNode } from '../../externals/nodes/conjunction-node/conjunction-node.type';
@@ -100,14 +100,12 @@ export class JNEditFormComponent implements OnInit {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
-    this.events.on(APP_READY, () => {
-      this.editorModel = this.targetNode.createEditorModel();
-      this.subscription = this.editorModel.viewModelChange.subscribe(() => {
-        this.controls = this.editorModel.controlsToArray();
-      });
-      // this.editorModel = node.createEditorModel();
-      this.prepare();
+    this.editorModel = this.targetNode.createEditorModel();
+    this.subscription = this.editorModel.viewModelChange.subscribe(() => {
+      this.controls = this.editorModel.controlsToArray();
     });
+    // this.editorModel = node.createEditorModel();
+    this.prepare();
   }
 
   public hide() {
@@ -124,6 +122,7 @@ export class JNEditFormComponent implements OnInit {
   private submit() {
     let result = this.editorModel.submit();
     this.targetNode.update(result);
+    this.events.emit(NODE_EVENTS.NODE_CHANGED, this.targetNode);
     this.hideEditor();
   }
 

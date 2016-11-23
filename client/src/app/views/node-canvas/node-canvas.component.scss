@@ -7,12 +7,14 @@ svg {
         }
         .port {
             cursor: crosshair;
-            stroke: #000;
-            fill: #fff;
-            &:hover,
-            &.hover {
+            &:hover rect,
+            &.hover rect {
                 stroke: #ffa500;
                 fill: #ffa500;
+            }
+            rect {
+                stroke: #000;
+                fill: #fff;
             }
         }
         path {
@@ -21,16 +23,21 @@ svg {
         }
         text {
             fill: #333;
-            font-size: 14px;
+            font-size: 11px;
         }
+    }
+    g.new_link path {
+        stroke: #ffa500;
+        stroke-width: 2px;
+        fill: transparent;
     }
     g.link {
         path {
             stroke: #000;
+            stroke-width: 2px;
             fill: transparent;
         }
-        &.new_link path {
-            stroke-width: 2px;
+        &.active path {
             stroke: #ffa500;
         }
     }

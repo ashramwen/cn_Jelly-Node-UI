@@ -1,5 +1,4 @@
 import * as $ from 'jquery';
-import 'jqueryui';
 
 import { Directive, OnInit, Component, ViewEncapsulation, Input, ElementRef } from '@angular/core';
 import { JNFlow } from './../../core/models/jn-flow.type';
@@ -7,15 +6,12 @@ import { JNFlow } from './../../core/models/jn-flow.type';
 import { JNBaseNode } from './../../core/models/jn-base-node.type';
 import { JNDeviceTypeNode } from './../../externals/nodes/device-type-node/device-type-node.type';
 import { JNLocationNode } from './../../externals/nodes/location-node/location-node.type';
-import { Events } from '../../core/services/event.service';
+import { Events, NODE_EVENTS } from '../../core/services/event.service';
 import { D3HelperService } from './services/d3-helper/d3-helper.service';
 import { JNPaletteNode } from '../palette/interfaces/palette-node.type';
 import { JNApplication } from '../../core/services/application-core.service';
-
-interface NodeDropEvent {
-  nativeEvent: DragEvent;
-  dragData: JNPaletteNode;
-}
+import { en } from '../../../../dist/assets/i18n/en';
+import { DropEvent } from '../../share/directives/drag-drop/components/droppable/drop-event.type';
 
 @Component({
   selector: 'jn-canvas',
@@ -36,39 +32,20 @@ export class NodeCanvasComponent implements OnInit {
 
   ngOnInit() {
     let self = this;
-    /*
-    $(this.elementRef.nativeElement).droppable({
-      accept: '.palette-node-group',
-      drop: function (event, ui) {
-        if (!self.nodeFlow) return;
-        let {left, top} = $(self.canvas).position();
-
-        let data = {
-          position: {
-            x: ui.position.left - left,
-            y: ui.position.top - top
-          }
-        };
-        let node = self.nodeFlow.createNode(ui.draggable.data('node').constructor, data);
-        self.d3Helper.addNode();
-        self.d3Helper.drawNode(self.nodeFlow.nodes);
-      }
-    });
-    */
-    this.canvas = $(this.elementRef.nativeElement).find('svg')[0];
+    this.canvas = this.elementRef.nativeElement.querySelector('svg');
     this.d3Helper.init(this.canvas);
+    this.events.on(NODE_EVENTS.NODE_CHANGED, this.d3Helper.drawNode.bind(this.d3Helper));
   }
 
-  onItemDrop(e: NodeDropEvent) {
-    let {left, top} = $(this.elementRef.nativeElement).offset();
+  onItemDrop(e: DropEvent) {
     let position = {
-      x: e.nativeEvent.clientX - left,
-      y: e.nativeEvent.clientY - top
+      x: e.nativeEvent.offsetX - e.offset.x,
+      y: e.nativeEvent.offsetY - e.offset.y
     };
     let nodeType = this.application.nodeTypeMapper[e.dragData.typeName];
     let property = e.dragData.property || {};
     Object.assign(property, { position: position });
     let node = this.nodeFlow.createNode(<any>nodeType, property);
-    this.d3Helper.drawNode(this.nodeFlow.nodes);
+    this.d3Helper.addNode(node);
   }
 }

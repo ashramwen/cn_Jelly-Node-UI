@@ -54,6 +54,16 @@ export abstract class JNBaseNode {
   static connectRules: IConnectRuleSetting;
 
   /**
+   * this node type accept other nodes or not
+   */
+  static hasInput: () => boolean;
+
+  /**
+   * this node type output to other nodes or not
+   */
+  static hasOutput: () => boolean;
+
+  /**
    * @desc test two node is connectable or not
    * @param  {typeofJNBaseNode} left
    * @param  {typeofJNBaseNode} right
@@ -99,7 +109,6 @@ export abstract class JNBaseNode {
     accepted: {},
     outputTo: {}
   };
-
 
   protected abstract model: JNNodeModel<any>; // node model
 

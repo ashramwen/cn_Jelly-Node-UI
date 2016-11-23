@@ -7,9 +7,13 @@ import { JNControlLoader } from '../../services/control-loader.service';
   selector: 'jn-control-container',
   template: `
     <div #dynamicTarget></div>
+    <div *ngFor="let validator of controlSchema.$validators"
+      [hidden]="controlSchema.input.hidden || !controlSchema.formControl.hasError(validator.errorName)">
+        {{validator.msg}}
+    </div>
   `
 })
-export class JNControlContainer implements OnInit{
+export class JNControlContainer implements OnInit {
   @Input() public controlSchema: IJNFormControl;
   @Output() public ready: EventEmitter<FormControl> = new EventEmitter<FormControl>();
   @ViewChild('dynamicTarget', { read: ViewContainerRef })

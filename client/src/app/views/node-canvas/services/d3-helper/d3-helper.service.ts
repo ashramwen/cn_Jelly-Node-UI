@@ -125,15 +125,17 @@ export class D3HelperService {
         position[1] -= shift.y;
         d.x = Math.max(0, Math.min(self.spaceWidth - d.width, position[0]));
         d.y = Math.max(0, Math.min(self.spaceHeight - self.NODE_HEIGHT, position[1]));
+        self.updateNode(d);
+        /*
         self.vis.selectAll('g.node_group')
           .filter((dt: CanvasNode) => {
             return dt.node.body.nodeID === d.node.body.nodeID;
           })
-          .attr('transform', (_d: any, i, ele) => {
+          .attr('transform', (_d: CanvasNode, i, ele) => {
             return `translate(${_d.x}, ${_d.y})`;
           });
-
-        self.moveNodeLink();
+        */
+        // self.moveNodeLink();
       }
     }
   }
@@ -147,15 +149,12 @@ export class D3HelperService {
   drawNode() {
     let self = this;
     let rects = this.vis.selectAll('g.node_group').data(this.data);
-    // rects.exit().remove();
+    rects.exit().remove();
 
     // node group
     let g = rects.enter()
       .append('svg:g')
       .classed('node_group', true)
-      .attr('transform', (d: any) => {
-        return `translate(${d.x}, ${d.y})`;
-      })
       .on('click', d => {
         this.events.emit('node_click', d.node);
       })
@@ -185,40 +184,7 @@ export class D3HelperService {
     // node text
     g.insert('svg:text')
       .attr('x', this.NODE_ICON_HOLDER_WIDTH + this.NODE_PADDING)
-      .style('font-size', this.FONT_SIZE)
-      .text((d: CanvasNode) => {
-        let name = d.node.name;
-        this.translate.get(name).subscribe((nameTranslated) => {
-          name = nameTranslated || name;
-        });
-        return name;
-      })
-      .each((data, i, e) => {
-        let textEle = e[i];
-        let textLength = textEle.getComputedTextLength(),
-          text = textEle.textContent;
-        while (textLength > (self.NODE_MAX_WIDTH - 2 * self.NODE_PADDING - this.NODE_ICON_HOLDER_WIDTH) && text.length > 0) {
-          text = text.slice(0, -1);
-          textEle.textContent = text;
-          textLength = textEle.getComputedTextLength();
-        }
-      });
-
-    // adjust node width and text position
-    let textEle = g.select('text').node();
-    let textWidth = textEle.getComputedTextLength();
-    let textHeight = textEle.getBoundingClientRect().height;
-
-    let nodeWidth = this.NODE_PADDING * 2 + this.NODE_ICON_HOLDER_WIDTH + textWidth;
-    nodeWidth = nodeWidth > this.NODE_MIN_WIDTH ? nodeWidth : this.NODE_MIN_WIDTH;
-
-    g.select('text')
-      .attr('y', Math.floor(this.NODE_HEIGHT - textHeight));
-    g.select('rect')
-      .attr('width', nodeWidth)
-      .each((d: CanvasNode, i, e) => {
-        d.width = nodeWidth;
-      });
+      .style('font-size', this.FONT_SIZE);
 
     // node icon right path
     g.insert('svg:path')
@@ -227,7 +193,6 @@ export class D3HelperService {
     // node input
     g.insert('svg:g')
       .classed('port input', true)
-      .attr('transform', `translate(-${Math.floor(this.HANDLER_WIDTH / 2)}, ${Math.floor(this.NODE_HEIGHT - this.HANDLER_HEIGHT) / 2})`)
       .on('mouseenter', function (d) {
         d3.select(this).classed('hover', true);
       })
@@ -248,16 +213,11 @@ export class D3HelperService {
         self.selectNode = null;
         self.inputDragging = false;
       })
-      .insert('svg:rect')
-      .attr('width', this.HANDLER_WIDTH)
-      .attr('height', this.HANDLER_HEIGHT)
-      .attr('rx', this.HANDLER_RADIUS)
-      .attr('ry', this.HANDLER_RADIUS);
+      .insert('svg:rect');
 
     // node output
     g.insert('svg:g')
       .classed('port output', true)
-      .attr('transform', `translate(${nodeWidth - Math.floor(this.HANDLER_WIDTH / 2)}, ${Math.floor(this.NODE_HEIGHT - this.HANDLER_HEIGHT) / 2})`)
       .on('mouseenter', function (d) {
         d3.select(this).classed('hover', true);
       })
@@ -278,12 +238,88 @@ export class D3HelperService {
         self.selectNode = null;
         self.outputDragging = false;
       })
-      .insert('svg:rect')
+      .insert('svg:rect');
+
+    this.data.forEach(n => this.updateNode(n));
+  }
+
+  public updateNode(canvasNode: CanvasNode) {
+    let self = this;
+
+    // adjust node width and text position
+    let _node = d3.select(canvasNode.element);
+    let nodeText = _node.select('text'),
+      nodeRect = _node.select('rect'),
+      nodeInput = _node.select('.port.input'),
+      nodeOutput = _node.select('.port.output');
+
+    _node
+      .attr('transform', (d: any) => {
+        return `translate(${d.x}, ${d.y})`;
+      });
+
+    nodeText
+      .text((d: CanvasNode) => {
+        let name = d.node.name;
+        this.translate.get(name).subscribe((nameTranslated) => {
+          name = nameTranslated || name;
+        });
+        return name;
+      })
+      .each((d, j, e) => {
+        let textEle = <any>nodeText.node();
+        let maxTextLength = self.NODE_MAX_WIDTH - 2 * self.NODE_PADDING - this.NODE_ICON_HOLDER_WIDTH;
+        let textLength = textEle.getComputedTextLength(),
+          text = textEle.textContent;
+        while (textLength > maxTextLength && text.length > 0) {
+          text = text.slice(0, -1);
+          textEle.textContent = text;
+          textLength = textEle.getComputedTextLength();
+        }
+      })
+      .attr('y', (d, j, e) => {
+        let textEle = <any>e[j];
+        let textHeight = textEle.getBoundingClientRect().height;
+        return Math.floor(this.NODE_HEIGHT - textHeight);
+      });
+
+    nodeRect
+      .attr('width', () => {
+        let textEle = <any>nodeText.node();
+        let textWidth = textEle.getComputedTextLength();
+        let nodeWidth = this.NODE_PADDING * 2 + this.NODE_ICON_HOLDER_WIDTH + textWidth;
+        nodeWidth = nodeWidth > this.NODE_MIN_WIDTH ? nodeWidth : this.NODE_MIN_WIDTH;
+        return nodeWidth;
+      });
+
+    nodeInput
+      .attr('transform', () => {
+        let x = -Math.floor(this.HANDLER_WIDTH / 2),
+          y = Math.floor(this.NODE_HEIGHT - this.HANDLER_HEIGHT) / 2;
+        return `translate(${x}, ${y})`;
+      })
+      .select('rect')
       .attr('width', this.HANDLER_WIDTH)
       .attr('height', this.HANDLER_HEIGHT)
       .attr('rx', this.HANDLER_RADIUS)
       .attr('ry', this.HANDLER_RADIUS);
+
+    nodeOutput
+      .attr('transform', (d) => {
+        let nodeWidth = (<any>nodeRect.node()).getBoundingClientRect().width;
+        let x = nodeWidth - Math.floor(this.HANDLER_WIDTH / 2),
+          y = Math.floor(this.NODE_HEIGHT - this.HANDLER_HEIGHT) / 2;
+        return `translate(${x}, ${y})`;
+      })
+      .select('rect')
+      .attr('width', this.HANDLER_WIDTH)
+      .attr('height', this.HANDLER_HEIGHT)
+      .attr('rx', this.HANDLER_RADIUS)
+      .attr('ry', this.HANDLER_RADIUS);
+
+    self.moveNodeLink();
   }
+
 
   private moveMouseLink = (linkData) => {
     let link = this.vis.selectAll('g.new_link').data([linkData]);

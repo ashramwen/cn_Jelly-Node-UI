@@ -14,6 +14,7 @@ import { JNEditorModel } from '../interfaces/editor-model.type';
 import { Request } from '@angular/http';
 import { JNControlsModule } from '../../controls/controls.module';
 import { ApplicationContextService } from '../../../core/services/application-context.service';
+import { JN_EDITOR_CONTROLS } from '../components/controls/index';
 
 interface IDynamicComponent {
   inputs: IJNEditorFormControlInput;
@@ -28,7 +29,9 @@ export class JNControlLoader {
     private templateBuilder: JNTemplateBuilder,
     private validatorGenerator: ValidatorGenerator,
     private applicationContext: ApplicationContextService
-  ) { }
+  ) {
+    // this.preloadControls();
+  }
 
   /*  
   public buildFormGroup(nodeEditorModel: JNEditorModel, dynamicComponentTarget: ViewContainerRef) {
@@ -42,7 +45,7 @@ export class JNControlLoader {
 
   public buildComponent(controlSchema: IJNFormControl, dynamicComponentTarget: ViewContainerRef) {
     return new Promise<IDynamicComponent>((resolve) => {
-      let template = this.templateBuilder.prepareTemplate(controlSchema);
+      let template = this.templateBuilder.prepareTemplate(controlSchema.controlType);
       // here we get Factory (just compiled or from cache)
       this.createComponentFactory(template)
         .then((factory) => {
@@ -64,6 +67,32 @@ export class JNControlLoader {
     });
   }
 
+  public preloadControls() {
+    let controlTypes = JN_EDITOR_CONTROLS;
+    let templates = controlTypes
+      .map(c => this.templateBuilder.prepareTemplate(c));
+    let components = templates
+      .map(tmpl => this.createNewComponent(tmpl));
+
+    let myModule = this.createComponentsModule(components);
+
+    return new Promise((resolve) => {
+      this.compiler
+        .compileModuleAndAllComponentsAsync(myModule)
+        .then((moduleWithFactories) => {
+          components.forEach((controlType, index) => {
+            let template = templates[index];
+            let factory = moduleWithFactories
+              .componentFactories
+              .find(e => e.componentType === controlType);
+            this.applicationContext.set(template, factory);
+          });
+          resolve();
+        });
+    });
+  }
+
+
   private injectInputs(component: IDynamicComponent, formInputs: IJNEditorFormControlInput) {
     component.inputs = formInputs;
   }
@@ -71,7 +100,7 @@ export class JNControlLoader {
   private createComponentFactory(template: string): Promise<ComponentFactory<IDynamicComponent>> {
      // unknown template ... let's create a Type for it
     let type = this.createNewComponent(template);
-    let myModule = this.createComponentModule(type);
+    let myModule = this.createComponentsModule([type]);
     let _factory = this.applicationContext.get(template);
     if (_factory) return Promise.resolve(_factory);
 
@@ -92,7 +121,6 @@ export class JNControlLoader {
         template: tmpl
     })
     class CustomDynamicComponent  implements IDynamicComponent {
-
       @Input() public inputs: IJNEditorFormControlInput;
       @Input() public formControl: FormControl;
     };
@@ -100,7 +128,7 @@ export class JNControlLoader {
     return CustomDynamicComponent;
   }
 
-  private createComponentModule (componentType: any) {
+  private createComponentsModule (componentTypes: Array<any>) {
       @NgModule({
         imports: [
           JNEditorControlModule,
@@ -108,7 +136,7 @@ export class JNControlLoader {
           BrowserModule
         ],
         declarations: [
-          componentType
+          ...componentTypes
         ]
       })
       class RuntimeComponentModule { }

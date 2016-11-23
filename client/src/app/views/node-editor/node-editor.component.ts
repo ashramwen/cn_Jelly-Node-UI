@@ -40,7 +40,8 @@ export class JNEditFormComponent implements OnInit {
   private subscription: Subscription;
 
   constructor(
-    private events: Events
+    private events: Events,
+    private controlLoader: JNControlLoader
   ) { }
 
   ngOnInit() {
@@ -92,6 +93,11 @@ export class JNEditFormComponent implements OnInit {
       }`
     });
     */
+    this.events.on(APP_READY, () => {
+      setTimeout(() => {
+        this.controlLoader.preloadControls();
+      });
+    });
   }
 
   public show(node: JNBaseNode) {

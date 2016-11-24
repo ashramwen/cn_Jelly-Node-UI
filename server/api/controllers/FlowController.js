@@ -141,9 +141,7 @@ module.exports = {
           return result
         })}
       else
-        Q.fcall(function(){
-          throw new Error(result.body)
-        })
+        throw new Error(result.body)
     })
     .then(function(result){     
       return Flow.destroy({
@@ -186,9 +184,7 @@ module.exports = {
           return result
         })}
       else
-        Q.fcall(function(){
-          throw new Error(result.body)
-        })
+        throw new Error(result.body)
     })
     .then(function(result){
       return Flow.update({
@@ -233,9 +229,7 @@ module.exports = {
           return result
         })}
       else
-        Q.fcall(function(){
-          throw new Error(result.body)
-        })
+        throw new Error(result.body)
     })
     .then(function(result){
       return Flow.update({

@@ -14,6 +14,8 @@ export class JNPaletteNode {
   disabled: Boolean;
   acceptable: Boolean;
   directable: Boolean;
+  hasInput: Boolean;
+  hasOutput: Boolean;
 
   constructor(selectedNodeType: typeof JNBaseNode, nodeType: typeof JNBaseNode, name: string, property?: Object) {
     this.type = nodeType;
@@ -42,5 +44,7 @@ export class JNPaletteNode {
       this.directable = true;
       this.disabled = false;
     }
+    this.hasInput = nodeType.hasInput();
+    this.hasOutput = nodeType.hasOutput();
   }
 }

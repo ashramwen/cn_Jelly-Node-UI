@@ -56,12 +56,12 @@ export abstract class JNBaseNode {
   /**
    * this node type accept other nodes or not
    */
-  static hasInput: () => boolean;
+  static hasInput: () => Boolean;
 
   /**
    * this node type output to other nodes or not
    */
-  static hasOutput: () => boolean;
+  static hasOutput: () => Boolean;
 
   /**
    * @desc test two node is connectable or not

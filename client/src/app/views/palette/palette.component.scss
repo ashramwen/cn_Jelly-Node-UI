@@ -37,16 +37,27 @@
           line-height: 40px;
           overflow: hidden;
           text-align: center;
+          &.right {
+            margin-left: 0 !important;
+            margin-right: 40px;
+          }
         }
         .palette-icon {
           position: absolute;
           text-align: center;
           top: 0;
           bottom: 0;
-          left: 0;
           width: 40px;
-          border-right: 1px solid #000;
           /*background-color: rgba(0, 0, 0, 0.05);*/
+          &.left {
+            border-right: 1px solid #000;
+            left: 0;
+          }
+          &.right {
+            border-left: 1px solid #000;
+            border-right: 0px !important;
+            left: 140px;
+          }
         }
         .palette-port {
           position: absolute;
@@ -65,6 +76,9 @@
           }
           &.connectable {
             background-color: #000;
+          }
+          &.disconnectable {
+            display: none;
           }
         }
       }

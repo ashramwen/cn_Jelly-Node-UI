@@ -41,6 +41,7 @@ export class PaletteComponent implements OnInit {
         let palette = node.createPaletteModel();
         this.flowNodes = palette.nodes;
         this.connections = palette.connections;
+        console.log('palette', palette);
       });
     });
   }

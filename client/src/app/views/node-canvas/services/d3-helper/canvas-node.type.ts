@@ -1,23 +1,23 @@
 import { JNBaseNode } from '../../../../core/models/jn-base-node.type';
 import * as d3 from 'd3';
+import { CanvasObject } from './canvas-object.type';
+import { JNUtils } from '../../../../share/util';
 
-export class CanvasNode {
+export class CanvasNode extends CanvasObject{
   node: JNBaseNode;
-  x: number;
-  y: number;
   inputs: number[] = [];
   outputs: number[] = [];
-  element: any;
 
-  get width(): number {
-    let rect: any = d3.select(this.element)
-      .select('rect').node();
-    return rect.getBoundingClientRect().width;
+  set position(position: { x: number, y: number }) {
+    this.node.position = position;
   }
 
-  constructor(node: JNBaseNode) {
+  get position() {
+    return this.node.position;
+  }
+
+  constructor(node: JNBaseNode, canvas: SVGSVGElement) {
+    super(canvas);
     this.node = node;
-    this.x = node.position.x;
-    this.y = node.position.y;
   }
 }

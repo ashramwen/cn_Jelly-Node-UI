@@ -25,6 +25,19 @@ svg {
             fill: #333;
             font-size: 11px;
         }
+        &.selected {
+            .node {
+                stroke: #ffa500;
+            }
+            path {
+                stroke: #ffa500;
+            }
+            .port {
+                rect{
+                    stroke: #ffa500;
+                }
+            }
+        }
     }
     g.new_link path {
         stroke: #ffa500;
@@ -37,7 +50,7 @@ svg {
             stroke-width: 2px;
             fill: transparent;
         }
-        &.active path {
+        &.active path, &.selected path {
             stroke: #ffa500;
         }
     }

@@ -35,6 +35,7 @@ export class D3HelperService {
 
   private vis: any;
   private canvas: any;
+  private brush: any;
 
   private data: CanvasNode[];
   private links: any[];
@@ -43,6 +44,8 @@ export class D3HelperService {
 
   private selectLink = null;
   private selectBrush = null;
+  private nodeOutputDragged: CanvasNode = null;
+  private nodeInputDragged: CanvasNode = null;
 
   private inputDragging = false;
   private outputDragging = false;
@@ -62,19 +65,38 @@ export class D3HelperService {
       .attr('width', this.spaceWidth)
       .attr('height', this.spaceHeight)
       .attr('pointer-events', 'all')
-      .style('cursor', 'crosshair')
+      .style('cursor', 'crosshair');
+      /*
       .on('mousedown', mousedown)
       .on('mouseup', mouseup)
       .on('mousemove', moving);
-
+    */
+    
+    /*
+    this.brush = this.canvas
+      .append('g')
+      .attr('class', 'brush')
+      .call(d3.brush()
+        .on('start', () => {
+          var e = d3.event.target.extent();
+        })
+        .on('brush', () => {
+          var e = d3.event.target.extent();
+        })
+        .on('end', () => {
+        }));
+    */
+      
     this.vis = this.canvas
       .append('svg:g')
       .on('dblclick.zoom', null)
       .append('svg:g');
+    
 
     let shift = null;
 
     function mousedown() {
+      console.log('123');
       d3.event.preventDefault();
       if (d3.event.button !== 0) return;
       if (self.selectNode) {
@@ -161,6 +183,7 @@ export class D3HelperService {
       .on('dblclick', d => {
         this.events.emit('node_dblclick', d.node);
       })
+      /*
       .on('mousedown', d => {
         console.log('node down');
         if (d3.event.button !== 0) return;
@@ -170,6 +193,14 @@ export class D3HelperService {
         console.log('node up');
         this.selectNode = null;
       })
+    */
+      .call(d3.drag()
+        .on('start', (d) => {
+          console.log(d);
+        }).on('end', (d) => {
+          console.log(d);
+        })
+      )
       .each((d: CanvasNode, i, eles) => {
         d.element = eles[i];
       });
@@ -196,6 +227,23 @@ export class D3HelperService {
       .on('mouseenter', function (d) {
         d3.select(this).classed('hover', true);
       })
+      .call(d3.drag()
+        .on('start', function (d: CanvasNode) {
+          self.nodeInputDragged = d;
+        })
+        .on('drag', function(d: CanvasNode) {
+          let position = d3.mouse(self.canvas.node());
+          let linkData = {
+            source: { x: position[0], y: position[1] },
+            target: { x: d.x - self.HANDLER_WIDTH / 2, y: d.y + self.NODE_HEIGHT / 2 }
+          };
+          self.moveMouseLink(linkData);
+        })
+        .on('end', (d) => {
+          this.nodeInputDragged = null;
+          self.vis.selectAll('g.new_link').remove();
+        })
+      )
       .on('mouseleave', function (d) {
         d3.select(this).classed('hover', false);
       })
@@ -232,8 +280,8 @@ export class D3HelperService {
       })
       .on('mouseup', function (d) {
         console.log('output up');
-        if (self.selectNode) {
-          self.createNodeLink(d, self.selectNode);
+        if (self.nodeInputDragged) {
+          self.createNodeLink(d, self.nodeInputDragged);
         }
         self.selectNode = null;
         self.outputDragging = false;

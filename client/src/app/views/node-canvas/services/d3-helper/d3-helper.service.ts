@@ -7,11 +7,11 @@ import * as d3 from 'd3';
 import { CanvasNode } from './canvas-node.type';
 import { CanvasPoint } from './canvas-point.type';
 import { NODE_EVENTS } from '../../../../core/services/event.service';
+import { CanvasLink } from './canvas-link.type';
+import { CanvasObject } from './canvas-object.type';
+import { CanvasConstants } from './constants';
 
-interface CanvasLink {
-  source: CanvasNode;
-  target: CanvasNode;
-}
+
 
 @Injectable()
 export class D3HelperService {
@@ -19,37 +19,27 @@ export class D3HelperService {
   private spaceWidth = 1464;
   private spaceHeight = 944;
 
-  private readonly NODE_MAX_WIDTH = 180;
-  private readonly NODE_MIN_WIDTH = 100;
-  private readonly NODE_RADIUS = 5;
-  private readonly NODE_HEIGHT = 34;
-  private readonly NODE_PADDING = 10;
-  private readonly NODE_ICON_HOLDER_WIDTH = 30;
-
-  private readonly HANDLER_WIDTH = 10;
-  private readonly HANDLER_HEIGHT = 10;
-  private readonly HANDLER_RADIUS = 3;
-
-  private readonly FONT_SIZE = 13;
-  private readonly PATH_STROKE_WIDTH = 2;
-
   private vis: any;
   private canvas: any;
+  private brush: any;
+  private use: any;
 
   private data: CanvasNode[];
-  private links: any[];
+  private links: CanvasLink[];
 
-  private selectNode: CanvasNode = null;
-
+  private selections: CanvasObject[];  
   private selectLink = null;
   private selectBrush = null;
 
-  private inputDragging = false;
-  private outputDragging = false;
+  private sourceNode: CanvasNode = null;
+  private targetNode: CanvasNode = null;
+
+  private _shift: Array<{x: number, y: number}> = [];
 
   constructor(private events: Events, private translate: TranslateService) {
     this.data = [];
     this.links = [];
+    this.selections = [];
   }
 
   init(svg: Element) {
@@ -62,86 +52,60 @@ export class D3HelperService {
       .attr('width', this.spaceWidth)
       .attr('height', this.spaceHeight)
       .attr('pointer-events', 'all')
-      .style('cursor', 'crosshair')
+      .style('cursor', 'crosshair');
+      /*
       .on('mousedown', mousedown)
       .on('mouseup', mouseup)
       .on('mousemove', moving);
-
+    */
+    
+    this.brush = this.canvas
+      .append('g')
+      .attr('class', 'brush')
+      .attr('id', 'brush-wrapper')
+      .call(d3.brush()
+        .on('start', () => {
+          self.brush.raise();
+          var e = d3.event.target.extent();
+        })
+        .on('end', () => {
+          // hide brush
+          self.select([]);
+          self.brush.lower();
+          self.brush
+            .select('.selection,.handle')
+            .style('display', 'none');
+          
+          // select nodes
+          let selection = d3.event.selection;
+          if (selection) {
+            let maxX = Math.max(selection[0][0], selection[1][0]),
+              maxY = Math.max(selection[0][1], selection[1][1]),
+              minX = Math.min(selection[0][0], selection[1][0]),
+              minY = Math.min(selection[0][1], selection[1][1]);
+            
+            let linksAndNodes: CanvasObject[] = (<Array<CanvasObject>>self.links).concat(self.data);
+            let selectedObjects = linksAndNodes.filter(n =>
+              n.x > minX
+              && n.x + n.width < maxX
+              && n.y > minY
+              && n.y + n.height < maxY);
+            
+            self.select(selectedObjects);
+          }
+          
+          self.updateNodes.bind(self)();
+          self.updateLinks.bind(self)();
+        }));
+      
     this.vis = this.canvas
       .append('svg:g')
       .on('dblclick.zoom', null)
       .append('svg:g');
-
-    let shift = null;
-
-    function mousedown() {
-      d3.event.preventDefault();
-      if (d3.event.button !== 0) return;
-      if (self.selectNode) {
-        let mousePosition = d3.mouse(this);
-        console.log(self.selectNode);
-        shift = {
-          x: mousePosition[0] - self.selectNode.x,
-          y: mousePosition[1] - self.selectNode.y,
-        };
-      }
-    }
-
-    function mouseup() {
-      self.vis.selectAll('g.new_link').remove();
-      self.selectNode = null;
-      self.inputDragging = false;
-      self.outputDragging = false;
-    }
-
-    function moving() {
-      d3.event.preventDefault();
-      let d = self.selectNode;
-      let position = d3.mouse(this);
-
-      // create&move mouse-link from input
-      if (self.inputDragging && d) {
-        let linkData = {
-          source: { x: position[0], y: position[1] },
-          target: { x: d.x - self.HANDLER_WIDTH / 2, y: d.y + self.NODE_HEIGHT / 2 }
-        };
-        self.moveMouseLink(linkData);
-        return;
-      }
-
-      // create&move mouse-link from output
-      if (self.outputDragging && d) {
-        let linkData = {
-          source: { x: d.x + d.width + self.HANDLER_WIDTH / 2, y: d.y + self.NODE_HEIGHT / 2 },
-          target: { x: position[0], y: position[1] }
-        };
-        self.moveMouseLink(linkData);
-        return;
-      }
-
-      // move node
-      if (d) {
-        position[0] -= shift.x;
-        position[1] -= shift.y;
-        d.x = Math.max(0, Math.min(self.spaceWidth - d.width, position[0]));
-        d.y = Math.max(0, Math.min(self.spaceHeight - self.NODE_HEIGHT, position[1]));
-        self.updateNode(d);
-        /*
-        self.vis.selectAll('g.node_group')
-          .filter((dt: CanvasNode) => {
-            return dt.node.body.nodeID === d.node.body.nodeID;
-          })
-          .attr('transform', (_d: CanvasNode, i, ele) => {
-            return `translate(${_d.x}, ${_d.y})`;
-          });
-        */
-        // self.moveNodeLink();
-      }
-    }
   }
 
   addNode(node: JNBaseNode) {
-    let canvasNode = new CanvasNode(node);
+    let canvasNode = new CanvasNode(node, this.canvas.node());
     this.data.push(canvasNode);
     this.drawNode();
   }
@@ -150,26 +114,29 @@ export class D3HelperService {
     let self = this;
     let rects = this.vis.selectAll('g.node_group').data(this.data);
     rects.exit().remove();
+    let shift = null;
 
     // node group
     let g = rects.enter()
       .append('svg:g')
       .classed('node_group', true)
       .on('click', d => {
-        this.events.emit('node_click', d.node);
+        self.select(d);
+        self.events.emit('node_click', d.node);
       })
       .on('dblclick', d => {
-        this.events.emit('node_dblclick', d.node);
+        self.events.emit('node_dblclick', d.node);
       })
-      .on('mousedown', d => {
-        console.log('node down');
-        if (d3.event.button !== 0) return;
-        this.selectNode = d;
-      })
-      .on('mouseup', d => {
-        console.log('node up');
-        this.selectNode = null;
-      })
+      .call(d3.drag()
+        .on('start', function(d: CanvasNode){
+          if (!self.selections || self.selections.indexOf(d) < 0) {
+            self.select(d);
+          }
+          self.dragStart.apply(self, arguments);
+        })
+        .on('drag', this.dragMove.bind(this))
+        .on('end', this.dragEnd.bind(this))
+      )
       .each((d: CanvasNode, i, eles) => {
         d.element = eles[i];
       });
@@ -177,42 +144,48 @@ export class D3HelperService {
     // node rect
     g.insert('svg:rect')
       .classed('node', true)
-      .attr('height', this.NODE_HEIGHT)
-      .attr('rx', this.NODE_RADIUS)
-      .attr('ry', this.NODE_RADIUS);
+      .attr('height', CanvasConstants.NODE_HEIGHT)
+      .attr('rx', CanvasConstants.NODE_RADIUS)
+      .attr('ry', CanvasConstants.NODE_RADIUS);
 
     // node text
     g.insert('svg:text')
-      .attr('x', this.NODE_ICON_HOLDER_WIDTH + this.NODE_PADDING)
-      .style('font-size', this.FONT_SIZE);
+      .attr('x', CanvasConstants.NODE_ICON_HOLDER_WIDTH + CanvasConstants.NODE_PADDING)
+      .style('font-size', CanvasConstants.FONT_SIZE);
 
     // node icon right path
     g.insert('svg:path')
-      .attr('d', `M ${this.NODE_HEIGHT} 1 l 0 ${this.NODE_HEIGHT}`);
+      .attr('d', `M ${CanvasConstants.NODE_HEIGHT} 1 l 0 ${CanvasConstants.NODE_HEIGHT}`);
 
     // node input
     g.insert('svg:g')
       .classed('port input', true)
       .on('mouseenter', function (d) {
         d3.select(this).classed('hover', true);
+        self.targetNode = d;
       })
       .on('mouseleave', function (d) {
         d3.select(this).classed('hover', false);
+        self.targetNode = null;
       })
-      .on('mousedown', function (d) {
-        console.log('input down');
-        if (d3.event.button !== 0) return;
-        self.selectNode = d;
-        self.inputDragging = true;
-      })
-      .on('mouseup', function (d) {
-        console.log('input up');
-        if (self.selectNode) {
-          self.createNodeLink(self.selectNode, d);
-        }
-        self.selectNode = null;
-        self.inputDragging = false;
-      })
+      .call(d3.drag()
+        .on('drag', function(d: CanvasNode) {
+          let position = d3.mouse(self.canvas.node());
+          let linkData = {
+            source: { x: position[0], y: position[1] },
+            target: { x: d.x, y: d.y + CanvasConstants.NODE_HEIGHT / 2 }
+          };
+          self.moveMouseLink(linkData);
+        })
+        .on('end', (d: CanvasNode) => {
+          self.vis.selectAll('g.new_link').remove();
+          if (self.sourceNode) {
+            self.createNodeLink(self.sourceNode, d);
+          }
+          self.sourceNode = null;
+          self.targetNode = null;
+        })
+      )
       .insert('svg:rect');
 
     // node output
@@ -220,27 +193,82 @@ export class D3HelperService {
       .classed('port output', true)
       .on('mouseenter', function (d) {
         d3.select(this).classed('hover', true);
+        self.sourceNode = d;
       })
       .on('mouseleave', function (d) {
         d3.select(this).classed('hover', false);
+        self.sourceNode = null;
       })
-      .on('mousedown', function (d) {
-        console.log('output down');
-        if (d3.event.button !== 0) return;
-        self.selectNode = d;
-        self.outputDragging = true;
-      })
-      .on('mouseup', function (d) {
-        console.log('output up');
-        if (self.selectNode) {
-          self.createNodeLink(d, self.selectNode);
-        }
-        self.selectNode = null;
-        self.outputDragging = false;
-      })
+      .call(d3.drag()
+        .on('drag', function(d: CanvasNode) {
+          let position = d3.mouse(self.canvas.node());
+          let linkData = {
+            source: { x: d.x + d.width, y: d.y + CanvasConstants.NODE_HEIGHT / 2 },
+            target: { x: position[0], y: position[1] }
+          };
+          self.moveMouseLink(linkData);
+        })
+        .on('end', (d: CanvasNode) => {
+          self.vis.selectAll('g.new_link').remove();
+          if (self.targetNode) {
+            self.createNodeLink(d, self.targetNode);
+          }
+          self.sourceNode = null;
+          self.targetNode = null;
+        })
+      )
       .insert('svg:rect');
 
-    this.data.forEach(n => this.updateNode(n));
+    this.data.forEach(n => {
+      self.updateNode(n);
+    });
+  }
+
+  private select(o: CanvasObject[] | CanvasObject) {
+    if (o instanceof Array) {
+      this.selections = o;
+    } else {
+      this.selections = [o];
+    }
+    this.updateNodes();
+  }
+
+  private dragStart() {
+    let position = d3.mouse(this.canvas.node());
+    this._shift = this.selections
+      .filter((o) => {
+        return o instanceof CanvasNode;
+      })
+      .map((o) => {
+        return {
+          x: position[0] - o.x,
+          y: position[1] - o.y
+        };
+      });
+  }
+
+  private dragMove() {
+    let position = d3.mouse(this.canvas.node());
+    this.selections
+      .filter((o) => {
+        return o instanceof CanvasNode;
+      })
+      .forEach((n: CanvasNode, i) => {
+        n.position = {
+          x: position[0] - this._shift[i].x,
+          y: position[1] - this._shift[i].y
+        };
+        this.updateNode(n);
+      });
+  }
+
+  private dragEnd() {
+    this._shift = null;
+    this.events.emit(NODE_EVENTS.NODE_CHANGED, true);
+  }
+
+  public updateNodes() {
+    this.data.forEach(this.updateNode.bind(this));
   }
 
   public updateNode(canvasNode: CanvasNode) {
@@ -254,8 +282,11 @@ export class D3HelperService {
       nodeOutput = _node.select('.port.output');
 
     _node
-      .attr('transform', (d: any) => {
-        return `translate(${d.x}, ${d.y})`;
+      .attr('transform', (d: CanvasNode) => {
+        return `translate(${d.position.x}, ${d.position.y})`;
+      })
+      .classed('selected', (d: CanvasNode) => {
+        return self.selections.indexOf(d) > -1;
       });
 
     nodeText
@@ -268,7 +299,7 @@ export class D3HelperService {
       })
       .each((d, j, e) => {
         let textEle = <any>nodeText.node();
-        let maxTextLength = self.NODE_MAX_WIDTH - 2 * self.NODE_PADDING - this.NODE_ICON_HOLDER_WIDTH;
+        let maxTextLength = CanvasConstants.NODE_MAX_WIDTH - 2 * CanvasConstants.NODE_PADDING - CanvasConstants.NODE_ICON_HOLDER_WIDTH;
         let textLength = textEle.getComputedTextLength(),
           text = textEle.textContent;
         while (textLength > maxTextLength && text.length > 0) {
@@ -280,44 +311,44 @@ export class D3HelperService {
       .attr('y', (d, j, e) => {
         let textEle = <any>e[j];
         let textHeight = textEle.getBoundingClientRect().height;
-        return Math.floor(this.NODE_HEIGHT - textHeight);
+        return Math.floor(CanvasConstants.NODE_HEIGHT - textHeight);
       });
 
     nodeRect
       .attr('width', () => {
         let textEle = <any>nodeText.node();
         let textWidth = textEle.getComputedTextLength();
-        let nodeWidth = this.NODE_PADDING * 2 + this.NODE_ICON_HOLDER_WIDTH + textWidth;
-        nodeWidth = nodeWidth > this.NODE_MIN_WIDTH ? nodeWidth : this.NODE_MIN_WIDTH;
+        let nodeWidth = CanvasConstants.NODE_PADDING * 2 + CanvasConstants.NODE_ICON_HOLDER_WIDTH + textWidth;
+        nodeWidth = nodeWidth > CanvasConstants.NODE_MIN_WIDTH ? nodeWidth : CanvasConstants.NODE_MIN_WIDTH;
         return nodeWidth;
       });
 
     nodeInput
       .attr('transform', () => {
-        let x = -Math.floor(this.HANDLER_WIDTH / 2),
-          y = Math.floor(this.NODE_HEIGHT - this.HANDLER_HEIGHT) / 2;
+        let x = -Math.floor(CanvasConstants.HANDLER_WIDTH / 2),
+          y = Math.floor(CanvasConstants.NODE_HEIGHT - CanvasConstants.HANDLER_HEIGHT) / 2;
         return `translate(${x}, ${y})`;
       })
       .select('rect')
-      .attr('width', this.HANDLER_WIDTH)
-      .attr('height', this.HANDLER_HEIGHT)
-      .attr('rx', this.HANDLER_RADIUS)
-      .attr('ry', this.HANDLER_RADIUS);
+      .attr('width', CanvasConstants.HANDLER_WIDTH)
+      .attr('height', CanvasConstants.HANDLER_HEIGHT)
+      .attr('rx', CanvasConstants.HANDLER_RADIUS)
+      .attr('ry', CanvasConstants.HANDLER_RADIUS);
 
     nodeOutput
       .attr('transform', (d) => {
         let nodeWidth = (<any>nodeRect.node()).getBoundingClientRect().width;
-        let x = nodeWidth - Math.floor(this.HANDLER_WIDTH / 2),
-          y = Math.floor(this.NODE_HEIGHT - this.HANDLER_HEIGHT) / 2;
+        let x = nodeWidth - Math.floor(CanvasConstants.HANDLER_WIDTH / 2),
+          y = Math.floor(CanvasConstants.NODE_HEIGHT - CanvasConstants.HANDLER_HEIGHT) / 2;
         return `translate(${x}, ${y})`;
       })
       .select('rect')
-      .attr('width', this.HANDLER_WIDTH)
-      .attr('height', this.HANDLER_HEIGHT)
-      .attr('rx', this.HANDLER_RADIUS)
-      .attr('ry', this.HANDLER_RADIUS);
+      .attr('width', CanvasConstants.HANDLER_WIDTH)
+      .attr('height', CanvasConstants.HANDLER_HEIGHT)
+      .attr('rx', CanvasConstants.HANDLER_RADIUS)
+      .attr('ry', CanvasConstants.HANDLER_RADIUS);
 
-    self.moveNodeLink();
+    self.updateLinks();
   }
 
 
@@ -342,32 +373,43 @@ export class D3HelperService {
     console.log('connectable', connectable);
     if (!connectable) {
       t.node.accept(s.node);
-      let newLink: CanvasLink = {
-        source: s,
-        target: t
-      };
+      let newLink: CanvasLink = new CanvasLink(s, t, this.canvas.node());
       this.links.push(newLink);
-      this.drawNodeLink();
+      this.drawLinks();
     }
   }
 
-  private drawNodeLink = () => {
-    let path = this.vis.selectAll('g.link').data(this.links);
-    path.exit().remove();
-    path.enter().insert('svg:g', ':first-child')
+  private drawLinks = () => {
+    let self = this;
+    let path = this.vis.selectAll('g.link')
+      .data(this.links)
+      .enter().insert('svg:g', ':first-child')
       .classed('link', true)
-      .on('click', function () {
-
+      .on('click', function (d) {
+        self.select(d);
       })
+      .call(d3.drag()
+        .on('start', this.dragStart.bind(this))
+        .on('drag', this.dragMove.bind(this))
+        .on('end', this.dragEnd.bind(this))
+      )
       .insert('svg:path')
-      .attr('stroke-width', this.PATH_STROKE_WIDTH)
-      .attr('d', this.genLinkPathValueWithLink.bind(this));
+      .attr('stroke-width', CanvasConstants.PATH_STROKE_WIDTH)
+      .attr('d', this.genLinkPathValueWithLink.bind(this))
+      .each((d: CanvasLink, i, eles: SVGSVGElement[]) => {
+        d.element = eles[i];
+      });
+    path.exit().remove();
   }
 
-  // move the links of the node
-  private moveNodeLink = () => {
-    let path = this.vis.selectAll('g.link')
-      .data(this.links).selectAll('path')
+  private updateLinks() {
+    let self = this;
+
+    this.vis.selectAll('g.link')
+      .classed('selected', (d) => {
+        return self.selections.indexOf(d) > -1;
+      })
+      .selectAll('path')
       .attr('d', this.genLinkPathValueWithLink.bind(this));
   }
 
@@ -379,19 +421,14 @@ export class D3HelperService {
     function getLinkPath(s: CanvasNode, t: CanvasNode) {
       let self: D3HelperService = this;
 
-      let outerLeft = self.canvas.node().getBoundingClientRect().left,
-        outerTop = self.canvas.node().getBoundingClientRect().top;
-
       let targetNode = t.element;
       let sourceNode = s.element;
 
-      let x1 = sourceNode.getBoundingClientRect().right - outerLeft;
-      let y1 = sourceNode.getBoundingClientRect().top
-        + Math.floor(sourceNode.getBoundingClientRect().height / 2) - outerTop;
+      let x1 = s.x + s.width;
+      let y1 = s.y + Math.floor(s.height / 2);
 
-      let x2 = targetNode.getBoundingClientRect().left - outerLeft;
-      let y2 = targetNode.getBoundingClientRect().top
-        + Math.floor(targetNode.getBoundingClientRect().height / 2) - outerTop;
+      let x2 = t.x;
+      let y2 = t.y + Math.floor(t.height / 2);
 
       return {
         source: { x: x1, y: y1 },

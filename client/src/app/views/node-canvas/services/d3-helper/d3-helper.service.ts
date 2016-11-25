@@ -10,6 +10,7 @@ import { NODE_EVENTS } from '../../../../core/services/event.service';
 import { CanvasLink } from './canvas-link.type';
 import { CanvasObject } from './canvas-object.type';
 import { CanvasConstants } from './constants';
+import { JNUtils } from '../../../../share/util';
 
 
 
@@ -44,9 +45,11 @@ export class D3HelperService {
 
   init(svg: Element) {
     let self = this;
-    // var margin = { top: 20, right: 120, bottom: 20, left: 120 },
-    //   spaceWidth = 960 - margin.right - margin.left,
-    //   spaceHeight = 500 - margin.top - margin.bottom;
+
+    // bind keypress event
+    d3.select('body').on('keydown', () => {
+      self.keydown(d3.event.key);
+    });
 
     this.canvas = d3.select(svg)
       .attr('width', this.spaceWidth)
@@ -73,7 +76,7 @@ export class D3HelperService {
           self.select([]);
           self.brush.lower();
           self.brush
-            .select('.selection,.handle')
+            .selectAll('.selection,.handle')
             .style('display', 'none');
           
           // select nodes
@@ -107,13 +110,16 @@ export class D3HelperService {
   addNode(node: JNBaseNode) {
     let canvasNode = new CanvasNode(node, this.canvas.node());
     this.data.push(canvasNode);
-    this.drawNode();
+    this.drawNodes();
   }
 
-  drawNode() {
+  drawNodes() {
     let self = this;
-    let rects = this.vis.selectAll('g.node_group').data(this.data);
-    rects.exit().remove();
+    
+    let rects = this.vis
+      .selectAll('g.node_group')
+      .data(this.data);
+    
     let shift = null;
 
     // node group
@@ -219,9 +225,23 @@ export class D3HelperService {
       )
       .insert('svg:rect');
 
-    this.data.forEach(n => {
-      self.updateNode(n);
-    });
+    this.updateNodes();
+
+    rects.exit().remove();
+  }
+
+  private removeNode(node: CanvasNode) {
+    this.links
+      .filter(link => link.source === node || link.target === node)
+      .forEach(this.removeLink.bind(this));
+    
+    JNUtils.removeItem(this.data, node);
+    this.drawNodes();
+  }
+
+  private removeLink(link: CanvasLink) {
+    JNUtils.removeItem(this.links, link);
+    this.drawLinks();
   }
 
   private select(o: CanvasObject[] | CanvasObject) {
@@ -258,8 +278,8 @@ export class D3HelperService {
           x: position[0] - this._shift[i].x,
           y: position[1] - this._shift[i].y
         };
-        this.updateNode(n);
       });
+    this.updateNodes();
   }
 
   private dragEnd() {
@@ -268,20 +288,21 @@ export class D3HelperService {
   }
 
   public updateNodes() {
-    this.data.forEach(this.updateNode.bind(this));
-  }
-
-  public updateNode(canvasNode: CanvasNode) {
     let self = this;
 
     // adjust node width and text position
-    let _node = d3.select(canvasNode.element);
-    let nodeText = _node.select('text'),
-      nodeRect = _node.select('rect'),
-      nodeInput = _node.select('.port.input'),
-      nodeOutput = _node.select('.port.output');
+    let nodes = this.vis.selectAll('g.node_group')
+      .data(this.data)
+      .each((n: CanvasNode, i, eles: Element) => {
+        n.element = eles[i];
+      });
+    
+    let nodeText = nodes.select('text'),
+      nodeRect = nodes.select('rect'),
+      nodeInput = nodes.select('.port.input'),
+      nodeOutput = nodes.select('.port.output');
 
-    _node
+    nodes
       .attr('transform', (d: CanvasNode) => {
         return `translate(${d.position.x}, ${d.position.y})`;
       })
@@ -297,8 +318,8 @@ export class D3HelperService {
         });
         return name;
       })
-      .each((d, j, e) => {
-        let textEle = <any>nodeText.node();
+      .each((d, j, eles: SVGTextElement[]) => {
+        let textEle = eles[j];
         let maxTextLength = CanvasConstants.NODE_MAX_WIDTH - 2 * CanvasConstants.NODE_PADDING - CanvasConstants.NODE_ICON_HOLDER_WIDTH;
         let textLength = textEle.getComputedTextLength(),
           text = textEle.textContent;
@@ -308,15 +329,15 @@ export class D3HelperService {
           textLength = textEle.getComputedTextLength();
         }
       })
-      .attr('y', (d, j, e) => {
-        let textEle = <any>e[j];
+      .attr('y', (d, j, eles: SVGTextElement[]) => {
+        let textEle = eles[j];
         let textHeight = textEle.getBoundingClientRect().height;
         return Math.floor(CanvasConstants.NODE_HEIGHT - textHeight);
       });
 
     nodeRect
-      .attr('width', () => {
-        let textEle = <any>nodeText.node();
+      .attr('width', (n: CanvasNode) => {
+        let textEle: SVGTextElement = <SVGTextElement>d3.select(n.element).select('text').node();
         let textWidth = textEle.getComputedTextLength();
         let nodeWidth = CanvasConstants.NODE_PADDING * 2 + CanvasConstants.NODE_ICON_HOLDER_WIDTH + textWidth;
         nodeWidth = nodeWidth > CanvasConstants.NODE_MIN_WIDTH ? nodeWidth : CanvasConstants.NODE_MIN_WIDTH;
@@ -336,8 +357,9 @@ export class D3HelperService {
       .attr('ry', CanvasConstants.HANDLER_RADIUS);
 
     nodeOutput
-      .attr('transform', (d) => {
-        let nodeWidth = (<any>nodeRect.node()).getBoundingClientRect().width;
+      .attr('transform', (d: CanvasNode) => {
+        let rectEle: SVGSVGElement = <SVGSVGElement>d3.select(d.element).select('rect').node();
+        let nodeWidth = rectEle.getBoundingClientRect().width;
         let x = nodeWidth - Math.floor(CanvasConstants.HANDLER_WIDTH / 2),
           y = Math.floor(CanvasConstants.NODE_HEIGHT - CanvasConstants.HANDLER_HEIGHT) / 2;
         return `translate(${x}, ${y})`;
@@ -348,6 +370,7 @@ export class D3HelperService {
       .attr('rx', CanvasConstants.HANDLER_RADIUS)
       .attr('ry', CanvasConstants.HANDLER_RADIUS);
 
+    nodes.exit().remove();
     self.updateLinks();
   }
 
@@ -381,7 +404,13 @@ export class D3HelperService {
 
   private drawLinks = () => {
     let self = this;
-    let path = this.vis.selectAll('g.link')
+
+    this.vis.selectAll('g.link')
+      .data(this.links)
+      .exit()
+      .remove();
+    
+    let links = this.vis.selectAll('g.link')
       .data(this.links)
       .enter().insert('svg:g', ':first-child')
       .classed('link', true)
@@ -392,25 +421,41 @@ export class D3HelperService {
         .on('start', this.dragStart.bind(this))
         .on('drag', this.dragMove.bind(this))
         .on('end', this.dragEnd.bind(this))
-      )
+      );
+    
+    let path = links
       .insert('svg:path')
-      .attr('stroke-width', CanvasConstants.PATH_STROKE_WIDTH)
+      .classed('link', true)
       .attr('d', this.genLinkPathValueWithLink.bind(this))
       .each((d: CanvasLink, i, eles: SVGSVGElement[]) => {
         d.element = eles[i];
       });
-    path.exit().remove();
+    
+    let pathWrapper = links
+      .insert('svg:path')
+      .classed('link-wrapper', true)
+      .attr('d', this.genLinkPathValueWithLink.bind(this))
+      .each((d: CanvasLink, i, eles: SVGSVGElement[]) => {
+        d.element = eles[i];
+      });
   }
 
   private updateLinks() {
     let self = this;
 
-    this.vis.selectAll('g.link')
+    let links = this.vis.selectAll('g.link')
+      .data(this.links)
       .classed('selected', (d) => {
         return self.selections.indexOf(d) > -1;
       })
-      .selectAll('path')
+      .each((d: CanvasLink, i, eles) => {
+        d.element = eles[i];
+      });
+
+    links.selectAll('path')
       .attr('d', this.genLinkPathValueWithLink.bind(this));
+    
+    links.exit().remove();
   }
 
   private genLinkPathValueWithLink (d: CanvasLink) {
@@ -466,5 +511,21 @@ export class D3HelperService {
 
     let v = `M${source.x} ${source.y} C ${source.x + scale * deltaX / 2} ${source.y + scaleY * deltaY} ${target.x - scale * deltaX / 2} ${target.y - scaleY * deltaY} ${target.x} ${target.y}`;
     return v;
+  }
+
+  private keydown(key: string) {
+    JNUtils.debug(key);
+    switch (key) {
+      case 'Backspace':
+        this.selections.forEach((o) => {
+          switch (o.constructor) {
+            case CanvasNode:
+              this.removeNode(<CanvasNode>o);
+            case CanvasLink:
+              this.removeLink(<CanvasLink>o);
+          }
+        });
+        break;
+    }
   }
 }

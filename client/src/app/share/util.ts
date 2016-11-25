@@ -16,15 +16,15 @@ export class JNUtils {
     arr.splice(arr.indexOf(v), 1);
   }
 
-  static log() {
+  static log(...args) {
     console.log.apply(this, arguments);
   }
 
-  static debug() {
+  static debug(...args) {
     console.log.apply(this, arguments);
   }
 
-  static warning() {
+  static warning(...args) {
     console.log.apply(this, arguments);
   }
 }

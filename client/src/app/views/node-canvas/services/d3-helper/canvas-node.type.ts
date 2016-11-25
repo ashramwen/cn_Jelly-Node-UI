@@ -5,8 +5,6 @@ import { JNUtils } from '../../../../share/util';
 
 export class CanvasNode extends CanvasObject{
   node: JNBaseNode;
-  inputs: number[] = [];
-  outputs: number[] = [];
 
   set position(position: { x: number, y: number }) {
     this.node.position = position;

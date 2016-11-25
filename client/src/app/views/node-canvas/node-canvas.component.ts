@@ -1,6 +1,6 @@
 import * as $ from 'jquery';
 
-import { Directive, OnInit, Component, ViewEncapsulation, Input, ElementRef } from '@angular/core';
+import { Directive, OnInit, Component, ViewEncapsulation, Input, ElementRef, HostListener } from '@angular/core';
 import { JNFlow } from './../../core/models/jn-flow.type';
 
 import { JNBaseNode } from './../../core/models/jn-base-node.type';
@@ -22,7 +22,7 @@ import { DropEvent } from '../../share/directives/drag-drop/components/droppable
 export class NodeCanvasComponent implements OnInit {
   @Input()
   nodeFlow: JNFlow;
-  canvas: Element;
+  canvas: Element;  
 
   constructor(
     private d3Helper: D3HelperService,
@@ -34,7 +34,7 @@ export class NodeCanvasComponent implements OnInit {
     let self = this;
     this.canvas = this.elementRef.nativeElement.querySelector('svg');
     this.d3Helper.init(this.canvas);
-    this.events.on(NODE_EVENTS.NODE_CHANGED, this.d3Helper.drawNode.bind(this.d3Helper));
+    this.events.on(NODE_EVENTS.NODE_CHANGED, this.d3Helper.drawNodes.bind(this.d3Helper));
   }
 
   onItemDrop(e: DropEvent) {
@@ -47,5 +47,10 @@ export class NodeCanvasComponent implements OnInit {
     Object.assign(property, { position: position });
     let node = this.nodeFlow.createNode(<any>nodeType, property);
     this.d3Helper.addNode(node);
+  }
+
+  @HostListener('keypress', ['$event'])
+  keypress(e) {
+    console.log(e);
   }
 }

@@ -1,3 +1,6 @@
+$color-active:#ffa500;
+$color-error: red;
+
 svg {
     .node_group {
         cursor: move;
@@ -45,12 +48,17 @@ svg {
         fill: transparent;
     }
     g.link {
+        cursor: pointer;
         path {
             stroke: #000;
             stroke-width: 2px;
             fill: transparent;
         }
-        &.active path, &.selected path {
+        path.link-wrapper{
+            stroke: rgba($color: #000, $alpha: 0);
+            stroke-width: 5px;
+        }
+        &.active path.link, &.selected path.link {
             stroke: #ffa500;
         }
     }

@@ -1,12 +1,11 @@
 import {
-  IJNInfoPanelModel
+  JNInfoPanelModel
 } from '../../../views/info-panel/interfaces';
 
-export class JNDeviceTypeInfoPanelModel implements IJNInfoPanelModel {
-  static instance = new JNDeviceTypeInfoPanelModel();
+export class JNDeviceTypeInfoPanelModel extends JNInfoPanelModel {
+  static instance: JNDeviceTypeInfoPanelModel = new JNDeviceTypeInfoPanelModel();
 
-  constructor() {
-
+  constructor(){
+    super();
   }
-
 }

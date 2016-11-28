@@ -1,6 +1,5 @@
 import { INodePosition, IJNNodePayload } from './interfaces';
 import { Observable, Subscriber } from 'rxjs';
-import { IJNInfoPanelModel } from '../../views/info-panel/interfaces';
 import {
   ApplicationContextService,
   CacheContextService,
@@ -15,6 +14,7 @@ import { INodeBody } from './interfaces/node-body.interface';
 import { JNUtils } from '../../share/util';
 import { INodeError } from './interfaces/node-error.interface';
 import { JNPaletteModel } from '../../views/palette/interfaces/palette-model.type';
+import { JNInfoPanelModel } from '../../views/info-panel/interfaces/info-panel-model.interface';
 
 export interface INodeMap {
   accepted: {
@@ -47,7 +47,7 @@ export abstract class JNBaseNode {
   static accepts: Array<string> = []; // node types that can be accepted;
   static nodeModel: typeof JNNodeModel;
   static editorModel: typeof JNEditorModel;
-  static infoModel: IJNInfoPanelModel;
+  static infoModel: JNInfoPanelModel;
   static paletteModel: typeof JNPaletteModel;
   static outputable: boolean;
   static modelRules: { message: string, validator: (model: JNNodeModel<any>) => boolean }[];
@@ -314,7 +314,15 @@ export abstract class JNBaseNode {
   }
 
   public createInfoPanelModel() {
+    let clazz = <typeof JNBaseNode>(this.constructor);
+    console.log('clazz', (<any>clazz.infoModel));
+    (<any>clazz.infoModel).getData(this);
+    (<any>clazz.infoModel).getInfo(this);
+  }
 
+  public getInfoModel() {
+    let clazz = <typeof JNBaseNode>(this.constructor);
+    return (<any>clazz.infoModel);
   }
 
   /**

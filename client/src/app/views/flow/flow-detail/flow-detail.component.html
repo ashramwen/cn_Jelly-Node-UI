@@ -1,15 +1,16 @@
 <div class="main-container">
-    <div class="main-header"></div>
-    <div class="main-body clearfix">
-        <div class="main-body-container">
-            <div class="palette">
-                <jn-palette></jn-palette>
-            </div>
-            <div class="canvas">
-                <jn-canvas [nodeFlow]="nodeFlow"></jn-canvas>
-            </div>
-            <div class="info-panel">info-panel</div>
-        </div>
-        <jn-node-editor #nodeEditor></jn-node-editor>
+  <div class="main-header"></div>
+  <div class="main-body clearfix">
+    <div class="main-body-container">
+      <div class="palette">
+        <jn-palette></jn-palette>
+      </div>
+      <div class="canvas">
+        <jn-canvas [nodeFlow]="nodeFlow"></jn-canvas>
+      </div>
+      <div class="info-panel">info-panel</div>
+      <jn-info-panel></jn-info-panel>>
     </div>
+    <jn-node-editor #nodeEditor></jn-node-editor>
+  </div>
 </div>

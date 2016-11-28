@@ -10,13 +10,14 @@ import { PaletteComponent } from './palette/palette.component';
 import { NodeCanvasComponent } from './node-canvas/node-canvas.component';
 import { NodeCanvasModule } from './node-canvas/node-canvas.module';
 import { PaletteModule } from './palette/palette.module';
+import { InfoPanelModule } from './info-panel/info-panel.module';
 
 @NgModule({
   imports: [
     BrowserModule, MaterialModule.forRoot(), ReactiveFormsModule,
-    NodeEditorModule, NodeCanvasModule, PaletteModule, PaletteModule
+    NodeEditorModule, NodeCanvasModule, PaletteModule, InfoPanelModule
   ],
-  exports: [MaterialModule, PaletteModule],
+  exports: [MaterialModule, PaletteModule, InfoPanelModule],
   declarations: [
     FlowComponent,
     FlowDetailComponent

@@ -1,1 +1,1 @@
-export * from './info-panel-model.interface';
+export * from './info-panel-model.type';

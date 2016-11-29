@@ -8,7 +8,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { CoreModule } from './core/core.module';
 import { AppComponent } from './app.component';
 import { JNViewModule } from './views';
-import { NodeEditorModule } from './views/node-editor/node-editor.module';
 import { ExternalsModule } from './externals/externals.module';
 import { TestComponent } from './views/test/test.component';
 
@@ -17,7 +16,7 @@ import { TestComponent } from './views/test/test.component';
 * our providers/directives/pipes
 */
 @NgModule({
-  imports: [ BrowserModule, NodeEditorModule, JNViewModule, CoreModule, ExternalsModule, HttpModule, AppRoutingModule ],
+  imports: [ BrowserModule, JNViewModule, CoreModule, ExternalsModule, HttpModule, AppRoutingModule ],
   declarations: [ AppComponent, TestComponent],
   bootstrap: [AppComponent]
 })

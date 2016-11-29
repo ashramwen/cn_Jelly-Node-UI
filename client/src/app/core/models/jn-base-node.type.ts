@@ -15,6 +15,7 @@ import { INodeBody } from './interfaces/node-body.interface';
 import { JNUtils } from '../../share/util';
 import { INodeError } from './interfaces/node-error.interface';
 import { JNPaletteModel } from '../../views/palette/interfaces/palette-model.type';
+import {SyncEvent} from 'ts-events';
 
 export interface INodeMap {
   accepted: {
@@ -111,6 +112,7 @@ export abstract class JNBaseNode {
   };
 
   protected abstract model: JNNodeModel<any>; // node model
+  private _modelChange: SyncEvent<JNBaseNode>;
 
   /**
    * @desc return body
@@ -166,6 +168,10 @@ export abstract class JNBaseNode {
     });
   }
 
+  get errors() {
+    return this.body.$errors;
+  }
+
   /**
    * @param  {JNBaseNode} node
    * @desc description
@@ -176,16 +182,7 @@ export abstract class JNBaseNode {
     }
     this.nodeMap.accepted[node.body.nodeID] = node;
     node.nodeMap.outputTo[this.body.nodeID] = this;
-    let _self = this;
-
-    /*    
-    node.output.subscribe((payload) => {
-      _self.listener.bind(_self)(payload).then(() => {
-        _self.validate();
-        _self.buildOutput();
-      });
-    });
-    */
+    node.publishData();
   }
 
   /**
@@ -193,11 +190,17 @@ export abstract class JNBaseNode {
    * @returns {Promise<boolean | JNNodeException>}
    */
   public reject(node: JNBaseNode): Promise<boolean | JNException> {
+    let nodeAccepted = !!JNUtils
+      .toArray<JNBaseNode>(this.nodeMap.accepted)
+      .find(p => p.value === node);
+    if (!nodeAccepted) return Promise.resolve(true);
+    
     return new Promise((resolve, reject) => {
       this.whenReject(node).then(() => {
         delete this.nodeMap.accepted[node.body.nodeID];
         delete node.nodeMap.outputTo[this.body.nodeID];
-        this.validate();
+        let errors = this.validate();
+        this.update(errors);
         resolve(node);
         this.publishData();
       }, (err) => {
@@ -218,7 +221,9 @@ export abstract class JNBaseNode {
   }
 
   constructor(
-  ) { }
+  ) {
+    this._modelChange = new SyncEvent<JNBaseNode>();
+  }
 
   /**
    * @param  {Object} data
@@ -226,8 +231,9 @@ export abstract class JNBaseNode {
    */
   public update(data: Object) {
     this.model = this.parser(data);
-    this.validate();
+    this.model.extends(this.validate());
     this.publishData();
+    this._modelChange.post(this);
   };
 
   /**
@@ -258,17 +264,42 @@ export abstract class JNBaseNode {
     });
   }
 
+  public validateLinkWith(node: JNBaseNode) {
+    // type level validation
+    let typeValid = this._shouldReject(<typeof JNBaseNode>node.constructor);
+    if (typeValid) return typeValid;
+
+    // global rule
+    let connectRules = (<typeof JNBaseNode>this.constructor).connectRules;
+    let error = this.connectable(node);
+    if (error) {
+      return error;
+    }
+
+    // node rule
+    if (connectRules.nodes && connectRules.nodes.length) {
+      let n = connectRules.nodes
+        .find(_node =>
+          JNApplication.instance.nodeTypeMapper[_node.nodeType]
+          === (<typeof JNBaseNode>node.constructor));
+
+      if (!n) return null;
+      let nodeRules = n.rules;
+      for (let rule of nodeRules) {
+        if (!rule.validator(this, node)) {
+          return { message: rule.message };
+        }
+      }
+    }
+    return null;
+  }
+
   /**
    * @param  {JNBaseNode} target output node
    * @returns boolean
    * @desc if thow target is connectable
    */
   public connectable(target: JNBaseNode): { message: string } {
-    // type level validation
-    let typeValid = this._shouldReject(<typeof JNBaseNode>target.constructor);
-    if (typeValid) return typeValid;
-
-    // global rule
     let connectRules = (<typeof JNBaseNode>this.constructor).connectRules;
     let globalRules = connectRules.global;
     if (globalRules && globalRules.length) {
@@ -278,23 +309,6 @@ export abstract class JNBaseNode {
         }
       }
     }
-
-    // node rule
-    if (connectRules.nodes && connectRules.nodes.length) {
-      let node = connectRules.nodes
-        .find(_node =>
-          JNApplication.instance.nodeTypeMapper[_node.nodeType]
-          === (<typeof JNBaseNode>target.constructor));
-
-      if (!node) return null;
-      let nodeRules = node.rules;
-      for (let rule of nodeRules) {
-        if (!rule.validator(this, target)) {
-          return { message: rule.message };
-        }
-      }
-    }
-    return null;
   }
 
   /**
@@ -318,12 +332,20 @@ export abstract class JNBaseNode {
   }
 
   /**
+   * @desc model change event listener
+   * @param  {any} cb
+   * @return {BaseEvent} description
+   */
+  public onChanges(cb: any) {
+    return this._modelChange.attach(cb);
+  }
+
+  /**
    * @desc subscribe input data
    * @param  {IJNNodePayload} payload
    */
   protected subscriber(payload: IJNNodePayload) {
     this.listener(payload).then(() => {
-      this.validate();
       this.publishData();
     });
   }
@@ -374,7 +396,7 @@ export abstract class JNBaseNode {
     let errors = JNUtils.toArray<JNBaseNode>(this.nodeMap.accepted)
       .map(pair => pair.value)
       .map((node) => {
-        return this.connectable(node);
+        return this.validateLinkWith(node);
       });
 
     let nodeType = <typeof JNBaseNode>this.constructor;
@@ -387,7 +409,9 @@ export abstract class JNBaseNode {
       return !!err;
     });
 
-    this.model.$errors = errors;
-    this.model.$valid = !!errors.length;
+    return {
+      $valid: !!errors.length,
+      $errors: errors
+    };
   }
 }

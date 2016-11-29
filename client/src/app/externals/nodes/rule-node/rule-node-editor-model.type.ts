@@ -59,6 +59,8 @@ import {
 })
 export class JNRuleNodeEditorModel extends JNEditorModel {
 
+  model: JNRuleNodeModel;
+
   protected init() {
   }
 
@@ -69,7 +71,8 @@ export class JNRuleNodeEditorModel extends JNEditorModel {
   }
 
   protected formate(): JNRuleNodeModel {
-    return <JNRuleNodeModel> JNRuleNodeModel.deserialize(this.formGroup.value);
+    this.model.extends(this.formGroup.value);
+    return this.model;
   }
 
   protected updated(fieldName: string, value: any): void {

@@ -2,67 +2,100 @@ $color-active:#ffa500;
 $color-error: red;
 
 svg {
-    .node_group {
-        cursor: move;
-        .node {
-            stroke: #000;
-            fill: #fff;
-        }
-        .port {
-            cursor: crosshair;
-            &:hover rect,
-            &.hover rect {
-                stroke: #ffa500;
-                fill: #ffa500;
-            }
-            rect {
-                stroke: #000;
-                fill: #fff;
-            }
-        }
-        path {
-            stroke-width: 1;
-            stroke: #000;
-        }
-        text {
-            fill: #333;
-            font-size: 11px;
-        }
-        &.selected {
-            .node {
-                stroke: #ffa500;
-            }
-            path {
-                stroke: #ffa500;
-            }
-            .port {
-                rect{
-                    stroke: #ffa500;
-                }
-            }
-        }
+  .node_group {
+    cursor: move;
+    .node {
+      stroke: #000;
+      fill: #fff;
     }
-    g.new_link path {
-        stroke: #ffa500;
-        stroke-width: 2px;
-        fill: transparent;
+    .port {
+      cursor: crosshair;
+      &:hover rect,
+      &.hover rect {
+        stroke: $color-active;
+        fill: $color-active;
+      }
+      rect {
+        stroke: #000;
+        fill: #fff;
+      }
     }
-    g.link {
-        cursor: pointer;
-        path {
-            stroke: #000;
-            stroke-width: 2px;
-            fill: transparent;
-        }
-        path.link-wrapper{
-            stroke: rgba($color: #000, $alpha: 0);
-            stroke-width: 5px;
-        }
-        &.active path.link, &.selected path.link {
-            stroke: #ffa500;
-        }
+    path {
+      stroke-width: 1;
+      stroke: #000;
     }
+    text {
+      fill: #333;
+      font-size: 11px;
+    }
+    &.selected {
+      .node {
+        stroke: $color-active;
+      }
+      path {
+        stroke: $color-active;
+      }
+      .port {
+        rect{
+          stroke: $color-active;
+        }
+      }
+    }
+    &.error {
+      .node {
+        stroke: $color-error;
+      }
+      path {
+        stroke: $color-error;
+      }
+      .port {
+        rect{
+          stroke: $color-error;
+        }
+      }
+    }
+  }
+  g.new_link path {
+    stroke: $color-active;
+    stroke-width: 2px;
+    fill: transparent;
+  }
+  g.link {
+    cursor: pointer;
+    path {
+      stroke: #000;
+      stroke-width: 2px;
+      fill: transparent;
+    }
+    path.link-wrapper{
+      stroke: rgba($color: #000, $alpha: 0);
+      stroke-width: 10px;
+    }
+    &.active path.link, &.selected path.link {
+      stroke: $color-active;
+    }
+    &.error path.link{
+      stroke: $color-error;
+    }
+  }
 }
+
+#chart{
+  position: relative;
+}
+div.tooltip {
+  position: absolute;
+  text-align: center;
+  max-width: 200px;
+  padding: 10px;
+  font: 12px sans-serif;
+  background: lightsteelblue;
+  border: 0px;
+  border-radius: 8px;
+  pointer-events: none;
+  color: #000;
+}
+
 
 .ui-draggable-dragging {
     margin: 0 !important;

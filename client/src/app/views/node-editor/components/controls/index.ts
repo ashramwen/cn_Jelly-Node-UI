@@ -9,3 +9,8 @@ import { JNJSONEditorControl } from './json-editor/json-editor.component';
 
 export const JN_EDITOR_CONTROLS = [JNTextControl, JNTextAreaControl, JNRadioControl,
   JNSelectControl, JNSelectSetControl, JNCheckTableControl, JNJSONEditorControl, ...EXTERNAL_CONTROLS];
+
+export const JN_EDITOR_WRAPPED_CONTROLS = JN_EDITOR_CONTROLS
+  .map((componentType) => {
+    return componentType.wrappedComponent
+  });

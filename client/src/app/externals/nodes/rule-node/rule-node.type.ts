@@ -34,9 +34,7 @@ export class JNRuleNode extends JNBaseNode  {
   public readonly body: IRule;
 
   protected whenReject() {
-    return new Promise((resolve) => {
-      resolve(true);
-    });
+    return Promise.resolve(true);
   }
 
   protected listener() {

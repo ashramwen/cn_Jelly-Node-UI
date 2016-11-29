@@ -44,7 +44,7 @@ export class JNApiNode extends JNBaseNode  {
   protected model: JNApiNodeModel = new JNApiNodeModel;
 
   protected whenReject() {
-    return null;
+    return Promise.resolve(true);
   }
 
   protected listener(data: Object) {

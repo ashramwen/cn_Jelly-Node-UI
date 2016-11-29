@@ -52,5 +52,7 @@ export abstract class JNNodeModel<T extends INodeBody> implements INodeBody {
     this.position = null;
     this.accepts = [];
     this.type = null;
+    this.$errors = null;
+    this.$valid = null;
   }
 }

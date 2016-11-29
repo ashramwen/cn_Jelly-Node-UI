@@ -37,6 +37,7 @@ import { JNActionPaletteModel } from './action-node-palette-model.type';
   }, {
     message: '某些属性值为空',
     validator: (model: JNActionNodeModel) => {
+      if (!model.properties) return true;
       for (let property of model.properties) {
         if (JNUtils.isBlank(property.propertyValue)) {
           return false;
@@ -89,7 +90,7 @@ export class JNActionNode extends JNBaseNode  {
   protected model: JNActionNodeModel = new JNActionNodeModel;
 
   protected whenReject() {
-    return null;
+    return Promise.resolve(true);
   }
 
   protected formatter() {
@@ -100,9 +101,11 @@ export class JNActionNode extends JNBaseNode  {
     return new Promise((resolve) => {
       if (payload.type === JNDeviceTypeNode) {
         if (payload.data['typeName'] !== this.model.typeName) {
-          this.model.actionName = null;
-          this.model.properties = [];
-          this.model.typeName = payload.data['typeName'];
+          this.update({
+            actionName: null,
+            properties: [],
+            typeName: payload.data['typeName']
+          });
         }
       }
       resolve(true);

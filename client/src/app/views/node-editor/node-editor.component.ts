@@ -6,8 +6,6 @@ import {
 import { FormGroup, FormControl, Validators, AsyncValidatorFn } from '@angular/forms';
 
 import { ApplicationContextService } from '../../core/services';
-import { JNTemplateBuilder } from './services/template-builder.service';
-import { JNControlLoader } from './services/control-loader.service';
 import { JNTextControl, ITextInput } from './components/controls/text/text.component';
 import { IJNFormControl } from './interfaces/form-control.interface';
 import { IRadioInput, JNRadioControl } from './components/controls/radio/radio.component';
@@ -40,8 +38,7 @@ export class JNEditFormComponent implements OnInit {
   private subscription: Subscription;
 
   constructor(
-    private events: Events,
-    private controlLoader: JNControlLoader
+    private events: Events
   ) { }
 
   ngOnInit() {
@@ -93,11 +90,6 @@ export class JNEditFormComponent implements OnInit {
       }`
     });
     */
-    this.events.on(APP_READY, () => {
-      setTimeout(() => {
-        this.controlLoader.preloadControls();
-      });
-    });
   }
 
   public show(node: JNBaseNode) {

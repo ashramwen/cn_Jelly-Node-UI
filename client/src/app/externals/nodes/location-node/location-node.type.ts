@@ -34,7 +34,7 @@ export class JNLocationNode extends JNBaseNode {
   protected model: JNLocationNodeModel = new JNLocationNodeModel;
 
   protected whenReject() {
-    return null;
+    return Promise.resolve(true);
   }
 
   protected listener() {

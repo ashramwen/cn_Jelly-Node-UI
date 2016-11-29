@@ -14,6 +14,11 @@ export class CanvasNode extends CanvasObject{
     return this.node.position;
   }
 
+  get error() {
+    let error = this.node.errors ? this.node.errors[0] : null;
+    return error;
+  }
+
   constructor(node: JNBaseNode, canvas: SVGSVGElement) {
     super(canvas);
     this.node = node;

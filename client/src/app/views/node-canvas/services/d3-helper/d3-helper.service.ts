@@ -12,8 +12,6 @@ import { CanvasObject } from './canvas-object.type';
 import { CanvasConstants } from './constants';
 import { JNUtils } from '../../../../share/util';
 
-
-
 @Injectable()
 export class D3HelperService {
 
@@ -23,7 +21,7 @@ export class D3HelperService {
   private vis: any;
   private canvas: any;
   private brush: any;
-  private use: any;
+  private tip: any;
 
   private data: CanvasNode[];
   private links: CanvasLink[];
@@ -43,24 +41,15 @@ export class D3HelperService {
     this.selections = [];
   }
 
-  init(svg: Element) {
+  init(container: Element) {
     let self = this;
+    let svg = d3.select(container).append('svg');
 
-    // bind keypress event
-    d3.select('body').on('keydown', () => {
-      self.keydown(d3.event.key);
-    });
-
-    this.canvas = d3.select(svg)
+    this.canvas = svg
       .attr('width', this.spaceWidth)
       .attr('height', this.spaceHeight)
       .attr('pointer-events', 'all')
       .style('cursor', 'crosshair');
-      /*
-      .on('mousedown', mousedown)
-      .on('mouseup', mouseup)
-      .on('mousemove', moving);
-    */
     
     this.brush = this.canvas
       .append('g')
@@ -105,6 +94,11 @@ export class D3HelperService {
       .append('svg:g')
       .on('dblclick.zoom', null)
       .append('svg:g');
+    
+    this.tip = d3.select(container)
+      .append('div')
+      .attr('class', 'tooltip')
+      .style('opacity', 0);
   }
 
   addNode(node: JNBaseNode) {
@@ -133,11 +127,20 @@ export class D3HelperService {
       .on('dblclick', d => {
         self.events.emit('node_dblclick', d.node);
       })
+      .on('mousemove', (d: CanvasNode) => {
+        if (d.error) {
+          self.showTip(d.error.message);
+        }
+      })
+      .on('mouseleave', () => {
+        self.hideTip();
+      })
       .call(d3.drag()
         .on('start', function(d: CanvasNode){
           if (!self.selections || self.selections.indexOf(d) < 0) {
             self.select(d);
           }
+          self.hideTip();
           self.dragStart.apply(self, arguments);
         })
         .on('drag', this.dragMove.bind(this))
@@ -169,6 +172,9 @@ export class D3HelperService {
       .on('mouseenter', function (d) {
         d3.select(this).classed('hover', true);
         self.targetNode = d;
+        if (self.sourceNode) {
+          console.log(self.sourceNode.node.connectable(d));
+        }
       })
       .on('mouseleave', function (d) {
         d3.select(this).classed('hover', false);
@@ -200,6 +206,9 @@ export class D3HelperService {
       .on('mouseenter', function (d) {
         d3.select(this).classed('hover', true);
         self.sourceNode = d;
+        if (self.targetNode) {
+          console.log(self.targetNode.node.connectable(d));
+        }
       })
       .on('mouseleave', function (d) {
         d3.select(this).classed('hover', false);
@@ -224,10 +233,9 @@ export class D3HelperService {
         })
       )
       .insert('svg:rect');
-
-    this.updateNodes();
-
+    
     rects.exit().remove();
+    this.updateNodes();
   }
 
   private removeNode(node: CanvasNode) {
@@ -236,11 +244,14 @@ export class D3HelperService {
       .forEach(this.removeLink.bind(this));
     
     JNUtils.removeItem(this.data, node);
+    this.events.emit(NODE_EVENTS.NODE_DELETE, node.node);
     this.drawNodes();
   }
 
   private removeLink(link: CanvasLink) {
+    if (this.links.indexOf(link) === -1) return; 
     JNUtils.removeItem(this.links, link);
+    this.events.emit(NODE_EVENTS.LINK_DELETE, {source: link.source.node, target: link.target.node});
     this.drawLinks();
   }
 
@@ -295,6 +306,10 @@ export class D3HelperService {
       .data(this.data)
       .each((n: CanvasNode, i, eles: Element) => {
         n.element = eles[i];
+        d3.select(eles[i]).select('text').datum(n);
+        d3.select(eles[i]).select('rect').datum(n);
+        d3.select(eles[i]).select('.port.input').datum(n);
+        d3.select(eles[i]).select('.port.output').datum(n);
       });
     
     let nodeText = nodes.select('text'),
@@ -308,6 +323,9 @@ export class D3HelperService {
       })
       .classed('selected', (d: CanvasNode) => {
         return self.selections.indexOf(d) > -1;
+      })
+      .classed('error', (d: CanvasNode) => {
+        return !!d.error;
       });
 
     nodeText
@@ -374,7 +392,6 @@ export class D3HelperService {
     self.updateLinks();
   }
 
-
   private moveMouseLink = (linkData) => {
     let link = this.vis.selectAll('g.new_link').data([linkData]);
     link.exit().remove();
@@ -392,13 +409,14 @@ export class D3HelperService {
   }
 
   private createNodeLink = (s: CanvasNode, t: CanvasNode) => {
-    let connectable = t.node.connectable(s.node);
-    console.log('connectable', connectable);
-    if (!connectable) {
+    if (this.links.find(l => l.source === s && l.target === t)) return;
+    try {
       t.node.accept(s.node);
       let newLink: CanvasLink = new CanvasLink(s, t, this.canvas.node());
       this.links.push(newLink);
       this.drawLinks();
+    } catch (e){
+      console.log(e);
     }
   }
 
@@ -412,10 +430,19 @@ export class D3HelperService {
     
     let links = this.vis.selectAll('g.link')
       .data(this.links)
-      .enter().insert('svg:g', ':first-child')
+      .enter()
+      .insert('svg:g', ':first-child')
       .classed('link', true)
       .on('click', function (d) {
         self.select(d);
+      })
+      .on('mousemove', (d: CanvasLink) => {
+        if (d.error) {
+          self.showTip(d.error.message);
+        }
+      })
+      .on('mouseleave', () => {
+        self.hideTip();
       })
       .call(d3.drag()
         .on('start', this.dragStart.bind(this))
@@ -425,37 +452,36 @@ export class D3HelperService {
     
     let path = links
       .insert('svg:path')
-      .classed('link', true)
-      .attr('d', this.genLinkPathValueWithLink.bind(this))
-      .each((d: CanvasLink, i, eles: SVGSVGElement[]) => {
-        d.element = eles[i];
-      });
+      .classed('link', true);
     
     let pathWrapper = links
       .insert('svg:path')
-      .classed('link-wrapper', true)
-      .attr('d', this.genLinkPathValueWithLink.bind(this))
-      .each((d: CanvasLink, i, eles: SVGSVGElement[]) => {
-        d.element = eles[i];
-      });
+      .classed('link-wrapper', true);
+    
+    this.updateLinks();
   }
 
   private updateLinks() {
     let self = this;
 
     let links = this.vis.selectAll('g.link')
-      .data(this.links)
-      .classed('selected', (d) => {
+      .data(this.links);
+    
+    links.exit().remove();
+    
+    links.classed('selected', (d) => {
         return self.selections.indexOf(d) > -1;
+      })
+      .classed('error', (d: CanvasLink) => {
+        return !!d.error;
       })
       .each((d: CanvasLink, i, eles) => {
         d.element = eles[i];
+        d3.select(eles[i]).selectAll('path').datum(d);
       });
 
     links.selectAll('path')
       .attr('d', this.genLinkPathValueWithLink.bind(this));
-    
-    links.exit().remove();
   }
 
   private genLinkPathValueWithLink (d: CanvasLink) {
@@ -480,6 +506,36 @@ export class D3HelperService {
         target: { x: x2, y: y2 }
       };
     }
+  }
+
+  private showTip(message: string) {
+    let position = d3.mouse(this.canvas.node());
+
+    this.tip.transition()
+      .duration(200)
+      .style("opacity", .9);
+    
+    this.tip
+      .html(() => {
+        return `<span style="color:red"> ${message} </span>`;
+      });
+    
+    this.tip
+      .style('display', 'block')
+      .style('left', (d, i, eles: Element[]) => {
+        let ele = eles[i];
+        return position[0] - ele.getBoundingClientRect().width / 2 + 'px';
+      })
+      .style('top', (d, i, eles) => {
+        let ele = eles[i];
+        return position[1] - ele.getBoundingClientRect().height - 10 + 'px';
+      });
+  }
+
+  private hideTip() {
+    this.tip
+      .style('display', 'none')
+      .style('opacity', 0);
   }
 
   /**
@@ -513,8 +569,7 @@ export class D3HelperService {
     return v;
   }
 
-  private keydown(key: string) {
-    JNUtils.debug(key);
+  public keydown(key: string, e) {
     switch (key) {
       case 'Backspace':
         this.selections.forEach((o) => {
@@ -525,6 +580,8 @@ export class D3HelperService {
               this.removeLink(<CanvasLink>o);
           }
         });
+        this.hideTip();
+        this.selections = [];
         break;
     }
   }

@@ -74,9 +74,10 @@ export class JNDeviceTypeNode extends JNBaseNode {
           .filter(n => !!n.body.locationID)
           .map(n => n.body.locationID);
 
-        this.model.locations = locations;
-
         if (!this.model.typeName) {
+          this.update({
+            locations: locations
+          });
           resolve();
           return;
         }
@@ -85,7 +86,10 @@ export class JNDeviceTypeNode extends JNBaseNode {
           let thingIDs = this.model.things.filter((thingID) => {
             return things.find(thing => thing.thingID === thingID);
           });
-          this.model.things = thingIDs;
+          this.update({
+            locations: locations,
+            things: thingIDs
+          });
           resolve();
         });
       }

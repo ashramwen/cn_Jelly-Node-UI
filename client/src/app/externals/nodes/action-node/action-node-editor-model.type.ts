@@ -41,7 +41,14 @@ export class JNActionNodeEditorModel extends JNEditorModel {
       let _property = (<JNActionNodeModel>this.model)
         .properties
         .find(property => property.propertyName === fieldName);
-      _property.propertyValue = value;
+      if (!_property) {
+        this.model.properties.push({
+          propertyName: fieldName,
+          propertyValue: value
+        });
+      } else {
+        _property.propertyValue = value;
+      }
     } else {
       if (value === this.model.actionName) return;
       this.model.actionName = value;

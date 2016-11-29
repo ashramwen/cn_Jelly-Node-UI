@@ -73,22 +73,31 @@ export interface IConditionResult {
 
         <!-- enum type row -->
         <template [ngSwitchCase]="'enum'">
-          <label>{{condition.text}}</label>
-          <select [(ngModel)]="condition.operator" (ngModelChange)="modelChange($event)">
-            <option *ngFor="let o of getOperators(condition.type)" [value]="o.value">{{o.text}}</option>
-          </select>
-          <select [(ngModel)]="condition.value" (ngModelChange)="modelChange($event)">
-            <option *ngFor="let o of condition.options" [value]="o.value">{{o.text}}</option>
-          </select>
+          <label class="jn-form-label">{{condition.text}}</label>
+          <jn-select 
+            class="operator" 
+            [(ngModel)]="condition.operator" 
+            (ngModelChange)="modelChange($event)"
+            [options]="getOperators(condition.type)"
+          ></jn-select>
+          <jn-select 
+            class="jn-form-control" 
+            [(ngModel)]="condition.value" 
+            (ngModelChange)="modelChange($event)"
+            [options]="condition.options"
+          ></jn-select>
         </template>
 
         <!-- enum type row -->
         <template [ngSwitchCase]="'value'">
-          <label>{{condition.text}}</label>
-          <select [(ngModel)]="condition.operator" (ngModelChange)="modelChange($event)">
-            <option *ngFor="let o of getOperators(condition.type)" [value]="o.value">{{o.text}}</option>
-          </select>
-          <input type="text" [(ngModel)]="condition.value" (ngModelChange)="modelChange($event)" />
+          <label class="jn-form-label">{{condition.text}}</label>
+          <jn-select 
+            class="operator"
+            [(ngModel)]="condition.operator"
+            (ngModelChange)="modelChange($event)"
+            [options]="getOperators(condition.type)">
+          </jn-select>
+          <input type="text" class="jn-form-control" [(ngModel)]="condition.value" (ngModelChange)="modelChange($event)" />
         </template>
 
       </div>

@@ -5,6 +5,10 @@ export class CanvasLink extends CanvasObject{
   source: CanvasNode;
   target: CanvasNode;
   element: SVGSVGElement;
+    
+  get error() {
+    return this.target.node.validateLinkWith(this.source.node);  
+  }
 
   constructor(source: CanvasNode, target: CanvasNode, canvas: SVGSVGElement) {
     super(canvas);

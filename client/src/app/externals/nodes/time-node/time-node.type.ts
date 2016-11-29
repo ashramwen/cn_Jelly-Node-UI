@@ -36,9 +36,7 @@ export class JNTimeNode extends JNBaseNode  {
   public readonly body: ITime;
 
   protected whenReject() {
-    return new Promise((resolve) => {
-      resolve(true);
-    });
+    return Promise.resolve(true);
   }
 
   protected listener() {

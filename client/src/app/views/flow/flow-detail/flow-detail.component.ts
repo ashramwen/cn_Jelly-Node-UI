@@ -6,8 +6,11 @@ import { JNDeviceTypeNode } from '../../../externals/nodes/device-type-node/devi
 import { JNRuleNode } from '../../../externals/nodes/rule-node/rule-node.type';
 import { JNDevicePropertyNode } from '../../../externals/nodes/device-property-node/device-property-node.type';
 import { JNFlow } from '../../../core/models/jn-flow.type';
-import { Events } from '../../../core/services/event.service';
+import { Events, NODE_EVENTS } from '../../../core/services/event.service';
 import { JNEditFormComponent } from '../../node-editor/node-editor.component';
+import { NodeCanvasComponent } from '../../node-canvas/node-canvas.component';
+import { AppEventListener } from '../../../core/services/event-listener.type';
+import { FlowDetailService } from './flow-detail.service';
 
 @Component({
   selector: 'app-flow-detail',
@@ -20,12 +23,20 @@ export class FlowDetailComponent implements OnInit, OnDestroy {
   subs: Subscription;
   selectedNode: JNBaseNode;
   nodeFlow: JNFlow;
+  nodeDeleteEventListener: AppEventListener;
 
   @ViewChild('nodeEditor')
   nodeEditor: JNEditFormComponent;
 
-  constructor(private router: Router, private route: ActivatedRoute, private events: Events) {
-  }
+  @ViewChild('nodeCanvas')
+  nodeCanvas: NodeCanvasComponent;
+
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private events: Events,
+    private flowDetailService: FlowDetailService
+  ) { }
 
   ngOnInit() {
     this.subs = this.route.params.subscribe(params => this.id = params['id']);
@@ -40,10 +51,17 @@ export class FlowDetailComponent implements OnInit, OnDestroy {
     });
 
     this.nodeFlow = new JNFlow();
+    this.nodeFlow.onChanges(() => {
+      this.nodeCanvas.update();
+    });
+
+    this.nodeDeleteEventListener = this.events.on(NODE_EVENTS.NODE_DELETE, this.removeNode.bind(this));
+    this.events.on(NODE_EVENTS.LINK_DELETE, this.removeLink.bind(this));
   }
 
   ngOnDestroy() {
     this.subs.unsubscribe();
+    this.nodeDeleteEventListener.destroy();
   }
 
   openEditModal(node: JNBaseNode) {
@@ -54,4 +72,16 @@ export class FlowDetailComponent implements OnInit, OnDestroy {
     this.nodeEditor.hide();
   }
 
+  removeNode(node: JNBaseNode) {
+    this.nodeFlow.removeNode(node);
+  }
+
+  removeLink(d: {source: JNBaseNode, target: JNBaseNode}) {
+    this.nodeFlow.removeLink(d);
+  }
+
+  submit() {
+    let result = this.flowDetailService.buildResult(this.nodeFlow);
+    console.log(result);
+  }  
 }

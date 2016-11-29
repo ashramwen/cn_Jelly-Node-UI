@@ -72,7 +72,7 @@ export class JNConditionNode extends JNBaseNode  {
   protected model: JNConditionNodeModel = new JNConditionNodeModel;
 
   protected whenReject() {
-    return null;
+    return Promise.resolve(true);
   }
 
   protected listener(payload: IJNNodePayload) {
@@ -85,18 +85,17 @@ export class JNConditionNode extends JNBaseNode  {
           .filter(n => !!n.body.typeName);
 
         if (!propertyNodes.length) {
-          this.model.typeName = null;
-          this.model.conditions = [];
+          this.update({
+            typeName: null,
+            conditions: []
+          })
           resolve(true);
           return;
         }
 
-        let properties = propertyNodes.filter(n => n.body.typeName === this.model.typeName);
-
-        if (!properties.length) {
-          this.model.typeName = propertyNodes[0].body.typeName;
-          properties = propertyNodes.filter(n => n.body.typeName === this.model.typeName);
-        }
+        let typeName = propertyNodes[0].body.typeName;   
+        let conditions = [];
+        let properties = propertyNodes.filter(n => n.body.typeName === typeName);
 
         let newPros = properties
           .filter((p) => {
@@ -113,8 +112,13 @@ export class JNConditionNode extends JNBaseNode  {
           });
         });
 
-        this.model.conditions =  this.model.conditions.filter((c) => {
+        conditions = this.model.conditions.filter((c) => {
           return !!properties.find(p => p.body.property === c.property);
+        });
+
+        this.update({
+          typeName: typeName,
+          conditions: conditions
         });
       }
       resolve(true);

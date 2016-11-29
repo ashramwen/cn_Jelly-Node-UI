@@ -9,14 +9,15 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EDITOR_PROVIDERS } from './services/index';
 import { BrowserModule } from '@angular/platform-browser';
 import { JNControlContainer } from './components/control-container/control-container.component';
+import { JN_EDITOR_WRAPPED_CONTROLS } from './components/controls/index';
 
 @NgModule({
-  declarations: [JNEditFormComponent, JNControlContainer],
+  declarations: [JNEditFormComponent, JNControlContainer, ...JN_EDITOR_WRAPPED_CONTROLS],
   imports: [
-    JNEditorControlModule.forRoot(), ReactiveFormsModule, MaterialModule,
-    FormsModule, TranslateModule, BrowserModule
+    JNEditorControlModule, ReactiveFormsModule, MaterialModule,
+    FormsModule, TranslateModule, BrowserModule, 
   ],
-  exports: [JNEditFormComponent],
+  exports: [JNEditFormComponent, JNControlContainer, JNEditorControlModule, ...JN_EDITOR_WRAPPED_CONTROLS],
   providers: [...EDITOR_PROVIDERS, COMPILER_PROVIDERS]
 })
 export class NodeEditorModule { }

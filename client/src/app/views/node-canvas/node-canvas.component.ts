@@ -15,9 +15,13 @@ import { DropEvent } from '../../share/directives/drag-drop/components/droppable
 
 @Component({
   selector: 'jn-canvas',
-  template: '<div id="chart" droppable (onDrop)="onItemDrop($event)"><svg></svg></div>',
+  template: '<div id="chart" droppable (onDrop)="onItemDrop($event)"></div>',
   styleUrls: ['./node-canvas.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  host: {
+    '[tabindex]': '1'
+  },
+  providers: [D3HelperService]
 })
 export class NodeCanvasComponent implements OnInit {
   @Input()
@@ -32,7 +36,7 @@ export class NodeCanvasComponent implements OnInit {
 
   ngOnInit() {
     let self = this;
-    this.canvas = this.elementRef.nativeElement.querySelector('svg');
+    this.canvas = this.elementRef.nativeElement.querySelector('#chart');
     this.d3Helper.init(this.canvas);
     this.events.on(NODE_EVENTS.NODE_CHANGED, this.d3Helper.drawNodes.bind(this.d3Helper));
   }
@@ -49,8 +53,12 @@ export class NodeCanvasComponent implements OnInit {
     this.d3Helper.addNode(node);
   }
 
-  @HostListener('keypress', ['$event'])
-  keypress(e) {
-    console.log(e);
+  @HostListener('keydown', ['$event'])
+  keydown(e) {
+    this.d3Helper.keydown(e.key, e);
+  }
+
+  update() {
+    this.d3Helper.updateNodes();
   }
 }

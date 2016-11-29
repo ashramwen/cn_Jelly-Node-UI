@@ -27,7 +27,7 @@ export class JNConjunctionNode extends JNBaseNode  {
   protected model: JNConjunctionNodeModel = new JNConjunctionNodeModel;
 
   protected whenReject() {
-    return null;
+    return Promise.resolve(true);
   }
 
   protected listener(data: Object) {

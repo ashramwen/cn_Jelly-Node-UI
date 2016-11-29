@@ -100,12 +100,16 @@ export class JNDevicePropertyNode extends JNBaseNode {
         .map(pair => <JNDeviceTypeNode>pair.value);
       if (deviceTypeNodes.length > 0) {
         if (this.model.typeName !== deviceTypeNodes[0].body['typeName']) {
-          this.model.typeName = deviceTypeNodes[0].body['typeName'];
-          this.model.property = null;
+          this.update({
+            typeName: deviceTypeNodes[0].body['typeName'],
+            property: null
+          });
         }
       } else {
-        this.model.typeName = null;
-        this.model.property = null;
+        this.update({
+          typeName: null,
+          property: null
+        });
       }
     }
     return Promise.resolve(true);

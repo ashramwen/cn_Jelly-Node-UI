@@ -1,6 +1,8 @@
 import { JNBaseNode } from './jn-base-node.type';
 import { INodeBody } from './interfaces/node-body.interface';
 import { JNApplication } from '../services/application-core.service';
+import { SyncEvent } from 'ts-events';
+import { JNUtils } from '../../share/util';
 
 export class JNFlow {
   flowID: number;
@@ -9,8 +11,11 @@ export class JNFlow {
 
   private _redoStack: Array<any> = [];
   private _undoStack: Array<any> = [];
+  private _flowChange: SyncEvent<JNBaseNode>;
 
-  constructor() { }
+  constructor() { 
+    this._flowChange = new SyncEvent<JNBaseNode>();
+  }
 
   /**
    * @param  {JNBaseNode} nodeType
@@ -30,6 +35,7 @@ export class JNFlow {
       _data = { nodeID: this._generateNodeID() };
     }
     node.init(_data);
+    this.initNode(node);
     this.nodes.push(node);
 
     return node;
@@ -39,20 +45,31 @@ export class JNFlow {
    * @param  {JNBaseNode} node
    * @desc delete existing node
    */
-  deleteNode(node: JNBaseNode) {
+  removeNode(node: JNBaseNode) {
     if (this.nodes.indexOf(node) > -1) {
-      this.nodes.splice(this.nodes.indexOf(node), 1);
+      JNUtils.removeItem(this.nodes, node);
+      node.remove();
     }
+  }
+
+  removeLink(d: { source: JNBaseNode, target: JNBaseNode }) {
+    d.target.reject(d.source);
   }
 
   loadData(data: INodeBody[]) {
 
-    this.nodes = data.map(d => {
-      let nodeType: typeof JNBaseNode = JNApplication.instance.nodeTypeMapper[d.type];
-      let node: JNBaseNode = new (<any>nodeType);
-      node.init(d);
-      return node;
-    });
+    this.nodes = data
+      .map(d => {
+        let nodeType: typeof JNBaseNode = JNApplication.instance.nodeTypeMapper[d.type];
+        let node: JNBaseNode = new (<any>nodeType);
+        node.init(d);
+        return node;
+      });
+    
+    this.nodes
+      .forEach((n) => {
+        this.initNode(n);
+      });
 
     this.nodes.forEach((node) => {
       node.body.accepts
@@ -65,14 +82,26 @@ export class JNFlow {
     });
   }
 
-  redo() {
+  initNode(node: JNBaseNode) {
+    node.onChanges(() => { this.whenNodeUpdated(node); });
   }
 
-  undo() {
+  public redo() {
+  }
+
+  public undo() {
+  }
+
+  public onChanges(cb: any) {
+    return this._flowChange.attach(cb);
   }
 
   private _generateNodeID() {
     return new Date().getTime() * 10000 + Math.random() * 10000;
   }
 
+  private whenNodeUpdated(node: JNBaseNode) {
+    this._flowChange.post(node);
+    console.log(node);
+  }
 }

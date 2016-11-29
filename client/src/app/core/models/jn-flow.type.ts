@@ -3,6 +3,7 @@ import { INodeBody } from './interfaces/node-body.interface';
 import { JNApplication } from '../services/application-core.service';
 import { SyncEvent } from 'ts-events';
 import { JNUtils } from '../../share/util';
+import { Observable, Subscriber } from 'rxjs';
 
 export class JNFlow {
   flowID: number;
@@ -12,9 +13,19 @@ export class JNFlow {
   private _redoStack: Array<any> = [];
   private _undoStack: Array<any> = [];
   private _flowChange: SyncEvent<JNBaseNode>;
+  private _subscriber: Subscriber<JNBaseNode>;
+  private _observable = new Observable((subscriber: Subscriber<JNBaseNode>) => {
+    this._subscriber = subscriber;
+  });
 
   constructor() { 
     this._flowChange = new SyncEvent<JNBaseNode>();
+    this._observable
+      .debounceTime(100)
+      .subscribe((node: JNBaseNode) => {
+        this._flowChange.post(node);
+        console.log(node);
+      });
   }
 
   /**
@@ -93,6 +104,7 @@ export class JNFlow {
   }
 
   public onChanges(cb: any) {
+    
     return this._flowChange.attach(cb);
   }
 
@@ -101,7 +113,6 @@ export class JNFlow {
   }
 
   private whenNodeUpdated(node: JNBaseNode) {
-    this._flowChange.post(node);
-    console.log(node);
+    this._subscriber.next(node);
   }
 }

@@ -261,6 +261,10 @@ export class D3HelperService {
     } else {
       this.selections = [o];
     }
+    let nodes = this.selections
+      .filter(o => o instanceof CanvasNode)
+      .map((n: CanvasNode) => n.node);
+    this.events.emit(NODE_EVENTS.SELECTION_CHANGED, nodes);
     this.updateNodes();
   }
 

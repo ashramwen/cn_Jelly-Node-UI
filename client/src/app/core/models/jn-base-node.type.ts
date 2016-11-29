@@ -199,7 +199,13 @@ export abstract class JNBaseNode {
       this.whenReject(node).then(() => {
         delete this.nodeMap.accepted[node.body.nodeID];
         delete node.nodeMap.outputTo[this.body.nodeID];
+        
         let errors = this.validate();
+        let data = {
+          accepts: JNUtils.toArray<JNBaseNode>(this.nodeMap.accepted)
+            .map(p=>p.value.body.nodeID)
+        };
+        Object.assign(data, errors);
         this.update(errors);
         resolve(node);
         this.publishData();

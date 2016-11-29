@@ -8,6 +8,7 @@ import { RuleApplication } from '../../rule-application-core';
 import { IJNNodePayload } from '../../../core/models/interfaces/node-payload.interface';
 import { JNActionNode } from '../action-node/action-node.type';
 import { JNDevicePropertyPaletteModel } from './device-property-node-palette-model.type';
+import { JNDevicePropertyInfoPanelModel } from './device-property-node-info-panel.type';
 
 @JNNode({
   title: 'nodeset.JNDevicePropertyNode.nodename',
@@ -15,7 +16,7 @@ import { JNDevicePropertyPaletteModel } from './device-property-node-palette-mod
   color: '',
   borderColor: '',
   editorModel: JNDevicePropertyNodeEditorModel,
-  infoPanelModel: null,
+  infoPanelModel: JNDevicePropertyInfoPanelModel,
   paletteModel: JNDevicePropertyPaletteModel,
   accepts: ['DeviceType'],
   modelRules: [{

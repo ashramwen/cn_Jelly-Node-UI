@@ -14,7 +14,7 @@ import { INodeBody } from './interfaces/node-body.interface';
 import { JNUtils } from '../../share/util';
 import { INodeError } from './interfaces/node-error.interface';
 import { JNPaletteModel } from '../../views/palette/interfaces/palette-model.type';
-import { JNInfoPanelModel } from '../../views/info-panel/interfaces/info-panel-model.interface';
+import { JNInfoPanelModel } from '../../views/info-panel/interfaces/info-panel-model.type';
 
 export interface INodeMap {
   accepted: {
@@ -47,7 +47,7 @@ export abstract class JNBaseNode {
   static accepts: Array<string> = []; // node types that can be accepted;
   static nodeModel: typeof JNNodeModel;
   static editorModel: typeof JNEditorModel;
-  static infoModel: JNInfoPanelModel;
+  static infoModel: typeof JNInfoPanelModel;
   static paletteModel: typeof JNPaletteModel;
   static outputable: boolean;
   static modelRules: { message: string, validator: (model: JNNodeModel<any>) => boolean }[];
@@ -87,7 +87,7 @@ export abstract class JNBaseNode {
    * @param  {type of JNBaseNode} type
    * @desc factory a node
    */
-  static factory<T extends JNBaseNode>(type: new() => T, data: any):  T {
+  static factory<T extends JNBaseNode>(type: new () => T, data: any): T {
     let node = new type;
     if (data) node.init(data);
     return node;
@@ -313,17 +313,18 @@ export abstract class JNBaseNode {
     return paletteModel;
   }
 
-  public createInfoPanelModel() {
+  public createInfoPanelModel(): JNInfoPanelModel {
     let clazz = <typeof JNBaseNode>(this.constructor);
-    console.log('clazz', (<any>clazz.infoModel));
-    (<any>clazz.infoModel).getData(this);
-    (<any>clazz.infoModel).getInfo(this);
+    if (clazz.infoModel) {
+      let infoModel: JNInfoPanelModel = new (<any>clazz.infoModel)(this);
+      return infoModel;
+    }
   }
 
-  public getInfoModel() {
-    let clazz = <typeof JNBaseNode>(this.constructor);
-    return (<any>clazz.infoModel);
-  }
+  // public getInfoModel() {
+  //   let clazz = <typeof JNBaseNode>(this.constructor);
+  //   return (<any>clazz.infoModel);
+  // }
 
   /**
    * @desc subscribe input data

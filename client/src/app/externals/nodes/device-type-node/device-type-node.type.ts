@@ -16,7 +16,7 @@ import { DeviceTypeNodeService } from './device-type-node.service';
   color: '',
   borderColor: '',
   editorModel: JNDeviceTypeNodeEditorModel,
-  infoPanelModel: null,
+  infoPanelModel: JNDeviceTypeInfoPanelModel.instance,
   paletteModel: JNDeviceTypePaletteModel,
   accepts: ['Location', 'Rule'],
   modelRules: [{
@@ -42,7 +42,7 @@ export class JNDeviceTypeNode extends JNBaseNode {
 
   public readonly body: IDeviceType;
 
-  get name(): string{
+  get name(): string {
     if (!this.model.typeName) return this.getTitle();
     let schema = RuleApplication.instance
       .resources.$schema

@@ -11,13 +11,14 @@ import { NodeCanvasComponent } from './node-canvas/node-canvas.component';
 import { NodeCanvasModule } from './node-canvas/node-canvas.module';
 import { PaletteModule } from './palette/palette.module';
 import { FlowDetailService } from './flow/flow-detail/flow-detail.service';
+import { InfoPanelModule } from './info-panel/info-panel.module';
 
 @NgModule({
   imports: [
     BrowserModule, MaterialModule.forRoot(), ReactiveFormsModule,
-    NodeEditorModule, NodeCanvasModule, PaletteModule, PaletteModule
+    NodeEditorModule, NodeCanvasModule, PaletteModule, InfoPanelModule
   ],
-  exports: [MaterialModule, PaletteModule, NodeEditorModule],
+  exports: [MaterialModule],
   declarations: [
     FlowComponent,
     FlowDetailComponent

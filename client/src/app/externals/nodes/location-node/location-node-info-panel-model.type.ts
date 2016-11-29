@@ -1,11 +1,7 @@
 import {
-  IJNInfoPanelModel
+  JNInfoPanelModel
 } from '../../../views/info-panel/interfaces';
 
-export class JNLocationInfoPanelModel implements IJNInfoPanelModel {
-  static instance = new JNLocationInfoPanelModel();
+export class JNLocationInfoPanelModel extends JNInfoPanelModel {
 
-  constructor() {
-
-  }
 }

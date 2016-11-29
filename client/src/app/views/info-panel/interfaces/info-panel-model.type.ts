@@ -1,22 +1,34 @@
 import { JNBaseNode } from '../../../core/models/jn-base-node.type';
 
 export abstract class JNInfoPanelModel {
-  info: Object;
-  data: Object;
-  description: String;
+  node: JNBaseNode;
 
-  protected getInfo(node) {
-    this.info = {
-      'nodeID': node.body.nodeID,
-      'nodeName': node.body.nodeName,
-    }
+  get info():Object {
+    return this.getInfo();
   }
 
-  protected getData(node) {
-    this.data = node.body;
-    delete this.data['accepts'];
-    delete this.data['position'];
-    delete this.data['nodeID'];
-    delete this.data['nodeName'];
+  get data():Object {
+    return this.getData();
+  }
+
+  constructor(node) {
+    this.node = node;
+  }
+
+  protected getInfo() {
+    let info = {
+      'nodeID': this.node.body.nodeID,
+      'nodeName': this.node.body.nodeName,
+    }
+    return info;
+  }
+
+  protected getData() {
+    let data = this.node.body;
+    delete data['accepts'];
+    delete data['position'];
+    delete data['nodeID'];
+    delete data['nodeName'];
+    return data;
   }
 }

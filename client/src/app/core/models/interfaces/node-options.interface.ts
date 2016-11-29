@@ -10,7 +10,7 @@ export interface INodeOptions {
   borderColor: String;
   title: string;
   editorModel: typeof JNEditorModel;
-  infoPanelModel: JNInfoPanelModel;
+  infoPanelModel: typeof JNInfoPanelModel;
   paletteModel: typeof JNPaletteModel;
   accepts: string[];
   modelRules?: { message: string, validator: (model: JNNodeModel<any>) => boolean }[];

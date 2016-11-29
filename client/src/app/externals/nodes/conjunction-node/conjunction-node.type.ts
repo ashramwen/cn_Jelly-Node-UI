@@ -3,6 +3,7 @@ import { JNNode } from '../../../core/models/node-annotation';
 import { JNConjunctionNodeModel, IConjunction } from './conjunction-node-model.type';
 import { JNConjunctionNodeEditorModel } from './conjunction-node-editor-model.type';
 import { JNConjunctionPaletteModel } from './conjunction-node-palette-model.type';
+import { JNConjunctionInfoPanelModel } from './conjunction-node-info-panel.type';
 
 @JNNode({
   title: 'nodeset.JNConjunctionNode.nodename',
@@ -10,7 +11,7 @@ import { JNConjunctionPaletteModel } from './conjunction-node-palette-model.type
   color: '',
   borderColor: '',
   editorModel: JNConjunctionNodeEditorModel,
-  infoPanelModel: null,
+  infoPanelModel: JNConjunctionInfoPanelModel,
   paletteModel: JNConjunctionPaletteModel,
   accepts: ['Condition', 'Conjunction'],
   modelRules: [{

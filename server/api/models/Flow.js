@@ -56,7 +56,7 @@ module.exports = {
   		type: 'boolean',
   		required: true,
   		defaultsTo: function() {
-  			return false
+  			return true
   		}
   	}
   }

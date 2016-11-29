@@ -317,7 +317,7 @@ describe('Flow Controller', function() {
         if (!('flowID' in res.body)) throw new Error("missing flowID key");
         if (!(res.body.synchronized == false)) throw new Error("synchronized key wrong default value");
         if (!(res.body.published == false)) throw new Error("published key wrong default value");
-        if (!(res.body.enabled == false)) throw new Error("enabled key wrong default value");
+        if (!(res.body.enabled == true)) throw new Error("enabled key wrong default value");
         if (!('createdAt' in res.body)) throw new Error("missing createdAt key");
         if (!('updatedAt' in res.body)) throw new Error("missing updatedAt key");
       })
@@ -344,7 +344,7 @@ describe('Flow Controller', function() {
         if (!('flowID' in res.body)) throw new Error("missing flowID key");
         if (!(res.body.synchronized == false)) throw new Error("synchronized key wrong default value");
         if (!(res.body.published == false)) throw new Error("published key wrong default value");
-        if (!(res.body.enabled == false)) throw new Error("enabled key wrong default value");
+        if (!(res.body.enabled == true)) throw new Error("enabled key wrong default value");
         if (!('createdAt' in res.body)) throw new Error("missing createdAt key");
         if (!('updatedAt' in res.body)) throw new Error("missing updatedAt key");
       })

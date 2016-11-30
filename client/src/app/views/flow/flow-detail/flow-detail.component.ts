@@ -11,6 +11,7 @@ import { JNEditFormComponent } from '../../node-editor/node-editor.component';
 import { NodeCanvasComponent } from '../../node-canvas/node-canvas.component';
 import { AppEventListener } from '../../../core/services/event-listener.type';
 import { FlowDetailService } from './flow-detail.service';
+import { APP_READY } from '../../../core/services/application-core.service';
 
 @Component({
   selector: 'app-flow-detail',
@@ -39,7 +40,15 @@ export class FlowDetailComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.subs = this.route.params.subscribe(params => this.id = params['id']);
+    this.events.on(APP_READY, () => {
+      this.subs = this.route.params.subscribe(params => {
+        this.flowDetailService.getFlow(params['id'])
+          .then((flow) => {
+            this.nodeFlow = flow;
+            this.initFlow();
+          });
+      });
+    });
 
     this.events.on('node_click', node => {
       console.log('node_click', node);
@@ -50,13 +59,15 @@ export class FlowDetailComponent implements OnInit, OnDestroy {
       this.openEditModal(node);
     });
 
-    this.nodeFlow = new JNFlow();
+    this.nodeDeleteEventListener = this.events.on(NODE_EVENTS.NODE_DELETE, this.removeNode.bind(this));
+    this.events.on(NODE_EVENTS.LINK_DELETE, this.removeLink.bind(this));
+  }
+
+  initFlow() {
     this.nodeFlow.onChanges(() => {
       this.nodeCanvas.update();
     });
-
-    this.nodeDeleteEventListener = this.events.on(NODE_EVENTS.NODE_DELETE, this.removeNode.bind(this));
-    this.events.on(NODE_EVENTS.LINK_DELETE, this.removeLink.bind(this));
+    this.nodeCanvas.update();
   }
 
   ngOnDestroy() {
@@ -81,7 +92,6 @@ export class FlowDetailComponent implements OnInit, OnDestroy {
   }
 
   submit() {
-    let result = this.flowDetailService.buildResult(this.nodeFlow);
-    console.log(result);
+    this.flowDetailService.saveFlow(this.nodeFlow);
   }  
 }

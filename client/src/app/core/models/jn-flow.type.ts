@@ -4,21 +4,66 @@ import { JNApplication } from '../services/application-core.service';
 import { SyncEvent } from 'ts-events';
 import { JNUtils } from '../../share/util';
 import { Observable, Subscriber } from 'rxjs';
+import { Serializable, JsonProperty } from '../../../bin/JsonMapper';
+import { IFlow } from './interfaces/flow.interface';
 
-export class JNFlow {
-  flowID: number;
-  flowName: String;
-  nodes: Array<JNBaseNode> = [];
+@Serializable()
+export class JNFlow implements IFlow{
+  flowName: string;
+  flowDescription: string;
+  createdBy: string;
+  flowID: string;
+  published: boolean;
+  synchronized: boolean;
+  enabled: boolean;
+  createdAt: string;
+  updatedAt: string;
+  id: string;
 
+  flowType: 'genericRule' | 'envRule' | 'reporting';
+
+  @JsonProperty({
+    serialize: (node: JNBaseNode) => {
+      return node.body;
+    },
+    deserialize: (node: INodeBody) => {
+      return null;
+    }
+  })
+  nodes: Array<JNBaseNode>;
+
+  @JsonProperty({ignore: true})
   private _redoStack: Array<any> = [];
+
+  @JsonProperty({ignore: true})
   private _undoStack: Array<any> = [];
+
+  @JsonProperty({ignore: true})
   private _flowChange: SyncEvent<JNBaseNode>;
+
+  @JsonProperty({ignore: true})
   private _subscriber: Subscriber<JNBaseNode>;
+
+  @JsonProperty({ignore: true})
   private _observable = new Observable((subscriber: Subscriber<JNBaseNode>) => {
     this._subscriber = subscriber;
   });
 
-  constructor() { 
+  static deserialize: (d: any) => JNFlow;
+  
+  constructor() {
+    this.flowName = null;
+    this.flowID = null;
+    this.flowType = null;
+    this.flowDescription = null;
+    this.published = null;
+    this.synchronized = null;
+    this.enabled = null;
+    this.createdAt = null;
+    this.updatedAt = null;
+    this.id = null;
+    this.nodes = [];
+
     this._flowChange = new SyncEvent<JNBaseNode>();
     this._observable
       .debounceTime(100)
@@ -104,9 +149,10 @@ export class JNFlow {
   }
 
   public onChanges(cb: any) {
-    
     return this._flowChange.attach(cb);
   }
+
+  public serialize: () => IFlow;
 
   private _generateNodeID() {
     return new Date().getTime() * 10000 + Math.random() * 10000;

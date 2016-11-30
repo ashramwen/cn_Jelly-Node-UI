@@ -1,0 +1,32 @@
+<div class="main-container">
+  <div>
+    <h4>流程列表</h4>
+  </div>
+  <div class="jn-form">
+    <table class="jn-table">
+      <thead>
+        <tr>
+          <th>
+            {{'flowID' | translate}}
+          </th>
+          <th>
+            {{'flowName' | translate}}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let flow of flows" (click)="goFlow(flow)">
+          <td>
+            {{flow.flowID}}
+          </td>
+          <td>
+            {{flow.flowName}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="jn-form">
+    <button class="jn-btn pull-right" (click)="createFlow()">新建流程</button>
+  </div>
+</div>

@@ -53,7 +53,7 @@ export class RuleApplication extends JNApplication {
 
     return new Promise((resolve, reject) => {
       this.authenHelper.storeCredential({
-        accessToken: 'super_token'
+        accessToken: '0fcdeb6d3b51d5dbabfd83d83c5655f23c979604'
       });
       resolve(true);
     });

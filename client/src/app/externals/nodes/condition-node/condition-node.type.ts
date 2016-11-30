@@ -22,6 +22,7 @@ import { JNCondtionPaletteMode } from './condition-node-palette-model.type';
   modelRules: [{
     message: '属性条件值不能为空',
     validator: (model: JNConditionNodeModel) => {
+      if (!model.conditions) return true;
       for (let condition of model.conditions) {
         if (JNUtils.isBlank(condition.value)) {
           return false;
@@ -59,6 +60,25 @@ import { JNCondtionPaletteMode } from './condition-node-palette-model.type';
               if (!inputs.length || (<IDeviceType>inputs[0].body).typeName === typeName) return false;
               return true;
             });
+          }
+        },
+        {
+          message: `<Condition>不能与拥有相同属性的<DeviceType>的节点相连。`,
+          validator: (node: JNConditionNode, target: JNDevicePropertyNode) => {
+            let nodes = JNUtils.toArray<JNBaseNode>(node.nodeMap.accepted)
+              .filter(p => p.value instanceof JNDevicePropertyNode)
+              .map(p => <JNDevicePropertyNode>p.value);
+            
+            let properties = nodes
+              .map(n => n.body.property)
+              .filter(p => !!p)
+              .sort();
+            
+            for (let i = 0; i < properties.length - 1; i++){
+              if (properties[i] === properties[i + 1]) return false;
+            }
+            
+            return true;
           }
         }
       ]

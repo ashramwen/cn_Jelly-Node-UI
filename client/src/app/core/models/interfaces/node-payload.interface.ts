@@ -1,10 +1,10 @@
 import { JNBaseNode } from '../jn-base-node.type';
 import { JNException } from '../exceptions/exception.type';
-import { INodeError } from './node-error.interface';
+import { NodeError } from './node-error.type';
 
 export interface IJNNodePayload {
   type: Object;
   data: Object;
   valid: boolean;
-  error: INodeError[];
+  error: NodeError[];
 }

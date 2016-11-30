@@ -15,6 +15,8 @@ export class InfoPanelComponent implements OnInit {
 
     info: Object;
     data: Object;
+    infoKeys: Array<String>;
+    dataKeys: Array<String>;
 
     constructor(private application: JNApplication, private events: Events) {
     }
@@ -25,7 +27,10 @@ export class InfoPanelComponent implements OnInit {
             if (infoPanel) {
                 this.info = infoPanel.info;
                 this.data = infoPanel.data;
+                this.infoKeys = Object.keys(this.info);
+                this.dataKeys = Object.keys(this.data);
             }
+            console.log('info panel', infoPanel);
         });
     }
 }

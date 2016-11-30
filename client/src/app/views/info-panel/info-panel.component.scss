@@ -1,0 +1,25 @@
+.info-panel {
+  .info-panel-title {
+    padding: 10px 0;
+    text-align: center;
+    background-color: #e1e1e1;
+    font-size: 16px;
+    border-bottom: 1px solid;
+  }
+  table {
+    border-collapse: collapse;
+    margin: 10px auto;
+    width: 100%;
+    caption{
+      caption-side: left;
+      font-size: 15px;
+    }
+    th,
+    td {
+      border: 1px solid #999;
+      padding: 0.5rem;
+      text-align: left;
+      font-size: 13px;
+    }
+  }
+}

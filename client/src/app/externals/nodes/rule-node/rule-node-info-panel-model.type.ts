@@ -1,7 +1,5 @@
-import {
-  JNInfoPanelModel
-} from '../../../views/info-panel/interfaces';
+import { JNInfoPanelModel } from '../../../views/info-panel/interfaces';
 
-export class JNRuleInfoPanelModel extends JNInfoPanelModel {
+export class JNRuleNodeInfoPanelModel extends JNInfoPanelModel {
 
 }

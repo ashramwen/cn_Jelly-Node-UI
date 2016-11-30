@@ -8,7 +8,8 @@ import { JNUtils } from '../../../share/util';
 import { JNApplication } from '../../../core/services/application-core.service';
 import { RuleApplication } from '../../rule-application-core';
 import { IJNNodePayload } from '../../../core/models/interfaces/node-payload.interface';
-import { JNActionPaletteModel } from './action-node-palette-model.type';
+import { JNActionPaletteNodeModel } from './action-node-palette-model.type';
+import { JNActionNodeInfoPanelModel } from './action-node-info-panel-model.type';
 
 @JNNode({
   title: 'nodeset.JNActionNode.nodename',
@@ -16,8 +17,8 @@ import { JNActionPaletteModel } from './action-node-palette-model.type';
   color: '',
   borderColor: '',
   editorModel: JNActionNodeEditorModel,
-  infoPanelModel: null,
-  paletteModel: JNActionPaletteModel,
+  infoPanelModel: JNActionNodeInfoPanelModel,
+  paletteModel: JNActionPaletteNodeModel,
   accepts: ['DeviceType'],
   modelRules: [{
     message: '必须选择一个行为',

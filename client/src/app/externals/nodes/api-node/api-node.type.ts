@@ -5,7 +5,8 @@ import { JNDeviceTypeNode } from '../device-type-node/device-type-node.type';
 import { JNRuleNode } from '../rule-node/rule-node.type';
 import { JNApiNodeEditorModel } from './api-node-editor-model.type';
 import { JNApiNodeModel, IApi } from './api-node-model.type';
-import { JNApiPaletteModel } from './api-node-palette-model.type';
+import { JNApiPaletteNodeModel } from './api-node-palette-model.type';
+import { JNApiNodeInfoPanelModel } from './api-node-info-panel-model.type';
 
 @JNNode({
   title: 'nodeset.JNApiNode.nodename',
@@ -13,8 +14,8 @@ import { JNApiPaletteModel } from './api-node-palette-model.type';
   color: '',
   borderColor: '',
   editorModel: JNApiNodeEditorModel,
-  infoPanelModel: null,
-  paletteModel: JNApiPaletteModel,
+  infoPanelModel: JNApiNodeInfoPanelModel,
+  paletteModel: JNApiPaletteNodeModel,
   accepts: ['Rule'],
   modelRules: [{
     message: 'API名称不能为空',

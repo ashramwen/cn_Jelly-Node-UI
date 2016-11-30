@@ -1,13 +1,14 @@
 import { JNBaseNode } from '../../../core/models/jn-base-node.type';
+import { JNUtils } from '../../../share/util';
 
 export abstract class JNInfoPanelModel {
   node: JNBaseNode;
 
-  get info():Object {
+  get info(): Object {
     return this.getInfo();
   }
 
-  get data():Object {
+  get data(): Object {
     return this.getData();
   }
 
@@ -24,7 +25,10 @@ export abstract class JNInfoPanelModel {
   }
 
   protected getData() {
-    let data = this.node.body;
+    let data = JNUtils.clone(this.node.body);
+
+    delete data['$errors'];
+    delete data['$valid'];
     delete data['accepts'];
     delete data['position'];
     delete data['nodeID'];

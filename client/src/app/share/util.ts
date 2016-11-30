@@ -27,4 +27,28 @@ export class JNUtils {
   static warning(...args) {
     console.log.apply(this, arguments);
   }
+
+  static clone(obj) {
+    var o;
+    if (typeof obj == "object") {
+      if (obj === null) {
+        o = null;
+      } else {
+        if (obj instanceof Array) {
+          o = [];
+          for (var i = 0, len = obj.length; i < len; i++) {
+            o.push(JNUtils.clone(obj[i]));
+          }
+        } else {
+          o = {};
+          for (var k in obj) {
+            o[k] = JNUtils.clone(obj[k]);
+          }
+        }
+      }
+    } else {
+      o = obj;
+    }
+    return o;
+  }
 }

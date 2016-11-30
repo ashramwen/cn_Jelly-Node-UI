@@ -16,7 +16,6 @@ export abstract class JNNodeModel<T extends INodeBody> implements INodeBody {
   public accepts: number[];
   public type: string;
   public position: INodePosition;
-  public nodeName: String;
   public nodeID: number;
 
   /*  
@@ -48,7 +47,6 @@ export abstract class JNNodeModel<T extends INodeBody> implements INodeBody {
 
   constructor() {
     this.nodeID = null;
-    this.nodeName = null;
     this.position = null;
     this.accepts = [];
     this.type = null;

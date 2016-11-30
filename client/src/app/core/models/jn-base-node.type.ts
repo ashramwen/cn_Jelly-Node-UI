@@ -16,6 +16,7 @@ import { INodeError } from './interfaces/node-error.interface';
 import { JNPaletteModel } from '../../views/palette/interfaces/palette-model.type';
 import { SyncEvent } from 'ts-events';
 import { JNInfoPanelModel } from '../../views/info-panel/interfaces/info-panel-model.type';
+import { RuleApplication } from '../../externals/rule-application-core';
 
 export interface INodeMap {
   accepted: {
@@ -201,11 +202,6 @@ export abstract class JNBaseNode {
         delete node.nodeMap.outputTo[this.body.nodeID];
         
         let errors = this.validate();
-        let data = {
-          accepts: JNUtils.toArray<JNBaseNode>(this.nodeMap.accepted)
-            .map(p=>p.value.body.nodeID)
-        };
-        Object.assign(data, errors);
         this.update(errors);
         resolve(node);
         this.publishData();
@@ -236,6 +232,8 @@ export abstract class JNBaseNode {
    * @desc update node by given data and publish new body
    */
   public update(data: Object) {
+    this.model.accepts = JNUtils.toArray<JNBaseNode>(this.nodeMap.accepted)
+      .map(p => p.value.body.nodeID);
     this.model = this.parser(data);
     this.model.extends(this.validate());
     this.publishData();
@@ -252,6 +250,11 @@ export abstract class JNBaseNode {
     } else {
       this.model.extends(model);
     }
+    let type = JNUtils.toArray<typeof JNBaseNode>(RuleApplication.instance.nodeTypeMapper)
+      .find(p => p.value === this.constructor).key;
+    this.model.extends({
+      type: type
+    });
   }
 
   /**

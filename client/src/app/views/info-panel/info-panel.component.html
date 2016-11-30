@@ -1,0 +1,25 @@
+<div class="info-panel" *ngIf="info && data">
+  <div class="info-panel-title">
+    {{ 'Info Panel' | translate }}
+  </div>
+  <table class="info-table table">
+    <caption>Info</caption>
+    <tbody>
+      <tr *ngFor="let key of infoKeys">
+        <td>{{key}}</td>
+        <td>{{info[key]}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <table class="data-table table">
+    <caption>Data</caption>
+    <tbody>
+      <tr *ngFor="let key of dataKeys">
+        <td>{{key}}</td>
+        <td>{{data[key]}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="description">
+  </div>
+</div>

@@ -2,7 +2,8 @@ import { JNBaseNode } from '../../../core/models/jn-base-node.type';
 import { JNNode } from '../../../core/models/node-annotation';
 import { JNTimeNodeModel, ITime } from './time-node-model.type';
 import { JNTimeNodeEditorModel } from './time-node-editor-model.type';
-import { JNTimePaletteModel } from './time-node-palette-mode.type';
+import { JNTimeNodePaletteModel } from './time-node-palette-mode.type';
+import { JNTimeNodeInfoPanelModel } from './time-node-info-panel-model.type';
 
 @JNNode({
   title: 'nodeset.JNTimeNode.nodename',
@@ -10,8 +11,8 @@ import { JNTimePaletteModel } from './time-node-palette-mode.type';
   color: '',
   borderColor: '',
   editorModel: JNTimeNodeEditorModel,
-  infoPanelModel: null,
-  paletteModel: JNTimePaletteModel,
+  infoPanelModel: JNTimeNodeInfoPanelModel,
+  paletteModel: JNTimeNodePaletteModel,
   accepts: [],
   modelRules: [{
     message: '必须选择一种间隔类型',

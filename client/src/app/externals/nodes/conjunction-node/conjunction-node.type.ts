@@ -2,8 +2,8 @@ import { JNBaseNode } from '../../../core/models/jn-base-node.type';
 import { JNNode } from '../../../core/models/node-annotation';
 import { JNConjunctionNodeModel, IConjunction } from './conjunction-node-model.type';
 import { JNConjunctionNodeEditorModel } from './conjunction-node-editor-model.type';
-import { JNConjunctionPaletteModel } from './conjunction-node-palette-model.type';
-import { JNConjunctionInfoPanelModel } from './conjunction-node-info-panel.type';
+import { JNConjunctionNodePaletteModel } from './conjunction-node-palette-model.type';
+import { JNConjunctionNodeInfoPanelModel } from './conjunction-node-info-panel.type';
 
 @JNNode({
   title: 'nodeset.JNConjunctionNode.nodename',
@@ -11,8 +11,8 @@ import { JNConjunctionInfoPanelModel } from './conjunction-node-info-panel.type'
   color: '',
   borderColor: '',
   editorModel: JNConjunctionNodeEditorModel,
-  infoPanelModel: JNConjunctionInfoPanelModel,
-  paletteModel: JNConjunctionPaletteModel,
+  infoPanelModel: JNConjunctionNodeInfoPanelModel,
+  paletteModel: JNConjunctionNodePaletteModel,
   accepts: ['Condition', 'Conjunction'],
   modelRules: [{
     message: '连接表达式不能为空',

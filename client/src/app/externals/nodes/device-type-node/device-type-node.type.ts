@@ -1,14 +1,14 @@
 import { JNBaseNode, IConnectRuleSetting } from '../../../core/models/jn-base-node.type';
 import { JNNode } from '../../../core/models/node-annotation';
 import { JNDeviceTypeNodeEditorModel } from './device-type-node-editor-model.type';
-import { JNDeviceTypePaletteModel } from './device-type-node-palette-model.type';
+import { JNDeviceTypeNodePaletteModel } from './device-type-node-palette-model.type';
 import { JNDeviceTypeNodeModel, IDeviceType } from './device-type-node-model.type';
 import { JNLocationNode } from '../location-node/location-node.type';
 import { JNUtils } from '../../../share/util';
 import { RuleApplication } from '../../rule-application-core';
 import { IJNNodePayload } from '../../../core/models/interfaces/node-payload.interface';
 import { DeviceTypeNodeService } from './device-type-node.service';
-import { JNDeviceTypeInfoPanelModel } from './device-type-node-info-panel-model.type';
+import { JNDeviceTypeNodeInfoPanelModel } from './device-type-node-info-panel-model.type';
 
 @JNNode({
   title: 'nodeset.JNDeviceTypeNode.nodename',
@@ -16,8 +16,8 @@ import { JNDeviceTypeInfoPanelModel } from './device-type-node-info-panel-model.
   color: '',
   borderColor: '',
   editorModel: JNDeviceTypeNodeEditorModel,
-  infoPanelModel: JNDeviceTypeInfoPanelModel,
-  paletteModel: JNDeviceTypePaletteModel,
+  infoPanelModel: JNDeviceTypeNodeInfoPanelModel,
+  paletteModel: JNDeviceTypeNodePaletteModel,
   accepts: ['Location', 'Rule'],
   modelRules: [{
     message: '必须选择一个设备类型',

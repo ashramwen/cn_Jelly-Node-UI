@@ -1,8 +1,8 @@
 import { JNBaseNode } from '../../../core/models/jn-base-node.type';
 import { JNNode } from '../../../core/models/node-annotation';
 import { JNLocationNodeEditorModel } from './location-node-editor-model.type';
-import { JNLocationInfoPanelModel } from './location-node-info-panel-model.type';
-import { JNLocationPaletteModel } from './location-node-palette-model.type';
+import { JNLocationNodeInfoPanelModel } from './location-node-info-panel-model.type';
+import { JNLocationNodePaletteModel } from './location-node-palette-model.type';
 import { JNLocationNodeModel, ILocationNodeModel } from './location-node-model.type';
 import { JNDeviceTypeNode } from '../device-type-node/device-type-node.type';
 
@@ -12,8 +12,8 @@ import { JNDeviceTypeNode } from '../device-type-node/device-type-node.type';
   color: '',
   borderColor: '',
   editorModel: JNLocationNodeEditorModel,
-  infoPanelModel: null,
-  paletteModel: JNLocationPaletteModel,
+  infoPanelModel: JNLocationNodeInfoPanelModel,
+  paletteModel: JNLocationNodePaletteModel,
   accepts: [],
   modelRules: [{
     message: '必须选择一个地址',

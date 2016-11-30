@@ -8,7 +8,7 @@ import { JNPaletteConnection } from '../../../views/palette/interfaces/palette-c
 import { JNPaletteNode } from '../../../views/palette/interfaces/palette-node.type';
 import { JNDeviceTypeNode } from '../device-type-node/device-type-node.type';
 
-export class JNDevicePropertyPaletteModel extends JNPaletteModel {
+export class JNDevicePropertyNodePaletteModel extends JNPaletteModel {
 
   createConnections(): JNPaletteConnection[] {
     let schemas = RuleApplication.instance.resources.$schema.schemas;

@@ -8,7 +8,8 @@ import { JNUtils } from '../../../share/util';
 import { IDeviceProperty } from '../device-property-node/device-property-node-model.type';
 import { IDeviceType } from '../device-type-node/device-type-node-model.type';
 import { IJNNodePayload } from '../../../core/models/interfaces/node-payload.interface';
-import { JNCondtionPaletteMode } from './condition-node-palette-model.type';
+import { JNCondtionNodePaletteMode } from './condition-node-palette-model.type';
+import { JNConditionNodeInfoPanelModel } from './condition-node-info-panel-model.type';
 
 @JNNode({
   icon: '',
@@ -16,8 +17,8 @@ import { JNCondtionPaletteMode } from './condition-node-palette-model.type';
   color: '',
   borderColor: '',
   editorModel: JNConditionNodeEditorModel,
-  infoPanelModel: null,
-  paletteModel: JNCondtionPaletteMode,
+  infoPanelModel: JNConditionNodeInfoPanelModel,
+  paletteModel: JNCondtionNodePaletteMode,
   accepts: ['DeviceProperty'],
   modelRules: [{
     message: '属性条件值不能为空',

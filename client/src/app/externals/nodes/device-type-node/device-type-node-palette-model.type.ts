@@ -5,11 +5,11 @@ import { JNLocationNode } from '../location-node/location-node.type';
 import { JNDevicePropertyNode } from '../device-property-node/device-property-node.type';
 import { JNBaseNode } from '../../../core/models/jn-base-node.type';
 import { JNUtils } from '../../../share/util';
-import { JNDevicePropertyPaletteModel } from '../device-property-node/device-property-node-palette-model.type';
+import { JNDevicePropertyNodePaletteModel } from '../device-property-node/device-property-node-palette-model.type';
 import { JNPaletteConnection } from '../../../views/palette/interfaces/palette-connections.type';
 import { JNPaletteNode } from '../../../views/palette/interfaces/palette-node.type';
 
-export class JNDeviceTypePaletteModel extends JNPaletteModel {
+export class JNDeviceTypeNodePaletteModel extends JNPaletteModel {
 
   protected createConnections(): JNPaletteConnection[] {
     let typeName = (<JNDeviceTypeNode>this.node).body.typeName;

@@ -4,3 +4,7 @@ export class JNDeviceTypeInfoPanelModel extends JNInfoPanelModel {
 
 
 }
+
+export class JNDeviceTypeNodeInfoPanelModel extends JNInfoPanelModel {
+  
+}

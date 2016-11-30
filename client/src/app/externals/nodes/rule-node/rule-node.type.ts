@@ -1,8 +1,8 @@
 import { JNBaseNode, IConnectRuleSetting } from '../../../core/models/jn-base-node.type';
 import { JNNode } from '../../../core/models/node-annotation';
 import { JNRuleNodeEditorModel } from './rule-node-editor-model.type';
-import { JNRuleInfoPanelModel } from './rule-node-info-panel-model.type';
-import { JNRulePaletteModel } from './rule-node-palette-model.type';
+import { JNRuleNodeInfoPanelModel } from './rule-node-info-panel-model.type';
+import { JNRuleNodePaletteModel } from './rule-node-palette-model.type';
 import { JNRuleNodeModel, IRule } from './rule-node-model.type';
 import { JNTimeNode } from '../time-node/time-node.type';
 
@@ -12,8 +12,8 @@ import { JNTimeNode } from '../time-node/time-node.type';
   color: '',
   borderColor: '',
   editorModel: JNRuleNodeEditorModel,
-  infoPanelModel: null,
-  paletteModel: JNRulePaletteModel,
+  infoPanelModel: JNRuleNodeInfoPanelModel,
+  paletteModel: JNRuleNodePaletteModel,
   accepts: ['Condition', 'Conjunction', 'Time'],
   modelRules: [{
     message: '必须包含规则名称',

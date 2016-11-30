@@ -9,13 +9,11 @@ import { JNLocationNode } from './../../externals/nodes/location-node/location-n
 import { RuleApplication } from '../../externals/rule-application-core';
 import { JNDeviceTypeNode } from '../../externals/nodes/device-type-node/device-type-node.type';
 import { JNDevicePropertyNode } from '../../externals/nodes/device-property-node/device-property-node.type';
-import { JNLocationPaletteModel } from '../../externals/nodes/location-node/location-node-palette-model.type';
 import { JNRuleNode } from '../../externals/nodes/rule-node/rule-node.type';
 import { JNConditionNode } from '../../externals/nodes/condition-node/condition-node.type';
 import { JNApplication, APP_READY } from '../../core/services/application-core.service';
 import { JNPaletteModel } from './interfaces/palette-model.type';
 import { Events } from '../../core/services/event.service';
-import { JNDeviceTypePaletteModel } from '../../externals/nodes/device-type-node/device-type-node-palette-model.type';
 import { JNPaletteNode } from './interfaces/palette-node.type';
 import { JNPaletteConnection } from './interfaces/palette-connections.type';
 

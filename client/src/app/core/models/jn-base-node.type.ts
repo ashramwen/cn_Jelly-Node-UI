@@ -16,7 +16,6 @@ import { INodeError } from './interfaces/node-error.interface';
 import { JNPaletteModel } from '../../views/palette/interfaces/palette-model.type';
 import { SyncEvent } from 'ts-events';
 import { JNInfoPanelModel } from '../../views/info-panel/interfaces/info-panel-model.type';
-import { RuleApplication } from '../../externals/rule-application-core';
 
 export interface INodeMap {
   accepted: {
@@ -250,7 +249,7 @@ export abstract class JNBaseNode {
     } else {
       this.model.extends(model);
     }
-    let type = JNUtils.toArray<typeof JNBaseNode>(RuleApplication.instance.nodeTypeMapper)
+    let type = JNUtils.toArray<typeof JNBaseNode>(JNApplication.instance.nodeTypeMapper)
       .find(p => p.value === this.constructor).key;
     this.model.extends({
       type: type

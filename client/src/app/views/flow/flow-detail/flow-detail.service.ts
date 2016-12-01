@@ -15,9 +15,17 @@ export class FlowDetailService {
   ) { }
 
   saveFlow(flow: JNFlow) {
-    console.log(flow);
-    this.flowResource.save(flow.serialize());
+    if (!!flow.flowID) {
+      return this.flowResource
+        .update(flow.serialize())
+        .$observable.toPromise()
+    } else {
+      this.flowResource
+        .save(flow.serialize())
+        .$observable.toPromise();
+    }
   }
+
 
   getFlow(flowID: string) {
     if (!flowID || flowID === 'new') {

@@ -12,6 +12,8 @@
           <th>
             {{'flowName' | translate}}
           </th>
+          <th width="130px">
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -21,6 +23,10 @@
           </td>
           <td>
             {{flow.flowName}}
+          </td>
+          <td>
+            <button class="jn-btn" (click)="deleteFlow(flow); $event.stopPropagation();">Delete</button>
+            <button class="jn-btn" (click)="publishFlow(flow); $event.stopPropagation();">Publish</button>
           </td>
         </tr>
       </tbody>

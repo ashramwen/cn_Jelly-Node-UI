@@ -1,5 +1,4 @@
 import { Directive, ElementRef, HostListener, Input, Output, EventEmitter, AfterViewInit } from '@angular/core';
-import * as $ from 'jquery';
 
 @Directive({
     selector: '[draggable]',
@@ -55,7 +54,6 @@ export class Draggable implements AfterViewInit {
     constructor(private ele: ElementRef) {}
 
     ngAfterViewInit() {
-        // $(this.ele.nativeElement).removeAttr('style');
         this.ele.nativeElement.addEventListener('dragstart', this.dragStart.bind(this));
         this.ele.nativeElement.addEventListener('drag', this.drag.bind(this));
         this.ele.nativeElement.addEventListener('dragend', this.dragEnd.bind(this));

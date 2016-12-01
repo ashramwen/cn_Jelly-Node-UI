@@ -92,6 +92,8 @@ export class FlowDetailComponent implements OnInit, OnDestroy {
   }
 
   submit() {
-    this.flowDetailService.saveFlow(this.nodeFlow);
+    this.flowDetailService.saveFlow(this.nodeFlow).then(() => {
+      this.router.navigate(['/flow']);
+    });
   }  
 }

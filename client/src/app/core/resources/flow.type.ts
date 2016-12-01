@@ -33,6 +33,18 @@ export class NodeFlowResource extends JNNodeResource {
   })
   save: ResourceMethod<IFlow, IFlow>;
 
+  @ResourceAction({
+    method: RequestMethod.Put,
+    path: '/{!flowID}'
+  })
+  update: ResourceMethod<IFlow, IFlow>;
+
+  @ResourceAction({
+    method: RequestMethod.Delete,
+    path: '/{!flowID}'
+  })
+  delete: ResourceMethod<{flowID: string}, string>;
+
   constructor(http: Http, injector: Injector,
     private authHelper: JNAuthenHelperSerivce,
     private cacheContext: CacheContextService) {

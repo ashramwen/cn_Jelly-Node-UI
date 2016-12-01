@@ -16,4 +16,8 @@ export class FlowListService {
         return d.map(JNFlow.deserialize);
       }).toPromise();
   }
+
+  deleteFlow(flow: JNFlow) {
+    return this.flowResource.delete({ flowID: flow.flowID }).$observable.toPromise();
+  }
 }

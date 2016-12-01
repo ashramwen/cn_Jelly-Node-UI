@@ -15,6 +15,7 @@ import { InfoPanelModule } from './info-panel/info-panel.module';
 import { FlowListComponent } from './flow/flow-list/flow-list.component';
 import { FlowListService } from './flow/flow-list/flow-list.service';
 import { TranslateModule } from 'ng2-translate';
+import { LoginComponent } from './flow/login/login.component';
 
 @NgModule({
   imports: [
@@ -26,7 +27,8 @@ import { TranslateModule } from 'ng2-translate';
   declarations: [
     FlowComponent,
     FlowDetailComponent,
-    FlowListComponent
+    FlowListComponent,
+    LoginComponent
   ],
   providers: [FlowDetailService, FlowListService]
 })

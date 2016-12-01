@@ -11,13 +11,85 @@ import { IFlow } from './interfaces/flow.interface';
 export class JNFlow implements IFlow{
   flowName: string;
   flowDescription: string;
+
+  @JsonProperty({
+    serialize: (d: string) => {
+      return undefined;
+    },
+    deserialize: (d: string) => {
+      return d;
+    }
+  })
   createdBy: string;
+
+  @JsonProperty({
+    serialize: (id: string) => {
+      return id || undefined;
+    },
+    deserialize: (id: string) => {
+      return id;
+    }
+  })
   flowID: string;
+
+  @JsonProperty({
+    serialize: (d: string) => {
+      return undefined;
+    },
+    deserialize: (d: string) => {
+      return d;
+    }
+  })
   published: boolean;
+
+  @JsonProperty({
+    serialize: (d: string) => {
+      return undefined;
+    },
+    deserialize: (d: string) => {
+      return d;
+    }
+  })
   synchronized: boolean;
+
+  @JsonProperty({
+    serialize: (d: string) => {
+      return undefined;
+    },
+    deserialize: (d: string) => {
+      return d;
+    }
+  })
   enabled: boolean;
+
+  @JsonProperty({
+    serialize: (d: string) => {
+      return undefined;
+    },
+    deserialize: (d: string) => {
+      return d;
+    }
+  })
   createdAt: string;
+
+  @JsonProperty({
+    serialize: (d: string) => {
+      return undefined;
+    },
+    deserialize: (d: string) => {
+      return d;
+    }
+  })
   updatedAt: string;
+
+  @JsonProperty({
+    serialize: (id: string) => {
+      return undefined;
+    },
+    deserialize: (id: string) => {
+      return id;
+    }
+  })
   id: string;
 
   flowType: 'genericRule' | 'envRule' | 'reporting';

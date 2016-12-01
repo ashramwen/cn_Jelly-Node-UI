@@ -1,12 +1,12 @@
 import { INodePosition } from './node-position.interface';
-import { INodeError } from './node-error.interface';
+import { NodeError } from './node-error.type';
 
 export interface INodeBody {
   position?: INodePosition;
   nodeName?: String;
   nodeID?: number;
   type?: string;
-  $valid?: boolean;
-  $errors: INodeError[];
+  valid?: boolean;
+  errors: NodeError[];
   accepts?: Array<number>;
 }

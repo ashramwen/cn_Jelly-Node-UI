@@ -29,7 +29,8 @@ export function JsonProperty<T>(metadata: (() => void) | string | IJsonMetaData<
       name: metadataObj ? metadataObj.name : undefined,
       clazz: metadataObj ? metadataObj.clazz : undefined,
       serialize: metadataObj ? metadataObj.serialize : undefined,
-      deserialize: metadataObj ? metadataObj.deserialize : undefined
+      deserialize: metadataObj ? metadataObj.deserialize : undefined,
+      ignore: metadata ? metadataObj.ignore: undefined
     });
   }
 }
@@ -59,6 +60,7 @@ export class MapUtils {
   }
 
   static serialize<T>(obj: Object) {
+    if (!obj) return null;
     let result = {};
     Object.keys(obj).forEach((key) => {
       let propertyMetadataFn: (d: IJsonMetaData<T>) => any = (propertyMetadata) => {
@@ -89,6 +91,7 @@ export class MapUtils {
 
       let propertyMetadata: IJsonMetaData<T> = MapUtils.getJsonProperty<T>(obj, key);
       if (propertyMetadata) {
+        if (propertyMetadata.ignore) return;
         let propertyName = propertyMetadata.name || key;
         result[propertyName] = propertyMetadataFn(propertyMetadata);
       } else {
@@ -142,6 +145,7 @@ export class MapUtils {
 
       let propertyMetadata = MapUtils.getJsonProperty<T>(obj, key);
       if (propertyMetadata) {
+        if (propertyMetadata.ignore) return;
         obj[key] = propertyMetadataFn(propertyMetadata);
       } else {
         if (jsonObject && jsonObject[key] !== undefined) {
@@ -168,5 +172,6 @@ export interface IJsonMetaData<T> {
   clazz?: { new (): T };
   serialize?: (t: T) => any;
   deserialize?: (a: any) => T;
+  ignore?: boolean;
 }
 

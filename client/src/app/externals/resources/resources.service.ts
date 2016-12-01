@@ -10,6 +10,5 @@ export class ResourceService {
     public $thing: BeehiveThing,
     public $location: BeehiveLocation,
     public $schema: BeehiveSchema
-  ) {
-  }
+  ) { }
 }

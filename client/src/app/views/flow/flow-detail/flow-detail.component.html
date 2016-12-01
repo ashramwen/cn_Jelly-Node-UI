@@ -1,5 +1,6 @@
 <div class="main-container">
   <div class="main-header">
+    <input type="text" *ngIf="nodeFlow" [(ngModel)]="nodeFlow.flowName"/>
     <button class="btn btn-danger" (click)="submit()">保存</button>
   </div>
   <div class="main-body clearfix">

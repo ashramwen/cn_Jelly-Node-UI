@@ -8,7 +8,6 @@ import { JNUtils } from '../../../share/util';
 import { JNApplication } from '../../../core/services/application-core.service';
 import { RuleApplication } from '../../rule-application-core';
 import { IJNNodePayload } from '../../../core/models/interfaces/node-payload.interface';
-import { INodeError } from '../../../core/models/interfaces/node-error.interface';
 import { JNActionPaletteNodeModel } from './action-node-palette-model.type';
 import { JNActionNodeInfoPanelModel } from './action-node-info-panel-model.type';
 

@@ -9,7 +9,6 @@ import { CoreModule } from './core/core.module';
 import { AppComponent } from './app.component';
 import { JNViewModule } from './views';
 import { ExternalsModule } from './externals/externals.module';
-import { TestComponent } from './views/test/test.component';
 
 /*
 * Platform and Environment
@@ -17,7 +16,7 @@ import { TestComponent } from './views/test/test.component';
 */
 @NgModule({
   imports: [ BrowserModule, JNViewModule, CoreModule, ExternalsModule, HttpModule, AppRoutingModule ],
-  declarations: [ AppComponent, TestComponent],
+  declarations: [ AppComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

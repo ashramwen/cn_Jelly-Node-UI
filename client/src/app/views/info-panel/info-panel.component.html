@@ -3,7 +3,11 @@
     {{ 'Info Panel' | translate }}
   </div>
   <table class="info-table table">
-    <caption>Info</caption>
+    <thead>
+      <tr>
+        <th colspan="2"><caption>Info</caption></th>
+      </tr>
+    </thead>
     <tbody>
       <tr *ngFor="let key of infoKeys">
         <td>{{key}}</td>
@@ -12,7 +16,11 @@
     </tbody>
   </table>
   <table class="data-table table">
-    <caption>Data</caption>
+    <thead>
+      <tr>
+        <th colspan="2"><caption>Data</caption></th>
+      </tr>
+    </thead>
     <tbody>
       <tr *ngFor="let key of dataKeys">
         <td>{{key}}</td>

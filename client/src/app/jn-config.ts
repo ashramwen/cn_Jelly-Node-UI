@@ -1,8 +1,7 @@
 export const JNConfig = {
   beehiveBaseUrl: 'http://114.215.196.178:8080/beehive-portal',
   apiPrefix: '/api',
-  backednUrl: '',
-  accessToken: 'Bearer super_token',
+  backednUrl: 'http://114.55.55.37:1337',
   apis: {
     'LOCATION_TAGS': '/locationTags',
     'SCHEMA': '/schema',
@@ -11,6 +10,9 @@ export const JNConfig = {
     'TYPE': '/things/types',
     'AUTH': '/oauth2',
     'USER': '/users'
+  },
+  backendAPI: {
+    FLOW: '/flows'
   }
 };
 

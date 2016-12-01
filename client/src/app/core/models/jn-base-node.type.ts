@@ -12,10 +12,10 @@ import { JNException } from './exceptions/exception.type';
 import { JNEditorModel } from '../../views/node-editor/interfaces/editor-model.type';
 import { INodeBody } from './interfaces/node-body.interface';
 import { JNUtils } from '../../share/util';
-import { INodeError } from './interfaces/node-error.interface';
 import { JNPaletteModel } from '../../views/palette/interfaces/palette-model.type';
 import { SyncEvent } from 'ts-events';
 import { JNInfoPanelModel } from '../../views/info-panel/interfaces/info-panel-model.type';
+import { NodeError } from './interfaces/node-error.type';
 
 export interface INodeMap {
   accepted: {
@@ -111,6 +111,16 @@ export abstract class JNBaseNode {
     outputTo: {}
   };
 
+  get accepted(): JNBaseNode[] {
+    return JNUtils.toArray<JNBaseNode>(this.nodeMap.accepted)
+      .map(p => p.value);
+  }
+
+  get outputTo(): JNBaseNode[] {
+    return JNUtils.toArray<JNBaseNode>(this.nodeMap.outputTo)
+      .map(p => p.value);
+  }
+
   protected abstract model: JNNodeModel<any>; // node model
   private _modelChange: SyncEvent<JNBaseNode>;
 
@@ -169,7 +179,7 @@ export abstract class JNBaseNode {
   }
 
   get errors() {
-    return this.body.$errors;
+    return this.body.errors;
   }
 
   /**
@@ -249,6 +259,8 @@ export abstract class JNBaseNode {
     } else {
       this.model.extends(model);
     }
+    let errors = this.validate();
+    this.model.extends(errors);
     let type = JNUtils.toArray<typeof JNBaseNode>(JNApplication.instance.nodeTypeMapper)
       .find(p => p.value === this.constructor).key;
     this.model.extends({
@@ -395,8 +407,8 @@ export abstract class JNBaseNode {
       let payload: IJNNodePayload = {
         type: this.constructor,
         data: output,
-        valid: this.model.$valid,
-        error: this.model.$errors
+        valid: this.model.valid,
+        error: this.model.errors
       };
       JNUtils.toArray<JNBaseNode>(this.nodeMap.outputTo)
         .map(pair => pair.value)
@@ -409,7 +421,7 @@ export abstract class JNBaseNode {
   /**
    * @desc validate accepted nodes and node's body; update node's status
    */
-  private validate() {
+  private validate(): {valid: boolean, errors: NodeError[]} {
     let errors = JNUtils.toArray<JNBaseNode>(this.nodeMap.accepted)
       .map(pair => pair.value)
       .map((node) => {
@@ -427,8 +439,8 @@ export abstract class JNBaseNode {
     });
 
     return {
-      $valid: !!errors.length,
-      $errors: errors
+      valid: !!errors.length,
+      errors: errors
     };
   }
 }

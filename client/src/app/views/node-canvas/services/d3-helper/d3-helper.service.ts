@@ -1,7 +1,7 @@
 import { JNFlow } from './../../../../core/models/jn-flow.type';
 import { Events } from './../../../../core/services/event.service';
 import { JNBaseNode } from '../../../../core/models/jn-base-node.type'
-import { Injectable } from '@angular/core';
+import { Injectable, Sanitizer, SecurityContext } from '@angular/core';
 import { TranslateService } from 'ng2-translate';
 import * as d3 from 'd3';
 import { CanvasNode } from './canvas-node.type';
@@ -35,7 +35,7 @@ export class D3HelperService {
 
   private _shift: Array<{x: number, y: number}> = [];
 
-  constructor(private events: Events, private translate: TranslateService) {
+  constructor(private events: Events, private translate: TranslateService, private _sanitizer: Sanitizer) {
     this.data = [];
     this.links = [];
     this.selections = [];
@@ -99,6 +99,25 @@ export class D3HelperService {
       .append('div')
       .attr('class', 'tooltip')
       .style('opacity', 0);
+  }
+
+  loadNodes(nodes: JNBaseNode[]) {
+    this.data = [];
+    this.links = [];
+    this.selections = [];
+
+    nodes.forEach((n) => {
+      this.addNode(n);
+    });
+
+    nodes.forEach(t => {
+      t.accepted.forEach(s => {
+        let target = this.data
+        .find(d => d.node === t);
+        let source = this.data.find(d => d.node === s);
+        this.addLink(source, target);
+      });
+    })
   }
 
   addNode(node: JNBaseNode) {
@@ -416,12 +435,16 @@ export class D3HelperService {
     if (this.links.find(l => l.source === s && l.target === t)) return;
     try {
       t.node.accept(s.node);
-      let newLink: CanvasLink = new CanvasLink(s, t, this.canvas.node());
-      this.links.push(newLink);
-      this.drawLinks();
+      this.addLink(s, t);
     } catch (e){
       console.log(e);
     }
+  }
+
+  private addLink(s: CanvasNode, t: CanvasNode) {
+    let newLink: CanvasLink = new CanvasLink(s, t, this.canvas.node());
+    this.links.push(newLink);
+    this.drawLinks();
   }
 
   private drawLinks = () => {
@@ -520,8 +543,8 @@ export class D3HelperService {
       .style("opacity", .9);
     
     this.tip
-      .html(() => {
-        return `<span style="color:red"> ${message} </span>`;
+      .text(() => {
+        return `${message}`;
       });
     
     this.tip

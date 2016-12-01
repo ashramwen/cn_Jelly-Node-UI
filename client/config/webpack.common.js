@@ -161,8 +161,6 @@ module.exports = function(options) {
     plugins: [
       new webpack.IgnorePlugin(/regenerator|nodent|js-beautify/, /ajv/),
       new webpack.ProvidePlugin({
-        $: "jquery",
-        jQuery: "jquery"
       }),
 
       new AssetsPlugin({

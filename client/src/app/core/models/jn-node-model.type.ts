@@ -3,15 +3,15 @@ import { JNBaseNode } from './jn-base-node.type';
 import { JsonProperty, MapUtils, Serializable } from '../../../bin/JsonMapper';
 import { JNException } from './exceptions/exception.type';
 import { INodeBody } from './interfaces/node-body.interface';
-import { INodeError } from './interfaces/node-error.interface';
+import { NodeError } from './interfaces/node-error.type';
 
 @Serializable()
 export abstract class JNNodeModel<T extends INodeBody> implements INodeBody {
 
   static deserialize: <V extends INodeBody>(obj: any) => JNNodeModel<V>;
 
-  public $errors: INodeError[];
-  public $valid: boolean;
+  public errors: NodeError[];
+  public valid: boolean;
 
   public accepts: number[];
   public type: string;
@@ -50,7 +50,7 @@ export abstract class JNNodeModel<T extends INodeBody> implements INodeBody {
     this.position = null;
     this.accepts = [];
     this.type = null;
-    this.$errors = null;
-    this.$valid = null;
+    this.errors = null;
+    this.valid = null;
   }
 }

@@ -16,6 +16,7 @@ import { ConfigContextService } from './services/config-context.service';
 import { RuleApplication } from '../externals/rule-application-core';
 import { Events } from './services/event.service';
 import { ExternalsModule } from '../externals/externals.module';
+import { NODE_RESOURCES } from './resources/index';
 
 
 // Create config options (see ILocalStorageServiceConfigOptions) for deets:
@@ -38,6 +39,6 @@ const LOCAL_STORAGE_CONFIG_PROVIDER: Provider = {
     provide: TranslateLoader,
     useFactory: (http: Http) => new TranslateStaticLoader(http, 'assets/i18n', '.json'),
     deps: [Http]
-  }, ...PROVIDERS]
+  }, ...PROVIDERS, ...NODE_RESOURCES]
 })
 export class CoreModule { }

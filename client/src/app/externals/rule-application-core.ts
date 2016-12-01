@@ -19,6 +19,7 @@ import { JNRuleNode } from './nodes/rule-node/rule-node.type';
 import { JNActionNode } from './nodes/action-node/action-node.type';
 import { JNApiNode } from './nodes/api-node/api-node.type';
 import { JNTimeNode } from './nodes/time-node/time-node.type';
+import { JNAuthenHelperSerivce } from '../core/services/authen-helper.service';
 
 @Injectable()
 export class RuleApplication extends JNApplication {
@@ -32,6 +33,7 @@ export class RuleApplication extends JNApplication {
     public events: Events,
     public resources: ResourceService,
     private authenHelper: AuthenHelperSerivce,
+    private authen: JNAuthenHelperSerivce
   ) {
     super(applicationContext, cacheContext, configContext, http, events);
     RuleApplication.instance = this;
@@ -52,7 +54,9 @@ export class RuleApplication extends JNApplication {
     };
 
     return new Promise((resolve, reject) => {
-      resolve(true);
+      this.authen.login({ userName: 'beehive_admin', password: '1qaz2wsx' }).then(() => {
+        resolve(true);
+      });
     });
   }
 

@@ -23,4 +23,14 @@ export class CanvasNode extends CanvasObject{
     super(canvas);
     this.node = node;
   }
+
+  get hasInput() :boolean{
+    let nodeType: typeof JNBaseNode = <typeof JNBaseNode>this.node.constructor;
+    return nodeType.hasInput();
+  }
+
+  get hasOutput(): boolean {
+    let nodeType: typeof JNBaseNode = <typeof JNBaseNode>this.node.constructor;
+    return nodeType.hasOutput();
+  }
 }

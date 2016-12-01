@@ -20,7 +20,7 @@ export class FlowDetailService {
         .update(flow.serialize())
         .$observable.toPromise()
     } else {
-      this.flowResource
+      return this.flowResource
         .save(flow.serialize())
         .$observable.toPromise();
     }

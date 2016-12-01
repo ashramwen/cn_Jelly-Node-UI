@@ -57,12 +57,12 @@ export abstract class JNBaseNode {
   /**
    * this node type accept other nodes or not
    */
-  static hasInput: () => Boolean;
+  static hasInput: () => boolean;
 
   /**
    * this node type output to other nodes or not
    */
-  static hasOutput: () => Boolean;
+  static hasOutput: () => boolean;
 
   /**
    * @desc test two node is connectable or not
@@ -193,6 +193,9 @@ export abstract class JNBaseNode {
     this.nodeMap.accepted[node.body.nodeID] = node;
     node.nodeMap.outputTo[this.body.nodeID] = this;
     node.publishData();
+    this.update({
+      accepts: this.accepted.map(n => n.body.nodeID)
+    });
   }
 
   /**

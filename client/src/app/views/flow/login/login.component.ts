@@ -33,8 +33,8 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent{
   credential = {
-    userName: '',
-    password: ''
+    userName: 'beehive_admin',
+    password: '1qaz2wsx'
   };
 
   constructor(

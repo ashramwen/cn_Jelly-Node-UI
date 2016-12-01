@@ -178,7 +178,6 @@ export class D3HelperService {
 
     // node text
     g.insert('svg:text')
-      .attr('x', CanvasConstants.NODE_ICON_HOLDER_WIDTH + CanvasConstants.NODE_PADDING)
       .style('font-size', CanvasConstants.FONT_SIZE);
 
     // node icon right path
@@ -352,6 +351,14 @@ export class D3HelperService {
       });
 
     nodeText
+      .attr('x', (n: CanvasNode) => {
+        /*
+        if (!n.hasOutput && n.hasInput) {
+          return 
+        }
+        */
+        return CanvasConstants.NODE_ICON_HOLDER_WIDTH + CanvasConstants.NODE_PADDING 
+      })
       .text((d: CanvasNode) => {
         let name = d.node.name;
         this.translate.get(name).subscribe((nameTranslated) => {
@@ -386,6 +393,9 @@ export class D3HelperService {
       });
 
     nodeInput
+      .style('display', (n: CanvasNode) => {
+        return n.hasInput ? 'block' : 'none';
+      })
       .attr('transform', () => {
         let x = -Math.floor(CanvasConstants.HANDLER_WIDTH / 2),
           y = Math.floor(CanvasConstants.NODE_HEIGHT - CanvasConstants.HANDLER_HEIGHT) / 2;
@@ -398,6 +408,9 @@ export class D3HelperService {
       .attr('ry', CanvasConstants.HANDLER_RADIUS);
 
     nodeOutput
+      .style('display', (n: CanvasNode) => {
+        return n.hasOutput ? 'block' : 'none';
+      })
       .attr('transform', (d: CanvasNode) => {
         let rectEle: SVGSVGElement = <SVGSVGElement>d3.select(d.element).select('rect').node();
         let nodeWidth = rectEle.getBoundingClientRect().width;

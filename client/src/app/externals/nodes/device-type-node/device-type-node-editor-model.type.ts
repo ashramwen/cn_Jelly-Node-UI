@@ -51,7 +51,11 @@ export class JNDeviceTypeNodeEditorModel extends JNEditorModel {
     let schemas = RuleApplication.instance.resources.$schema.schemas;
     
     let schemaOptions = types
-      .filter(type => !!schemas[type])
+      .filter(type => {
+        return !!schemas[type]
+          && !!schemas[type].content
+          && !!schemas[type].content.statesSchema;
+      })
       .map((type) => {
         return { value: type, text: schemas[type].content.statesSchema.title };
       });

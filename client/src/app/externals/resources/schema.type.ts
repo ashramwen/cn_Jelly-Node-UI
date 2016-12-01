@@ -52,7 +52,7 @@ export interface ISchema {
   thingType: string;
   name: string;
   version: string;
-  content: {
+  content?: {
     statesSchema?: {
       type: 'object';
       title: string;
@@ -124,7 +124,9 @@ export class BeehiveSchema extends BeehiveResource {
         Promise.all(promises)
           .then((schemas) => {
             schemas.forEach((schema, i) => {
-              this.cacheSchema(requests[i], schema);
+              if (this.validateSchema(schema)) {
+                this.cacheSchema(requests[i], schema);
+              }
             });
             resolve();
           }, (err) => {
@@ -134,10 +136,17 @@ export class BeehiveSchema extends BeehiveResource {
     });
   }
 
+  validateSchema(schema: ISchema) {
+    if (!schema || !schema.thingType || !schema.content || !schema.content.statesSchema) return false;
+    return true;
+  }
+
   restoreSchemas() {
     this.schemas = this.schemas || {};
     this.types.forEach((type) => {
-      this.schemas[type] = this.getSchema(type);
+      let schema = this.getSchema(type);
+      if (!this.validateSchema(schema)) return;
+      this.schemas[type] = schema;
     });
   }
 

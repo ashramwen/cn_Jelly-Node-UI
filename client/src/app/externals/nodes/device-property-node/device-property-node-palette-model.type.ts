@@ -2,7 +2,6 @@ import { JNPaletteModel } from '../../../views/palette/interfaces/palette-model.
 import { JNBaseNode } from '../../../core/models/jn-base-node.type';
 import { RuleApplication } from '../../rule-application-core';
 import { JNDevicePropertyNode } from './device-property-node.type';
-import { JNDeviceTypeInfoPanelModel } from '../device-type-node/device-type-node-info-panel-model.type';
 import { JNPaletteConnection } from '../../../views/palette/interfaces/palette-connections.type';
 import { JNPaletteNode } from '../../../views/palette/interfaces/palette-node.type';
 import { JNDeviceTypeNode } from '../device-type-node/device-type-node.type';

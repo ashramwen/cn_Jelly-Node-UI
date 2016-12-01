@@ -11,6 +11,7 @@ import { RuleApplication } from './rule-application-core';
 import { ResourceProviders } from 'ng2-resource-rest';
 import { AuthenHelperSerivce } from './services/authen-helper.service';
 import { ResourceService } from './resources/resources.service';
+import { JNAuthenHelperSerivce } from '../core/services/authen-helper.service';
 
 @NgModule({
   imports: [],
@@ -24,12 +25,13 @@ import { ResourceService } from './resources/resources.service';
         http: Http,
         events: Events,
         resource: ResourceService,
-        authenHelper: AuthenHelperSerivce
+        authenHelper: AuthenHelperSerivce,
+        authen: JNAuthenHelperSerivce
       ) => new RuleApplication(appContext, cacheContext,
-        configContext, http, events, resource, authenHelper),
+        configContext, http, events, resource, authenHelper, authen),
       deps: [
         ApplicationContextService, ConfigContextService,
-        CacheContextService, Http, Events, ResourceService, AuthenHelperSerivce]
+        CacheContextService, Http, Events, ResourceService, AuthenHelperSerivce, JNAuthenHelperSerivce]
   }]
 })
 export class ExternalsModule {
@@ -44,10 +46,11 @@ export class ExternalsModule {
             http: Http,
             events: Events,
             resource: ResourceService,
-            authenHelper: AuthenHelperSerivce
-          ) => new RuleApplication(appContext, cacheContext, configContext, http, events, resource, authenHelper),
+            authenHelper: AuthenHelperSerivce,
+            auth: JNAuthenHelperSerivce
+          ) => new RuleApplication(appContext, cacheContext, configContext, http, events, resource, authenHelper, auth),
           deps: [ApplicationContextService, ConfigContextService,
-            CacheContextService, Http, Events, ResourceService, AuthenHelperSerivce]
+            CacheContextService, Http, Events, ResourceService, AuthenHelperSerivce, JNAuthenHelperSerivce]
       }]
     };
   }

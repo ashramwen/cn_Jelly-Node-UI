@@ -124,7 +124,7 @@ module.exports = {
     .then(function(value) {
       var externalID = value.externalID
       flowType = value.flowType
-      published = value.publised
+      published = value.published
       return Q.fcall(function(){
         return {
           externalID: externalID,
@@ -133,8 +133,9 @@ module.exports = {
       })
     })
     .then(function(result){
-      if (flowType == 'genericRule' && published == true)
+      if (flowType == 'genericRule' && published == true) {
         return RulesEngineService.delete(result)
+      }
       else
         return Q.fcall(function (){
           return {res: {statusCode: '200'}}

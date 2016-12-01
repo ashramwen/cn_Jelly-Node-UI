@@ -3,6 +3,7 @@ import { JNUtils } from '../../../share/util';
 
 export abstract class JNInfoPanelModel {
   node: JNBaseNode;
+  complexData: Array<Object>;
 
   get info(): Object {
     return this.getInfo();
@@ -12,10 +13,12 @@ export abstract class JNInfoPanelModel {
     return this.getData();
   }
 
-  
-
   constructor(node) {
     this.node = node;
+  }
+
+  public init() {
+
   }
 
   protected getInfo() {
@@ -27,7 +30,16 @@ export abstract class JNInfoPanelModel {
   }
 
   protected getData() {
-    let data = JNUtils.clone(this.node.body);
+    let data: Object = JNUtils.clone(this.node.body);
+
+    Object.keys(data).forEach((key) => {
+      if (data[key].constructor !== String) {
+        this.complexData.push({
+          key: data[key]
+        });
+        delete data[key];
+      }
+    })
 
     delete data['$errors'];
     delete data['$valid'];
@@ -38,4 +50,6 @@ export abstract class JNInfoPanelModel {
 
     return data;
   }
+
+
 }

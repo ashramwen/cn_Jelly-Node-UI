@@ -10,6 +10,15 @@
  */
 
 module.exports.bootstrap = function(cb) {
+	Flow.native(function(err, collection) {
+		collection.ensureIndex(['flowID'], {
+	    unique: true
+	  }, function(err, result) {
+	    if (err) {
+	      sails.log.error(err);
+	    }
+	  });
+	})
 
   // It's very important to trigger this callback method when you are finished
   // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)

@@ -26,8 +26,10 @@ export class InfoPanelComponent implements OnInit {
             if (infoPanel) {
                 this.info = infoPanel.info;
                 this.data = infoPanel.data;
+                
                 this.infoKeys = Object.keys(this.info);
                 this.dataKeys = Object.keys(this.data);
+                infoPanel.init();
             }
             console.log('info panel', infoPanel);
         });

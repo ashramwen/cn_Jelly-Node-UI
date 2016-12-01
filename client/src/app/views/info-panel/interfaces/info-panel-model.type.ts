@@ -12,6 +12,8 @@ export abstract class JNInfoPanelModel {
     return this.getData();
   }
 
+  
+
   constructor(node) {
     this.node = node;
   }
@@ -33,6 +35,7 @@ export abstract class JNInfoPanelModel {
     delete data['position'];
     delete data['nodeID'];
     delete data['nodeName'];
+
     return data;
   }
 }

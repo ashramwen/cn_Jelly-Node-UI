@@ -13,9 +13,10 @@ import { JNRuleNode } from '../../externals/nodes/rule-node/rule-node.type';
 import { JNConditionNode } from '../../externals/nodes/condition-node/condition-node.type';
 import { JNApplication, APP_READY } from '../../core/services/application-core.service';
 import { JNPaletteModel } from './interfaces/palette-model.type';
-import { Events } from '../../core/services/event.service';
+import { Events, NODE_EVENTS } from '../../core/services/event.service';
 import { JNPaletteNode } from './interfaces/palette-node.type';
 import { JNPaletteConnection } from './interfaces/palette-connections.type';
+import { PaletteModule } from './palette.module';
 
 @Component({
   selector: 'jn-palette',
@@ -41,6 +42,16 @@ export class PaletteComponent implements OnInit {
         this.connections = palette.connections;
         console.log('palette', palette);
       });
+      this.events.on(NODE_EVENTS.SELECTION_CHANGED, (nodes: Array<JNBaseNode>) => {
+        if (nodes.length == 1) {
+          let palette = nodes[0].createPaletteModel();
+          this.flowNodes = palette.nodes;
+          this.connections = palette.connections;
+        }else {
+          this.flowNodes = JNPaletteModel.getNodes();
+          this.connections = [];
+        }
+      })
     });
   }
 }

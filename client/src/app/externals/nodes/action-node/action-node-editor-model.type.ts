@@ -11,10 +11,7 @@ import { ISchemaProperty, ISchema, ISchemaAction } from '../../resources/schema.
 import { JNActionNodeModel } from './action-node-model.type';
 import { JNNodeEditor } from '../../../core/models/node-editor-annotation';
 import { JNActionNodeService } from './action-node.service';
-import {
-  JNTextAreaControl,
-  ITextareaInput
-} from '../../../views/node-editor/components/controls/textarea/textarea.component';
+import { JNTextAreaControl, ITextareaInput } from '../../../views/node-editor/components/controls/textarea/textarea.component';
 
 @JNNodeEditor({
   title: 'nodeset.JNActionNode.nodename'

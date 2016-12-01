@@ -5,11 +5,7 @@ import { Events } from '../../core/services/event.service';
 import { JNBaseNode } from '../../core/models/jn-base-node.type';
 import { RuleApplication } from '../../externals/rule-application-core';
 import { JNDevicePropertyNode } from '../../externals/nodes/device-property-node/device-property-node.type';
-import { JNDevicePropertyPaletteModel } from '../../externals/nodes/device-property-node/device-property-node-palette-model.type';
-import { JNDeviceTypePaletteModel } from '../../externals/nodes/device-type-node/device-type-node-palette-model.type';
 import { JNDeviceTypeNode } from '../../externals/nodes/device-type-node/device-type-node.type';
-import { JNLocationPaletteModel } from '../../externals/nodes/location-node/location-node-palette-model.type';
-import { JNRulePaletteModel } from '../../externals/nodes/rule-node/rule-node-palette-model.type';
 import { JNPaletteModel } from '../palette/interfaces/palette-model.type';
 import { JNLocationNode } from '../../externals/nodes/location-node/location-node.type';
 

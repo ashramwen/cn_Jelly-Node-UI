@@ -2,7 +2,6 @@ import { JNApplication, APP_READY } from '../../core/services/application-core.s
 import { Events } from '../../core/services/event.service';
 import { JNBaseNode } from '../../core/models/jn-base-node.type';
 import { Component, OnInit } from '@angular/core';
-import { JNDeviceTypeInfoPanelModel } from '../../externals/nodes/device-type-node/device-type-node-info-panel-model.type';
 import { JNInfoPanelModel } from './interfaces/info-panel-model.type';
 
 @Component({

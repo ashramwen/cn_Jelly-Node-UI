@@ -5,12 +5,6 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 
 import { JNFlow } from './../../core/models/jn-flow.type';
 import { JNBaseNode } from '../../core/models/jn-base-node.type';
-import { JNLocationNode } from './../../externals/nodes/location-node/location-node.type';
-import { RuleApplication } from '../../externals/rule-application-core';
-import { JNDeviceTypeNode } from '../../externals/nodes/device-type-node/device-type-node.type';
-import { JNDevicePropertyNode } from '../../externals/nodes/device-property-node/device-property-node.type';
-import { JNRuleNode } from '../../externals/nodes/rule-node/rule-node.type';
-import { JNConditionNode } from '../../externals/nodes/condition-node/condition-node.type';
 import { JNApplication, APP_READY } from '../../core/services/application-core.service';
 import { JNPaletteModel } from './interfaces/palette-model.type';
 import { Events, NODE_EVENTS } from '../../core/services/event.service';

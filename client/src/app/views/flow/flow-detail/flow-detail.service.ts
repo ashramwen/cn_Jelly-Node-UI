@@ -26,7 +26,6 @@ export class FlowDetailService {
     }
   }
 
-
   getFlow(flowID: string) {
     if (!flowID || flowID === 'new') {
       let nodeFlow = new JNFlow();

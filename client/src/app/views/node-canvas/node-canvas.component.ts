@@ -1,8 +1,6 @@
 import { Directive, OnInit, Component, ViewEncapsulation, Input, ElementRef, HostListener, SimpleChange, OnChanges } from '@angular/core';
 import { JNFlow } from './../../core/models/jn-flow.type';
 import { JNBaseNode } from './../../core/models/jn-base-node.type';
-import { JNDeviceTypeNode } from './../../externals/nodes/device-type-node/device-type-node.type';
-import { JNLocationNode } from './../../externals/nodes/location-node/location-node.type';
 import { Events, NODE_EVENTS } from '../../core/services/event.service';
 import { D3HelperService } from './services/d3-helper/d3-helper.service';
 import { JNPaletteNode } from '../palette/interfaces/palette-node.type';

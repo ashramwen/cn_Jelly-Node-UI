@@ -13,9 +13,7 @@ import { JNApplication } from './services/application-core.service';
 import { ApplicationContextService } from './services/application-context.service';
 import { CacheContextService } from './services/cache-context.service';
 import { ConfigContextService } from './services/config-context.service';
-import { RuleApplication } from '../externals/rule-application-core';
 import { Events } from './services/event.service';
-import { ExternalsModule } from '../externals/externals.module';
 import { NODE_RESOURCES } from './resources/index';
 
 
@@ -32,7 +30,7 @@ const LOCAL_STORAGE_CONFIG_PROVIDER: Provider = {
 
 @NgModule({
   imports: [
-    HttpModule, TranslateModule.forRoot(), ResourceModule.forRoot(), ExternalsModule
+    HttpModule, TranslateModule.forRoot(), ResourceModule.forRoot()
   ],
   exports: [HttpModule, TranslateModule, ResourceModule],
   providers: [LocalStorageService, LOCAL_STORAGE_CONFIG_PROVIDER, {

@@ -181,8 +181,7 @@ export class D3HelperService {
       .style('font-size', CanvasConstants.FONT_SIZE);
 
     // node icon right path
-    g.insert('svg:path')
-      .attr('d', `M ${CanvasConstants.NODE_HEIGHT} 1 l 0 ${CanvasConstants.NODE_HEIGHT}`);
+    g.insert('svg:path');
 
     // node input
     g.insert('svg:g')
@@ -330,11 +329,13 @@ export class D3HelperService {
         n.element = eles[i];
         d3.select(eles[i]).select('text').datum(n);
         d3.select(eles[i]).select('rect').datum(n);
+        d3.select(eles[i]).select('path').datum(n);
         d3.select(eles[i]).select('.port.input').datum(n);
         d3.select(eles[i]).select('.port.output').datum(n);
       });
     
     let nodeText = nodes.select('text'),
+      nodePath = nodes.select('path'),
       nodeRect = nodes.select('rect'),
       nodeInput = nodes.select('.port.input'),
       nodeOutput = nodes.select('.port.output');
@@ -352,11 +353,9 @@ export class D3HelperService {
 
     nodeText
       .attr('x', (n: CanvasNode) => {
-        /*
         if (!n.hasOutput && n.hasInput) {
-          return 
+          return CanvasConstants.NODE_PADDING;
         }
-        */
         return CanvasConstants.NODE_ICON_HOLDER_WIDTH + CanvasConstants.NODE_PADDING 
       })
       .text((d: CanvasNode) => {
@@ -381,6 +380,17 @@ export class D3HelperService {
         let textEle = eles[j];
         let textHeight = textEle.getBoundingClientRect().height;
         return Math.floor(CanvasConstants.NODE_HEIGHT - textHeight);
+      });
+    
+    nodePath
+      .attr('d', (n: CanvasNode) => {
+        if (!n.hasOutput && n.hasInput) {
+          let textEle: SVGTextElement = <SVGTextElement>d3.select(n.element).select('text').node();
+          let textWidth = textEle.getComputedTextLength();
+
+          return `M ${textWidth + 2 * CanvasConstants.NODE_PADDING} 1 l 0 ${CanvasConstants.NODE_HEIGHT}`;
+        }
+        return `M ${CanvasConstants.NODE_ICON_HOLDER_WIDTH} 1 l 0 ${CanvasConstants.NODE_HEIGHT}`;
       });
 
     nodeRect

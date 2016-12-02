@@ -8,4 +8,4 @@ import { DragDropModule } from './directives/drag-drop/index';
   declarations: [],
   providers: [],
 })
-export class SharedModule { }
+export class JNSharedModule { }

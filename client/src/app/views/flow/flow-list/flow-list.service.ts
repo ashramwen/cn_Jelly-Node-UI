@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { NodeFlowResource } from '../../../core/resources/flow.type';
 import { JNFlow } from '../../../core/models/jn-flow.type';
+import { NodeFlowResource } from '../../../share/resources/flow.type';
 
 
 @Injectable()

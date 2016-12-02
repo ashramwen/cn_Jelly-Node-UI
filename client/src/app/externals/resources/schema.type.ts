@@ -2,9 +2,9 @@ import { Injectable, Injector } from '@angular/core';
 import { Resource, ResourceParams, ResourceAction, ResourceMethod } from 'ng2-resource-rest';
 import { RequestMethod, Http, Headers } from '@angular/http';
 import { JNConfig, BEEHIVE_HEADERS } from '../../jn-config';
-import { CacheContextService } from '../../core/services/cache-context.service';
 import { BeehiveResource } from './beehive-resource.type';
 import { AuthenHelperSerivce } from '../services/authen-helper.service';
+import { CacheContextService } from '../../share/services/cache-context.service';
 
 export interface IType {
   type: string;

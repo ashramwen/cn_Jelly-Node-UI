@@ -1,8 +1,8 @@
 import { JNBaseNode } from '../../../core/models/jn-base-node.type';
-import { JNApplication } from '../../../core/services/application-core.service';
 import { JNUtils } from '../../../share/util';
 import { JNPaletteConnection } from './palette-connections.type';
 import { JNPaletteNode } from './palette-node.type';
+import { JNApplication } from '../../../share/services/application-core.service';
 
 export abstract class JNPaletteModel {
   staticPropertyTitle: string = 'nodes';

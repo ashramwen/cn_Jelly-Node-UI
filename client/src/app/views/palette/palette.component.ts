@@ -1,16 +1,13 @@
-import { ApplicationContextService } from './../../core/services/application-context.service';
-import { ConfigContextService } from './../../core/services/config-context.service';
-import { CacheContextService } from './../../core/services/cache-context.service';
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 
 import { JNFlow } from './../../core/models/jn-flow.type';
 import { JNBaseNode } from '../../core/models/jn-base-node.type';
-import { JNApplication, APP_READY } from '../../core/services/application-core.service';
 import { JNPaletteModel } from './interfaces/palette-model.type';
-import { Events, NODE_EVENTS } from '../../core/services/event.service';
 import { JNPaletteNode } from './interfaces/palette-node.type';
 import { JNPaletteConnection } from './interfaces/palette-connections.type';
 import { PaletteModule } from './palette.module';
+import { JNApplication, APP_READY } from '../../share/services/application-core.service';
+import { Events, NODE_EVENTS } from '../../share/services/event.service';
 
 @Component({
   selector: 'jn-palette',

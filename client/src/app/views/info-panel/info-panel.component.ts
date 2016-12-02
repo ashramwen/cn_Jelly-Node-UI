@@ -1,8 +1,7 @@
-import { JNApplication, APP_READY } from '../../core/services/application-core.service';
-import { Events } from '../../core/services/event.service';
 import { JNBaseNode } from '../../core/models/jn-base-node.type';
 import { Component, OnInit } from '@angular/core';
 import { JNInfoPanelModel } from './interfaces/info-panel-model.type';
+import { Events } from '../../share/services/event.service';
 
 @Component({
     selector: 'jn-info-panel',
@@ -17,7 +16,7 @@ export class InfoPanelComponent implements OnInit {
     infoKeys: Array<String>;
     dataKeys: Array<String>;
 
-    constructor(private application: JNApplication, private events: Events) {
+    constructor(private events: Events) {
     }
 
     ngOnInit() {

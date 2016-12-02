@@ -1,11 +1,11 @@
 import { Directive, OnInit, Component, ViewEncapsulation, Input, ElementRef, HostListener, SimpleChange, OnChanges } from '@angular/core';
 import { JNFlow } from './../../core/models/jn-flow.type';
 import { JNBaseNode } from './../../core/models/jn-base-node.type';
-import { Events, NODE_EVENTS } from '../../core/services/event.service';
 import { D3HelperService } from './services/d3-helper/d3-helper.service';
 import { JNPaletteNode } from '../palette/interfaces/palette-node.type';
-import { JNApplication } from '../../core/services/application-core.service';
 import { DropEvent } from '../../share/directives/drag-drop/components/droppable/drop-event.type';
+import { Events, NODE_EVENTS } from '../../share/services/event.service';
+import { JNApplication } from '../../share/services/application-core.service';
 
 @Component({
   selector: 'jn-canvas',

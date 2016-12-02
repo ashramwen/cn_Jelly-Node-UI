@@ -3,10 +3,10 @@
 import { TestBed, inject, async } from '@angular/core/testing';
 
 import { By } from '@angular/platform-browser';
-import { CoreModule } from '../core.module';
 import { Events } from './event.service';
 import { APP_READY, JNApplication } from './application-core.service';
 import { AppModule } from '../../app.module';
+import { CoreModule } from '../../core/core.module';
 
 
 ////////  SPECS  /////////////

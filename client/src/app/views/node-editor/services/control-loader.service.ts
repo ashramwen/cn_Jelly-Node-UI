@@ -16,7 +16,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { JNEditorModel } from '../interfaces/editor-model.type';
 import { Request } from '@angular/http';
 import { JNControlsModule } from '../../controls/controls.module';
-import { ApplicationContextService } from '../../../core/services/application-context.service';
 import { JN_EDITOR_CONTROLS } from '../components/controls/index';
 
 interface IDynamicComponent {
@@ -30,7 +29,6 @@ export class JNControlLoader {
   constructor(
     private compiler: RuntimeCompiler,
     private validatorGenerator: ValidatorGenerator,
-    private applicationContext: ApplicationContextService,
     private componentResolver: ComponentFactoryResolver
   ) {
     // this.preloadControls();

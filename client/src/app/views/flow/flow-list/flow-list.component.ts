@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FlowListService } from './flow-list.service';
 import { JNFlow } from '../../../core/models/jn-flow.type';
-import { Events } from '../../../core/services/event.service';
-import { APP_READY } from '../../../core/services/application-core.service';
 import { Router } from '@angular/router';
 import { JNUtils } from '../../../share/util';
+import { Events } from '../../../share/services/event.service';
+import { APP_READY } from '../../../share/services/application-core.service';
 
 @Component({
   selector: 'jn-flow-list',

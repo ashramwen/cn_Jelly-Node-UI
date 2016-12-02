@@ -5,15 +5,13 @@ import {
 } from '@angular/core';
 import { FormGroup, FormControl, Validators, AsyncValidatorFn } from '@angular/forms';
 
-import { ApplicationContextService } from '../../core/services';
 import { JNTextControl, ITextInput } from './components/controls/text/text.component';
 import { IJNFormControl } from './interfaces/form-control.interface';
 import { IRadioInput, JNRadioControl } from './components/controls/radio/radio.component';
 import { JNEditorModel } from './interfaces/editor-model.type';
-import { Events, NODE_EVENTS } from '../../core/services/event.service';
-import { APP_READY } from '../../core/services/application-core.service';
 import { JNBaseNode } from '../../core/models/jn-base-node.type';
 import { Subscription } from 'rxjs';
+import { Events, NODE_EVENTS } from '../../share/services/event.service';
 
 @Component({
   selector: 'jn-node-editor',

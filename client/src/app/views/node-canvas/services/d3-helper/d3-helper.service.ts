@@ -1,16 +1,15 @@
 import { JNFlow } from './../../../../core/models/jn-flow.type';
-import { Events } from './../../../../core/services/event.service';
 import { JNBaseNode } from '../../../../core/models/jn-base-node.type'
 import { Injectable, Sanitizer, SecurityContext } from '@angular/core';
 import { TranslateService } from 'ng2-translate';
 import * as d3 from 'd3';
 import { CanvasNode } from './canvas-node.type';
 import { CanvasPoint } from './canvas-point.type';
-import { NODE_EVENTS } from '../../../../core/services/event.service';
 import { CanvasLink } from './canvas-link.type';
 import { CanvasObject } from './canvas-object.type';
 import { CanvasConstants } from './constants';
 import { JNUtils } from '../../../../share/util';
+import { Events, NODE_EVENTS } from '../../../../share/services/event.service';
 
 @Injectable()
 export class D3HelperService {

@@ -4,7 +4,7 @@ import { RequestMethod, Http } from '@angular/http';
 import { JNConfig } from '../../jn-config';
 import { BeehiveResource } from './beehive-resource.type';
 import { AuthenHelperSerivce } from '../services/authen-helper.service';
-import { CacheContextService } from '../../core/services/cache-context.service';
+import { CacheContextService } from '../../share/services/cache-context.service';
 
 export interface ILocation {
   location: string;

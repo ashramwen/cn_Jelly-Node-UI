@@ -1,7 +1,7 @@
 import { INodeOptions } from './interfaces';
 import { JNBaseNode } from './jn-base-node.type';
-import { JNApplication } from '../services/application-core.service';
 import { JNUtils } from '../../share/util';
+import { JNApplication } from '../../share/services/application-core.service';
 
 declare const Reflect: any;
 

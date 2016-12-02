@@ -5,7 +5,6 @@ import { JNActionNodeModel } from './action-node-model.type';
 import { JNDeviceTypeNode } from '../device-type-node/device-type-node.type';
 import { JNActionNodeEditorModel } from './action-node-editor-model.type';
 import { JNUtils } from '../../../share/util';
-import { JNApplication } from '../../../core/services/application-core.service';
 import { RuleApplication } from '../../rule-application-core';
 import { IJNNodePayload } from '../../../core/models/interfaces/node-payload.interface';
 import { JNActionPaletteNodeModel } from './action-node-palette-model.type';

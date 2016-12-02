@@ -1,11 +1,11 @@
 import { JNBaseNode } from './jn-base-node.type';
 import { INodeBody } from './interfaces/node-body.interface';
-import { JNApplication } from '../services/application-core.service';
 import { SyncEvent } from 'ts-events';
 import { JNUtils } from '../../share/util';
 import { Observable, Subscriber } from 'rxjs';
 import { Serializable, JsonProperty } from '../../../bin/JsonMapper';
 import { IFlow } from './interfaces/flow.interface';
+import { JNApplication } from '../../share/services/application-core.service';
 
 @Serializable()
 export class JNFlow implements IFlow{

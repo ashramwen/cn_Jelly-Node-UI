@@ -1,13 +1,8 @@
 import { Http } from '@angular/http';
 import { Injectable } from '@angular/core';
 
-import { JNApplication } from '../core/services/application-core.service';
-import { ApplicationContextService } from '../core/services/application-context.service';
-import { ConfigContextService } from '../core/services/config-context.service';
-import { CacheContextService } from '../core/services/cache-context.service';
 import { BEEHIVE_HEADERS, JNConfig } from '../jn-config';
 import { AuthenHelperSerivce } from './services/authen-helper.service';
-import { Events } from '../core/services/event.service';
 import { ResourceService } from './resources/resources.service';
 import { CACHE_LOCATION } from './resources/location.type';
 import { JNLocationNode } from './nodes/location-node/location-node.type';
@@ -19,7 +14,15 @@ import { JNRuleNode } from './nodes/rule-node/rule-node.type';
 import { JNActionNode } from './nodes/action-node/action-node.type';
 import { JNApiNode } from './nodes/api-node/api-node.type';
 import { JNTimeNode } from './nodes/time-node/time-node.type';
-import { JNAuthenHelperSerivce } from '../core/services/authen-helper.service';
+import { JNApplication } from '../share/services/application-core.service';
+import { ApplicationContextService } from '../share/services/application-context.service';
+import { CacheContextService } from '../share/services/cache-context.service';
+import { ConfigContextService } from '../share/services/config-context.service';
+import { Events } from '../share/services/event.service';
+import { JNAuthenHelperSerivce } from '../share/services/authen-helper.service';
+import { TranslateService } from 'ng2-translate';
+import { cn, en } from '../../../dist/assets/i18n';
+
 
 @Injectable()
 export class RuleApplication extends JNApplication {
@@ -33,7 +36,8 @@ export class RuleApplication extends JNApplication {
     public events: Events,
     public resources: ResourceService,
     private authenHelper: AuthenHelperSerivce,
-    private authen: JNAuthenHelperSerivce
+    private authen: JNAuthenHelperSerivce,
+    private translate: TranslateService
   ) {
     super(applicationContext, cacheContext, configContext, http, events);
     RuleApplication.instance = this;
@@ -52,6 +56,10 @@ export class RuleApplication extends JNApplication {
       Api: JNApiNode,
       Time: JNTimeNode
     };
+
+    this.translate.setDefaultLang('cn');
+    this.translate.setTranslation('cn', cn);
+    this.translate.setTranslation('en', en);
 
     return new Promise((resolve, reject) => {
       this.authen.login({ userName: 'beehive_admin', password: '1qaz2wsx' }).then(() => {

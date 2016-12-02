@@ -1,13 +1,7 @@
 import { INodePosition, IJNNodePayload } from './interfaces';
 import { Observable, Subscriber } from 'rxjs';
-import {
-  ApplicationContextService,
-  CacheContextService,
-  ConfigContextService
-} from '../services';
 import { JNNodeModel } from './jn-node-model.type';
 import { JNNodeUnconnectableException } from './exceptions/node-unconnectable-exception.type';
-import { JNApplication } from '../services/application-core.service';
 import { JNException } from './exceptions/exception.type';
 import { JNEditorModel } from '../../views/node-editor/interfaces/editor-model.type';
 import { INodeBody } from './interfaces/node-body.interface';
@@ -16,6 +10,7 @@ import { JNPaletteModel } from '../../views/palette/interfaces/palette-model.typ
 import { SyncEvent } from 'ts-events';
 import { JNInfoPanelModel } from '../../views/info-panel/interfaces/info-panel-model.type';
 import { NodeError } from './interfaces/node-error.type';
+import { JNApplication } from '../../share/services/application-core.service';
 
 export interface INodeMap {
   accepted: {

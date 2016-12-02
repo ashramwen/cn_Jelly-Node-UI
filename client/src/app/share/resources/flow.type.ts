@@ -2,10 +2,10 @@ import { Injectable, Injector } from '@angular/core';
 import { Resource, ResourceParams, ResourceAction, ResourceMethod } from 'ng2-resource-rest';
 import { RequestMethod, Http } from '@angular/http';
 import { JNConfig } from '../../jn-config';
-import { CacheContextService } from '../../core/services/cache-context.service';
 import { IFlow } from '../../core/models/interfaces/flow.interface';
 import { JNNodeResource } from './node-resource.type';
 import { JNAuthenHelperSerivce } from '../services/authen-helper.service';
+import { CacheContextService } from '../services/cache-context.service';
 
 export const CACHE_LOCATION = 'beehive.location';
 

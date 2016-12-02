@@ -17,12 +17,12 @@ import { FlowListService } from './flow/flow-list/flow-list.service';
 import { TranslateModule } from 'ng2-translate';
 import { LoginComponent } from './flow/login/login.component';
 import { JN_EDITOR_WRAPPED_CONTROLS } from './node-editor/components/controls/index';
+import { JNSharedModule } from '../share/share.module';
 
 @NgModule({
   imports: [
     BrowserModule, MaterialModule, ReactiveFormsModule, FormsModule,
-    NodeEditorModule, NodeCanvasModule, PaletteModule, InfoPanelModule,
-    TranslateModule
+    NodeEditorModule, NodeCanvasModule, PaletteModule, InfoPanelModule, JNSharedModule
   ],
   exports: [MaterialModule, NodeEditorModule],
   declarations: [

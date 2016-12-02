@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { JNBaseNode } from '../models/jn-base-node.type';
 import { ApplicationContextService } from './application-context.service';
 import { CacheContextService } from './cache-context.service';
 import { ConfigContextService } from './config-context.service';
@@ -8,6 +7,7 @@ import { JNConfig } from '../../jn-config';
 import { Observable, Subscriber } from 'rxjs';
 import { Events } from './event.service';
 import { IJsonMetaData } from '../../../bin/JsonMapper';
+import { JNBaseNode } from '../../core/models/jn-base-node.type';
 
 export const APP_READY = 'app_ready';
 

@@ -62,10 +62,10 @@ import { JNActionNodeInfoPanelModel } from './action-node-info-panel-model.type'
           return false;
         }
       }, {
-        message: `当<DeviceType>节点不能同时与<Action>节点与<DeviceProperty>相连。`,
+        message: `<DeviceType>节点不能同时与<Action>节点与<DeviceProperty>相连。`,
         validator: (node: JNActionNode, target: JNDeviceTypeNode) => {
-          let nodes = JNUtils.toArray(target.nodeMap.outputTo)
-            .filter(pair => pair.value instanceof JNDeviceTypeNode);
+          let nodes = target.outputTo
+            .filter(n => n instanceof JNDevicePropertyNode);
           return !nodes.length;
         }
       }]
@@ -89,12 +89,20 @@ export class JNActionNode extends JNBaseNode  {
 
   protected model: JNActionNodeModel = new JNActionNodeModel;
 
-  protected whenReject() {
-    return Promise.resolve(true);
-  }
+  protected whenReject(node: JNBaseNode) {
+    let typeName = this.model.typeName;
+    let actionName = this.model.actionName;
+    let properties = this.model.properties;
 
-  protected formatter() {
-    return this.model.serialize();
+    let deviceTypeNodes = <JNDeviceTypeNode[]> this.accepted.filter(n => n instanceof JNDeviceTypeNode);
+    if (!!deviceTypeNodes.find(n => n.body.typeName === this.model.typeName)) {
+      this.update({
+        typeName: null,
+        actionName: null,
+        properties: []
+      });
+    }
+    return Promise.resolve(true);
   }
 
   protected listener(payload: IJNNodePayload) {

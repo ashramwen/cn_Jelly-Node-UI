@@ -43,7 +43,7 @@ export class JNSharedModule {
   static forRoot() {
     return {
       ngModule: JNSharedModule,
-      imports: [DragDropModule, HttpModule, TranslateModule.forRoot(), ResourceModule.forRoot()],
+      imports: [DragDropModule, HttpModule, TranslateModule, ResourceModule.forRoot()],
       providers: [
         LocalStorageService,
         LOCAL_STORAGE_CONFIG_PROVIDER,

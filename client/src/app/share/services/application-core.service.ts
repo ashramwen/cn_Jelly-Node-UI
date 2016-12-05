@@ -55,7 +55,6 @@ export abstract class JNApplication {
    */
   private _init() {
     this._loadConfig()
-      .then(this._validateToken.bind(this))
       .then(this.init.bind(this))
       .then(this._loader.bind(this))
       .then(this._onReady.bind(this), this._onError.bind(this));
@@ -67,12 +66,6 @@ export abstract class JNApplication {
       Object.keys(configContent).forEach((key, value) => {
         this.cacheContext.set(key, value);
       });
-      resolve(true);
-    });
-  }
-
-  private _validateToken() {
-    return new Promise((resolve, reject) => {
       resolve(true);
     });
   }

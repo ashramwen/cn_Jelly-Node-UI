@@ -10,6 +10,7 @@ import { CanvasObject } from './canvas-object.type';
 import { CanvasConstants } from './constants';
 import { JNUtils } from '../../../../share/util';
 import { Events, NODE_EVENTS } from '../../../../share/services/event.service';
+import { cn } from '../../../../../assets/i18n/cn';
 
 @Injectable()
 export class D3HelperService {

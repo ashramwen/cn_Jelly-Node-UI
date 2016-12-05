@@ -6,7 +6,7 @@ import { Events } from '../../share/services/event.service';
 @Component({
     selector: 'jn-info-panel',
     templateUrl: 'info-panel.component.html',
-    styleUrls: ['./info-panel.component.scss']
+    styleUrls: ['./info-panel.component.scss'],
 })
 
 export class InfoPanelComponent implements OnInit {
@@ -15,8 +15,14 @@ export class InfoPanelComponent implements OnInit {
     data: Object;
     infoKeys: Array<String>;
     dataKeys: Array<String>;
+    complexDataHTML: String;
+    complexDataScss: String;
 
     constructor(private events: Events) {
+    }
+
+    add(component: any) {
+
     }
 
     ngOnInit() {
@@ -25,7 +31,9 @@ export class InfoPanelComponent implements OnInit {
             if (infoPanel) {
                 this.info = infoPanel.info;
                 this.data = infoPanel.data;
-                
+                this.complexDataHTML = infoPanel.complexDataHTML;
+                this.complexDataScss = infoPanel.complexDataScss;
+
                 this.infoKeys = Object.keys(this.info);
                 this.dataKeys = Object.keys(this.data);
                 infoPanel.init();

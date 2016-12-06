@@ -17,8 +17,12 @@ export abstract class JNInfoPanelModel {
     return this.createComplexDataHTML(this.complexData);
   }
 
-  get complexDataScss(): String {
-    return this.createComplexDataScss();
+  get complexDataScss(): string {
+    return this.createComplexDataCss();
+  }
+
+  get complexDataComponent(): Component {
+    return this.generateComplexDataComponent();
   }
 
   constructor(node) {
@@ -32,6 +36,7 @@ export abstract class JNInfoPanelModel {
     let info = {
       'nodeID': this.node.body.nodeID,
       'nodeName': this.node.body.nodeName,
+      'type': this.node.body.type
     }
     return info;
   }
@@ -49,7 +54,8 @@ export abstract class JNInfoPanelModel {
     })
     console.log(this.complexData);
 
-    delete data['$errors'];
+    delete data['type'];
+    delete data['$errors']; 
     delete data['$valid'];
     delete data['accepts'];
     delete data['position'];
@@ -63,7 +69,11 @@ export abstract class JNInfoPanelModel {
     return '';
   }
 
-  protected createComplexDataScss() {
+  protected createComplexDataCss() {
     return '';
+  }
+
+  protected generateComplexDataComponent() {
+    return ;
   }
 }

@@ -1,16 +1,18 @@
 import { JNFlow } from './../../../../core/models/jn-flow.type';
 import { JNBaseNode } from '../../../../core/models/jn-base-node.type'
-import { Injectable, Sanitizer, SecurityContext } from '@angular/core';
+import { Injectable, Sanitizer, SecurityContext, Injector } from '@angular/core';
 import { TranslateService } from 'ng2-translate';
 import * as d3 from 'd3';
 import { CanvasNode } from './canvas-node.type';
 import { CanvasPoint } from './canvas-point.type';
 import { CanvasLink } from './canvas-link.type';
 import { CanvasObject } from './canvas-object.type';
-import { CanvasConstants } from './constants';
 import { JNUtils } from '../../../../share/util';
 import { Events, NODE_EVENTS } from '../../../../share/services/event.service';
 import { cn } from '../../../../../assets/i18n/cn';
+import { JN_NODE_SETTING } from '../../../../share/providers/constants';
+import { NodeSettings } from '../../../providers/constants';
+import { INodeSettings } from '../../../interfaces/node-settings.interface';
 
 @Injectable()
 export class D3HelperService {
@@ -32,13 +34,22 @@ export class D3HelperService {
 
   private sourceNode: CanvasNode = null;
   private targetNode: CanvasNode = null;
+  private _shift: Array<{ x: number, y: number }> = [];
+  private NodeSettings: INodeSettings;
 
-  private _shift: Array<{x: number, y: number}> = [];
-
-  constructor(private events: Events, private translate: TranslateService, private _sanitizer: Sanitizer) {
+  constructor(
+    private events: Events,
+    private translate: TranslateService,
+    private _sanitizer: Sanitizer,
+    private injector: Injector
+  ) {
     this.data = [];
     this.links = [];
     this.selections = [];
+    let externalSettings = injector.get(JN_NODE_SETTING);
+    this.NodeSettings = {};
+
+    Object.assign(this.NodeSettings, NodeSettings, externalSettings); 
   }
 
   init(container: Element) {
@@ -168,20 +179,21 @@ export class D3HelperService {
       .each((d: CanvasNode, i, eles) => {
         d.element = eles[i];
       });
+    
+    g.insert('svg:text')
+      .classed('jn-icon', true);
 
     // node rect
     g.insert('svg:rect')
       .classed('node', true)
-      .attr('height', CanvasConstants.NODE_HEIGHT)
-      .attr('rx', CanvasConstants.NODE_RADIUS)
-      .attr('ry', CanvasConstants.NODE_RADIUS);
+      .attr('height', this.NodeSettings.NODE_HEIGHT)
+      .attr('rx', this.NodeSettings.NODE_RADIUS)
+      .attr('ry', this.NodeSettings.NODE_RADIUS);
 
     // node text
     g.insert('svg:text')
-      .style('font-size', CanvasConstants.FONT_SIZE);
-
-    // node icon right path
-    g.insert('svg:path');
+      .classed('node-title', true)
+      .style('font-size', this.NodeSettings.FONT_SIZE);
 
     // node input
     g.insert('svg:g')
@@ -202,7 +214,7 @@ export class D3HelperService {
           let position = d3.mouse(self.canvas.node());
           let linkData = {
             source: { x: position[0], y: position[1] },
-            target: { x: d.x, y: d.y + CanvasConstants.NODE_HEIGHT / 2 }
+            target: { x: d.x, y: d.y + self.NodeSettings.NODE_HEIGHT / 2 }
           };
           self.moveMouseLink(linkData);
         })
@@ -235,7 +247,7 @@ export class D3HelperService {
         .on('drag', function(d: CanvasNode) {
           let position = d3.mouse(self.canvas.node());
           let linkData = {
-            source: { x: d.x + d.width, y: d.y + CanvasConstants.NODE_HEIGHT / 2 },
+            source: { x: d.x + d.width, y: d.y + self.NodeSettings.NODE_HEIGHT / 2 },
             target: { x: position[0], y: position[1] }
           };
           self.moveMouseLink(linkData);
@@ -254,6 +266,130 @@ export class D3HelperService {
     rects.exit().remove();
     this.updateNodes();
   }
+
+  public updateNodes() {
+    let self = this;
+
+    // adjust node width and text position
+    let nodes = this.vis.selectAll('g.node_group')
+      .data(this.data)
+      .each((n: CanvasNode, i, eles: Element) => {
+        n.element = eles[i];
+        d3.select(eles[i]).selectAll('text').datum(n);
+        d3.select(eles[i]).select('rect').datum(n);
+        d3.select(eles[i]).select('path').datum(n);
+        d3.select(eles[i]).select('.port.input').datum(n);
+        d3.select(eles[i]).select('.port.output').datum(n);
+      });
+    
+    let nodeText = nodes.select('text.node-title'),
+      nodeIcon = nodes.select('text.jn-icon'),
+      nodeRect = nodes.select('rect'),
+      nodeInput = nodes.select('.port.input'),
+      nodeOutput = nodes.select('.port.output');
+
+    nodes
+      .attr('transform', (d: CanvasNode) => {
+        return `translate(${d.position.x}, ${d.position.y})`;
+      })
+      .classed('connected', (d: CanvasNode) => {
+        return d.connected;
+      })
+      .classed('selected', (d: CanvasNode) => {
+        return self.selections.indexOf(d) > -1;
+      })
+      .classed('error', (d: CanvasNode) => {
+        return !!d.error;
+      });
+    
+    nodeIcon
+      .attr('x', () => {
+        return self.NodeSettings.NODE_PADDING;
+      })
+      .attr('y', () => {
+        return self.NodeSettings.NODE_HEIGHT / 2 + self.NodeSettings.NODE_ICON_HOLDER_WIDTH/2;
+      })
+      .attr('font-family', 'icomoon')
+      .style('font-size', `${self.NodeSettings.NODE_ICON_HOLDER_WIDTH}px`)
+      .text((d: CanvasNode)=>{
+        return d.icon;
+      });
+
+    nodeText
+      .text((d: CanvasNode) => {
+        let name = d.node.name;
+        this.translate.get(name).subscribe((nameTranslated) => {
+          name = nameTranslated || name;
+        });
+        return name;
+      })
+      .each((d, j, eles: SVGTextElement[]) => {
+        let textEle = eles[j];
+        let maxTextLength = this.NodeSettings.NODE_MAX_WIDTH - 3 * this.NodeSettings.NODE_PADDING - this.NodeSettings.NODE_ICON_HOLDER_WIDTH;
+        let textLength = textEle.getComputedTextLength(),
+          text = textEle.textContent;
+        while (textLength > maxTextLength && text.length > 0) {
+          text = text.slice(0, -1);
+          textEle.textContent = text;
+          textLength = textEle.getComputedTextLength();
+        }
+      })
+      .attr('y', (d, j, eles: SVGTextElement[]) => {
+        let textEle = eles[j];
+        let textHeight = textEle.getBoundingClientRect().height;
+        return Math.floor(this.NodeSettings.NODE_HEIGHT/2 + textHeight/2);
+      });
+    
+    nodeRect
+      .attr('width', (n: CanvasNode) => {
+        let textEle: SVGTextElement = <SVGTextElement>d3.select(n.element).select('text.node-title').node();
+        let textWidth = textEle.getComputedTextLength();
+        let nodeWidth = this.NodeSettings.NODE_PADDING * 3 + this.NodeSettings.NODE_ICON_HOLDER_WIDTH + textWidth;
+        nodeWidth = nodeWidth > this.NodeSettings.NODE_MIN_WIDTH ? nodeWidth : this.NodeSettings.NODE_MIN_WIDTH;
+
+        d3.select(textEle)
+          .attr('x', (d: CanvasNode, i, eles) => {
+            return nodeWidth - textWidth - this.NodeSettings.NODE_PADDING;
+          });
+        return nodeWidth;
+      });
+
+    nodeInput
+      .style('display', (n: CanvasNode) => {
+        return n.hasInput ? 'block' : 'none';
+      })
+      .attr('transform', () => {
+        let x = -Math.floor(this.NodeSettings.HANDLER_WIDTH / 2),
+          y = Math.floor(this.NodeSettings.NODE_HEIGHT - this.NodeSettings.HANDLER_HEIGHT) / 2;
+        return `translate(${x}, ${y})`;
+      })
+      .select('rect')
+      .attr('width', this.NodeSettings.HANDLER_WIDTH)
+      .attr('height', this.NodeSettings.HANDLER_HEIGHT)
+      .attr('rx', this.NodeSettings.HANDLER_RADIUS)
+      .attr('ry', this.NodeSettings.HANDLER_RADIUS);
+
+    nodeOutput
+      .style('display', (n: CanvasNode) => {
+        return n.hasOutput ? 'block' : 'none';
+      })
+      .attr('transform', (d: CanvasNode) => {
+        let rectEle: SVGSVGElement = <SVGSVGElement>d3.select(d.element).select('rect').node();
+        let nodeWidth = rectEle.getBoundingClientRect().width;
+        let x = nodeWidth - Math.floor(this.NodeSettings.HANDLER_WIDTH / 2),
+          y = Math.floor(this.NodeSettings.NODE_HEIGHT - this.NodeSettings.HANDLER_HEIGHT) / 2;
+        return `translate(${x}, ${y})`;
+      })
+      .select('rect')
+      .attr('width', this.NodeSettings.HANDLER_WIDTH)
+      .attr('height', this.NodeSettings.HANDLER_HEIGHT)
+      .attr('rx', this.NodeSettings.HANDLER_RADIUS)
+      .attr('ry', this.NodeSettings.HANDLER_RADIUS);
+
+    nodes.exit().remove();
+    self.updateLinks();
+  }
+
 
   private removeNode(node: CanvasNode) {
     this.links
@@ -317,125 +453,6 @@ export class D3HelperService {
   private dragEnd() {
     this._shift = null;
     this.events.emit(NODE_EVENTS.NODE_CHANGED, true);
-  }
-
-  public updateNodes() {
-    let self = this;
-
-    // adjust node width and text position
-    let nodes = this.vis.selectAll('g.node_group')
-      .data(this.data)
-      .each((n: CanvasNode, i, eles: Element) => {
-        n.element = eles[i];
-        d3.select(eles[i]).select('text').datum(n);
-        d3.select(eles[i]).select('rect').datum(n);
-        d3.select(eles[i]).select('path').datum(n);
-        d3.select(eles[i]).select('.port.input').datum(n);
-        d3.select(eles[i]).select('.port.output').datum(n);
-      });
-    
-    let nodeText = nodes.select('text'),
-      nodePath = nodes.select('path'),
-      nodeRect = nodes.select('rect'),
-      nodeInput = nodes.select('.port.input'),
-      nodeOutput = nodes.select('.port.output');
-
-    nodes
-      .attr('transform', (d: CanvasNode) => {
-        return `translate(${d.position.x}, ${d.position.y})`;
-      })
-      .classed('selected', (d: CanvasNode) => {
-        return self.selections.indexOf(d) > -1;
-      })
-      .classed('error', (d: CanvasNode) => {
-        return !!d.error;
-      });
-
-    nodeText
-      .attr('x', (n: CanvasNode) => {
-        if (!n.hasOutput && n.hasInput) {
-          return CanvasConstants.NODE_PADDING;
-        }
-        return CanvasConstants.NODE_ICON_HOLDER_WIDTH + CanvasConstants.NODE_PADDING 
-      })
-      .text((d: CanvasNode) => {
-        let name = d.node.name;
-        this.translate.get(name).subscribe((nameTranslated) => {
-          name = nameTranslated || name;
-        });
-        return name;
-      })
-      .each((d, j, eles: SVGTextElement[]) => {
-        let textEle = eles[j];
-        let maxTextLength = CanvasConstants.NODE_MAX_WIDTH - 2 * CanvasConstants.NODE_PADDING - CanvasConstants.NODE_ICON_HOLDER_WIDTH;
-        let textLength = textEle.getComputedTextLength(),
-          text = textEle.textContent;
-        while (textLength > maxTextLength && text.length > 0) {
-          text = text.slice(0, -1);
-          textEle.textContent = text;
-          textLength = textEle.getComputedTextLength();
-        }
-      })
-      .attr('y', (d, j, eles: SVGTextElement[]) => {
-        let textEle = eles[j];
-        let textHeight = textEle.getBoundingClientRect().height;
-        return Math.floor(CanvasConstants.NODE_HEIGHT - textHeight);
-      });
-    
-    nodePath
-      .attr('d', (n: CanvasNode) => {
-        if (!n.hasOutput && n.hasInput) {
-          let textEle: SVGTextElement = <SVGTextElement>d3.select(n.element).select('text').node();
-          let textWidth = textEle.getComputedTextLength();
-
-          return `M ${textWidth + 2 * CanvasConstants.NODE_PADDING} 1 l 0 ${CanvasConstants.NODE_HEIGHT}`;
-        }
-        return `M ${CanvasConstants.NODE_ICON_HOLDER_WIDTH} 1 l 0 ${CanvasConstants.NODE_HEIGHT}`;
-      });
-
-    nodeRect
-      .attr('width', (n: CanvasNode) => {
-        let textEle: SVGTextElement = <SVGTextElement>d3.select(n.element).select('text').node();
-        let textWidth = textEle.getComputedTextLength();
-        let nodeWidth = CanvasConstants.NODE_PADDING * 2 + CanvasConstants.NODE_ICON_HOLDER_WIDTH + textWidth;
-        nodeWidth = nodeWidth > CanvasConstants.NODE_MIN_WIDTH ? nodeWidth : CanvasConstants.NODE_MIN_WIDTH;
-        return nodeWidth;
-      });
-
-    nodeInput
-      .style('display', (n: CanvasNode) => {
-        return n.hasInput ? 'block' : 'none';
-      })
-      .attr('transform', () => {
-        let x = -Math.floor(CanvasConstants.HANDLER_WIDTH / 2),
-          y = Math.floor(CanvasConstants.NODE_HEIGHT - CanvasConstants.HANDLER_HEIGHT) / 2;
-        return `translate(${x}, ${y})`;
-      })
-      .select('rect')
-      .attr('width', CanvasConstants.HANDLER_WIDTH)
-      .attr('height', CanvasConstants.HANDLER_HEIGHT)
-      .attr('rx', CanvasConstants.HANDLER_RADIUS)
-      .attr('ry', CanvasConstants.HANDLER_RADIUS);
-
-    nodeOutput
-      .style('display', (n: CanvasNode) => {
-        return n.hasOutput ? 'block' : 'none';
-      })
-      .attr('transform', (d: CanvasNode) => {
-        let rectEle: SVGSVGElement = <SVGSVGElement>d3.select(d.element).select('rect').node();
-        let nodeWidth = rectEle.getBoundingClientRect().width;
-        let x = nodeWidth - Math.floor(CanvasConstants.HANDLER_WIDTH / 2),
-          y = Math.floor(CanvasConstants.NODE_HEIGHT - CanvasConstants.HANDLER_HEIGHT) / 2;
-        return `translate(${x}, ${y})`;
-      })
-      .select('rect')
-      .attr('width', CanvasConstants.HANDLER_WIDTH)
-      .attr('height', CanvasConstants.HANDLER_HEIGHT)
-      .attr('rx', CanvasConstants.HANDLER_RADIUS)
-      .attr('ry', CanvasConstants.HANDLER_RADIUS);
-
-    nodes.exit().remove();
-    self.updateLinks();
   }
 
   private moveMouseLink = (linkData) => {

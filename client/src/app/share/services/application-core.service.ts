@@ -16,10 +16,9 @@ export abstract class JNApplication {
 
   static instance: JNApplication;
 
-  nodes: Array<JNBaseNode> = [];
   nodeTypeMapper: {
     [key: string]: typeof JNBaseNode
-  } = {};
+  };
 
   constructor(
     public applicationContext: ApplicationContextService,

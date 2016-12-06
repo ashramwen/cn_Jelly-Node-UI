@@ -8,7 +8,7 @@ import { JNTimeNode } from '../time-node/time-node.type';
 
 @JNNode({
   title: 'nodeset.JNRuleNode.nodename',
-  icon: '',
+  icon: '\ue903',
   color: '',
   borderColor: '',
   editorModel: JNRuleNodeEditorModel,

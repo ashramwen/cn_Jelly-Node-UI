@@ -41,13 +41,11 @@ export abstract class JNInfoPanelModel {
     let data: Object = JNUtils.clone(this.node.body);
 
     Object.keys(data).forEach((key) => {
-      console.log(key);
       if (data[key] && data[key].constructor !== String) {
         this.complexData[key] = data[key];
         delete data[key];
       }
     })
-    console.log(this.complexData);
 
     delete data['$errors'];
     delete data['$valid'];

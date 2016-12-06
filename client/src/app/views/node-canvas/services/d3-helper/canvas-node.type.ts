@@ -10,6 +10,14 @@ export class CanvasNode extends CanvasObject{
     this.node.position = position;
   }
 
+  get icon() {
+    return (<typeof JNBaseNode>this.node.constructor).icon;
+  }
+
+  get connected() {
+    return !!this.node.accepted.length || !!this.node.outputTo.length;
+  }
+
   get position() {
     return this.node.position;
   }

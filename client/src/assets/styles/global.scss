@@ -1,3 +1,22 @@
+$color-header: #d3dee6;
+$color-palette-main-header:#5b9edc;
+
+
+$node-color-default: #f1f7fb;
+$node-color-success: #8fc31f;
+$node-color-danger: #f83b63;
+$node-color-active: #ff782a;
+$node-color-fill: rgba(0, 0, 0, 0);
+
+$node-handler-width: 12px;
+$node-handler-radius: 6px;
+$node-handler-border: 1.5px;
+
+
+$node-radius: 7px;
+$node-height: 42px;
+$node-padding: 10px 16px;
+$node-stroke-width: 1.5px;
 
 $color-primary: blue;
 $color-danger: red;
@@ -7,3 +26,5 @@ $color-warning: yellow;
 $color-dark: #333;
 $color-grey: #999;
 $color-light: #eee;
+
+$canvas-background-color: #2f363b;

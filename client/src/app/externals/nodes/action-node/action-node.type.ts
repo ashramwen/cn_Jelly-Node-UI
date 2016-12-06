@@ -12,7 +12,7 @@ import { JNActionNodeInfoPanelModel } from './action-node-info-panel-model.type'
 
 @JNNode({
   title: 'nodeset.JNActionNode.nodename',
-  icon: '',
+  icon: '\ue908',
   color: '',
   borderColor: '',
   editorModel: JNActionNodeEditorModel,

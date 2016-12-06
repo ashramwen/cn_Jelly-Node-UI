@@ -21,12 +21,26 @@ import { ConfigContextService } from '../share/services/config-context.service';
 import { Events } from '../share/services/event.service';
 import { JNAuthenHelperSerivce } from '../share/services/authen-helper.service';
 import { TranslateService } from 'ng2-translate';
-import { cn, en } from '../../../dist/assets/i18n';
+import { cn, en } from '../../assets/i18n';
 
 
 @Injectable()
 export class RuleApplication extends JNApplication {
   static instance: RuleApplication;
+
+  get nodeTypeMapper() {
+    return {
+      Location: JNLocationNode,
+      DeviceType: JNDeviceTypeNode,
+      DeviceProperty: JNDevicePropertyNode,
+      Condition: JNConditionNode,
+      Conjunction: JNConjunctionNode,
+      Rule: JNRuleNode,
+      DeviceAction: JNActionNode,
+      Api: JNApiNode,
+      Time: JNTimeNode
+    };
+  }
 
   constructor(
     public applicationContext: ApplicationContextService,
@@ -45,17 +59,6 @@ export class RuleApplication extends JNApplication {
   }
 
   protected init() {
-    this.nodeTypeMapper = {
-      Location: JNLocationNode,
-      DeviceType: JNDeviceTypeNode,
-      DeviceProperty: JNDevicePropertyNode,
-      Condition: JNConditionNode,
-      Conjunction: JNConjunctionNode,
-      Rule: JNRuleNode,
-      DeviceAction: JNActionNode,
-      Api: JNApiNode,
-      Time: JNTimeNode
-    };
 
     this.translate.setDefaultLang('cn');
     this.translate.setTranslation('cn', cn);

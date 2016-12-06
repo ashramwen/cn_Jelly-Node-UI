@@ -50,6 +50,7 @@ export class JNEditFormComponent implements OnInit {
   }
 
   public hide() {
+    this.targetNode = null;
     this.editorShown = false;
     this.editorModel = null;
   }
@@ -64,10 +65,6 @@ export class JNEditFormComponent implements OnInit {
     let result = this.editorModel.submit();
     this.targetNode.update(result);
     this.events.emit(NODE_EVENTS.NODE_CHANGED, this.targetNode);
-    this.hideEditor();
-  }
-
-  private hideEditor() {
-    this.editorShown = false;
+    this.hide();
   }
 }

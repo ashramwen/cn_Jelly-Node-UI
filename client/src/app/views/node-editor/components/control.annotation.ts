@@ -23,7 +23,7 @@ export function JNEditorControl(options: IControlOptions) {
 
 function createNewComponent (tmpl: string) {
   @Component({
-      template: tmpl
+      template: `<div [hidden]="inputs.hidden">${ tmpl }</div>`
   })
   class CustomDynamicComponent  implements IDynamicComponent {
     @Input() public inputs: IJNEditorFormControlInput;

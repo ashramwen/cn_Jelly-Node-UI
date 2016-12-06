@@ -116,14 +116,23 @@ export abstract class JNBaseNode {
       .map(p => p.value);
   }
 
+  get state(){
+    return this._state;
+  }
+
   protected abstract model: JNNodeModel<any>; // node model
   private _modelChange: SyncEvent<JNBaseNode>;
+  private _state: 'listening' | 'publishing' | 'published';
 
   /**
    * @desc return body
    */
   public get body() {
     return this.formatter();
+  }
+
+  constructor() {
+    this._modelChange = new SyncEvent<JNBaseNode>();
   }
 
   /**
@@ -187,7 +196,6 @@ export abstract class JNBaseNode {
     }
     this.nodeMap.accepted[node.body.nodeID] = node;
     node.nodeMap.outputTo[this.body.nodeID] = this;
-    node.publishData();
     this.update({
       accepts: this.accepted.map(n => n.body.nodeID)
     });
@@ -227,11 +235,6 @@ export abstract class JNBaseNode {
       .find(r => {
         return r.value === node;
       });
-  }
-
-  constructor(
-  ) {
-    this._modelChange = new SyncEvent<JNBaseNode>();
   }
 
   /**
@@ -372,6 +375,7 @@ export abstract class JNBaseNode {
    * @param  {IJNNodePayload} payload
    */
   protected subscriber(payload: IJNNodePayload) {
+    this._state = 'listening';
     this.listener(payload).then(() => {
       this.publishData();
     });
@@ -401,6 +405,7 @@ export abstract class JNBaseNode {
    * @desc publish data 
    */
   private publishData() {
+    this._state = 'publishing';
     this.buildOutput().then((output) => {
       let payload: IJNNodePayload = {
         type: this.constructor,
@@ -413,6 +418,7 @@ export abstract class JNBaseNode {
         .forEach((node) => {
           node.subscriber(payload);
         });
+      this._state = 'published';
     });
   }
 

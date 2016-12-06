@@ -37,7 +37,7 @@ import {
 })
 export class JNConjunctionNodeEditorModel extends JNEditorModel {
 
-
+  protected model: JNConjunctionNodeModel;
   protected init() {
   }
 
@@ -50,6 +50,7 @@ export class JNConjunctionNodeEditorModel extends JNEditorModel {
   }
 
   protected updated(fieldName: string, value: any): void {
+    this.model.conjunction = this.getValue(fieldName);
   }
 
 }

@@ -12,7 +12,7 @@ import { JNCondtionNodePaletteMode } from './condition-node-palette-model.type';
 import { JNConditionNodeInfoPanelModel } from './condition-node-info-panel-model.type';
 
 @JNNode({
-  icon: '',
+  icon: '\ue902',
   title: 'nodeset.JNConditionNode.nodename',
   color: '',
   borderColor: '',

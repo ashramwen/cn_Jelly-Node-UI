@@ -12,7 +12,7 @@ import { JNDevicePropertyNodeInfoPanelModel } from './device-property-node-info-
 
 @JNNode({
   title: 'nodeset.JNDevicePropertyNode.nodename',
-  icon: '',
+  icon: '\ue901',
   color: '',
   borderColor: '',
   editorModel: JNDevicePropertyNodeEditorModel,

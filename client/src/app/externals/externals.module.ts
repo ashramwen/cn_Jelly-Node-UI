@@ -20,15 +20,22 @@ import { Events } from '../share/services/event.service';
 import { JNAuthenHelperSerivce } from '../share/services/authen-helper.service';
 import { CoreModule } from '../core/core.module';
 import { TranslateService } from 'ng2-translate';
+import { JN_NODE_SETTING } from '../share/providers/constants';
+import { INodeSettings } from '../views/interfaces/node-settings.interface';
 
 const EXTERNAL_EDITOR_WRAPPED_CONTROLS = EXTERNAL_CONTROLS
   .map((componentType) => {
     return componentType.wrappedComponent
   });
 
+const NODE_SETTINGS: INodeSettings = {
+  // NODE_MAX_WIDTH: 180,
+  // NODE_MIN_WIDTH: 100
+};
+
 @NgModule({
   imports: [
-    BrowserModule, MaterialModule, CoreModule, ReactiveFormsModule, FormsModule, JNControlsModule
+    BrowserModule, CoreModule, ReactiveFormsModule, FormsModule, JNControlsModule
   ],
   exports: [],
   declarations: [...EXTERNAL_CONTROLS, ...EXTERNAL_EDITOR_WRAPPED_CONTROLS],
@@ -54,7 +61,12 @@ const EXTERNAL_EDITOR_WRAPPED_CONTROLS = EXTERNAL_CONTROLS
       deps: [
         ApplicationContextService, ConfigContextService,
         CacheContextService, Http, Events, ResourceService, AuthenHelperSerivce, JNAuthenHelperSerivce, TranslateService]
-  }]
+    },
+    {
+      provide: JN_NODE_SETTING,
+      useValue: NODE_SETTINGS
+    }
+  ]
 })
 export class ExternalsModule {
   

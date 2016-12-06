@@ -20,8 +20,8 @@ interface ISelectOption {
   template: `
     <md-button-toggle-group multiple="true" (change)="change(item, $event)">
       <md-button-toggle *ngFor="let item of options"
-        [checked]="hasChecked(item.value)" 
-        (click)="change(item, $event)"
+        [checked]="item.checked" 
+        (click)="change(item, $event); $event.stopPropagation(); $event.preventDefault()"
         [disabled]="item.disabled"
         [value]="item.value">
           {{item.text}}
@@ -62,8 +62,8 @@ export class JNButtonToggleGroup extends JNFormControl  implements OnChanges{
     this.selectionChanged.emit(event);
   }
 
-  hasChecked(value) {
-    return !!(this.value && this.value.indexOf(value) > -1);
+  hasChecked(item) {
+    return item.checked;
   }
 
   ngOnChanges(value: {[key: string]: SimpleChange}) {

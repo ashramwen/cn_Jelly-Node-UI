@@ -138,7 +138,6 @@ export class JNFlow implements IFlow{
 
     this._flowChange = new SyncEvent<JNBaseNode>();
     this._observable
-      .debounceTime(100)
       .subscribe((node: JNBaseNode) => {
         this._flowChange.post(node);
         console.log(node);
@@ -231,6 +230,9 @@ export class JNFlow implements IFlow{
   }
 
   private whenNodeUpdated(node: JNBaseNode) {
+    if (!!this.nodes.find(n => n.state === 'listening' || n.state == 'publishing')) {
+      return;
+    }
     this._subscriber.next(node);
   }
 }

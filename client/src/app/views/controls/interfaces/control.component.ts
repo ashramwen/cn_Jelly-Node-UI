@@ -12,9 +12,11 @@ export abstract class JNFormControl implements ControlValueAccessor {
   protected onTouched = () => {};
 
   constructor(
-    private el: ElementRef,
+    protected el: ElementRef,
     public renderer: Renderer,
-    private _zone: NgZone) {
+    protected _zone: NgZone,
+    protected _provider?: any
+  ) {
     this.init();
   }
 

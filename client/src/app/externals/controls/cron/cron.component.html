@@ -10,7 +10,7 @@
 <hr/>
 
 <!-- year -->
-<div class="jn-form" [hidden]="yearValue !== 'enum'">
+<div class="jn-form" *ngIf="!(yearValue !== 'enum')">
   <label class="jn-form-label">
     年份
   </label>
@@ -22,7 +22,7 @@
 </div>
 
 <!-- month -->
-<div class="jn-form" [hidden]="monthValue !== 'enum'">
+<div class="jn-form" *ngIf="!(monthValue !== 'enum')">
   <label class="jn-form-label">
     月份
   </label>
@@ -34,7 +34,7 @@
 </div>
 
 <!-- week -->
-<div class="jn-form" [hidden]="weekValue !== 'enum'">
+<div class="jn-form" *ngIf="!(weekValue !== 'enum')">
   <label class="jn-form-label">
     第几周
   </label>
@@ -46,7 +46,7 @@
 </div>
 
 <!-- day -->
-<div class="jn-form" [hidden]="dayValue !== 'enum'">
+<div class="jn-form" *ngIf="!(dayValue !== 'enum')">
   <label class="jn-form-label">
     第几天
   </label>

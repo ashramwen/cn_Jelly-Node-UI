@@ -21,7 +21,7 @@ import { JNSharedModule } from '../share/share.module';
 
 @NgModule({
   imports: [
-    BrowserModule, MaterialModule, ReactiveFormsModule, FormsModule,
+    BrowserModule, MaterialModule.forRoot(), ReactiveFormsModule, FormsModule,
     NodeEditorModule, NodeCanvasModule, PaletteModule, InfoPanelModule, JNSharedModule
   ],
   exports: [MaterialModule, NodeEditorModule],

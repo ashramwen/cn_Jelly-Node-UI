@@ -1,10 +1,9 @@
 import { NgModule, Component } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { LoginComponent } from './externals/components/login/login.component';
+import { FlowListComponent } from './externals/components/flow-list/flow-list.component';
+import { FlowDetailComponent } from './externals/components/flow-detail/flow-detail.component';
 
-import { FlowComponent } from './views/flow/flow.component';
-import { FlowDetailComponent } from './views/flow/flow-detail/flow-detail.component';
-import { FlowListComponent } from './views/flow/flow-list/flow-list.component';
-import { LoginComponent } from './views/flow/login/login.component';
 
 const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' },

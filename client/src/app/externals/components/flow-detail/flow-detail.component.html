@@ -1,0 +1,45 @@
+<div class="main-container">
+  <div class="main-header">
+    <div class="left-container">
+      <ul>
+        <li><i class="fa fa-times-circle"></i></li>
+        <li><i class="fa fa-minus-circle"></i></li>
+        <li>
+          <i class="fa fa-expand" 
+            [class.fa-expand]="!fullscreen" 
+            [class.fa-compress]="fullscreen"
+            (click)="toggleFullScreen()"></i>
+          </li>
+        <li>
+          <input type="text" class="scale-size-txt" autocomplete="off"><label class="scale-percentage">%</label>
+        </li>
+        <li><i class="fa fa-hand-stop-o"></i></li>
+      </ul>
+    </div>
+    <div class="title-container" *ngIf="nodeFlow">
+      <label class="title" [hidden]="editingName" (click)="startEditingName()">
+        {{nodeFlow.flowName || 'Untitled Rule'}}
+      </label>
+      <input #flowNameTxt class="title-txt" type="text" (blur)="stopEditingName()" [hidden]="!editingName" [(ngModel)]="nodeFlow.flowName">
+    </div>
+    <div class="right-container">
+      <ul>
+        <li>
+          <div class="btn-toggle">
+            <label [class.checked]="enabled"><input type="radio" name="enabled" [(ngModel)]="enabled" value="false" />禁用</label>
+            <label [class.checked]="!enabled"><input type="radio" name="enabled" [(ngModel)]="enabled" value="true" />启用</label>
+          </div>
+        </li>
+        <li>
+          <button class="btn-save">保存</button>
+        </li>
+        <li>
+          <button class="btn-publish">发布</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="main-body clearfix">
+    <jn-view [nodeFlow]="nodeFlow"></jn-view>
+  </div>
+</div>

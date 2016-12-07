@@ -4,33 +4,25 @@ import { MaterialModule } from '@angular/material';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { NodeEditorModule } from './node-editor';
-import { FlowComponent } from './flow/flow.component';
-import { FlowDetailComponent } from './flow/flow-detail/flow-detail.component';
 import { PaletteComponent } from './palette/palette.component';
 import { NodeCanvasComponent } from './node-canvas/node-canvas.component';
 import { NodeCanvasModule } from './node-canvas/node-canvas.module';
 import { PaletteModule } from './palette/palette.module';
-import { FlowDetailService } from './flow/flow-detail/flow-detail.service';
 import { InfoPanelModule } from './info-panel/info-panel.module';
-import { FlowListComponent } from './flow/flow-list/flow-list.component';
-import { FlowListService } from './flow/flow-list/flow-list.service';
 import { TranslateModule } from 'ng2-translate';
-import { LoginComponent } from './flow/login/login.component';
 import { JN_EDITOR_WRAPPED_CONTROLS } from './node-editor/components/controls/index';
 import { JNSharedModule } from '../share/share.module';
+import { JNViewComponent } from './view.component';
 
 @NgModule({
   imports: [
     BrowserModule, MaterialModule.forRoot(), ReactiveFormsModule, FormsModule,
     NodeEditorModule, NodeCanvasModule, PaletteModule, InfoPanelModule, JNSharedModule
   ],
-  exports: [MaterialModule, NodeEditorModule],
+  exports: [MaterialModule, NodeEditorModule, JNViewComponent],
   declarations: [
-    FlowComponent,
-    FlowDetailComponent,
-    FlowListComponent,
-    LoginComponent
+    JNViewComponent
   ],
-  providers: [FlowDetailService, FlowListService]
+  providers: []
 })
 export class JNViewModule { }

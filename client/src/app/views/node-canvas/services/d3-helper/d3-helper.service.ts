@@ -13,6 +13,7 @@ import { cn } from '../../../../../assets/i18n/cn';
 import { JN_NODE_SETTING } from '../../../../share/providers/constants';
 import { NodeSettings } from '../../../providers/constants';
 import { INodeSettings } from '../../../interfaces/node-settings.interface';
+import { SVGUtils } from './utils';
 
 @Injectable()
 export class D3HelperService {
@@ -20,6 +21,8 @@ export class D3HelperService {
   private vis: any;
   private canvasContainer: any;
   private canvas: any;
+  private canvasBackground: any;
+  private canvasRule: any;
   private brush: any;
   private tip: any;
 
@@ -34,6 +37,11 @@ export class D3HelperService {
   private targetNode: CanvasNode = null;
   private _shift: Array<{ x: number, y: number }> = [];
   private NodeSettings: INodeSettings;
+  private _scale: number;
+
+  get currentScale() {
+    return this._scale;
+  }
 
   constructor(
     private events: Events,
@@ -46,19 +54,34 @@ export class D3HelperService {
     this.selections = [];
     let externalSettings = injector.get(JN_NODE_SETTING);
     this.NodeSettings = {};
+    this._scale = 1;
 
     Object.assign(this.NodeSettings, NodeSettings, externalSettings); 
   }
 
   init(container: Element) {
     let self = this;
-    let svg = d3.select(container).append('svg');
-
-    this.canvasContainer = svg
+    this.canvasBackground = d3.select(container)
+      .append('div')
+      .attr('class', 'canvas-background')
+      .style('position', 'absolute')
+      .style('left', 0)
+      .style('top', 0)
+      .style('overflow', 'hidden');
+    
+    this.canvasRule = this.canvasBackground
+      .append('div')
+      .attr('class', 'canvas-rule')
+      .style('width', '100%')
+      .style('height', '100%');
+    
+    this.canvasContainer = d3.select(container)
+      .append('svg')
       .attr('width', this.NodeSettings.CANVAS_WIDTH)
       .attr('height', this.NodeSettings.CANVAS_HEIGHT)
       .attr('pointer-events', 'all')
-      .style('cursor', 'crosshair');
+      .style('cursor', 'crosshair')
+      .style('position', 'relative');
     
     this.canvas = this.canvasContainer.append('g');
     
@@ -109,7 +132,22 @@ export class D3HelperService {
     this.tip = d3.select(container)
       .append('div')
       .attr('class', 'tooltip')
-      .style('opacity', 0);
+      .style('opacity', 0)
+      .style('display', 'none');
+    
+    this.updateCanvasContainer();
+  }
+
+  scale(s) {
+    if (s < this.NodeSettings.MIN_SCALE) {
+      this._scale = this.NodeSettings.MIN_SCALE;
+    } else if (s > this.NodeSettings.MAX_SCALE) {
+      this._scale = this.NodeSettings.MAX_SCALE
+    } else {
+      this._scale = s;
+    }
+    this.updateCanvas();
+    this.updateNodes();
   }
 
   loadNodes(nodes: JNBaseNode[]) {
@@ -282,9 +320,31 @@ export class D3HelperService {
       maxHeight = maxHeight < y ? y : maxHeight;
     });
     this.canvasContainer
-      .attr('width', maxWidth)
-      .attr('height', maxHeight)
+      .attr('width', maxWidth * this._scale)
+      .attr('height', maxHeight * this._scale)
       .classed('selected', d => !!this.selections.length);
+    
+    let ruleSize = Math.floor(this.NodeSettings.RULE_SIZE * this._scale);
+    
+    this.canvasBackground
+      .style('width', `${maxWidth * this._scale}px`)
+      .style('height', `${maxHeight * this._scale}px`)
+      .style('background', `
+        -webkit-linear-gradient(top, transparent ${ruleSize - 1}px, rgba(255,255,255,0.06) ${ruleSize}px),
+        -webkit-linear-gradient(left, transparent ${ruleSize - 1}px, rgba(255,255,255,0.06) ${ruleSize}px), 
+        -webkit-linear-gradient(top, #2f363b 0px, #2f363b ${ruleSize}px)`)
+      .style('background-size', `${ruleSize}px ${ruleSize}px`);
+    
+    this.canvasRule
+      .style('background', `
+        -webkit-linear-gradient(top, transparent ${5 * ruleSize - 1}px, rgba(255,255,255,0.12) ${5 * ruleSize}px), 
+        -webkit-linear-gradient(left, transparent ${5 * ruleSize - 1}px, rgba(255,255,255,0.12) ${5 * ruleSize}px)`)
+      .style('background-size', `${5 * ruleSize}px ${5 * ruleSize}px`);
+  }
+
+  private updateCanvas() {
+    this.canvas
+      .attr('transform', `scale(${this._scale})`);
   }
 
   public updateNodes() {
@@ -323,11 +383,12 @@ export class D3HelperService {
       });
     
     nodeIcon
-      .attr('x', () => {
-        return self.NodeSettings.NODE_PADDING;
+      .attr('x', (n: CanvasNode) => {
+        if (!n.hasInput) return self.NodeSettings.NODE_PADDING;
+        return self.NodeSettings.NODE_PADDING + Math.floor(this.NodeSettings.HANDLER_WIDTH / 2);
       })
       .attr('y', () => {
-        return self.NodeSettings.NODE_HEIGHT / 2 + self.NodeSettings.NODE_ICON_HOLDER_WIDTH/2;
+        return Math.floor(self.NodeSettings.NODE_HEIGHT / 2 + self.NodeSettings.NODE_ICON_HOLDER_WIDTH / 2);
       })
       .attr('font-family', 'icomoon')
       .style('font-size', `${self.NodeSettings.NODE_ICON_HOLDER_WIDTH}px`)
@@ -355,12 +416,14 @@ export class D3HelperService {
         }
       })
       .attr('y', (d, j, eles: SVGTextElement[]) => {
-        let textEle = eles[j];
-        let textHeight = textEle.getBoundingClientRect().height;
-        return Math.floor(this.NodeSettings.NODE_HEIGHT/2 + textHeight/2);
+        return Math.floor(this.NodeSettings.NODE_HEIGHT / 2 + this.NodeSettings.FONT_SIZE / 2);
       });
     
     nodeRect
+      .attr('x', (n: CanvasNode) => {
+        if (!n.hasInput) return 0;
+        return Math.floor(this.NodeSettings.HANDLER_WIDTH / 2);
+      })
       .attr('width', (n: CanvasNode) => {
         let textEle: SVGTextElement = <SVGTextElement>d3.select(n.element).select('text.node-title').node();
         let textWidth = textEle.getComputedTextLength();
@@ -369,7 +432,9 @@ export class D3HelperService {
 
         d3.select(textEle)
           .attr('x', (d: CanvasNode, i, eles) => {
-            return nodeWidth - textWidth - this.NodeSettings.NODE_PADDING;
+            if (!d.hasInput) return nodeWidth - textWidth - this.NodeSettings.NODE_PADDING;
+            return nodeWidth - textWidth - this.NodeSettings.NODE_PADDING
+              + Math.floor(this.NodeSettings.HANDLER_WIDTH / 2);
           });
         return nodeWidth;
       });
@@ -379,7 +444,7 @@ export class D3HelperService {
         return n.hasInput ? 'block' : 'none';
       })
       .attr('transform', () => {
-        let x = -Math.floor(this.NodeSettings.HANDLER_WIDTH / 2),
+        let x = 0,
           y = Math.floor(this.NodeSettings.NODE_HEIGHT - this.NodeSettings.HANDLER_HEIGHT) / 2;
         return `translate(${x}, ${y})`;
       })
@@ -395,8 +460,8 @@ export class D3HelperService {
       })
       .attr('transform', (d: CanvasNode) => {
         let rectEle: SVGSVGElement = <SVGSVGElement>d3.select(d.element).select('rect').node();
-        let nodeWidth = rectEle.getBoundingClientRect().width;
-        let x = nodeWidth - Math.floor(this.NodeSettings.HANDLER_WIDTH / 2),
+        let nodeWidth = SVGUtils.getWith(rectEle);
+        let x = d.hasInput ? nodeWidth : nodeWidth - Math.floor(this.NodeSettings.HANDLER_WIDTH / 2),
           y = Math.floor(this.NodeSettings.NODE_HEIGHT - this.NodeSettings.HANDLER_HEIGHT) / 2;
         return `translate(${x}, ${y})`;
       })

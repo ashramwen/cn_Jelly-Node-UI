@@ -30,7 +30,11 @@ import { JNApplication } from '../../share/services/application-core.service';
 export class NodeCanvasComponent implements OnInit, OnChanges {
   @Input()
   nodeFlow: JNFlow;
-  canvas: Element;  
+  canvas: Element;
+  
+  get currentScale() {
+    return this.d3Helper.currentScale;
+  }
 
   constructor(
     private d3Helper: D3HelperService,
@@ -47,8 +51,8 @@ export class NodeCanvasComponent implements OnInit, OnChanges {
 
   onItemDrop(e: DropEvent) {
     let position = {
-      x: e.nativeEvent.offsetX - e.offset.x,
-      y: e.nativeEvent.offsetY - e.offset.y
+      x: (e.nativeEvent.offsetX - e.offset.x) / this.currentScale,
+      y: (e.nativeEvent.offsetY - e.offset.y) / this.currentScale
     };
     let nodeType = this.application.nodeTypeMapper[e.dragData.typeName];
     let property = e.dragData.property || {};
@@ -68,6 +72,10 @@ export class NodeCanvasComponent implements OnInit, OnChanges {
 
   update() {
     this.d3Helper.updateNodes();
+  }
+
+  scale(s: number) {
+    this.d3Helper.scale(s);
   }
 
   ngOnChanges(changes: { [key: string]: SimpleChange }) {

@@ -7,6 +7,7 @@ import { FlowDetailService } from './flow-detail.service';
 import { AppEventListener } from '../../../share/services/event-listener.type';
 import { Events, NODE_EVENTS } from '../../../share/services/event.service';
 import { APP_READY } from '../../../share/services/application-core.service';
+import { JNViewComponent } from '../../../views/view.component';
 
 @Component({
   selector: 'app-flow-detail',
@@ -27,6 +28,9 @@ export class FlowDetailComponent implements OnInit, OnDestroy {
   @ViewChild('flowNameTxt')
   flowNameTxt: ElementRef;
 
+  @ViewChild('nodeView')
+  nodeView: JNViewComponent;
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -36,7 +40,7 @@ export class FlowDetailComponent implements OnInit, OnDestroy {
   ) { 
     this.editingName = false;
   }
-  
+
   ngOnInit() {
     this.events.on(APP_READY, () => {
       this.subs = this.route.params.subscribe(params => {
@@ -80,5 +84,13 @@ export class FlowDetailComponent implements OnInit, OnDestroy {
     this.flowDetailService.saveFlow(this.nodeFlow).then(() => {
       this.router.navigate(['/flow']);
     });
-  }  
+  } 
+  
+  zoomIn() {
+    this.nodeView.scale(this.nodeView.currentScale + 0.2);
+  }
+
+  zoomOut() {
+    this.nodeView.scale(this.nodeView.currentScale - 0.2);
+  }
 }

@@ -2,8 +2,8 @@
   <div class="main-header">
     <div class="left-container">
       <ul>
-        <li><i class="fa fa-times-circle"></i></li>
-        <li><i class="fa fa-minus-circle"></i></li>
+        <li><i class="fa fa-plus-circle" (click)="zoomIn()"></i></li>
+        <li><i class="fa fa-minus-circle" (click)="zoomOut()"></i></li>
         <li>
           <i class="fa fa-expand" 
             [class.fa-expand]="!fullscreen" 
@@ -40,6 +40,6 @@
     </div>
   </div>
   <div class="main-body clearfix">
-    <jn-view [nodeFlow]="nodeFlow"></jn-view>
+    <jn-view [nodeFlow]="nodeFlow" #nodeView></jn-view>
   </div>
 </div>

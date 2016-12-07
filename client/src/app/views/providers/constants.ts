@@ -13,5 +13,8 @@ export var NodeSettings: INodeSettings = {
   HANDLER_HEIGHT: 12,
   HANDLER_RADIUS: 6,
   FONT_SIZE: 14,
-  PATH_STROKE_WIDTH: 1.5
+  PATH_STROKE_WIDTH: 1.5,
+  MIN_SCALE: 0.5,
+  MAX_SCALE: 3,
+  RULE_SIZE: 5
 };

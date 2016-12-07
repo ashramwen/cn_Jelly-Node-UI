@@ -41,8 +41,15 @@ export class JNViewComponent implements OnInit, OnDestroy {
     private events: Events
   ) { }
 
-  ngOnInit() {
+  public scale(s: number) {
+    this.nodeCanvas.scale(s);
+  }
 
+  get currentScale() {
+    return this.nodeCanvas.currentScale;
+  }
+
+  ngOnInit() {
     this.events.on('node_click', node => {
       console.log('node_click', node);
     });
@@ -56,7 +63,7 @@ export class JNViewComponent implements OnInit, OnDestroy {
     this.events.on(NODE_EVENTS.LINK_DELETE, this.removeLink.bind(this));
   }
 
-  initFlow() {
+  protected initFlow() {
     this.nodeFlow.onChanges(() => {
       this.nodeCanvas.update();
     });
@@ -68,19 +75,19 @@ export class JNViewComponent implements OnInit, OnDestroy {
     this.nodeDeleteEventListener.destroy();
   }
 
-  openEditModal(node: JNBaseNode) {
+  protected openEditModal(node: JNBaseNode) {
     this.nodeEditor.show(node);
   }
 
-  hideEditor() {
+  protected hideEditor() {
     this.nodeEditor.hide();
   }
 
-  removeNode(node: JNBaseNode) {
+  protected removeNode(node: JNBaseNode) {
     this.nodeFlow.removeNode(node);
   }
 
-  removeLink(d: {source: JNBaseNode, target: JNBaseNode}) {
+  protected removeLink(d: {source: JNBaseNode, target: JNBaseNode}) {
     this.nodeFlow.removeLink(d);
   }
 }

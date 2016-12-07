@@ -1,5 +1,6 @@
 export const JNConfig = {
   beehiveBaseUrl: 'http://114.215.196.178:8080/beehive-portal',
+  //beehiveBaseUrl: 'http://114.215.178.24:8080/beehive-portal',
   apiPrefix: '/api',
   backednUrl: 'http://114.55.55.37:1337',
   apis: {

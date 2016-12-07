@@ -14,7 +14,8 @@ import { Events } from './share/services/event.service';
   template: '<router-outlet></router-outlet>',
   styles: [
     require('jsoneditor/dist/jsoneditor.min.css'),
-    require('../assets/styles/theme.scss')
+    require('../assets/styles/theme.scss'),
+    require('font-awesome/css/font-awesome.css')
   ],
   encapsulation: ViewEncapsulation.None
 })

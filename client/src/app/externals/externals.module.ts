@@ -22,6 +22,12 @@ import { CoreModule } from '../core/core.module';
 import { TranslateService } from 'ng2-translate';
 import { JN_NODE_SETTING } from '../share/providers/constants';
 import { INodeSettings } from '../views/interfaces/node-settings.interface';
+import { JNViewModule } from '../views/view.module';
+import { LoginComponent } from './components/login/login.component';
+import { FlowListComponent } from './components/flow-list/flow-list.component';
+import { FlowDetailComponent } from './components/flow-detail/flow-detail.component';
+import { FlowDetailService } from './components/flow-detail/flow-detail.service';
+import { FlowListService } from './components/flow-list/flow-list.service';
 import { EXTERNAL_INFO_PANEL_COMPONENTS } from './nodes/index';
 
 const EXTERNAL_EDITOR_WRAPPED_CONTROLS = EXTERNAL_CONTROLS
@@ -37,10 +43,11 @@ const NODE_SETTINGS: INodeSettings = {
 
 @NgModule({
   imports: [
-    BrowserModule, CoreModule, ReactiveFormsModule, FormsModule, JNControlsModule
+    BrowserModule, CoreModule, ReactiveFormsModule, FormsModule, JNControlsModule, JNViewModule
   ],
-  exports: [],
-  declarations: [...EXTERNAL_CONTROLS, ...EXTERNAL_EDITOR_WRAPPED_CONTROLS],
+  exports: [LoginComponent, FlowListComponent, FlowDetailComponent],
+  declarations: [...EXTERNAL_CONTROLS, ...EXTERNAL_EDITOR_WRAPPED_CONTROLS,
+    LoginComponent, FlowListComponent, FlowDetailComponent],
   providers: [BEEHIVE_RESOURCES, BEEHIVE_RPOVIDERS,
     {
       provide: ANALYZE_FOR_ENTRY_COMPONENTS,
@@ -67,7 +74,9 @@ const NODE_SETTINGS: INodeSettings = {
     {
       provide: JN_NODE_SETTING,
       useValue: NODE_SETTINGS
-    }
+    },
+    FlowDetailService,
+    FlowListService
   ]
 })
 export class ExternalsModule {

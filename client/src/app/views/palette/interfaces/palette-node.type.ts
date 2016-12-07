@@ -1,7 +1,6 @@
 import { JNBaseNode } from '../../../core/models/jn-base-node.type';
-import { JNApiNode } from '../../../externals/nodes/api-node/api-node.type';
-import { JNApplication } from '../../../core/services/application-core.service';
 import { JNUtils } from '../../../share/util';
+import { JNApplication } from '../../../share/services/application-core.service';
 
 export class JNPaletteNode {
   type: typeof JNBaseNode;

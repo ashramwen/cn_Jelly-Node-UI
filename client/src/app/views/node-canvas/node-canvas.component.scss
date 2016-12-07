@@ -1,23 +1,24 @@
-$color-active:#ffa500;
-$color-error: red;
+@import '../../../assets/styles/global';
 
 svg {
   .node_group {
     cursor: move;
     .node {
-      stroke: #000;
-      fill: #fff;
+      stroke: $node-color-default;
+      fill: transparent;
+      stroke-width: 1.5px;
     }
     .port {
       cursor: crosshair;
       &:hover rect,
       &.hover rect {
-        stroke: $color-active;
-        fill: $color-active;
+        stroke: $node-color-active;
+        fill: $node-color-active;
       }
       rect {
-        stroke: #000;
-        fill: #fff;
+        stroke-width: 1.5px;
+        stroke: $node-color-default;
+        fill: $node-color-success;
       }
     }
     path {
@@ -25,46 +26,61 @@ svg {
       stroke: #000;
     }
     text {
-      fill: #333;
-      font-size: 11px;
+      fill: $node-color-default;
     }
-    &.selected {
-      .node {
-        stroke: $color-active;
+    &.connected {
+      .node, path {
+        stroke: $node-color-success;
       }
-      path {
-        stroke: $color-active;
+      text {
+        fill: $node-color-success;
       }
       .port {
         rect{
-          stroke: $color-active;
+          stroke: $node-color-success;
+          fill: $node-color-success;
+        }
+      }
+    }
+    &.selected {
+      .node, path {
+        stroke: $node-color-active;
+      }
+      text {
+        fill: $node-color-active;
+      }
+      .port {
+        rect{
+          stroke: $node-color-active;
+          fill: $node-color-active;
         }
       }
     }
     &.error {
-      .node {
-        stroke: $color-error;
+      .node, path {
+        stroke: $node-color-danger;
       }
-      path {
-        stroke: $color-error;
+      text {
+        fill: $node-color-danger;
       }
       .port {
         rect{
-          stroke: $color-error;
+          stroke: $node-color-danger;
+          fill: $node-color-danger;
         }
       }
     }
   }
   g.new_link path {
-    stroke: $color-active;
-    stroke-width: 2px;
+    stroke: $node-color-active;
+    stroke-width: 1.5px;
     fill: transparent;
   }
   g.link {
     cursor: pointer;
     path {
-      stroke: #000;
-      stroke-width: 2px;
+      stroke: $node-color-success;
+      stroke-width: 1.5px;
       fill: transparent;
     }
     path.link-wrapper{
@@ -72,21 +88,19 @@ svg {
       stroke-width: 10px;
     }
     &.active path.link, &.selected path.link {
-      stroke: $color-active;
+      stroke: $node-color-active;
     }
     &.error path.link{
-      stroke: $color-error;
+      stroke: $node-color-danger;
     }
   }
 }
 
-#chart{
-  position: relative;
-}
 div.tooltip {
   position: absolute;
   text-align: center;
   max-width: 200px;
+  min-width: 100px;
   padding: 10px;
   font: 12px sans-serif;
   background: lightsteelblue;
@@ -99,4 +113,21 @@ div.tooltip {
 
 .ui-draggable-dragging {
     margin: 0 !important;
+}
+
+#chart{
+  position: relative;
+  background:  -webkit-linear-gradient(top, transparent 4px, rgba(255,255,255,0.06) 5px), -webkit-linear-gradient(left, transparent 4px, rgba(255,255,255,0.06) 5px), -webkit-linear-gradient(top, $canvas-background-color 0px, $canvas-background-color 5px);
+  background-size: 5px 5px;
+  float: left;
+}
+
+svg{
+  background:  -webkit-linear-gradient(top, transparent 24px, rgba(255,255,255,0.12) 25px), -webkit-linear-gradient(left, transparent 24px, rgba(255,255,255,0.12) 25px);
+  background-size: 25px 25px;
+  &::before{
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+  }
 }

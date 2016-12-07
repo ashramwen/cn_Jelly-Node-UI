@@ -7,7 +7,7 @@ import { JNConjunctionNodeInfoPanelModel } from './conjunction-node-info-panel.t
 
 @JNNode({
   title: 'nodeset.JNConjunctionNode.nodename',
-  icon: '',
+  icon: '\ue907',
   color: '',
   borderColor: '',
   editorModel: JNConjunctionNodeEditorModel,

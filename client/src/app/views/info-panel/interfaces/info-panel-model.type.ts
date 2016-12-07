@@ -21,7 +21,7 @@ export abstract class JNInfoPanelModel {
     return this.createComplexDataCss();
   }
 
-  get complexDataComponent(): Component {
+  get complexDataComponent() {
     return this.generateComplexDataComponent();
   }
 
@@ -46,13 +46,11 @@ export abstract class JNInfoPanelModel {
     let data: Object = JNUtils.clone(this.node.body);
 
     Object.keys(data).forEach((key) => {
-      console.log(key);
       if (data[key] && data[key].constructor !== String) {
         this.complexData[key] = data[key];
         delete data[key];
       }
     })
-    console.log(this.complexData);
 
     delete data['type'];
     delete data['$errors']; 

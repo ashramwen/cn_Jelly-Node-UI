@@ -12,7 +12,7 @@ import { JNDeviceTypeNodeInfoPanelModel } from './device-type-node-info-panel-mo
 
 @JNNode({
   title: 'nodeset.JNDeviceTypeNode.nodename',
-  icon: '',
+  icon: '\ue904',
   color: '',
   borderColor: '',
   editorModel: JNDeviceTypeNodeEditorModel,

@@ -165,7 +165,6 @@
     "webpack-dev-middleware": "^1.6.1",
     "webpack-dev-server": "2.1.0-beta.9",
     "webpack-md5-hash": "^0.0.5",
-    "@types/chai": "^3.4.34",
     "@types/isomorphic-fetch": "0.0.30",
     "typed-graphql": "^1.0.1",
     "webpack-merge": "^1.0.1"

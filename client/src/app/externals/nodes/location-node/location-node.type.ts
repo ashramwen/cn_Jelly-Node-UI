@@ -8,7 +8,7 @@ import { JNDeviceTypeNode } from '../device-type-node/device-type-node.type';
 
 @JNNode({
   title: 'nodeset.JNLocationNode.nodename',
-  icon: '',
+  icon: '\ue900',
   color: '',
   borderColor: '',
   editorModel: JNLocationNodeEditorModel,

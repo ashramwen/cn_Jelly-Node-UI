@@ -3,9 +3,9 @@
 import { TestBed, inject, async } from '@angular/core/testing';
 
 import { By } from '@angular/platform-browser';
-import { CoreModule } from '../core.module';
 import { Events } from './event.service';
 import { APP_READY } from './application-core.service';
+import { CoreModule } from '../../core/core.module';
 
 
 ////////  SPECS  /////////////

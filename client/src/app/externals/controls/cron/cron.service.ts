@@ -1,4 +1,5 @@
 import { ISelectOption } from '../../../views/controls/components/select/select.component';
+import { Injectable } from '@angular/core';
 
 export interface ICronOptions {
   yearValue: string;
@@ -13,8 +14,23 @@ export interface ICronOptions {
   minEnumValue: string[];
 }
 
+export interface IOption{
+  text: string;
+  value: string;
+}
+
+@Injectable()
 export class CronService {
   static instance = new CronService;
+
+  
+  _yearEnum: IOption[];
+  _monthEnum: IOption[];
+  _weekEnum: IOption[];
+  _dayEnum: IOption[];
+  _hourEnum: IOption[];
+  _minEnum: IOption[];
+
 
   yearOptions = [{
     text: '每一年',
@@ -68,6 +84,9 @@ export class CronService {
   }];
 
   get yearEnums(): ISelectOption[] {
+    if (this._yearEnum) {
+      return this._yearEnum;
+    }
     let currentYear = (new Date()).getFullYear();
     let items = new Array<ISelectOption>(5);
     for (let i = 0; i < items.length; i++) {
@@ -77,10 +96,12 @@ export class CronService {
       };
       items[i] = item;
     }
-    return items;
+    this._yearEnum = items;
+    return this._yearEnum;
   }
 
   get monthEnums(): ISelectOption[] {
+    if (this._monthEnum) return this._monthEnum;
     let monthAbbrs = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
     let items = monthAbbrs.map((month, index) => {
@@ -90,10 +111,14 @@ export class CronService {
       };
     });
 
-    return items;
+    this._monthEnum = items;
+    return this._monthEnum;
   }
 
   get weekEnum(): ISelectOption[]{
+    if (this._weekEnum) {
+      return this._weekEnum;
+    }
     let items = new Array<ISelectOption>(6);
     for (let i = 0; i < items.length; i++) {
       let item = {
@@ -107,7 +132,7 @@ export class CronService {
       text: 'Last',
       value: 'L'
     };
-
+    this._weekEnum = items;
     return items;
   }
 
@@ -144,6 +169,7 @@ export class CronService {
   }
 
   get hourEnum(): ISelectOption[]{
+    if (this._hourEnum) return this._hourEnum;
     let items = new Array<ISelectOption>(24);
     for (let i = 0; i < items.length; i++) {
       let item = {
@@ -152,11 +178,12 @@ export class CronService {
       };
       items[i] = item;
     }
-
+    this._hourEnum = items;
     return items;
   }
 
   get minEnum(): ISelectOption[]{
+    if (this._minEnum) return this._minEnum;
     let items = new Array<ISelectOption>(60);
     for (let i = 0; i < items.length; i++) {
       let item = {
@@ -165,7 +192,7 @@ export class CronService {
       };
       items[i] = item;
     }
-
+    this._minEnum = items;
     return items;
   }
 

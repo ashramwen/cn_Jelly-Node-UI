@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, ANALYZE_FOR_ENTRY_COMPONENTS } from '@angular/core';
 import { MaterialModule } from '@angular/material';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
@@ -16,14 +16,15 @@ import { FlowListComponent } from './flow/flow-list/flow-list.component';
 import { FlowListService } from './flow/flow-list/flow-list.service';
 import { TranslateModule } from 'ng2-translate';
 import { LoginComponent } from './flow/login/login.component';
+import { JN_EDITOR_WRAPPED_CONTROLS } from './node-editor/components/controls/index';
+import { JNSharedModule } from '../share/share.module';
 
 @NgModule({
   imports: [
     BrowserModule, MaterialModule.forRoot(), ReactiveFormsModule, FormsModule,
-    NodeEditorModule, NodeCanvasModule, PaletteModule, InfoPanelModule,
-    TranslateModule
+    NodeEditorModule, NodeCanvasModule, PaletteModule, InfoPanelModule, JNSharedModule
   ],
-  exports: [MaterialModule],
+  exports: [MaterialModule, NodeEditorModule],
   declarations: [
     FlowComponent,
     FlowDetailComponent,

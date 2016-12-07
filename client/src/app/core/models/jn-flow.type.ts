@@ -1,11 +1,11 @@
 import { JNBaseNode } from './jn-base-node.type';
 import { INodeBody } from './interfaces/node-body.interface';
-import { JNApplication } from '../services/application-core.service';
 import { SyncEvent } from 'ts-events';
 import { JNUtils } from '../../share/util';
 import { Observable, Subscriber } from 'rxjs';
 import { Serializable, JsonProperty } from '../../../bin/JsonMapper';
 import { IFlow } from './interfaces/flow.interface';
+import { JNApplication } from '../../share/services/application-core.service';
 
 @Serializable()
 export class JNFlow implements IFlow{
@@ -138,7 +138,6 @@ export class JNFlow implements IFlow{
 
     this._flowChange = new SyncEvent<JNBaseNode>();
     this._observable
-      .debounceTime(100)
       .subscribe((node: JNBaseNode) => {
         this._flowChange.post(node);
         console.log(node);
@@ -231,6 +230,9 @@ export class JNFlow implements IFlow{
   }
 
   private whenNodeUpdated(node: JNBaseNode) {
+    if (!!this.nodes.find(n => n.state === 'listening' || n.state == 'publishing')) {
+      return;
+    }
     this._subscriber.next(node);
   }
 }

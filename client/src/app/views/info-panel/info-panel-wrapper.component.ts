@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild, ViewContainerRef, ComponentRef, Input, ComponentFactoryResolver, Compiler } from '@angular/core';
+import { testComponent } from './test.component';
 
 @Component({
   selector: 'info-panel-wrapper',
-  template: '<div #target></div>'
+  template: '<div #target></div>',
 })
 export class InfoPanelWrapperComponent implements OnInit {
   @ViewChild('target', { read: ViewContainerRef }) target: ViewContainerRef;
@@ -19,6 +20,7 @@ export class InfoPanelWrapperComponent implements OnInit {
     if (this.componentRef) {
       this.componentRef.destroy();
     }
+    console.log(this.type);
     let factory = this.componentFactoryResolver.resolveComponentFactory(this.type);
     this.componentRef = this.target.createComponent(factory);
   }

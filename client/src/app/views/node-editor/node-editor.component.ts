@@ -5,22 +5,13 @@ import {
 } from '@angular/core';
 import { FormGroup, FormControl, Validators, AsyncValidatorFn } from '@angular/forms';
 
-import { ApplicationContextService } from '../../core/services';
 import { JNTextControl, ITextInput } from './components/controls/text/text.component';
 import { IJNFormControl } from './interfaces/form-control.interface';
 import { IRadioInput, JNRadioControl } from './components/controls/radio/radio.component';
 import { JNEditorModel } from './interfaces/editor-model.type';
-import { JNRuleNode } from '../../externals/nodes/rule-node/rule-node.type';
-import { JNLocationNode } from '../../externals/nodes/location-node/location-node.type';
-import { Events, NODE_EVENTS } from '../../core/services/event.service';
-import { APP_READY } from '../../core/services/application-core.service';
-import { JNDeviceTypeNode } from '../../externals/nodes/device-type-node/device-type-node.type';
-import { JNConjunctionNode } from '../../externals/nodes/conjunction-node/conjunction-node.type';
-import { JNTimeNode } from '../../externals/nodes/time-node/time-node.type';
-import { JNActionNode } from '../../externals/nodes/action-node/action-node.type';
-import { JNApiNode } from '../../externals/nodes/api-node/api-node.type';
 import { JNBaseNode } from '../../core/models/jn-base-node.type';
 import { Subscription } from 'rxjs';
+import { Events, NODE_EVENTS } from '../../share/services/event.service';
 
 @Component({
   selector: 'jn-node-editor',
@@ -42,54 +33,6 @@ export class JNEditFormComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // let ruleNode = new JNRuleNode();
-    // ruleNode.init({ ruleName: 'rule1', description: 'description', triggerWhen: 'TRUE_TO_FALSE' });
-    // let locationNode = new JNLocationNode();
-    // locationNode.init({ locationStr: ['08', '0801'] });
-    // let node = new JNDeviceTypeNode;
-    // node.init({ things: [5266], locations: ['08'], typeName: 'EnvironmentSensor' });
-    // let node = new JNConjunctionNode();
-    // node.init({conjunction: 'and'});
-    /*
-    let node = new JNConditionNode();
-    node.init({
-      thingType: 'AirCondition',
-      conditions: [{
-        property: 'Power',
-        value: 0,
-        operator: 'eq'
-      }, {
-        property: 'Temp',
-        value: 20,
-        operator: 'gte',
-        aggregation: 'avg'
-      }]
-    });
-    */
-    // let node = new JNTimeNode();
-    // node.init({timeType: 'schedule', cron: '0 9 * 3 ? 5', interval: 50, unit: 'day'});
-    /*
-    let node = new JNActionNode();
-    node.init({
-      actionName: 'turnPower',
-      typeName: 'AirCondition',
-      properties: null
-    });
-    */
-    /*
-    let node = new JNApiNode();
-    node.init({
-      apiName: 'api的名字',
-      apiUrl: 'http://www.example.com',
-      method: 'POST',
-      header: `{
-        "authorization": "Bearer super_token"
-      }`,
-      body: `{
-        "id": 5425
-      }`
-    });
-    */
   }
 
   public show(node: JNBaseNode) {
@@ -107,6 +50,7 @@ export class JNEditFormComponent implements OnInit {
   }
 
   public hide() {
+    this.targetNode = null;
     this.editorShown = false;
     this.editorModel = null;
   }
@@ -121,10 +65,6 @@ export class JNEditFormComponent implements OnInit {
     let result = this.editorModel.submit();
     this.targetNode.update(result);
     this.events.emit(NODE_EVENTS.NODE_CHANGED, this.targetNode);
-    this.hideEditor();
-  }
-
-  private hideEditor() {
-    this.editorShown = false;
+    this.hide();
   }
 }

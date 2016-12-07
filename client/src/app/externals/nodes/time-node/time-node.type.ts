@@ -7,7 +7,7 @@ import { JNTimeNodeInfoPanelModel } from './time-node-info-panel-model.type';
 
 @JNNode({
   title: 'nodeset.JNTimeNode.nodename',
-  icon: '',
+  icon: '\ue905',
   color: '',
   borderColor: '',
   editorModel: JNTimeNodeEditorModel,

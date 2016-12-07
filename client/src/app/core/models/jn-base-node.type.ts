@@ -1,13 +1,7 @@
 import { INodePosition, IJNNodePayload } from './interfaces';
 import { Observable, Subscriber } from 'rxjs';
-import {
-  ApplicationContextService,
-  CacheContextService,
-  ConfigContextService
-} from '../services';
 import { JNNodeModel } from './jn-node-model.type';
 import { JNNodeUnconnectableException } from './exceptions/node-unconnectable-exception.type';
-import { JNApplication } from '../services/application-core.service';
 import { JNException } from './exceptions/exception.type';
 import { JNEditorModel } from '../../views/node-editor/interfaces/editor-model.type';
 import { INodeBody } from './interfaces/node-body.interface';
@@ -16,6 +10,7 @@ import { JNPaletteModel } from '../../views/palette/interfaces/palette-model.typ
 import { SyncEvent } from 'ts-events';
 import { JNInfoPanelModel } from '../../views/info-panel/interfaces/info-panel-model.type';
 import { NodeError } from './interfaces/node-error.type';
+import { JNApplication } from '../../share/services/application-core.service';
 
 export interface INodeMap {
   accepted: {
@@ -121,14 +116,23 @@ export abstract class JNBaseNode {
       .map(p => p.value);
   }
 
+  get state(){
+    return this._state;
+  }
+
   protected abstract model: JNNodeModel<any>; // node model
   private _modelChange: SyncEvent<JNBaseNode>;
+  private _state: 'listening' | 'publishing' | 'published';
 
   /**
    * @desc return body
    */
   public get body() {
     return this.formatter();
+  }
+
+  constructor() {
+    this._modelChange = new SyncEvent<JNBaseNode>();
   }
 
   /**
@@ -192,7 +196,6 @@ export abstract class JNBaseNode {
     }
     this.nodeMap.accepted[node.body.nodeID] = node;
     node.nodeMap.outputTo[this.body.nodeID] = this;
-    node.publishData();
     this.update({
       accepts: this.accepted.map(n => n.body.nodeID)
     });
@@ -232,11 +235,6 @@ export abstract class JNBaseNode {
       .find(r => {
         return r.value === node;
       });
-  }
-
-  constructor(
-  ) {
-    this._modelChange = new SyncEvent<JNBaseNode>();
   }
 
   /**
@@ -377,6 +375,7 @@ export abstract class JNBaseNode {
    * @param  {IJNNodePayload} payload
    */
   protected subscriber(payload: IJNNodePayload) {
+    this._state = 'listening';
     this.listener(payload).then(() => {
       this.publishData();
     });
@@ -406,6 +405,7 @@ export abstract class JNBaseNode {
    * @desc publish data 
    */
   private publishData() {
+    this._state = 'publishing';
     this.buildOutput().then((output) => {
       let payload: IJNNodePayload = {
         type: this.constructor,
@@ -418,6 +418,7 @@ export abstract class JNBaseNode {
         .forEach((node) => {
           node.subscriber(payload);
         });
+      this._state = 'published';
     });
   }
 

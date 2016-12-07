@@ -9,6 +9,6 @@ import { Component, OnInit } from '@angular/core';
 export class JNDevicePropertyNodeInfoPanelModel extends JNInfoPanelModel {
 
   generateComplexDataComponent(){
-    return this;
+    return this.constructor;
   }
 }

@@ -3,7 +3,7 @@ import { JNFlow } from '../../../core/models/jn-flow.type';
 import { INodeBody } from '../../../core/models/interfaces/node-body.interface';
 import { Http } from '@angular/http';
 import { JNConfig } from '../../../jn-config';
-import { NodeFlowResource } from '../../../core/resources/flow.type';
+import { NodeFlowResource } from '../../../share/resources/flow.type';
 
 
 @Injectable()
@@ -25,7 +25,6 @@ export class FlowDetailService {
         .$observable.toPromise();
     }
   }
-
 
   getFlow(flowID: string) {
     if (!flowID || flowID === 'new') {

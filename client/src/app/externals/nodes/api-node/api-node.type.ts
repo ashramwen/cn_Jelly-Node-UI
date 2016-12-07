@@ -10,7 +10,7 @@ import { JNApiNodeInfoPanelModel } from './api-node-info-panel-model.type';
 
 @JNNode({
   title: 'nodeset.JNApiNode.nodename',
-  icon: '',
+  icon: '\ue906',
   color: '',
   borderColor: '',
   editorModel: JNApiNodeEditorModel,

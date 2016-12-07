@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { JNAuthenHelperSerivce } from '../../../core/services/authen-helper.service';
 import { Router } from '@angular/router';
+import { JNAuthenHelperSerivce } from '../../../share/services/authen-helper.service';
 
 @Component({
   selector: 'login',

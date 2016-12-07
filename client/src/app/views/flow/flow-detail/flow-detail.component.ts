@@ -2,16 +2,13 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { JNBaseNode } from '../../../core/models/jn-base-node.type';
-import { JNDeviceTypeNode } from '../../../externals/nodes/device-type-node/device-type-node.type';
-import { JNRuleNode } from '../../../externals/nodes/rule-node/rule-node.type';
-import { JNDevicePropertyNode } from '../../../externals/nodes/device-property-node/device-property-node.type';
 import { JNFlow } from '../../../core/models/jn-flow.type';
-import { Events, NODE_EVENTS } from '../../../core/services/event.service';
 import { JNEditFormComponent } from '../../node-editor/node-editor.component';
 import { NodeCanvasComponent } from '../../node-canvas/node-canvas.component';
-import { AppEventListener } from '../../../core/services/event-listener.type';
 import { FlowDetailService } from './flow-detail.service';
-import { APP_READY } from '../../../core/services/application-core.service';
+import { AppEventListener } from '../../../share/services/event-listener.type';
+import { Events, NODE_EVENTS } from '../../../share/services/event.service';
+import { APP_READY } from '../../../share/services/application-core.service';
 
 @Component({
   selector: 'app-flow-detail',

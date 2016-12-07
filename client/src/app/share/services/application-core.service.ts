@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { JNBaseNode } from '../models/jn-base-node.type';
 import { ApplicationContextService } from './application-context.service';
 import { CacheContextService } from './cache-context.service';
 import { ConfigContextService } from './config-context.service';
@@ -8,6 +7,7 @@ import { JNConfig } from '../../jn-config';
 import { Observable, Subscriber } from 'rxjs';
 import { Events } from './event.service';
 import { IJsonMetaData } from '../../../bin/JsonMapper';
+import { JNBaseNode } from '../../core/models/jn-base-node.type';
 
 export const APP_READY = 'app_ready';
 
@@ -16,10 +16,9 @@ export abstract class JNApplication {
 
   static instance: JNApplication;
 
-  nodes: Array<JNBaseNode> = [];
   nodeTypeMapper: {
     [key: string]: typeof JNBaseNode
-  } = {};
+  };
 
   constructor(
     public applicationContext: ApplicationContextService,
@@ -55,7 +54,6 @@ export abstract class JNApplication {
    */
   private _init() {
     this._loadConfig()
-      .then(this._validateToken.bind(this))
       .then(this.init.bind(this))
       .then(this._loader.bind(this))
       .then(this._onReady.bind(this), this._onError.bind(this));
@@ -67,12 +65,6 @@ export abstract class JNApplication {
       Object.keys(configContent).forEach((key, value) => {
         this.cacheContext.set(key, value);
       });
-      resolve(true);
-    });
-  }
-
-  private _validateToken() {
-    return new Promise((resolve, reject) => {
       resolve(true);
     });
   }

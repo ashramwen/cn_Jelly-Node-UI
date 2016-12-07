@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 
 import { JNConfig } from '../../jn-config';
-import { CacheContextService } from '../../core/services/cache-context.service';
 import { CredentialException } from '../../core/models/exceptions/credential-exception.type';
+import { CacheContextService } from '../../share/services/cache-context.service';
 
 export interface ILoginPayload {
   password: String;

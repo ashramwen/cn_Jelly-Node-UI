@@ -67,6 +67,7 @@ import {
 })
 export class JNTimeNodeEditorModel extends JNEditorModel {
 
+  model: JNTimeNodeModel;  
 
   protected init() {
   }
@@ -79,26 +80,31 @@ export class JNTimeNodeEditorModel extends JNEditorModel {
   }
 
   protected formate(): JNTimeNodeModel {
-    return <JNTimeNodeModel> JNTimeNodeModel.deserialize(this.formGroup.value);
+    return this.model;
   }
 
   protected updated(fieldName: string, value: any): void {
     if (fieldName === 'timeType') {
       switch (value) {
-        case 'interval':
-          this.getInput('cron').hidden = true;
-          this.getInput('unit').hidden = false;
-          this.getInput('interval').hidden = false;
-          break;
         case 'cron':
           this.getInput('cron').hidden = false;
           this.getInput('unit').hidden = true;
           this.getInput('interval').hidden = true;
           break;
+        case 'interval':
+          this.getInput('cron').hidden = true;
+          this.getInput('unit').hidden = false;
+          this.getInput('interval').hidden = false;
+          break;
         default:
+          this.getInput('cron').hidden = true;
+          this.getInput('unit').hidden = false;
+          this.getInput('interval').hidden = false;
+          this.setValue('timeType', 'interval');
           break;
       }
     }
+    this.model[fieldName] = value;
   }
 
 }

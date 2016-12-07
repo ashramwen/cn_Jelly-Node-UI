@@ -12,7 +12,7 @@ import { JNDevicePropertyNodeInfoPanelModel } from './device-property-node-info-
 
 @JNNode({
   title: 'nodeset.JNDevicePropertyNode.nodename',
-  icon: '',
+  icon: '\ue901',
   color: '',
   borderColor: '',
   editorModel: JNDevicePropertyNodeEditorModel,
@@ -56,10 +56,9 @@ import { JNDevicePropertyNodeInfoPanelModel } from './device-property-node-info-
           return false;
         }
       }, {
-          message: `当<DeviceType>节点不能同时与<Action>节点与<DeviceProperty>相连。`,
+          message: `<DeviceType>节点不能同时与<Action>节点与<DeviceProperty>相连。`,
           validator: (node: JNDevicePropertyNode, target: JNDeviceTypeNode) => {
-            let nodes = JNUtils.toArray(target.nodeMap.outputTo)
-              .filter(pair => pair.value instanceof JNActionNode);
+            let nodes = target.outputTo.filter(n => n instanceof JNActionNode);
             return !nodes.length;
           }
       }]

@@ -3,8 +3,7 @@ import { JNInfoPanelModel } from '../../../views/info-panel/interfaces/info-pane
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  moduleId: module.id,
-  template: 'feature.component.html'
+  template: ''
 })
 export class JNTimeNodeInfoPanelModel extends JNInfoPanelModel {
    generateComplexDataComponent() {

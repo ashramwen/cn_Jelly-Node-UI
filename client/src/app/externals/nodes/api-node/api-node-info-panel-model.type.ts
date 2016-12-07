@@ -3,8 +3,7 @@ import { JNInfoPanelModel } from '../../../views/info-panel/interfaces/info-pane
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  moduleId: module.id,
-  template: '<div>api</div>'
+  template: ''
 })
 
 export class JNApiNodeInfoPanelModel extends JNInfoPanelModel {

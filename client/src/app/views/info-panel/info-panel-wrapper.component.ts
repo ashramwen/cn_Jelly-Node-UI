@@ -1,5 +1,4 @@
-import { Component, OnInit, ViewChild, ViewContainerRef, ComponentRef, Input, ComponentFactoryResolver, Compiler } from '@angular/core';
-import { testComponent } from './test.component';
+import { Component, OnInit, ViewChild, ViewContainerRef, ComponentRef, Input, ComponentFactoryResolver, Compiler, ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'info-panel-wrapper',
@@ -8,10 +7,12 @@ import { testComponent } from './test.component';
 export class InfoPanelWrapperComponent implements OnInit {
   @ViewChild('target', { read: ViewContainerRef }) target: ViewContainerRef;
   @Input() type;
+  @Input() data;
   componentRef: ComponentRef<Component>;
   private isViewInitialized: boolean = false;
 
-  constructor(private componentFactoryResolver: ComponentFactoryResolver, private compiler: Compiler) { }
+  constructor(private componentFactoryResolver: ComponentFactoryResolver, private compiler: Compiler,
+    private cdRef: ChangeDetectorRef) { }
 
   updateComponent() {
     if (!this.isViewInitialized) {
@@ -20,9 +21,11 @@ export class InfoPanelWrapperComponent implements OnInit {
     if (this.componentRef) {
       this.componentRef.destroy();
     }
-    console.log(this.type);
     let factory = this.componentFactoryResolver.resolveComponentFactory(this.type);
     this.componentRef = this.target.createComponent(factory);
+    let component = this.componentRef.instance;
+    component.inputs = this.data;
+    this.cdRef.detectChanges();
   }
 
   ngOnChanges() {

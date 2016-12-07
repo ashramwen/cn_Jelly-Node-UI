@@ -29,6 +29,7 @@ import { FlowDetailComponent } from './components/flow-detail/flow-detail.compon
 import { FlowDetailService } from './components/flow-detail/flow-detail.service';
 import { FlowListService } from './components/flow-list/flow-list.service';
 import { EXTERNAL_INFO_PANEL_COMPONENTS } from './nodes/index';
+import { KeysPipe } from '../share/keysPipe';
 
 const EXTERNAL_EDITOR_WRAPPED_CONTROLS = EXTERNAL_CONTROLS
   .map((componentType) => {
@@ -47,7 +48,7 @@ const NODE_SETTINGS: INodeSettings = {
   ],
   exports: [LoginComponent, FlowListComponent, FlowDetailComponent],
   declarations: [...EXTERNAL_CONTROLS, ...EXTERNAL_EDITOR_WRAPPED_CONTROLS,
-    LoginComponent, FlowListComponent, FlowDetailComponent],
+    LoginComponent, FlowListComponent, FlowDetailComponent, KeysPipe],
   providers: [BEEHIVE_RESOURCES, BEEHIVE_RPOVIDERS,
     {
       provide: ANALYZE_FOR_ENTRY_COMPONENTS,

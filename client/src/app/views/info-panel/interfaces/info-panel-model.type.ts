@@ -22,17 +22,17 @@ export abstract class JNInfoPanelModel {
   }
 
   get complexDataComponent() {
-    return this.generateComplexDataComponent();
+    return this.generateComplexDataComponent(this.complexData);
   }
 
   constructor(node) {
     this.node = node;
   }
 
-  public init() {
-  }
-
   protected getInfo() {
+    if(!this.node){
+      return ;
+    }
     let info = {
       'nodeID': this.node.body.nodeID,
       'nodeName': this.node.body.nodeName,
@@ -42,6 +42,9 @@ export abstract class JNInfoPanelModel {
   }
 
   protected getData() {
+    if(!this.node){
+      return ;
+    }
     this.complexData = {};
     let data: Object = JNUtils.clone(this.node.body);
 
@@ -71,7 +74,7 @@ export abstract class JNInfoPanelModel {
     return '';
   }
 
-  protected generateComplexDataComponent() {
+  protected generateComplexDataComponent(complexData) {
     return ;
   }
 }

@@ -18,6 +18,7 @@ export class InfoPanelComponent implements OnInit {
   dataKeys: Array<String>;
   complexDataHTML: String;
   typeComponent;
+  complexData;
 
   constructor(private elementRef: ElementRef, private application: JNApplication, private events: Events) {
   }
@@ -32,7 +33,8 @@ export class InfoPanelComponent implements OnInit {
         this.data = infoPanel.data;
         this.complexDataHTML = infoPanel.complexDataHTML;
         this.typeComponent = infoPanel.complexDataComponent;
-
+        this.complexData = infoPanel.complexData;
+        console.log('complex data', this.complexData);
         // //remove old style
         // var oldStyle = this.elementRef.nativeElement.querySelector('#complex-data-style')
         // if (oldStyle) {
@@ -47,9 +49,7 @@ export class InfoPanelComponent implements OnInit {
 
         this.infoKeys = Object.keys(this.info);
         this.dataKeys = Object.keys(this.data);
-        infoPanel.init();
       }
-      console.log('info panel', infoPanel);
     });
   }
 }

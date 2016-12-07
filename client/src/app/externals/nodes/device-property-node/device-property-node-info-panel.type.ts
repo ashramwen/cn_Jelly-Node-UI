@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'selector',
-  template: '<div>rubbish</div>'
+  template: '<div></div>'
 })
 
 export class JNDevicePropertyNodeInfoPanelModel extends JNInfoPanelModel {

@@ -17,15 +17,13 @@ import { INodeSettings } from '../../../interfaces/node-settings.interface';
 @Injectable()
 export class D3HelperService {
 
-  private spaceWidth = 1464;
-  private spaceHeight = 944;
-
   private vis: any;
+  private canvasContainer: any;
   private canvas: any;
   private brush: any;
   private tip: any;
 
-  private data: CanvasNode[];
+  private nodes: CanvasNode[];
   private links: CanvasLink[];
 
   private selections: CanvasObject[];  
@@ -43,7 +41,7 @@ export class D3HelperService {
     private _sanitizer: Sanitizer,
     private injector: Injector
   ) {
-    this.data = [];
+    this.nodes = [];
     this.links = [];
     this.selections = [];
     let externalSettings = injector.get(JN_NODE_SETTING);
@@ -56,11 +54,13 @@ export class D3HelperService {
     let self = this;
     let svg = d3.select(container).append('svg');
 
-    this.canvas = svg
-      .attr('width', this.spaceWidth)
-      .attr('height', this.spaceHeight)
+    this.canvasContainer = svg
+      .attr('width', this.NodeSettings.CANVAS_WIDTH)
+      .attr('height', this.NodeSettings.CANVAS_HEIGHT)
       .attr('pointer-events', 'all')
       .style('cursor', 'crosshair');
+    
+    this.canvas = this.canvasContainer.append('g');
     
     this.brush = this.canvas
       .append('g')
@@ -87,7 +87,7 @@ export class D3HelperService {
               minX = Math.min(selection[0][0], selection[1][0]),
               minY = Math.min(selection[0][1], selection[1][1]);
             
-            let linksAndNodes: CanvasObject[] = (<Array<CanvasObject>>self.links).concat(self.data);
+            let linksAndNodes: CanvasObject[] = (<Array<CanvasObject>>self.links).concat(self.nodes);
             let selectedObjects = linksAndNodes.filter(n =>
               n.x > minX
               && n.x + n.width < maxX
@@ -113,7 +113,7 @@ export class D3HelperService {
   }
 
   loadNodes(nodes: JNBaseNode[]) {
-    this.data = [];
+    this.nodes = [];
     this.links = [];
     this.selections = [];
 
@@ -123,33 +123,35 @@ export class D3HelperService {
 
     nodes.forEach(t => {
       t.accepted.forEach(s => {
-        let target = this.data
-        .find(d => d.node === t);
-        let source = this.data.find(d => d.node === s);
+        let target = this.nodes
+          .find(d => d.node === t);
+        let source = this.nodes.find(d => d.node === s);
         this.addLink(source, target);
       });
-    })
+    });
+    this.select([]);
   }
 
   addNode(node: JNBaseNode) {
     let canvasNode = new CanvasNode(node, this.canvas.node());
-    this.data.push(canvasNode);
+    this.nodes.push(canvasNode);
     this.drawNodes();
+    this.select(canvasNode);
   }
 
   drawNodes() {
     let self = this;
     
     let rects = this.vis
-      .selectAll('g.node_group')
-      .data(this.data);
+      .selectAll('g.node-group')
+      .data(this.nodes);
     
     let shift = null;
 
     // node group
     let g = rects.enter()
       .append('svg:g')
-      .classed('node_group', true)
+      .classed('node-group', true)
       .on('click', d => {
         self.select(d);
         self.events.emit('node_click', d.node);
@@ -267,12 +269,30 @@ export class D3HelperService {
     this.updateNodes();
   }
 
+  private updateCanvasContainer() {
+    let maxWidth = this.NodeSettings.CANVAS_WIDTH,
+      maxHeight = this.NodeSettings.CANVAS_HEIGHT;
+    
+    this.nodes.forEach((n) => {
+      // node right + margin right
+      let x = n.position.x + n.width + 200,
+        y = n.position.y + n.height + 200;
+      
+      maxWidth = maxWidth < x ? x : maxWidth;
+      maxHeight = maxHeight < y ? y : maxHeight;
+    });
+    this.canvasContainer
+      .attr('width', maxWidth)
+      .attr('height', maxHeight)
+      .classed('selected', d => !!this.selections.length);
+  }
+
   public updateNodes() {
     let self = this;
 
     // adjust node width and text position
-    let nodes = this.vis.selectAll('g.node_group')
-      .data(this.data)
+    let nodes = this.vis.selectAll('g.node-group')
+      .data(this.nodes)
       .each((n: CanvasNode, i, eles: Element) => {
         n.element = eles[i];
         d3.select(eles[i]).selectAll('text').datum(n);
@@ -388,15 +408,15 @@ export class D3HelperService {
 
     nodes.exit().remove();
     self.updateLinks();
+    self.updateCanvasContainer();
   }
-
 
   private removeNode(node: CanvasNode) {
     this.links
       .filter(link => link.source === node || link.target === node)
       .forEach(this.removeLink.bind(this));
     
-    JNUtils.removeItem(this.data, node);
+    JNUtils.removeItem(this.nodes, node);
     this.events.emit(NODE_EVENTS.NODE_DELETE, node.node);
     this.drawNodes();
   }

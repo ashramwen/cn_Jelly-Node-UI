@@ -10,7 +10,17 @@ import { JNApplication } from '../../share/services/application-core.service';
 @Component({
   selector: 'jn-canvas',
   template: '<div id="chart" droppable (onDrop)="onItemDrop($event)"></div>',
-  styleUrls: ['./node-canvas.component.scss'],
+  styles: [
+    require('./node-canvas.component.scss'),
+    `
+      :host{
+        display: block;
+        height: 100%;
+        width: 100%;
+        overflow: auto;
+      }
+    `
+  ],
   encapsulation: ViewEncapsulation.None,
   host: {
     '[tabindex]': '1'

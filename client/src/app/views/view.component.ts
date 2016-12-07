@@ -12,7 +12,13 @@ import { Events, NODE_EVENTS } from '../share/services/event.service';
   selector: 'jn-view',
   templateUrl: './view.component.html',
   styles: [
-    require('./view.component.scss')
+    require('./view.component.scss'),
+    `
+      :host{
+        display: block;
+        height: 100%;
+      }
+    `
   ]
 })
 export class JNViewComponent implements OnInit, OnDestroy {

@@ -1,4 +1,6 @@
 export interface INodeSettings {
+  CANVAS_WIDTH?: number;
+  CANVAS_HEIGHT?: number;
   NODE_MAX_WIDTH?: number;
   NODE_MIN_WIDTH?: number
   NODE_RADIUS?: number;

@@ -1,7 +1,15 @@
 @import '../../../assets/styles/global';
 
 svg {
-  .node_group {
+  &.selected{
+    g.node-group, g.link{
+      opacity: 0.6;
+      &.selected{
+        opacity: 1;
+      }
+    }
+  }
+  .node-group {
     cursor: move;
     .node {
       stroke: $node-color-default;
@@ -43,17 +51,8 @@ svg {
       }
     }
     &.selected {
-      .node, path {
-        stroke: $node-color-active;
-      }
-      text {
-        fill: $node-color-active;
-      }
-      .port {
-        rect{
-          stroke: $node-color-active;
-          fill: $node-color-active;
-        }
+      .node {
+        stroke-width: 3px;
       }
     }
     &.error {
@@ -88,7 +87,7 @@ svg {
       stroke-width: 10px;
     }
     &.active path.link, &.selected path.link {
-      stroke: $node-color-active;
+      stroke-width: 3px;
     }
     &.error path.link{
       stroke: $node-color-danger;
@@ -120,6 +119,7 @@ div.tooltip {
   background:  -webkit-linear-gradient(top, transparent 4px, rgba(255,255,255,0.06) 5px), -webkit-linear-gradient(left, transparent 4px, rgba(255,255,255,0.06) 5px), -webkit-linear-gradient(top, $canvas-background-color 0px, $canvas-background-color 5px);
   background-size: 5px 5px;
   float: left;
+  overflow: hidden;
 }
 
 svg{

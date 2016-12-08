@@ -17,26 +17,34 @@ export abstract class JNInfoPanelModel {
     return this.createComplexDataHTML(this.complexData);
   }
 
-  get complexDataScss(): String {
-    return this.createComplexDataScss();
+  get complexDataScss(): string {
+    return this.createComplexDataCss();
+  }
+
+  get complexDataComponent() {
+    return this.generateComplexDataComponent(this.complexData);
   }
 
   constructor(node) {
     this.node = node;
   }
 
-  public init() {
-  }
-
   protected getInfo() {
+    if(!this.node){
+      return ;
+    }
     let info = {
       'nodeID': this.node.body.nodeID,
       'nodeName': this.node.body.nodeName,
+      'type': this.node.body.type
     }
     return info;
   }
 
   protected getData() {
+    if(!this.node){
+      return ;
+    }
     this.complexData = {};
     let data: Object = JNUtils.clone(this.node.body);
 
@@ -47,7 +55,8 @@ export abstract class JNInfoPanelModel {
       }
     })
 
-    delete data['$errors'];
+    delete data['type'];
+    delete data['$errors']; 
     delete data['$valid'];
     delete data['accepts'];
     delete data['position'];
@@ -61,7 +70,11 @@ export abstract class JNInfoPanelModel {
     return '';
   }
 
-  protected createComplexDataScss() {
+  protected createComplexDataCss() {
     return '';
+  }
+
+  protected generateComplexDataComponent(complexData) {
+    return ;
   }
 }

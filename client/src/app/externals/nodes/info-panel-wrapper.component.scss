@@ -1,18 +1,36 @@
 .info-panel-wrapper {
+  background-color: #c2cbd2;
+  height: 100%;
+  .info-panel-title {
+    text-align: center;
+    background-color: #e1e1e1;
+    font-size: 14px;
+    border-bottom: 1px solid #000;
+    height: 38px;
+    line-height: 38px;
+    background-color: #99a3ab;
+    color: #fff;
+  }
   table {
     border-collapse: collapse;
     margin: 10px auto;
     width: 100%;
-    caption {
+    caption{
       caption-side: left;
-      font-size: 15px;
+      font-size: 13px;
+      // background-color: #99a3ab;
     }
     th,
     td {
       border: 1px solid #999;
       padding: 0.5rem;
       text-align: left;
-      font-size: 13px;
+      font-size: 13px;  
+      color: #828282;
+      background-color: #e9eff4;
+      &:column-span {
+        
+      }
     }
   }
 }

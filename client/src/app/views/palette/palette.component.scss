@@ -1,23 +1,37 @@
 .palette {
   overflow: scroll !important;
+  height: 100%;
+  background-color: #808e99;
   .palette-property {
     border-bottom: 1px solid;
     .palette-title {
-      height: 30px;
+      height: 38px;
       width: 200px;
       text-align: center;
       background-color: #5b9edc;
       font-size: 14px;
-      line-height: 30px;
+      line-height: 38px;
       color: #032748;
+      border-bottom: 1px solid;
+    }
+    .connections-title {
+      height: 38px;
+      line-height: 38px;
+      font-size: 14px;
+      color: #565b5c;
+      text-align: center;
+      background-color: #dce7ea;
       border-bottom: 1px solid;
     }
     .palette-connection {
       border-bottom: 1px solid;
       .palette-connection-title {
-        padding: 5px 0;
+        height: 38px;
+        line-height: 38px;
         font-size: 14px;
+        color: #565b5c;
         text-align: center;
+        background-color: #8fadc4;
         border-bottom: 1px solid;
       }
     }

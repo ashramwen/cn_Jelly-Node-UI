@@ -20,16 +20,15 @@ export class JNPaletteNode {
     this.type = nodeType;
     this.typeName = JNUtils.toArray<typeof JNBaseNode>(JNApplication.instance.nodeTypeMapper)
       .find(p => p.value === this.type).key;
-
     this.name = name;
     if (property) {
       this.property = property;
     } else {
       this.property = null;
     }
-    this.icon = (<typeof JNBaseNode>nodeType.constructor).icon;
-    this.color = (<typeof JNBaseNode>nodeType.constructor).color;
-    this.borderColor = (<typeof JNBaseNode>nodeType.constructor).borderColor;
+    this.icon = nodeType.icon;
+    this.color = nodeType.color;
+    this.borderColor = nodeType.borderColor;
     if (selectedNodeType) {
       this.acceptable = selectedNodeType.connectable(selectedNodeType, nodeType);
       this.directable = selectedNodeType.connectable(nodeType, selectedNodeType);

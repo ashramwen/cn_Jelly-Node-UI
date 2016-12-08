@@ -3,8 +3,6 @@ import { CoreModule } from '../../../core/core.module';
 import { TestBed, async, inject } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { JNFlow } from '../../../core/models/jn-flow.type';
-import { Events } from '../../../core/services/event.service';
-import { APP_READY } from '../../../core/services/application-core.service';
 import { JNDevicePropertyNode } from './device-property-node.type';
 import { JNUtils } from '../../../share/util';
 import { JNDeviceTypeNode } from '../device-type-node/device-type-node.type';
@@ -32,7 +30,7 @@ describe('Device Property Node', function () {
 
   it('Should Unconnectable when not accepted', () => {
     let device = new JNDevicePropertyNode();
-    expect(!!device.connectable(new JNLocationNode).message).toEqual(true);
+    expect(!!device.connectable(new JNLocationNode)).toEqual(true);
   });
 
   it('Should alert Error', () => {

@@ -1,5 +1,13 @@
 @import '../../../assets/styles/global';
 
+jn-canvas {
+  display: block;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  position: relative;
+}
+
 svg {
   &.selected{
     g.node-group, g.link{
@@ -18,15 +26,25 @@ svg {
     }
     .port {
       cursor: crosshair;
-      &:hover rect,
-      &.hover rect {
-        stroke: $node-color-active;
-        fill: $node-color-active;
+      &:hover,
+      &.hover{
+        rect {
+          stroke-width: 2.5px;
+          stroke: $node-color-active;
+        }
+        &.error rect{
+          stroke: $node-color-danger;
+          fill: $node-color-danger;
+        }
+        &.success rect{
+          stroke: $node-color-success;
+          fill: $node-color-success;
+        }
       }
       rect {
         stroke-width: 1.5px;
         stroke: $node-color-default;
-        fill: $node-color-success;
+        fill: $canvas-background-color;
       }
     }
     path {
@@ -46,13 +64,18 @@ svg {
       .port {
         rect{
           stroke: $node-color-success;
-          fill: $node-color-success;
+          &.connected{
+            fill: $node-color-success;
+          }
         }
+      }
+      &.error .port rect.connected{
+        fill: $node-color-danger;
       }
     }
     &.selected {
-      .node {
-        stroke-width: 3px;
+      .node, .port rect {
+        stroke-width: 2.5px;
       }
     }
     &.error {
@@ -65,7 +88,6 @@ svg {
       .port {
         rect{
           stroke: $node-color-danger;
-          fill: $node-color-danger;
         }
       }
     }
@@ -87,7 +109,7 @@ svg {
       stroke-width: 10px;
     }
     &.active path.link, &.selected path.link {
-      stroke-width: 3px;
+      stroke-width: 2.5px;
     }
     &.error path.link{
       stroke: $node-color-danger;
@@ -116,6 +138,7 @@ div.tooltip {
 
 #chart{
   position: relative;
-  
+  width: 100%;
+  height: 100%;
   overflow: auto;
 }

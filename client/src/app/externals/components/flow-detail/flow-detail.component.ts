@@ -1,5 +1,5 @@
 import { Router, ActivatedRoute } from '@angular/router';
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, HostListener, AfterViewInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { JNBaseNode } from '../../../core/models/jn-base-node.type';
 import { JNFlow } from '../../../core/models/jn-flow.type';
@@ -17,13 +17,14 @@ import { JNViewComponent } from '../../../views/view.component';
     '[tabindex]': '1'
   }
 })
-export class FlowDetailComponent implements OnInit, OnDestroy {
+export class FlowDetailComponent implements OnInit, OnDestroy, AfterViewInit {
 
   id: string;
   subs: Subscription;
   nodeFlow: JNFlow;
   editingName: boolean;
   fullscreen: boolean;
+  scale: number;
 
   @ViewChild('flowNameTxt')
   flowNameTxt: ElementRef;
@@ -31,12 +32,16 @@ export class FlowDetailComponent implements OnInit, OnDestroy {
   @ViewChild('nodeView')
   nodeView: JNViewComponent;
 
+  get isNew() {
+    return !this.nodeFlow || this.nodeFlow.flowID;
+  }
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private events: Events,
     private flowDetailService: FlowDetailService,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
   ) { 
     this.editingName = false;
   }
@@ -58,6 +63,10 @@ export class FlowDetailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subs.unsubscribe();
+  }
+
+  ngAfterViewInit() {
+    this.scale = this.nodeView.nodeCanvas.currentScale * 100;
   }
 
   startEditingName() {
@@ -85,12 +94,32 @@ export class FlowDetailComponent implements OnInit, OnDestroy {
       this.router.navigate(['/flow']);
     });
   } 
+
+  scaleTxtBlur(event) {
+    let s = this.flowDetailService.calcScale(this.scale);
+    this.nodeView.nodeCanvas.scale(s);
+    this.refreshScale();
+  }
+
+  toggleDragMove() {
+    if (this.nodeView.nodeCanvas.dragEnabled) {
+      this.nodeView.nodeCanvas.disableDragMove();
+    } else {
+      this.nodeView.nodeCanvas.enableDragMove();
+    }
+  }
   
   zoomIn() {
-    this.nodeView.scale(this.nodeView.currentScale + 0.2);
+    this.nodeView.nodeCanvas.scale(this.nodeView.nodeCanvas.currentScale + 0.2);
+    this.refreshScale();
   }
 
   zoomOut() {
-    this.nodeView.scale(this.nodeView.currentScale - 0.2);
+    this.nodeView.nodeCanvas.scale(this.nodeView.nodeCanvas.currentScale - 0.2);
+    this.refreshScale();
+  }
+
+  refreshScale() {
+    this.scale = Math.floor(this.nodeView.nodeCanvas.currentScale * 100);
   }
 }

@@ -34,7 +34,15 @@ export class CanvasNode extends CanvasObject{
   }
 
   get connected() {
-    return !!this.node.accepted.length || !!this.node.outputTo.length;
+    return this.inputConnected || this.outputConnected;
+  }
+
+  get inputConnected() {
+    return !!this.node.accepted.length;
+  }
+
+  get outputConnected() {
+    return !!this.node.outputTo.length;
   }
 
   get position() {
@@ -44,6 +52,10 @@ export class CanvasNode extends CanvasObject{
   get error() {
     let error = this.node.errors ? this.node.errors[0] : null;
     return error;
+  }
+
+  connectable(s: CanvasNode) {
+    return this.node.connectable(s.node);
   }
 
   constructor(node: JNBaseNode, canvas: SVGSVGElement) {

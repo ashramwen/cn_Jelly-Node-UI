@@ -199,6 +199,7 @@ export abstract class JNBaseNode {
     this.update({
       accepts: this.accepted.map(n => n.body.nodeID)
     });
+    node.publishData();
   }
 
   /**
@@ -273,16 +274,14 @@ export abstract class JNBaseNode {
    * @desc remove node
    */
   public remove() {
-    JNUtils.toArray(this.nodeMap.accepted).forEach((t: { key: string; value: JNBaseNode }) => {
-      let node = t.value;
+    this.accepted.forEach((node) => {
       delete node.nodeMap.outputTo[node.body.nodeID];
     });
 
-    JNUtils.toArray(this.nodeMap.outputTo).forEach((t: { key: string; value: JNBaseNode }) => {
-      let node = t.value;
+    this.outputTo.forEach((node) => {
       delete node.nodeMap.accepted[node.body.nodeID];
       node.reject(this);
-    });
+    })
   }
 
   public validateLinkWith(node: JNBaseNode) {
@@ -292,9 +291,13 @@ export abstract class JNBaseNode {
 
     // global rule
     let connectRules = (<typeof JNBaseNode>this.constructor).connectRules;
-    let error = this.connectable(node);
-    if (error) {
-      return error;
+    let globalRules = connectRules.global;
+    if (globalRules && globalRules.length) {
+      for (let rule of globalRules) {
+        if (!rule.validator(this, node)) {
+          return { message: rule.message };
+        }
+      }
     }
 
     // node rule
@@ -318,18 +321,10 @@ export abstract class JNBaseNode {
   /**
    * @param  {JNBaseNode} target output node
    * @returns boolean
-   * @desc if thow target is connectable
+   * @desc if target is connectable
    */
-  public connectable(target: JNBaseNode): { message: string } {
-    let connectRules = (<typeof JNBaseNode>this.constructor).connectRules;
-    let globalRules = connectRules.global;
-    if (globalRules && globalRules.length) {
-      for (let rule of globalRules) {
-        if (!rule.validator(this, target)) {
-          return { message: rule.message };
-        }
-      }
-    }
+  public connectable(target: JNBaseNode): boolean {
+    return (<typeof JNBaseNode>this.constructor).connectable(<typeof JNBaseNode>target.constructor, <typeof JNBaseNode>this.constructor);
   }
 
   /**

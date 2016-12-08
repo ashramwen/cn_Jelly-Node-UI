@@ -46,6 +46,10 @@ export class FlowDetailService {
     !this.fullscreen ? this._launchIntoFullscreen(element) : this._exitFullscreen();
   }
 
+  calcScale(s) {
+    return Math.ceil(s / 20) / 5;
+  }
+
   private _launchIntoFullscreen(element) {
     if(element.requestFullscreen) {
       element.requestFullscreen();

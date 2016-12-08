@@ -41,14 +41,6 @@ export class JNViewComponent implements OnInit, OnDestroy {
     private events: Events
   ) { }
 
-  public scale(s: number) {
-    this.nodeCanvas.scale(s);
-  }
-
-  get currentScale() {
-    return this.nodeCanvas.currentScale;
-  }
-
   ngOnInit() {
     this.events.on('node_click', node => {
       console.log('node_click', node);

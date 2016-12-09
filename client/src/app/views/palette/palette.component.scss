@@ -1,62 +1,86 @@
 .palette {
   overflow: scroll !important;
+  height: 100%;
+  background-color: #808e99;
   .palette-property {
     border-bottom: 1px solid;
     .palette-title {
-      padding: 10px 0;
+      height: 38px;
+      width: 200px;
       text-align: center;
-      background-color: #e1e1e1;
-      font-size: 16px;
+      background-color: #5b9edc;
+      font-size: 14px;
+      line-height: 38px;
+      color: #032748;
+      border-bottom: 1px solid;
+    }
+    .connections-title {
+      height: 38px;
+      line-height: 38px;
+      font-size: 14px;
+      color: #565b5c;
+      text-align: center;
+      background-color: #dce7ea;
       border-bottom: 1px solid;
     }
     .palette-connection {
       border-bottom: 1px solid;
       .palette-connection-title {
-        padding: 5px 0;
+        height: 38px;
+        line-height: 38px;
         font-size: 14px;
+        color: #565b5c;
         text-align: center;
+        background-color: #8fadc4;
         border-bottom: 1px solid;
       }
     }
     .palette-node-group {
+      padding: 10px 0;
+      background-color: #485c6b;
+      &.no {
+        font-size: 14px;
+        color: #485c6b;
+        background-color: #808e99;
+      }
+      &:hover {
+        background: #344654;
+      }
       .palette-node {
+        width: 152px;
+        height: 42px;
         position: relative;
-        width: 180px;
-        height: 40px;
         cursor: move;
-        /*background-color: #ddd;*/
-        margin: 10px auto;
-        border-radius: 10px;
-        border: 1px solid #000;
+        margin: 0 auto;
+        border-radius: 7px;
+        border: 1px solid #f1f7fb;
         background-position: 5% 50%;
         background-repeat: no-repeat;
         background-size: contain;
         .palette-label {
+          color: #f1f7fb;
           font-size: 14px;
-          margin-left: 40px;
-          line-height: 40px;
+          line-height: 42px;
           overflow: hidden;
           text-align: center;
-          &.right {
-            margin-left: 0 !important;
-            margin-right: 40px;
-          }
+          // &.right {
+          //   margin-left: 0 !important;
+          //   margin-right: 40px;
+          // }
         }
         .palette-icon {
-          position: absolute;
+          width: 42px;
           text-align: center;
-          top: 0;
-          bottom: 0;
-          width: 40px;
-          /*background-color: rgba(0, 0, 0, 0.05);*/
-          &.left {
-            border-right: 1px solid #000;
-            left: 0;
-          }
-          &.right {
-            border-left: 1px solid #000;
-            border-right: 0px !important;
-            left: 140px;
+          font-family: icomoon;
+          float: left;
+          // &.left {
+          //   left: 0;
+          // }
+          // &.right {
+          //   left: 140px;
+          // }
+          i {
+            color: #f1f7fb;
           }
         }
         .palette-port {
@@ -65,17 +89,12 @@
           left: -5px;
           box-sizing: border-box;
           -moz-box-sizing: border-box;
-          background-color: #fff;
-          border-radius: 3px;
-          width: 10px;
-          height: 10px;
-          border: 1px solid #000;
           &.output {
             left: auto;
             right: -6px;
           }
           &.connectable {
-            background-color: #000;
+            background-color: #8fc31f;
           }
           &.disconnectable {
             display: none;

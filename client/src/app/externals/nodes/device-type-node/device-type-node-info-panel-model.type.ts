@@ -2,7 +2,6 @@ import { JNInfoPanelModel } from '../../../views/info-panel/interfaces/info-pane
 import { Component, Input } from '@angular/core';
 
 @Component({
-  
   template: `
     <h3>位置</h3>
     <ul>
@@ -13,7 +12,6 @@ import { Component, Input } from '@angular/core';
       <li *ngFor="let thing of inputs.things">{{thing}}</li>
     </ul>
   `
-
 })
 export class JNDeviceTypeNodeInfoPanelModel extends JNInfoPanelModel {
   generateComplexDataComponent() {

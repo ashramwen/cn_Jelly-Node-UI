@@ -15,6 +15,7 @@ import { NodeSettings } from '../../../providers/constants';
 import { INodeSettings } from '../../../interfaces/node-settings.interface';
 import { SVGUtils } from './utils';
 import { DragScrollService } from './drag-scroll.service';
+import { JNKeyboardService } from '../keyboard.service';
 
 @Injectable()
 export class D3HelperService {
@@ -54,7 +55,8 @@ export class D3HelperService {
     private events: Events,
     private translate: TranslateService,
     private _sanitizer: Sanitizer,
-    private injector: Injector
+    private injector: Injector,
+    private keybordService: JNKeyboardService
   ) {
     this.nodes = [];
     this.links = [];
@@ -858,20 +860,16 @@ export class D3HelperService {
     return v;
   }
 
-  public keydown(key: string, e) {
-    switch (key) {
-      case 'Backspace':
-        this.selections.forEach((o) => {
-          switch (o.constructor) {
-            case CanvasNode:
-              this.removeNode(<CanvasNode>o);
-            case CanvasLink:
-              this.removeLink(<CanvasLink>o);
-          }
-        });
-        this.hideTip();
-        this.selections = [];
-        break;
-    }
+  removeSelection() {
+    this.selections.forEach((o) => {
+      switch (o.constructor) {
+        case CanvasNode:
+          this.removeNode(<CanvasNode>o);
+        case CanvasLink:
+          this.removeLink(<CanvasLink>o);
+      }
+    });
+    this.hideTip();
+    this.selections = [];
   }
 }

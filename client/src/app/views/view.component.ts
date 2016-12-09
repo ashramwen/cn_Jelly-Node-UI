@@ -50,9 +50,6 @@ export class JNViewComponent implements OnInit, OnDestroy {
       console.log('node_dblclick', node);
       this.openEditModal(node);
     });
-
-    this.nodeDeleteEventListener = this.events.on(NODE_EVENTS.NODE_DELETE, this.removeNode.bind(this));
-    this.events.on(NODE_EVENTS.LINK_DELETE, this.removeLink.bind(this));
   }
 
   protected initFlow() {
@@ -73,13 +70,5 @@ export class JNViewComponent implements OnInit, OnDestroy {
 
   protected hideEditor() {
     this.nodeEditor.hide();
-  }
-
-  protected removeNode(node: JNBaseNode) {
-    this.nodeFlow.removeNode(node);
-  }
-
-  protected removeLink(d: {source: JNBaseNode, target: JNBaseNode}) {
-    this.nodeFlow.removeLink(d);
   }
 }

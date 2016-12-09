@@ -37,9 +37,9 @@ export interface IConnectRuleSetting {
 export abstract class JNBaseNode {
 
   static title: string; // static node name
-  static icon: String; // node icon diplay on canvas
-  static color: String; // node color display on canvas
-  static borderColor: String; // node border color on canvas
+  static icon: string; // node icon diplay on canvas
+  static color: string; // node color display on canvas
+  static borderColor: string; // node border color on canvas
   static accepts: Array<string> = []; // node types that can be accepted;
   static nodeModel: typeof JNNodeModel;
   static editorModel: typeof JNEditorModel;
@@ -98,7 +98,9 @@ export abstract class JNBaseNode {
   }
 
   set position(position: INodePosition) {
-    this.model.position = position;
+    this.update({
+      position: position
+    });
   }
 
   public nodeMap: INodeMap = {
@@ -120,9 +122,15 @@ export abstract class JNBaseNode {
     return this._state;
   }
 
+  set state(s) {
+    this._state = s;
+    this._stateChange.post(this);
+  }
+
   protected abstract model: JNNodeModel<any>; // node model
   private _modelChange: SyncEvent<JNBaseNode>;
   private _state: 'listening' | 'publishing' | 'published';
+  private _stateChange: SyncEvent<JNBaseNode>;
 
   /**
    * @desc return body
@@ -133,6 +141,7 @@ export abstract class JNBaseNode {
 
   constructor() {
     this._modelChange = new SyncEvent<JNBaseNode>();
+    this._stateChange = new SyncEvent<JNBaseNode>();
   }
 
   /**
@@ -243,8 +252,8 @@ export abstract class JNBaseNode {
    * @desc update node by given data and publish new body
    */
   public update(data: Object) {
-    this.model.accepts = JNUtils.toArray<JNBaseNode>(this.nodeMap.accepted)
-      .map(p => p.value.body.nodeID);
+    this.model.accepts = this.accepted
+      .map(n => n.body.nodeID);
     this.model = this.parser(data);
     this.model.extends(this.validate());
     this.publishData();
@@ -365,14 +374,20 @@ export abstract class JNBaseNode {
     return this._modelChange.attach(cb);
   }
 
+  public onStateChanges(cb: any) {
+    return this._stateChange.attach(cb);
+  }
+
   /**
    * @desc subscribe input data
    * @param  {IJNNodePayload} payload
    */
   protected subscriber(payload: IJNNodePayload) {
-    this._state = 'listening';
+    this.state = 'listening';
     this.listener(payload).then(() => {
-      this.publishData();
+      if (this.state != 'published') {
+        this.state = 'published';
+      }
     });
   }
 
@@ -400,7 +415,11 @@ export abstract class JNBaseNode {
    * @desc publish data 
    */
   private publishData() {
-    this._state = 'publishing';
+    this.state = 'publishing';
+    if (!this.outputTo.length) {
+      this.state = 'published';
+      return;
+    }
     this.buildOutput().then((output) => {
       let payload: IJNNodePayload = {
         type: this.constructor,
@@ -413,7 +432,7 @@ export abstract class JNBaseNode {
         .forEach((node) => {
           node.subscriber(payload);
         });
-      this._state = 'published';
+      this.state = 'published';
     });
   }
 

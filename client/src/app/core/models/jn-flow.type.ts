@@ -111,18 +111,15 @@ export class JNFlow implements IFlow{
   private _undoStack: Array<any> = [];
 
   @JsonProperty({ignore: true})
-  private _flowChange: SyncEvent<JNBaseNode>;
-
-  @JsonProperty({ignore: true})
-  private _subscriber: Subscriber<JNBaseNode>;
-
-  @JsonProperty({ignore: true})
-  private _observable = new Observable((subscriber: Subscriber<JNBaseNode>) => {
-    this._subscriber = subscriber;
-  });
-
+  private _flowChange: SyncEvent<JNFlow>;
   static deserialize: (d: any) => JNFlow;
-  
+
+  static factory(f: IFlow) {
+    let flow = JNFlow.deserialize(f);
+    flow.loadData(f.nodes);
+    return flow;
+  }
+
   constructor() {
     this.flowName = null;
     this.flowID = null;
@@ -136,12 +133,7 @@ export class JNFlow implements IFlow{
     this.id = null;
     this.nodes = [];
 
-    this._flowChange = new SyncEvent<JNBaseNode>();
-    this._observable
-      .subscribe((node: JNBaseNode) => {
-        this._flowChange.post(node);
-        console.log(node);
-      });
+    this._flowChange = new SyncEvent<JNFlow>();
   }
 
   /**
@@ -163,9 +155,11 @@ export class JNFlow implements IFlow{
     }
     node.init(_data);
     this.initNode(node);
-    this.nodes.push(node);
-
     return node;
+  }
+
+  addNode(node: JNBaseNode) {
+    this.nodes.push(node);
   }
 
   /**
@@ -176,11 +170,14 @@ export class JNFlow implements IFlow{
     if (this.nodes.indexOf(node) > -1) {
       JNUtils.removeItem(this.nodes, node);
       node.remove();
+      this._flowChange.post(this);
     }
   }
 
   removeLink(d: { source: JNBaseNode, target: JNBaseNode }) {
+    if (d.target.accepted.indexOf(d.source) < 0) return;
     d.target.reject(d.source);
+    this._flowChange.post(this);
   }
 
   loadData(data: INodeBody[]) {
@@ -210,13 +207,7 @@ export class JNFlow implements IFlow{
   }
 
   initNode(node: JNBaseNode) {
-    node.onChanges(() => { this.whenNodeUpdated(node); });
-  }
-
-  public redo() {
-  }
-
-  public undo() {
+    node.onStateChanges(() => { this.whenNodeUpdated(node); });
   }
 
   public onChanges(cb: any) {
@@ -233,6 +224,6 @@ export class JNFlow implements IFlow{
     if (!!this.nodes.find(n => n.state === 'listening' || n.state == 'publishing')) {
       return;
     }
-    this._subscriber.next(node);
+    this._flowChange.post(this);
   }
 }

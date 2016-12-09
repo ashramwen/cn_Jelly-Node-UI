@@ -7,6 +7,10 @@ import { DropEvent } from '../../share/directives/drag-drop/components/droppable
 import { Events, NODE_EVENTS } from '../../share/services/event.service';
 import { JNApplication } from '../../share/services/application-core.service';
 import * as d3 from 'd3';
+import { EditStack } from './services/edit-stack.service';
+import { JNUtils } from '../../share/util';
+import { Subscriber, Observable } from 'rxjs';
+import { JNKeyboardService, CANVAS_COMMANDS } from './services/keyboard.service';
 
 @Component({
   selector: 'jn-canvas',
@@ -20,7 +24,7 @@ import * as d3 from 'd3';
   host: {
     '[tabindex]': '1'
   },
-  providers: [D3HelperService]
+  providers: [D3HelperService, EditStack, JNKeyboardService]
 })
 export class NodeCanvasComponent implements OnInit, OnChanges {
   @Input()
@@ -30,6 +34,7 @@ export class NodeCanvasComponent implements OnInit, OnChanges {
   canvas: ElementRef;
 
   private _dragEnabled: boolean;
+  private _commands: { keyCombo: string[]; command: any };
   
   get currentScale() {
     return this.d3Helper.currentScale;
@@ -43,7 +48,9 @@ export class NodeCanvasComponent implements OnInit, OnChanges {
     private d3Helper: D3HelperService,
     private elementRef: ElementRef,
     private events: Events,
-    private application: JNApplication
+    private application: JNApplication,
+    private editStack: EditStack,
+    private keyboardService: JNKeyboardService
   ) { 
     this._dragEnabled = false;
   }
@@ -51,10 +58,17 @@ export class NodeCanvasComponent implements OnInit, OnChanges {
   ngOnInit() {
     let self = this;
     this.d3Helper.init(this.canvas.nativeElement);
-    this.events.on(NODE_EVENTS.NODE_CHANGED, this.d3Helper.drawNodes.bind(this.d3Helper));
+
+    this.events.on(NODE_EVENTS.SELECTION_BEFORE_MOVED, this.onUserInput.bind(this));
+    this.events.on(NODE_EVENTS.SELECTION_BEFORE_REMOVED, this.onUserInput.bind(this));
+    this.events.on(NODE_EVENTS.NODE_BEFORE_ADDED, this.onUserInput.bind(this));
+    this.events.on(NODE_EVENTS.NODE_BEFORE_LINKED, this.onUserInput.bind(this));
+    this.events.on(NODE_EVENTS.NODE_BEFORE_CHANGED, this.onUserInput.bind(this));
+    this.events.on(NODE_EVENTS.LINK_BEFORE_REMOVED, this.onUserInput.bind(this));
   }
 
   onItemDrop(e: DropEvent) {
+    if (!this.nodeFlow) return;
     let position = {
       x: (e.nativeEvent.offsetX - e.offset.x) / this.currentScale,
       y: (e.nativeEvent.offsetY - e.offset.y) / this.currentScale
@@ -63,12 +77,21 @@ export class NodeCanvasComponent implements OnInit, OnChanges {
     let property = e.dragData.property || {};
     Object.assign(property, { position: position });
     let node = this.nodeFlow.createNode(<any>nodeType, property);
+    this.events.emit(NODE_EVENTS.NODE_BEFORE_ADDED, node);
+    this.nodeFlow.addNode(node);
     this.addNode(node);
   }
 
   @HostListener('keydown', ['$event'])
-  keydown(e) {
-    this.d3Helper.keydown(e.key, e);
+  keydown(e: KeyboardEvent) {
+    let command = this.keyboardService.keydown(e);
+    console.log(command);
+    this.handleCommand(command.commandName);
+  }
+
+  @HostListener('keyup', ['$event'])
+  keyup(e: KeyboardEvent) {
+    this.keyboardService.keyup(e);
   }
 
   addNode(node: JNBaseNode) {
@@ -93,10 +116,33 @@ export class NodeCanvasComponent implements OnInit, OnChanges {
     this._dragEnabled = false;
   }
 
+  undo() {
+    if (!this.editStack.undoable) return;
+    let flow = this.editStack.undo();
+    this.nodeFlow.loadData(flow.nodes);
+    this.d3Helper.loadFlow(this.nodeFlow);
+  }
+
+  onUserInput() {
+    this.d3Helper.drawNodes();
+    this.editStack.do(this.nodeFlow.serialize());
+    JNUtils.debug(this.editStack._doStack, this.editStack._undoStack);
+  }
+
   ngOnChanges(changes: { [key: string]: SimpleChange }) {
     let flow: JNFlow = changes['nodeFlow'].currentValue;
     if (flow === changes['nodeFlow'].previousValue || !flow) return;
-    let nodes = flow.nodes;
-    this.d3Helper.loadNodes(nodes);
+    this.d3Helper.loadFlow(flow);
+  }
+
+  private handleCommand(commandName: string) {
+    switch (commandName) {
+      case CANVAS_COMMANDS.REMOVE:
+        this.d3Helper.removeSelection();
+        break;
+      case CANVAS_COMMANDS.UNDO:
+        this.undo();
+        break;
+    }
   }
 }

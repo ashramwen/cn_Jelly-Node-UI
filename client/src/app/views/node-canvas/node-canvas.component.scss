@@ -1,5 +1,9 @@
 @import '../../../assets/styles/global';
 
+$stroke-default-width: 1.5px;
+$stroke-active-width: 2.5px;
+
+
 jn-canvas {
   display: block;
   height: 100%;
@@ -22,14 +26,14 @@ svg {
     .node {
       stroke: $node-color-default;
       fill: transparent;
-      stroke-width: 1.5px;
+      stroke-width: $stroke-default-width;
     }
     .port {
       cursor: crosshair;
       &:hover,
       &.hover{
         rect {
-          stroke-width: 2.5px;
+          stroke-width: $stroke-active-width;
           stroke: $node-color-active;
         }
         &.error rect{
@@ -42,14 +46,10 @@ svg {
         }
       }
       rect {
-        stroke-width: 1.5px;
+        stroke-width: $stroke-default-width;
         stroke: $node-color-default;
         fill: $canvas-background-color;
       }
-    }
-    path {
-      stroke-width: 1;
-      stroke: #000;
     }
     text {
       fill: $node-color-default;
@@ -75,7 +75,7 @@ svg {
     }
     &.selected {
       .node, .port rect {
-        stroke-width: 2.5px;
+        stroke-width: $stroke-active-width;
       }
     }
     &.error {
@@ -94,14 +94,14 @@ svg {
   }
   g.new_link path {
     stroke: $node-color-active;
-    stroke-width: 1.5px;
+    stroke-width: $stroke-active-width;
     fill: transparent;
   }
   g.link {
     cursor: pointer;
     path {
       stroke: $node-color-success;
-      stroke-width: 1.5px;
+      stroke-width: $stroke-default-width;
       fill: transparent;
     }
     path.link-wrapper{
@@ -109,7 +109,7 @@ svg {
       stroke-width: 10px;
     }
     &.active path.link, &.selected path.link {
-      stroke-width: 2.5px;
+      stroke-width: $stroke-active-width;
     }
     &.error path.link{
       stroke: $node-color-danger;

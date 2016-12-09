@@ -29,6 +29,7 @@ export class D3HelperService {
   private tip: any;
   private dragWrapper: any;
 
+  private flow: JNFlow;  
   private nodes: CanvasNode[];
   private links: CanvasLink[];
 
@@ -38,7 +39,8 @@ export class D3HelperService {
 
   private sourceNode: CanvasNode = null;
   private targetNode: CanvasNode = null;
-  private _shift: Array<{ x: number, y: number }> = [];
+  private _dragOrigin: CanvasPoint
+  private _shift: CanvasPoint;
   private NodeSettings: INodeSettings;
   private _scale: number;
   private dragScrollService: DragScrollService;
@@ -198,16 +200,17 @@ export class D3HelperService {
     this.updateNodes();
   }
 
-  loadNodes(nodes: JNBaseNode[]) {
+  loadFlow(flow: JNFlow) {
+    this.flow = flow;
     this.nodes = [];
     this.links = [];
     this.selections = [];
 
-    nodes.forEach((n) => {
+    flow.nodes.forEach((n) => {
       this.addNode(n);
     });
 
-    nodes.forEach(t => {
+    flow.nodes.forEach(t => {
       t.accepted.forEach(s => {
         let target = this.nodes
           .find(d => d.node === t);
@@ -584,22 +587,30 @@ export class D3HelperService {
   }
 
   private removeNode(node: CanvasNode) {
+    this.events.emit(NODE_EVENTS.SELECTION_BEFORE_REMOVED, node.node);
     this.links
       .filter(link => link.source === node || link.target === node)
-      .forEach(this.removeLink.bind(this));
+      .forEach(this.removeLink.bind(this, true));
     
+    this.flow.removeNode(node.node);
     JNUtils.removeItem(this.nodes, node);
-    this.events.emit(NODE_EVENTS.NODE_DELETE, node.node);
     setTimeout(() => {
       this.drawNodes();
     });
   }
 
-  private removeLink(link: CanvasLink) {
+  private removeLink(link: CanvasLink, preventEvent?: boolean) {
     if (this.links.indexOf(link) === -1) return; 
+    if (!preventEvent) {
+      this.events.emit(NODE_EVENTS.LINK_BEFORE_REMOVED,
+        { source: link.source.node, target: link.target.node });
+    }
     JNUtils.removeItem(this.links, link);
-    this.events.emit(NODE_EVENTS.LINK_DELETE, { source: link.source.node, target: link.target.node });
+    this.flow.removeLink({source: link.source.node, target: link.target.node});
     this.drawLinks();
+    setTimeout(() => {
+      this.updateNodes();
+    });
   }
 
   private select(o: CanvasObject[] | CanvasObject) {
@@ -617,36 +628,54 @@ export class D3HelperService {
 
   private dragStart() {
     let position = d3.mouse(this.canvas.node());
-    this._shift = this.selections
-      .filter((o) => {
-        return o instanceof CanvasNode;
-      })
-      .map((o) => {
-        return {
-          x: position[0] - o.x,
-          y: position[1] - o.y
-        };
-      });
+    this._dragOrigin = {
+      x: position[0],
+      y: position[1]
+    };
   }
 
   private dragMove() {
     let position = d3.mouse(this.canvas.node());
+    this._shift = {
+      x: position[0] - this._dragOrigin.x,
+      y: position[1] - this._dragOrigin.y
+    };
     this.selections
       .filter((o) => {
         return o instanceof CanvasNode;
       })
       .forEach((n: CanvasNode, i) => {
-        n.position = {
-          x: position[0] - this._shift[i].x,
-          y: position[1] - this._shift[i].y
+        n.offset = {
+          x: this._shift.x,
+          y: this._shift.y
         };
       });
     this.updateNodes();
   }
 
   private dragEnd() {
-    this._shift = null;
-    this.events.emit(NODE_EVENTS.NODE_CHANGED, true);
+    if (!this.selections.length) return;
+
+    // check changes
+    // return if no node moved
+    let changed = this.selections
+      .filter((o) => {
+        return o instanceof CanvasNode;
+      })
+      .find((n: CanvasNode) => {
+        return !!n.offset.x || !!n.offset.y
+      });
+    if (!changed) return;
+
+    this.events.emit(NODE_EVENTS.SELECTION_BEFORE_MOVED, this.selections);
+    
+    this.selections
+      .filter((o) => {
+        return o instanceof CanvasNode;
+      })
+      .forEach((n: CanvasNode, i) => {
+        n.updatePosition();
+      });
   }
 
   private moveMouseLink = (linkData) => {
@@ -667,13 +696,11 @@ export class D3HelperService {
 
   private createNodeLink = (s: CanvasNode, t: CanvasNode) => {
     if (this.links.find(l => l.source === s && l.target === t)) return;
-    try {
-      t.node.accept(s.node);
-      this.addLink(s, t);
-      this.updateNodes();
-    } catch (e){
-      console.log(e);
-    }
+    if (!t.node.connectable(s.node)) return;
+    this.events.emit(NODE_EVENTS.NODE_BEFORE_LINKED, t.node);
+    t.node.accept(s.node);
+    this.addLink(s, t);
+    this.updateNodes();
   }
 
   private addLink(s: CanvasNode, t: CanvasNode) {

@@ -5,9 +5,9 @@ import { JNNodeModel } from '../jn-node-model.type';
 import { JNPaletteModel } from '../../../views/palette/interfaces/palette-model.type';
 
 export interface INodeOptions {
-  icon: String;
-  color: String;
-  borderColor: String;
+  icon: string;
+  color: string;
+  borderColor: string;
   title: string;
   editorModel: typeof JNEditorModel;
   infoPanelModel: typeof JNInfoPanelModel;

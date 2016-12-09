@@ -2,8 +2,8 @@
   <div class="main-header">
     <div class="left-container">
       <ul>
-        <li><i class="fa fa-times-circle"></i></li>
-        <li><i class="fa fa-minus-circle"></i></li>
+        <li><i class="fa fa-plus-circle" (click)="zoomIn()"></i></li>
+        <li><i class="fa fa-minus-circle" (click)="zoomOut()"></i></li>
         <li>
           <i class="fa fa-expand" 
             [class.fa-expand]="!fullscreen" 
@@ -11,9 +11,9 @@
             (click)="toggleFullScreen()"></i>
           </li>
         <li>
-          <input type="text" class="scale-size-txt" autocomplete="off"><label class="scale-percentage">%</label>
+          <input type="text" class="scale-size-txt" autocomplete="off" (keydown.enter)="$event.target.blur()" (blur)="scaleTxtBlur()" [(ngModel)]="scale"><label class="scale-percentage">%</label>
         </li>
-        <li><i class="fa fa-hand-stop-o"></i></li>
+        <li><i class="fa fa-hand-stop-o" [class.active]="nodeView.nodeCanvas.dragEnabled" (click)="toggleDragMove()"></i></li>
       </ul>
     </div>
     <div class="title-container" *ngIf="nodeFlow">
@@ -24,22 +24,22 @@
     </div>
     <div class="right-container">
       <ul>
-        <li>
+        <li *ngIf="!isNew">
           <div class="btn-toggle">
             <label [class.checked]="enabled"><input type="radio" name="enabled" [(ngModel)]="enabled" value="false" />禁用</label>
             <label [class.checked]="!enabled"><input type="radio" name="enabled" [(ngModel)]="enabled" value="true" />启用</label>
           </div>
         </li>
         <li>
-          <button class="btn-save">保存</button>
+          <button class="btn-save" (click)="submit()">保存</button>
         </li>
-        <li>
-          <button class="btn-publish">发布</button>
+        <li *ngIf="!isNew">
+          <button class="btn-publish" (click)="publish()">发布</button>
         </li>
       </ul>
     </div>
   </div>
   <div class="main-body clearfix">
-    <jn-view [nodeFlow]="nodeFlow"></jn-view>
+    <jn-view [nodeFlow]="nodeFlow" #nodeView></jn-view>
   </div>
 </div>

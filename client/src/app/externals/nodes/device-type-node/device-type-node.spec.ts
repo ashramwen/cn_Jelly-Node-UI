@@ -65,7 +65,7 @@ describe('Device Type Node', function () {
       nodeName: '类型-灯泡'
     });
     deviceNode.accept(locationNode1);
-    expect(!!deviceNode.connectable(locationNode2).message).toEqual(true);
+    expect(!!deviceNode.connectable(locationNode2)).toEqual(true);
   }));
 
 });

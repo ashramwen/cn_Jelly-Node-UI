@@ -46,7 +46,7 @@ import {
       controlType: JNTextControl,
       $validators: []
     },
-    unit: {
+    timeUnit: {
       input: <ISelectInput>{
         label: '时间单位',
         options: [{
@@ -74,7 +74,7 @@ export class JNTimeNodeEditorModel extends JNEditorModel {
 
   protected parse(data: JNTimeNodeModel) {
     this.setValue('timeType', data.timeType);
-    this.setValue('unit', data.timeUnit);
+    this.setValue('timeUnit', data.timeUnit);
     this.setValue('cron', data.cron);
     this.setValue('interval', data.interval);
   }
@@ -88,17 +88,17 @@ export class JNTimeNodeEditorModel extends JNEditorModel {
       switch (value) {
         case 'cron':
           this.getInput('cron').hidden = false;
-          this.getInput('unit').hidden = true;
+          this.getInput('timeUnit').hidden = true;
           this.getInput('interval').hidden = true;
           break;
         case 'interval':
           this.getInput('cron').hidden = true;
-          this.getInput('unit').hidden = false;
+          this.getInput('timeUnit').hidden = false;
           this.getInput('interval').hidden = false;
           break;
         default:
           this.getInput('cron').hidden = true;
-          this.getInput('unit').hidden = false;
+          this.getInput('timeUnit').hidden = false;
           this.getInput('interval').hidden = false;
           this.setValue('timeType', 'interval');
           break;

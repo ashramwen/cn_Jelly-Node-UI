@@ -13,16 +13,23 @@ import { cn } from '../../../../../assets/i18n/cn';
 import { JN_NODE_SETTING } from '../../../../share/providers/constants';
 import { NodeSettings } from '../../../providers/constants';
 import { INodeSettings } from '../../../interfaces/node-settings.interface';
+import { SVGUtils } from './utils';
+import { DragScrollService } from './drag-scroll.service';
 
 @Injectable()
 export class D3HelperService {
 
   private vis: any;
+  private parent: Element;
   private canvasContainer: any;
   private canvas: any;
+  private canvasBackground: any;
+  private canvasRule: any;
   private brush: any;
   private tip: any;
+  private dragWrapper: any;
 
+  private flow: JNFlow;  
   private nodes: CanvasNode[];
   private links: CanvasLink[];
 
@@ -32,8 +39,16 @@ export class D3HelperService {
 
   private sourceNode: CanvasNode = null;
   private targetNode: CanvasNode = null;
-  private _shift: Array<{ x: number, y: number }> = [];
+  private _dragOrigin: CanvasPoint
+  private _shift: CanvasPoint;
   private NodeSettings: INodeSettings;
+  private _scale: number;
+  private dragScrollService: DragScrollService;
+  private linkingNode: { from: 'input' | 'output'; node: CanvasNode };
+
+  get currentScale() {
+    return this._scale;
+  }
 
   constructor(
     private events: Events,
@@ -46,82 +61,156 @@ export class D3HelperService {
     this.selections = [];
     let externalSettings = injector.get(JN_NODE_SETTING);
     this.NodeSettings = {};
+    this._scale = 1;
+    this.dragScrollService = DragScrollService.factory();
 
     Object.assign(this.NodeSettings, NodeSettings, externalSettings); 
   }
 
-  init(container: Element) {
+  init(parent: Element) {
     let self = this;
-    let svg = d3.select(container).append('svg');
-
-    this.canvasContainer = svg
+    this.parent = parent;
+    this.canvasBackground = d3.select(parent)
+      .append('div')
+      .attr('class', 'canvas-background')
+      .style('position', 'absolute')
+      .style('left', 0)
+      .style('top', 0)
+      .style('overflow', 'hidden');
+    
+    this.canvasRule = this.canvasBackground
+      .append('div')
+      .attr('class', 'canvas-rule')
+      .style('width', '100%')
+      .style('height', '100%');
+    
+    this.canvasContainer = d3.select(parent)
+      .append('svg')
       .attr('width', this.NodeSettings.CANVAS_WIDTH)
       .attr('height', this.NodeSettings.CANVAS_HEIGHT)
       .attr('pointer-events', 'all')
-      .style('cursor', 'crosshair');
+      .style('cursor', 'crosshair')
+      .style('position', 'relative');
     
     this.canvas = this.canvasContainer.append('g');
     
     this.brush = this.canvas
       .append('g')
       .attr('class', 'brush')
-      .attr('id', 'brush-wrapper')
-      .call(d3.brush()
-        .on('start', () => {
-          self.brush.raise();
-          var e = d3.event.target.extent();
-        })
-        .on('end', () => {
-          // hide brush
-          self.select([]);
-          self.brush.lower();
-          self.brush
-            .selectAll('.selection,.handle')
-            .style('display', 'none');
-          
-          // select nodes
-          let selection = d3.event.selection;
-          if (selection) {
-            let maxX = Math.max(selection[0][0], selection[1][0]),
-              maxY = Math.max(selection[0][1], selection[1][1]),
-              minX = Math.min(selection[0][0], selection[1][0]),
-              minY = Math.min(selection[0][1], selection[1][1]);
-            
-            let linksAndNodes: CanvasObject[] = (<Array<CanvasObject>>self.links).concat(self.nodes);
-            let selectedObjects = linksAndNodes.filter(n =>
-              n.x > minX
-              && n.x + n.width < maxX
-              && n.y > minY
-              && n.y + n.height < maxY);
-            
-            self.select(selectedObjects);
-          }
-          
-          self.updateNodes.bind(self)();
-          self.updateLinks.bind(self)();
-        }));
+      .attr('id', 'brush-wrapper');
+    
+    this.initBrush();
       
     this.vis = this.canvas
       .append('svg:g')
       .on('dblclick.zoom', null)
       .append('svg:g');
     
-    this.tip = d3.select(container)
+    this.tip = d3.select(parent)
       .append('div')
       .attr('class', 'tooltip')
-      .style('opacity', 0);
+      .style('opacity', 0)
+      .style('display', 'none');
+    
+    this.dragWrapper = d3.select(this.parent)
+      .append('div')
+      .attr('class', 'drag-wrapper');
+    this.initDragWrapper();
+    
+    this.updateCanvasContainer();
   }
 
-  loadNodes(nodes: JNBaseNode[]) {
+  initBrush() {
+    let self = this;
+
+    this.brush.call(d3.brush()
+      .on('start', () => {
+        self.brush.raise();
+        var e = d3.event.target.extent();
+      })
+      .on('end', () => {
+        // hide brush
+        self.select([]);
+        self.brush.lower();
+        self.brush
+          .selectAll('.selection,.handle')
+          .style('display', 'none');
+        
+        // select nodes
+        let selection = d3.event.selection;
+        if (selection) {
+          let maxX = Math.max(selection[0][0], selection[1][0]),
+            maxY = Math.max(selection[0][1], selection[1][1]),
+            minX = Math.min(selection[0][0], selection[1][0]),
+            minY = Math.min(selection[0][1], selection[1][1]);
+          
+          let linksAndNodes: CanvasObject[] = (<Array<CanvasObject>>self.links).concat(self.nodes);
+          let selectedObjects = linksAndNodes.filter(n =>
+            n.x > minX
+            && n.x + n.width < maxX
+            && n.y > minY
+            && n.y + n.height < maxY);
+          
+          self.select(selectedObjects);
+        }
+        
+        self.updateNodes.bind(self)();
+        self.updateLinks.bind(self)();
+      }));
+  }
+
+  initDragWrapper() {
+    this.dragWrapper
+      .attr('fill', '#fff')
+      .style('position', 'absolute')
+      .style('left', '0px')
+      .style('top', '0px')
+      .style('opacity', '0')
+      .call(d3.drag()
+        .on('start', () => {
+          let ele = this.parent;
+          this.dragScrollService.dragStart(ele);
+        })
+        .on('drag', () => {
+          this.dragScrollService.dragMove();
+        })
+      )
+      .style('display', 'none');
+  }
+
+  enableDrapMove() {
+    this.dragWrapper
+      .style('display', 'block');
+  }
+
+  disableDrapMove() {
+    this.dragWrapper
+      .style('display', 'none');
+  }
+
+  scale(s) {
+    if (s < this.NodeSettings.MIN_SCALE) {
+      this._scale = this.NodeSettings.MIN_SCALE;
+    } else if (s > this.NodeSettings.MAX_SCALE) {
+      this._scale = this.NodeSettings.MAX_SCALE
+    } else {
+      this._scale = s;
+    }
+    this.updateCanvas();
+    this.updateNodes();
+  }
+
+  loadFlow(flow: JNFlow) {
+    this.flow = flow;
     this.nodes = [];
     this.links = [];
     this.selections = [];
 
-    nodes.forEach((n) => {
+    flow.nodes.forEach((n) => {
       this.addNode(n);
     });
 
-    nodes.forEach(t => {
+    flow.nodes.forEach(t => {
       t.accepted.forEach(s => {
         let target = this.nodes
           .find(d => d.node === t);
@@ -200,18 +289,32 @@ export class D3HelperService {
     // node input
     g.insert('svg:g')
       .classed('port input', true)
-      .on('mouseenter', function (d) {
+      .on('mouseenter', function (d: CanvasNode) {
         d3.select(this).classed('hover', true);
+        if (!self.linkingNode) return;
+
+        let connectable = self.linkingNode.from === 'output'
+          && d.connectable(self.linkingNode.node);
+        
+        d3.select(this)
+          .classed('error', !connectable)
+          .classed('success', connectable);
+        
         self.targetNode = d;
-        if (self.sourceNode) {
-          console.log(self.sourceNode.node.connectable(d));
-        }
       })
       .on('mouseleave', function (d) {
         d3.select(this).classed('hover', false);
+        d3.select(this).classed('error', false);
+        d3.select(this).classed('success', false);
         self.targetNode = null;
       })
       .call(d3.drag()
+        .on('start', (d: CanvasNode) => {
+          this.linkingNode = {
+            from: 'input',
+            node: d
+          };
+        })
         .on('drag', function(d: CanvasNode) {
           let position = d3.mouse(self.canvas.node());
           let linkData = {
@@ -225,6 +328,7 @@ export class D3HelperService {
           if (self.sourceNode) {
             self.createNodeLink(self.sourceNode, d);
           }
+          self.linkingNode = null
           self.sourceNode = null;
           self.targetNode = null;
         })
@@ -234,18 +338,32 @@ export class D3HelperService {
     // node output
     g.insert('svg:g')
       .classed('port output', true)
-      .on('mouseenter', function (d) {
+      .on('mouseenter', function (d: CanvasNode) {
         d3.select(this).classed('hover', true);
+        if (!self.linkingNode) return;
+
+        let connectable = self.linkingNode.from === 'input'
+          && d.connectable(self.linkingNode.node);
+        
+        d3.select(this)
+          .classed('error', !connectable)
+          .classed('success', connectable);
+
         self.sourceNode = d;
-        if (self.targetNode) {
-          console.log(self.targetNode.node.connectable(d));
-        }
       })
       .on('mouseleave', function (d) {
         d3.select(this).classed('hover', false);
+        d3.select(this).classed('error', false);
+        d3.select(this).classed('success', false);
         self.sourceNode = null;
       })
       .call(d3.drag()
+        .on('start', (n: CanvasNode) => {
+          this.linkingNode = {
+            from: 'output',
+            node: n
+          };
+        })
         .on('drag', function(d: CanvasNode) {
           let position = d3.mouse(self.canvas.node());
           let linkData = {
@@ -259,6 +377,7 @@ export class D3HelperService {
           if (self.targetNode) {
             self.createNodeLink(d, self.targetNode);
           }
+          self.linkingNode = null;
           self.sourceNode = null;
           self.targetNode = null;
         })
@@ -272,7 +391,7 @@ export class D3HelperService {
   private updateCanvasContainer() {
     let maxWidth = this.NodeSettings.CANVAS_WIDTH,
       maxHeight = this.NodeSettings.CANVAS_HEIGHT;
-    
+
     this.nodes.forEach((n) => {
       // node right + margin right
       let x = n.position.x + n.width + 200,
@@ -281,10 +400,55 @@ export class D3HelperService {
       maxWidth = maxWidth < x ? x : maxWidth;
       maxHeight = maxHeight < y ? y : maxHeight;
     });
+
+    maxWidth = maxWidth * this._scale;
+    maxHeight = maxHeight * this._scale;
+
+
+    let parentWidth = this.parent.getBoundingClientRect().width,
+      parentHeight = this.parent.getBoundingClientRect().height;
+    
+    maxWidth = maxWidth < parentWidth ? parentWidth : maxWidth;
+    maxHeight = maxHeight < parentHeight ? parentHeight : maxHeight;
+
     this.canvasContainer
       .attr('width', maxWidth)
       .attr('height', maxHeight)
       .classed('selected', d => !!this.selections.length);
+    
+    this.updateCanvasBackGround(maxWidth, maxHeight);
+    this.updateDragWrapper(maxWidth, maxHeight);
+   
+  }
+
+  private updateCanvas() {
+    this.canvas
+      .attr('transform', `scale(${this._scale})`);
+  }
+
+  private updateCanvasBackGround(width: number, height: number) {
+    let ruleSize = Math.floor(this.NodeSettings.RULE_SIZE * this._scale);
+    
+     this.canvasBackground
+      .style('width', `${width}px`)
+      .style('height', `${height}px`)
+      .style('background', `
+        -webkit-linear-gradient(top, transparent ${ruleSize - 1}px, rgba(255,255,255,0.06) ${ruleSize}px),
+        -webkit-linear-gradient(left, transparent ${ruleSize - 1}px, rgba(255,255,255,0.06) ${ruleSize}px), 
+        -webkit-linear-gradient(top, #2f363b 0px, #2f363b ${ruleSize}px)`)
+      .style('background-size', `${ruleSize}px ${ruleSize}px`);
+    
+    this.canvasRule
+      .style('background', `
+        -webkit-linear-gradient(top, transparent ${5 * ruleSize - 1}px, rgba(255,255,255,0.12) ${5 * ruleSize}px), 
+        -webkit-linear-gradient(left, transparent ${5 * ruleSize - 1}px, rgba(255,255,255,0.12) ${5 * ruleSize}px)`)
+      .style('background-size', `${5 * ruleSize}px ${5 * ruleSize}px`);
+  }
+
+  private updateDragWrapper(width: number, height: number) {
+    this.dragWrapper
+      .style('width', `${width}px`)
+      .style('height', `${height}px`);
   }
 
   public updateNodes() {
@@ -296,7 +460,7 @@ export class D3HelperService {
       .each((n: CanvasNode, i, eles: Element) => {
         n.element = eles[i];
         d3.select(eles[i]).selectAll('text').datum(n);
-        d3.select(eles[i]).select('rect').datum(n);
+        d3.select(eles[i]).select('rect.node').datum(n);
         d3.select(eles[i]).select('path').datum(n);
         d3.select(eles[i]).select('.port.input').datum(n);
         d3.select(eles[i]).select('.port.output').datum(n);
@@ -323,11 +487,12 @@ export class D3HelperService {
       });
     
     nodeIcon
-      .attr('x', () => {
-        return self.NodeSettings.NODE_PADDING;
+      .attr('x', (n: CanvasNode) => {
+        if (!n.hasInput) return self.NodeSettings.NODE_PADDING;
+        return self.NodeSettings.NODE_PADDING + Math.floor(this.NodeSettings.HANDLER_WIDTH / 2);
       })
       .attr('y', () => {
-        return self.NodeSettings.NODE_HEIGHT / 2 + self.NodeSettings.NODE_ICON_HOLDER_WIDTH/2;
+        return Math.floor(self.NodeSettings.NODE_HEIGHT / 2 + self.NodeSettings.NODE_ICON_HOLDER_WIDTH / 2);
       })
       .attr('font-family', 'icomoon')
       .style('font-size', `${self.NodeSettings.NODE_ICON_HOLDER_WIDTH}px`)
@@ -355,12 +520,14 @@ export class D3HelperService {
         }
       })
       .attr('y', (d, j, eles: SVGTextElement[]) => {
-        let textEle = eles[j];
-        let textHeight = textEle.getBoundingClientRect().height;
-        return Math.floor(this.NodeSettings.NODE_HEIGHT/2 + textHeight/2);
+        return Math.floor(this.NodeSettings.NODE_HEIGHT / 2 + this.NodeSettings.FONT_SIZE / 2);
       });
     
     nodeRect
+      .attr('x', (n: CanvasNode) => {
+        if (!n.hasInput) return 0;
+        return Math.floor(this.NodeSettings.HANDLER_WIDTH / 2);
+      })
       .attr('width', (n: CanvasNode) => {
         let textEle: SVGTextElement = <SVGTextElement>d3.select(n.element).select('text.node-title').node();
         let textWidth = textEle.getComputedTextLength();
@@ -369,7 +536,9 @@ export class D3HelperService {
 
         d3.select(textEle)
           .attr('x', (d: CanvasNode, i, eles) => {
-            return nodeWidth - textWidth - this.NodeSettings.NODE_PADDING;
+            if (!d.hasInput) return nodeWidth - textWidth - this.NodeSettings.NODE_PADDING;
+            return nodeWidth - textWidth - this.NodeSettings.NODE_PADDING
+              + Math.floor(this.NodeSettings.HANDLER_WIDTH / 2);
           });
         return nodeWidth;
       });
@@ -379,7 +548,7 @@ export class D3HelperService {
         return n.hasInput ? 'block' : 'none';
       })
       .attr('transform', () => {
-        let x = -Math.floor(this.NodeSettings.HANDLER_WIDTH / 2),
+        let x = 0,
           y = Math.floor(this.NodeSettings.NODE_HEIGHT - this.NodeSettings.HANDLER_HEIGHT) / 2;
         return `translate(${x}, ${y})`;
       })
@@ -387,7 +556,10 @@ export class D3HelperService {
       .attr('width', this.NodeSettings.HANDLER_WIDTH)
       .attr('height', this.NodeSettings.HANDLER_HEIGHT)
       .attr('rx', this.NodeSettings.HANDLER_RADIUS)
-      .attr('ry', this.NodeSettings.HANDLER_RADIUS);
+      .attr('ry', this.NodeSettings.HANDLER_RADIUS)
+      .classed('connected', (n: CanvasNode) => {
+        return n.inputConnected;
+      });
 
     nodeOutput
       .style('display', (n: CanvasNode) => {
@@ -395,8 +567,8 @@ export class D3HelperService {
       })
       .attr('transform', (d: CanvasNode) => {
         let rectEle: SVGSVGElement = <SVGSVGElement>d3.select(d.element).select('rect').node();
-        let nodeWidth = rectEle.getBoundingClientRect().width;
-        let x = nodeWidth - Math.floor(this.NodeSettings.HANDLER_WIDTH / 2),
+        let nodeWidth = SVGUtils.getWith(rectEle);
+        let x = d.hasInput ? nodeWidth : nodeWidth - Math.floor(this.NodeSettings.HANDLER_WIDTH / 2),
           y = Math.floor(this.NodeSettings.NODE_HEIGHT - this.NodeSettings.HANDLER_HEIGHT) / 2;
         return `translate(${x}, ${y})`;
       })
@@ -404,7 +576,10 @@ export class D3HelperService {
       .attr('width', this.NodeSettings.HANDLER_WIDTH)
       .attr('height', this.NodeSettings.HANDLER_HEIGHT)
       .attr('rx', this.NodeSettings.HANDLER_RADIUS)
-      .attr('ry', this.NodeSettings.HANDLER_RADIUS);
+      .attr('ry', this.NodeSettings.HANDLER_RADIUS)
+      .classed('connected', (n: CanvasNode) => {
+        return n.outputConnected;
+      });
 
     nodes.exit().remove();
     self.updateLinks();
@@ -412,20 +587,30 @@ export class D3HelperService {
   }
 
   private removeNode(node: CanvasNode) {
+    this.events.emit(NODE_EVENTS.SELECTION_BEFORE_REMOVED, node.node);
     this.links
       .filter(link => link.source === node || link.target === node)
-      .forEach(this.removeLink.bind(this));
+      .forEach(this.removeLink.bind(this, true));
     
+    this.flow.removeNode(node.node);
     JNUtils.removeItem(this.nodes, node);
-    this.events.emit(NODE_EVENTS.NODE_DELETE, node.node);
-    this.drawNodes();
+    setTimeout(() => {
+      this.drawNodes();
+    });
   }
 
-  private removeLink(link: CanvasLink) {
+  private removeLink(link: CanvasLink, preventEvent?: boolean) {
     if (this.links.indexOf(link) === -1) return; 
+    if (!preventEvent) {
+      this.events.emit(NODE_EVENTS.LINK_BEFORE_REMOVED,
+        { source: link.source.node, target: link.target.node });
+    }
     JNUtils.removeItem(this.links, link);
-    this.events.emit(NODE_EVENTS.LINK_DELETE, {source: link.source.node, target: link.target.node});
+    this.flow.removeLink({source: link.source.node, target: link.target.node});
     this.drawLinks();
+    setTimeout(() => {
+      this.updateNodes();
+    });
   }
 
   private select(o: CanvasObject[] | CanvasObject) {
@@ -443,36 +628,54 @@ export class D3HelperService {
 
   private dragStart() {
     let position = d3.mouse(this.canvas.node());
-    this._shift = this.selections
-      .filter((o) => {
-        return o instanceof CanvasNode;
-      })
-      .map((o) => {
-        return {
-          x: position[0] - o.x,
-          y: position[1] - o.y
-        };
-      });
+    this._dragOrigin = {
+      x: position[0],
+      y: position[1]
+    };
   }
 
   private dragMove() {
     let position = d3.mouse(this.canvas.node());
+    this._shift = {
+      x: position[0] - this._dragOrigin.x,
+      y: position[1] - this._dragOrigin.y
+    };
     this.selections
       .filter((o) => {
         return o instanceof CanvasNode;
       })
       .forEach((n: CanvasNode, i) => {
-        n.position = {
-          x: position[0] - this._shift[i].x,
-          y: position[1] - this._shift[i].y
+        n.offset = {
+          x: this._shift.x,
+          y: this._shift.y
         };
       });
     this.updateNodes();
   }
 
   private dragEnd() {
-    this._shift = null;
-    this.events.emit(NODE_EVENTS.NODE_CHANGED, true);
+    if (!this.selections.length) return;
+
+    // check changes
+    // return if no node moved
+    let changed = this.selections
+      .filter((o) => {
+        return o instanceof CanvasNode;
+      })
+      .find((n: CanvasNode) => {
+        return !!n.offset.x || !!n.offset.y
+      });
+    if (!changed) return;
+
+    this.events.emit(NODE_EVENTS.SELECTION_BEFORE_MOVED, this.selections);
+    
+    this.selections
+      .filter((o) => {
+        return o instanceof CanvasNode;
+      })
+      .forEach((n: CanvasNode, i) => {
+        n.updatePosition();
+      });
   }
 
   private moveMouseLink = (linkData) => {
@@ -493,12 +696,11 @@ export class D3HelperService {
 
   private createNodeLink = (s: CanvasNode, t: CanvasNode) => {
     if (this.links.find(l => l.source === s && l.target === t)) return;
-    try {
-      t.node.accept(s.node);
-      this.addLink(s, t);
-    } catch (e){
-      console.log(e);
-    }
+    if (!t.node.connectable(s.node)) return;
+    this.events.emit(NODE_EVENTS.NODE_BEFORE_LINKED, t.node);
+    t.node.accept(s.node);
+    this.addLink(s, t);
+    this.updateNodes();
   }
 
   private addLink(s: CanvasNode, t: CanvasNode) {

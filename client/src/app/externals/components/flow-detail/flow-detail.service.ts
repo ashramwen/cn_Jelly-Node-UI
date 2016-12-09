@@ -33,17 +33,19 @@ export class FlowDetailService {
       return Promise.resolve(nodeFlow);
     } else {
       return this.flowResource.get({ flowID: flowID })
-      .$observable
-      .map((d) => {
-        let flow = JNFlow.deserialize(d);
-        flow.loadData(d.nodes);
-        return flow;
-      }).toPromise();
+        .$observable
+        .map((d) => {
+          return JNFlow.factory(d);
+        }).toPromise();
     }
   }
 
   toggleFullScreen(element) {
     !this.fullscreen ? this._launchIntoFullscreen(element) : this._exitFullscreen();
+  }
+
+  calcScale(s) {
+    return Math.ceil(s / 20) / 5;
   }
 
   private _launchIntoFullscreen(element) {

@@ -12,6 +12,7 @@ import { JNEditorModel } from './interfaces/editor-model.type';
 import { JNBaseNode } from '../../core/models/jn-base-node.type';
 import { Subscription } from 'rxjs';
 import { Events, NODE_EVENTS } from '../../share/services/event.service';
+import { JNUtils } from '../../share/util';
 
 @Component({
   selector: 'jn-node-editor',
@@ -63,8 +64,9 @@ export class JNEditFormComponent implements OnInit {
 
   private submit() {
     let result = this.editorModel.submit();
+    JNUtils.debug(result);
+    this.events.emit(NODE_EVENTS.NODE_BEFORE_CHANGED, this.targetNode);
     this.targetNode.update(result);
-    this.events.emit(NODE_EVENTS.NODE_CHANGED, this.targetNode);
     this.hide();
   }
 }

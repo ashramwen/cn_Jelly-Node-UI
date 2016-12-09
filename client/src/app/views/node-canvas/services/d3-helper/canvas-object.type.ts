@@ -1,27 +1,14 @@
 import * as d3 from 'd3';
+import { SVGUtils } from './utils';
 
 export class CanvasObject {
-  element: SVGSVGElement;
-  error: {message: string}; 
+  element: SVGSVGElement; // native SVG element
+  error: { message: string }; // object error message
+  width: number; // object width
+  height: number; // object height
+  x: number; // object offset left
+  y: number; //object offset top
 
   constructor(private canvas: SVGSVGElement) {
-  }
-
-  get width() {
-    return this.element.getBoundingClientRect().width;
-  }
-
-  get height() {
-    return this.element.getBoundingClientRect().height;
-  }
-
-  get x() {
-    return this.element.getBoundingClientRect().left
-      - this.canvas.getBoundingClientRect().left;
-  }
-  
-  get y() {
-    return this.element.getBoundingClientRect().top
-      - this.canvas.getBoundingClientRect().top;
   }
 }

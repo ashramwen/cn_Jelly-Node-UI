@@ -12,4 +12,7 @@ export interface INodeSettings {
   HANDLER_RADIUS?: number;
   FONT_SIZE?: number;
   PATH_STROKE_WIDTH?: number;
+  MIN_SCALE?: number;
+  MAX_SCALE?: number;
+  RULE_SIZE?: number; 
 };

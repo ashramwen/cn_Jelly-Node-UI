@@ -34,18 +34,6 @@ export class InfoPanelComponent implements OnInit {
         this.complexDataHTML = infoPanel.complexDataHTML;
         this.typeComponent = infoPanel.complexDataComponent;
         this.complexData = infoPanel.complexData;
-        console.log('complex data', this.complexData);
-        // //remove old style
-        // var oldStyle = this.elementRef.nativeElement.querySelector('#complex-data-style')
-        // if (oldStyle) {
-        //   this.elementRef.nativeElement.querySelector('#complex-data').removeChild(oldStyle);
-        // }
-
-        // //insert complex data style
-        // var style = document.createElement('style');
-        // style.setAttribute('id', 'complex-data-style');
-        // style.innerHTML = infoPanel.complexDataScss;
-        // this.elementRef.nativeElement.querySelector('#complex-data').appendChild(style);
 
         this.infoKeys = Object.keys(this.info);
         this.dataKeys = Object.keys(this.data);

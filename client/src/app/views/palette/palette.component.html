@@ -4,16 +4,18 @@
       {{'节点面板' | translate}}
     </div>
     <div class="palette-node-container">
-      <div class="palette-node-group" *ngFor="let node of flowNodes;" [ngClass]="{'no': !node.acceptable && !node.directable}">
+      <div class="palette-node-group" *ngFor="let node of flowNodes;" [ngClass]="{'no': !node.acceptable && !node.directable, 'yes': node.acceptable || node.directable}">
         <div class="palette-function">
-          <div draggable [dragData]="node" class="palette-node" [ngStyle]="nodeStyle">
+          <div draggable="node.acceptable || node.directable" [dragData]="node" class="palette-node" [ngStyle]="nodeStyle">
             <div class="palette-icon" [ngStyle]="{'line-height': NodeSettings.NODE_HEIGHT}">
               <i [ngStyle]="{'font-size': NodeSettings.NODE_ICON_HOLDER_WIDTH}">{{node.icon}}</i>
             </div>
             <div class="palette-label" dir="">{{node.name | translate}}</div>
-            <div class="palette-port output" [ngClass]="{'connectable': node.directable, 'disconnectable': !node.directable}" [ngStyle]="{'width': NodeSettings.HANDLER_WIDTH, 'height': NodeSettings.HANDLER_HEIGHT, 
+            <div class="palette-port output" [ngClass]="{'connectable': node.directable, 'disconnectable': !node.directable && !node.hasOutput, 'hasOutput': !node.directable && node.hasOutput}"
+              [ngStyle]="{'width': NodeSettings.HANDLER_WIDTH, 'height': NodeSettings.HANDLER_HEIGHT, 
                 'border-radius': NodeSettings.HANDLER_RADIUS, 'stroke-width': NodeSettings.PATH_STROKE_WIDTH}"></div>
-            <div class="palette-port input" [ngClass]="{'connectable': node.acceptable, 'disconnectable': !node.acceptable}" [ngStyle]="{'width': NodeSettings.HANDLER_WIDTH, 'height': NodeSettings.HANDLER_HEIGHT, 
+            <div class="palette-port input" [ngClass]="{'connectable': node.acceptable, 'disconnectable': !node.acceptable && !node.hasInput, 'hasOutput': !node.acceptable && node.hasInput}"
+              [ngStyle]="{'width': NodeSettings.HANDLER_WIDTH, 'height': NodeSettings.HANDLER_HEIGHT, 
                 'border-radius': NodeSettings.HANDLER_RADIUS, 'stroke-width': NodeSettings.PATH_STROKE_WIDTH}"></div>
           </div>
         </div>
@@ -30,16 +32,18 @@
           {{connection.title}}
         </div>
         <div class="palette-node-container">
-          <div class="palette-node-group" *ngFor="let node of connection.properties;" [ngClass]="{'no': !node.acceptable && !node.directable}">
+          <div class="palette-node-group" *ngFor="let node of connection.properties;" [ngClass]="{'no': !node.acceptable && !node.directable, 'yes': node.acceptable || node.directable}">
             <div class="palette-function">
-              <div draggable [dragData]="node" class="palette-node" [ngStyle]="nodeStyle">
+              <div draggable="node.acceptable || node.directable" [dragData]="node" class="palette-node" [ngStyle]="nodeStyle">
                 <div class="palette-icon" [ngStyle]="{'line-height': NodeSettings.NODE_HEIGHT}">
                   <i [ngStyle]="{'font-size': NodeSettings.NODE_ICON_HOLDER_WIDTH}">{{node.icon}}</i>
                 </div>
                 <div class="palette-label" dir="">{{node.name}}</div>
-                <div class="palette-port output" [ngClass]="{'connectable': node.hasOutput, 'disconnectable': !node.hasOutput}" [ngStyle]="{'width': NodeSettings.HANDLER_WIDTH, 'height': NodeSettings.HANDLER_HEIGHT, 
+                <div class="palette-port output" [ngClass]="{'connectable': node.directable, 'disconnectable': !node.directable && !node.hasOutput, 'hasOutput': !node.directable && node.hasOutput}"
+                  [ngStyle]="{'width': NodeSettings.HANDLER_WIDTH, 'height': NodeSettings.HANDLER_HEIGHT, 
                 'border-radius': NodeSettings.HANDLER_RADIUS, 'stroke-width': NodeSettings.PATH_STROKE_WIDTH}"></div>
-                <div class="palette-port input" [ngClass]="{'connectable': node.hasInput, 'disconnectable': !node.hasInput}" [ngStyle]="{'width': NodeSettings.HANDLER_WIDTH, 'height': NodeSettings.HANDLER_HEIGHT, 
+                <div class="palette-port input" [ngClass]="{'connectable': node.acceptable, 'disconnectable': !node.acceptable && !node.hasInput, 'hasOutput': !node.acceptable && node.hasInput}"
+                  [ngStyle]="{'width': NodeSettings.HANDLER_WIDTH, 'height': NodeSettings.HANDLER_HEIGHT, 
                 'border-radius': NodeSettings.HANDLER_RADIUS, 'stroke-width': NodeSettings.PATH_STROKE_WIDTH}"></div>
               </div>
             </div>

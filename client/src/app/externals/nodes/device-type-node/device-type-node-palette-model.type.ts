@@ -8,10 +8,13 @@ import { JNUtils } from '../../../share/util';
 import { JNDevicePropertyNodePaletteModel } from '../device-property-node/device-property-node-palette-model.type';
 import { JNPaletteConnection } from '../../../views/palette/interfaces/palette-connections.type';
 import { JNPaletteNode } from '../../../views/palette/interfaces/palette-node.type';
+import { JNActionNode } from '../action-node/action-node.type';
 
 export class JNDeviceTypeNodePaletteModel extends JNPaletteModel {
 
   protected createConnections(): JNPaletteConnection[] {
+
+    //device property
     let typeName = (<JNDeviceTypeNode>this.node).body.typeName;
     if (!typeName) return [];
 
@@ -30,6 +33,22 @@ export class JNDeviceTypeNodePaletteModel extends JNPaletteModel {
         JNBaseNode.getName(JNDevicePropertyNode, data), data));
     });
 
-    return [connection];
+    //action
+    console.log('schemas', schemas);
+    let actions = Object.keys(schemas[typeName].content.actions);
+    let actionConnection = new JNPaletteConnection();
+    actionConnection.title = '命令';
+    actionConnection.properties = [];
+    actions.forEach((action) => {
+      let data: Object = {};
+      data = {
+        typeName: typeName,
+        properties: schemas[typeName].content.actions[action].in.properties,
+        actionName: action
+      };
+      actionConnection.properties.push(new JNPaletteNode(<typeof JNBaseNode>this.node.constructor, JNActionNode,
+        JNBaseNode.getName(JNActionNode, data), data));
+    })
+    return [connection, actionConnection];
   }
 }

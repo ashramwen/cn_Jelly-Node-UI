@@ -1,6 +1,6 @@
 import { CanvasNode } from './canvas-node.type';
 
-export class CanvasPoint {
+export interface CanvasPoint {
   x: number;
   y: number;
 }

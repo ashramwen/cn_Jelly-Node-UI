@@ -35,14 +35,13 @@ svg {
         rect {
           stroke-width: $stroke-active-width;
           stroke: $node-color-active;
+          fill: #fff;
         }
         &.error rect{
           stroke: $node-color-danger;
-          fill: $node-color-danger;
         }
         &.success rect{
           stroke: $node-color-success;
-          fill: $node-color-success;
         }
       }
       rect {
@@ -137,6 +136,31 @@ div.tooltip {
 }
 
 #chart{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+
+.nav-map{
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  background: rgba(0,0,0,0.5);
+  border: solid 1px #ccc;
+  display: none;
+  cursor: pointer;
+  .view-port{
+    display: flex;
+    position: absolute;
+    .inner{
+      flex: 1;
+      border: red solid 1px;
+    }
+  }
+}
+
+.canvas-wrapper {
   position: relative;
   width: 100%;
   height: 100%;

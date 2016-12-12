@@ -1,7 +1,12 @@
-import { Directive, ElementRef, HostListener, Input, Output, EventEmitter, AfterViewInit } from '@angular/core';
+import {
+    Directive, ElementRef, HostListener, Input,
+    Output, EventEmitter, AfterViewInit,
+    Attribute
+} from '@angular/core';
 
 @Directive({
     selector: '[draggable]',
+    inputs: ['draggable'],
     host: {
         '[draggable]': 'true'
         // '[stype.user-drag]': ''
@@ -11,6 +16,8 @@ import { Directive, ElementRef, HostListener, Input, Output, EventEmitter, After
  * Makes an element draggable by adding the draggable html attribute
  */
 export class Draggable implements AfterViewInit {
+
+    @Input() disabled: boolean;
     /**
      * The data that will be avaliable to the droppable directive on its `onDrop()` event. 
      */
@@ -93,10 +100,13 @@ export class Draggable implements AfterViewInit {
     }
 
     private allowDrag() {
-      if (this.dragHandle) {
-        return this.mouseOverElement.matches(this.dragHandle);
-      } else {
-        return true;
-      }
+        if (this.disabled) {
+            return false
+        }
+        if (this.dragHandle) {
+            return this.mouseOverElement.matches(this.dragHandle);
+        } else {
+            return true;
+        }
     }
 }

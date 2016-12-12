@@ -16,19 +16,23 @@ import { INodeSettings } from '../../../interfaces/node-settings.interface';
 import { SVGUtils } from './utils';
 import { DragScrollService } from './drag-scroll.service';
 import { JNKeyboardService } from '../keyboard.service';
+import { CanvasSize } from './canvas-size.interface';
+import { Observable, Subscriber } from 'rxjs';
 
 @Injectable()
 export class D3HelperService {
 
   private vis: any;
   private parent: Element;
-  private canvasContainer: any;
+  private canvasWrapper: d3.Selection<any, any, any, any>;
+  private canvasContainer: d3.Selection<any, any, any, any>;
   private canvas: any;
-  private canvasBackground: any;
-  private canvasRule: any;
-  private brush: any;
-  private tip: any;
-  private dragWrapper: any;
+  private canvasBackground: d3.Selection<any, any, any, any>;
+  private canvasRule: d3.Selection<any, any, any, any>;
+  private brush: d3.Selection<any, any, any, any>;
+  private tip: d3.Selection<any, any, any, any>;
+  private dragWrapper: d3.Selection<any, any, any, any>;
+  private navMap: d3.Selection<any, any, any, any>;
 
   private flow: JNFlow;  
   private nodes: CanvasNode[];
@@ -46,9 +50,35 @@ export class D3HelperService {
   private _scale: number;
   private dragScrollService: DragScrollService;
   private linkingNode: { from: 'input' | 'output'; node: CanvasNode };
+  private navMapObservable: Observable<any>;
+  private navMapSubscriber: Subscriber<any>;
 
   get currentScale() {
     return this._scale;
+  }
+
+  get canvasContainerSize(): CanvasSize{
+    let ele = <HTMLDivElement> this.canvasContainer.node();
+    return {
+      width: ele.getBoundingClientRect().width,
+      height: ele.getBoundingClientRect().height
+    };
+  }
+
+  get viewPortSize(){
+    let ele = <HTMLDivElement>this.canvasWrapper.node();
+    return {
+      width: ele.getBoundingClientRect().width,
+      height: ele.getBoundingClientRect().height
+    };
+  }
+
+  get viewPortPosition() {
+    let ele = <HTMLDivElement>this.canvasWrapper.node();
+    return {
+      x: ele.scrollLeft,
+      y: ele.scrollTop
+    };
   }
 
   constructor(
@@ -72,7 +102,12 @@ export class D3HelperService {
   init(parent: Element) {
     let self = this;
     this.parent = parent;
-    this.canvasBackground = d3.select(parent)
+
+    this.canvasWrapper = d3.select(parent)
+      .append('div')
+      .attr('class', 'canvas-wrapper');
+    
+    this.canvasBackground = this.canvasWrapper
       .append('div')
       .attr('class', 'canvas-background')
       .style('position', 'absolute')
@@ -86,15 +121,18 @@ export class D3HelperService {
       .style('width', '100%')
       .style('height', '100%');
     
-    this.canvasContainer = d3.select(parent)
+    this.canvasContainer = this.canvasWrapper
       .append('svg')
+      .attr('class', 'canvas-container')
       .attr('width', this.NodeSettings.CANVAS_WIDTH)
       .attr('height', this.NodeSettings.CANVAS_HEIGHT)
       .attr('pointer-events', 'all')
       .style('cursor', 'crosshair')
       .style('position', 'relative');
     
-    this.canvas = this.canvasContainer.append('g');
+    this.canvas = this.canvasContainer
+      .append('g')
+      .attr('class', 'canvas');
     
     this.brush = this.canvas
       .append('g')
@@ -108,16 +146,32 @@ export class D3HelperService {
       .on('dblclick.zoom', null)
       .append('svg:g');
     
-    this.tip = d3.select(parent)
+    this.tip = this.canvasWrapper
       .append('div')
       .attr('class', 'tooltip')
       .style('opacity', 0)
       .style('display', 'none');
     
-    this.dragWrapper = d3.select(this.parent)
+    this.dragWrapper = this.canvasWrapper
       .append('div')
       .attr('class', 'drag-wrapper');
     this.initDragWrapper();
+
+    this.navMap = d3.select(this.parent)
+      .append('div')
+      .attr('class', 'nav-map');
+    
+    this.navMap
+      .append('div')
+      .attr('class', 'view-port')
+      .append('div')
+      .attr('class', 'inner');
+    
+    this.navMap
+      .append('svg')
+      .attr('class', 'canvas-map');
+    
+    this.initCanvasWrapper();
     
     this.updateCanvasContainer();
   }
@@ -170,7 +224,7 @@ export class D3HelperService {
       .style('opacity', '0')
       .call(d3.drag()
         .on('start', () => {
-          let ele = this.parent;
+          let ele = this.canvasWrapper.node();
           this.dragScrollService.dragStart(ele);
         })
         .on('drag', () => {
@@ -178,6 +232,30 @@ export class D3HelperService {
         })
       )
       .style('display', 'none');
+  }
+
+  initCanvasWrapper() {
+    this.canvasWrapper.on('scroll', () => {
+      this.updateMap();
+      this.navMapSubscriber.next(false);
+    });
+
+    this.navMap
+      .on('mouseenter', () => {
+        this.navMapSubscriber.next(true);
+      })
+      .on('mouseleave', () => {
+        this.navMapSubscriber.next(false);
+      });
+    
+    this.navMapObservable = new Observable((subscriber) => {
+      this.navMapSubscriber = subscriber;
+    });
+    this.navMapObservable
+      .debounceTime(500)
+      .subscribe((flag) => {
+        this.navMap.style('display', flag ? 'block' : 'none');
+      });
   }
 
   enableDrapMove() {
@@ -407,8 +485,8 @@ export class D3HelperService {
     maxHeight = maxHeight * this._scale;
 
 
-    let parentWidth = this.parent.getBoundingClientRect().width,
-      parentHeight = this.parent.getBoundingClientRect().height;
+    let parentWidth = this.canvasWrapper.node().getBoundingClientRect().width,
+      parentHeight = this.canvasWrapper.node().getBoundingClientRect().height;
     
     maxWidth = maxWidth < parentWidth ? parentWidth : maxWidth;
     maxHeight = maxHeight < parentHeight ? parentHeight : maxHeight;
@@ -420,12 +498,47 @@ export class D3HelperService {
     
     this.updateCanvasBackGround(maxWidth, maxHeight);
     this.updateDragWrapper(maxWidth, maxHeight);
-   
   }
 
   private updateCanvas() {
     this.canvas
       .attr('transform', `scale(${this._scale})`);
+  }
+
+  private updateMap() {
+
+    let scale = 1;
+    let scaleX = this.NodeSettings.MAP_WIDTH / this.canvasContainerSize.width;
+    let scaleY = this.NodeSettings.MAP_HEIGHT / this.canvasContainerSize.height;
+    scale = scaleX < scaleY ? scaleX : scaleY;
+    // scale *= this._scale;
+
+    this.navMap
+      .style('display', 'block');
+    
+    let svg = this.navMap
+      .select('svg')
+      .html(this.canvasContainer.html());
+    
+    svg
+      .attr('width', this.canvasContainerSize.width * scale)
+      .attr('height', this.canvasContainerSize.height * scale)
+      .select('g')
+      .attr('transform', `scale(${scale * this._scale})`)
+      .selectAll('text')
+      .remove();
+    
+    let viewPort = this.navMap.select('.view-port');
+    let _vw = this.viewPortSize.width * scale + 'px',
+      _vh = this.viewPortSize.height * scale + 'px',
+      _vy = this.viewPortPosition.y * scale + 'px',
+      _vx = this.viewPortPosition.x * scale + 'px';
+    
+    viewPort
+      .style('width', _vw)
+      .style('height', _vh)
+      .style('top', _vy)
+      .style('left', _vx);
   }
 
   private updateCanvasBackGround(width: number, height: number) {
@@ -802,9 +915,11 @@ export class D3HelperService {
   private showTip(message: string) {
     let position = d3.mouse(this.canvas.node());
 
+    /*    
     this.tip.transition()
       .duration(200)
       .style("opacity", .9);
+    */
     
     this.tip
       .text(() => {

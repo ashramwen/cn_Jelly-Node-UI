@@ -85,13 +85,17 @@ export class NodeCanvasComponent implements OnInit, OnChanges {
   @HostListener('keydown', ['$event'])
   keydown(e: KeyboardEvent) {
     let command = this.keyboardService.keydown(e);
+    if (!command) return;
     console.log(command);
     this.handleCommand(command.commandName);
   }
 
   @HostListener('keyup', ['$event'])
   keyup(e: KeyboardEvent) {
-    this.keyboardService.keyup(e);
+    let command = this.keyboardService.keyup(e);
+    if (!command) return;
+    console.log(command);
+    this.handleCommand(command.commandName);
   }
 
   addNode(node: JNBaseNode) {
@@ -107,6 +111,7 @@ export class NodeCanvasComponent implements OnInit, OnChanges {
   }
 
   enableDragMove() {
+    if (this._dragEnabled) return;
     this.d3Helper.enableDrapMove();
     this._dragEnabled = true;
   }
@@ -135,13 +140,19 @@ export class NodeCanvasComponent implements OnInit, OnChanges {
     this.d3Helper.loadFlow(flow);
   }
 
-  private handleCommand(commandName: string) {
+  private handleCommand(commandName: CANVAS_COMMANDS) {
     switch (commandName) {
       case CANVAS_COMMANDS.REMOVE:
         this.d3Helper.removeSelection();
         break;
       case CANVAS_COMMANDS.UNDO:
         this.undo();
+        break;
+      case CANVAS_COMMANDS.ENABLE_DRAG_MOVE:
+        this.enableDragMove();
+        break;
+      case CANVAS_COMMANDS.DISABLED_DRAG_MOVE:
+        this.disableDragMove();
         break;
     }
   }

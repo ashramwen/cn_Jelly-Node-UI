@@ -15,4 +15,6 @@ export interface INodeSettings {
   MIN_SCALE?: number;
   MAX_SCALE?: number;
   RULE_SIZE?: number; 
+  MAP_HEIGHT?: number;
+  MAP_WIDTH?: number;
 };

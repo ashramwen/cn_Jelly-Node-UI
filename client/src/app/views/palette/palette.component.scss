@@ -43,8 +43,10 @@
         color: #485c6b;
         background-color: #808e99;
       }
-      &:hover {
-        background: #344654;
+      &.yes {
+        &:hover {
+          background: #344654;
+        }
       }
       .palette-node {
         width: 152px;
@@ -89,6 +91,7 @@
           left: -5px;
           box-sizing: border-box;
           -moz-box-sizing: border-box;
+          stroke: 1.5px;
           &.output {
             left: auto;
             right: -6px;
@@ -98,6 +101,9 @@
           }
           &.disconnectable {
             display: none;
+          }
+          &.hasOutput {
+            background-color: #fff; 
           }
         }
       }

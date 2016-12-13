@@ -51,18 +51,13 @@ export class PaletteComponent implements OnInit {
   ngOnInit() {
     this.events.on(APP_READY, () => {
       this.flowNodes = JNPaletteModel.getNodes();
-      console.log('flow nodes', this.flowNodes);
-      this.events.on('node_click', (node: JNBaseNode) => {
-        let palette = node.createPaletteModel();
-        this.flowNodes = palette.nodes;
-        this.connections = palette.connections;
-        console.log('palette', palette);
-      });
       this.events.on(NODE_EVENTS.SELECTION_CHANGED, (nodes: Array<JNBaseNode>) => {
         if (nodes.length == 1) {
           let palette = nodes[0].createPaletteModel();
           this.flowNodes = palette.nodes;
           this.connections = palette.connections;
+          console.log('connections', this.connections);
+
         } else {
           this.flowNodes = JNPaletteModel.getNodes();
           this.connections = [];

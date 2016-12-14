@@ -3,15 +3,34 @@ import { Component, Input } from '@angular/core';
 
 @Component({
   template: `
-    <h3>位置</h3>
-    <ul>
-      <li *ngFor="let location of inputs.locations">{{location}}</li>
-    </ul>
-    <h3>设备</h3>
-    <ul>
-      <li *ngFor="let thing of inputs.things">{{thing}}</li>
-    </ul>
-  `
+    <div class="info-panel-wrapper">
+      <table>
+      <thead>
+        <tr>
+          <th colspan="2"><caption>Device</caption></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let location of inputs.locations">
+          <td class="info">{{location}}</td>
+        </tr>
+      </tbody>
+    </table>
+        <table>
+      <thead>
+        <tr>
+          <th colspan="2"><caption>Thing</caption></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let thing of inputs.things">
+          <td class="info">{{thing}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  `,
+  styleUrls: ['../info-panel-wrapper.component.scss']
 })
 export class JNDeviceTypeNodeInfoPanelModel extends JNInfoPanelModel {
   generateComplexDataComponent() {

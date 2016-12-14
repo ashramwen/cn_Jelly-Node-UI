@@ -32,19 +32,10 @@ export class PaletteComponent implements OnInit {
     let externalSettings = injector.get(JN_NODE_SETTING);
     this.NodeSettings = {};
     Object.assign(this.NodeSettings, NodeSettings, externalSettings);
+    this.NodeSettings.HALF_HANDLER_HEIGHT = this.NodeSettings.HANDLER_HEIGHT/2;
     Object.keys(this.NodeSettings).forEach(key => {
       this.NodeSettings[key] = this.NodeSettings[key] + 'px';
     })
-    this.nodeStyle = {
-      'max-width': NodeSettings.NODE_MAX_WIDTH,
-      'min-width': NodeSettings.NODE_MIN_WIDTH, 'border-radius': NodeSettings.NODE_RADIUS, 'height': NodeSettings.NODE_HEIGHT,
-      'font-size': NodeSettings.FONT_SIZE
-    };
-    this.iconStyle = { 'font-size': NodeSettings.NODE_ICON_HOLDER_WIDTH, 'line-height': NodeSettings.NODE_HEIGHT };
-    this.portStyle = {
-      'width': NodeSettings.HANDLER_WIDTH, 'height': NodeSettings.HANDLER_HEIGHT,
-      'border-radius': NodeSettings.HANDLER_RADIUS, 'stroke-width': NodeSettings.PATH_STROKE_WIDTH
-    };
     console.log(this.NodeSettings);
   }
 
@@ -68,6 +59,20 @@ export class PaletteComponent implements OnInit {
         this.connections = [];
       });
     });
+    this.nodeStyle = {
+      'max-width': this.NodeSettings.NODE_MAX_WIDTH,
+      'min-width': this.NodeSettings.NODE_MIN_WIDTH, 'border-radius': this.NodeSettings.NODE_RADIUS,
+      'height': this.NodeSettings.NODE_HEIGHT, 'line-height': this.NodeSettings.NODE_HEIGHT,
+      'font-size': this.NodeSettings.FONT_SIZE
+    };
+    this.iconStyle = {
+      'width': this.NodeSettings.NODE_HEIGHT, 'height': this.NodeSettings.NODE_HEIGHT, 'line-height': this.NodeSettings.NODE_HEIGHT
+    };
+    this.portStyle = {
+      'width': this.NodeSettings.HANDLER_WIDTH, 'height': this.NodeSettings.HANDLER_HEIGHT,
+      'border-radius': this.NodeSettings.HANDLER_RADIUS, 'stroke-width': this.NodeSettings.PATH_STROKE_WIDTH,
+      'margin-top': "-"+this.NodeSettings.HALF_HANDLER_HEIGHT
+    };
   }
 }
 

@@ -101,7 +101,7 @@ export class Draggable implements AfterViewInit {
 
     private allowDrag() {
         if (this.disabled) {
-            return false
+            return false;
         }
         if (this.dragHandle) {
             return this.mouseOverElement.matches(this.dragHandle);

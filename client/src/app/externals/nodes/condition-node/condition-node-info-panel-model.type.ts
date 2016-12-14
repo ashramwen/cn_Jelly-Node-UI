@@ -13,7 +13,7 @@ import { Component, OnInit } from '@angular/core';
         <tbody>
           <tr *ngFor="let field of condition | keys">
             <td>{{field.key}}</td>
-            <td>{{field.value}}</td>
+            <td class="info">{{field.value}}</td>
           </tr>
         </tbody>
       </table>

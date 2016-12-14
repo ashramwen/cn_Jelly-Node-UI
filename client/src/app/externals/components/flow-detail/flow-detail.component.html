@@ -33,8 +33,8 @@
         <li>
           <button class="btn-save" (click)="submit()">保存</button>
         </li>
-        <li *ngIf="!isNew">
-          <button class="btn-publish" (click)="publish()">发布</button>
+        <li>
+          <button class="btn-publish" (click)="publish()">{{isNew? '保存并发布': '发布'}}</button>
         </li>
       </ul>
     </div>

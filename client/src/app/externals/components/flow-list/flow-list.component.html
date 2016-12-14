@@ -26,7 +26,7 @@
           </td>
           <td>
             <button class="jn-btn" (click)="deleteFlow(flow); $event.stopPropagation();">Delete</button>
-            <button class="jn-btn" (click)="publishFlow(flow); $event.stopPropagation();">Publish</button>
+            <button class="jn-btn" (click)="publishFlow(flow); $event.stopPropagation();" *ngIf="!flow.publised">Publish</button>
           </td>
         </tr>
       </tbody>

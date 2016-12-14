@@ -43,7 +43,25 @@ export class NodeFlowResource extends JNNodeResource {
     method: RequestMethod.Delete,
     path: '/{!flowID}'
   })
-  delete: ResourceMethod<{flowID: string}, string>;
+  delete: ResourceMethod<{ flowID: string }, string>;
+  
+  @ResourceAction({
+    method: RequestMethod.Post,
+    path: '/{!flowID}/publish'
+  })
+  publish: ResourceMethod<{ flowID: string }, string>;
+
+  @ResourceAction({
+    method: RequestMethod.Put,
+    path: '/{!flowID}/enable'
+  })
+  enable: ResourceMethod<{ flowID: string }, string>;
+
+  @ResourceAction({
+    method: RequestMethod.Put,
+    path: '/{!flowID}/disabled'
+  })
+  disable: ResourceMethod<{ flowID: string }, string>;
 
   constructor(http: Http, injector: Injector,
     private authHelper: JNAuthenHelperSerivce,

@@ -146,7 +146,7 @@ $control-margin: 10px;
                     button.btn-save, button.btn-publish{
                         outline: none;
                         height: $control-btn-height;
-                        width: $control-btn-width;
+                        min-width: $control-btn-width;
                         border: solid 2px $icon-active-color;
                         background: transparent;
                         color: $icon-active-color;

@@ -89,10 +89,30 @@ export class FlowDetailComponent implements OnInit, OnDestroy, AfterViewInit {
     },1000);
   }
 
+  publish() {
+    if (this.isNew) {
+      this.flowDetailService.saveFlow(this.nodeFlow)
+        .then((flow) => {
+          this.flowDetailService
+            .publishFlow(flow)
+            .then(() => {
+              this.router.navigate(['/flow']);
+            });
+        });
+    } else {
+      this.flowDetailService
+        .publishFlow(this.nodeFlow)
+        .then(() => {
+          this.router.navigate(['/flow']);
+        });
+    }
+  }
+
   submit() {
-    this.flowDetailService.saveFlow(this.nodeFlow).then(() => {
-      this.router.navigate(['/flow']);
-    });
+    this.flowDetailService.saveFlow(this.nodeFlow)
+      .then((flow: JNFlow) => {
+        this.router.navigate(['/flow']);
+      });
   } 
 
   scaleTxtBlur(event) {

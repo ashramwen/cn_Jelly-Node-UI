@@ -20,4 +20,17 @@ export class FlowListService {
   deleteFlow(flow: JNFlow) {
     return this.flowResource.delete({ flowID: flow.flowID }).$observable.toPromise();
   }
+
+  publishFlow(flow: JNFlow) {
+    return this.flowResource.publish({flowID: flow.flowID}).$observable.toPromise();
+  }
+
+  enableFlow(flow: JNFlow) {
+    return this.flowResource.enable({ flowID: flow.flowID }).$observable.toPromise();
+  }
+
+  disableFlow(flow: JNFlow) {
+    return this.flowResource.disable({ flowID: flow.flowID }).$observable.toPromise();
+  }  
+
 }

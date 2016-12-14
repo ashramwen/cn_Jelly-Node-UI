@@ -46,6 +46,8 @@ export class FlowListComponent implements OnInit{
   }
 
   publishFlow(flow: JNFlow) {
-    
+    this.flowListService.publishFlow(flow).then(() => {
+      flow.published = true;
+    });
   }
 }

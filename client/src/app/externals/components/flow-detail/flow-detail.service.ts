@@ -18,11 +18,15 @@ export class FlowDetailService {
     if (!!flow.flowID) {
       return this.flowResource
         .update(flow.serialize())
-        .$observable.toPromise()
+        .$observable
+        .map(r=> JNFlow.deserialize(r))
+        .toPromise()
     } else {
       return this.flowResource
         .save(flow.serialize())
-        .$observable.toPromise();
+        .$observable
+        .map(r=> JNFlow.deserialize(r))
+        .toPromise();
     }
   }
 
@@ -79,5 +83,9 @@ export class FlowDetailService {
     } else if (document['mozIsFullScreen'] !== undefined) {
       return document['mozIsFullScreen'];
     }
+  }
+
+  publishFlow(flow: JNFlow) {
+    return this.flowResource.publish({flowID: flow.flowID}).$observable.toPromise();
   }
 }

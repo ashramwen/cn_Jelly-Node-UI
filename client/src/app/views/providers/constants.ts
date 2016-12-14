@@ -2,7 +2,7 @@ import { INodeSettings } from '../interfaces/node-settings.interface';
 
 export var NodeSettings: INodeSettings = {
   CANVAS_WIDTH: 1400,
-  CANVAS_HEIGHT: 1000,
+  CANVAS_HEIGHT: 800,
   NODE_MAX_WIDTH: 160,
   NODE_MIN_WIDTH: 100,
   NODE_RADIUS: 10,

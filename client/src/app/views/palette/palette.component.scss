@@ -50,7 +50,6 @@
       }
       .palette-node {
         width: 152px;
-        height: 42px;
         position: relative;
         cursor: move;
         margin: 0 auto;
@@ -59,10 +58,10 @@
         background-position: 5% 50%;
         background-repeat: no-repeat;
         background-size: contain;
+        background-color: transparent;
         .palette-label {
           color: #f1f7fb;
           font-size: 14px;
-          line-height: 42px;
           overflow: hidden;
           text-align: center;
           // &.right {
@@ -71,7 +70,6 @@
           // }
         }
         .palette-icon {
-          width: 42px;
           text-align: center;
           font-family: icomoon;
           float: left;
@@ -87,14 +85,15 @@
         }
         .palette-port {
           position: absolute;
-          top: 15px;
+          margin-top: -5px;
+          top: 50%;
           left: -5px;
           box-sizing: border-box;
           -moz-box-sizing: border-box;
           stroke: 1.5px;
           &.output {
             left: auto;
-            right: -6px;
+            right: -5px;
           }
           &.connectable {
             background-color: #8fc31f;

@@ -35,6 +35,9 @@ export class JNDeviceTypeNodePaletteModel extends JNPaletteModel {
 
     //action
     console.log('schemas', schemas);
+    if(!schemas[typeName].content.actions) {
+      return [connection];
+    }
     let actions = Object.keys(schemas[typeName].content.actions);
     let actionConnection = new JNPaletteConnection();
     actionConnection.title = '命令';

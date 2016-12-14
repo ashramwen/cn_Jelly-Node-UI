@@ -54,7 +54,7 @@
         cursor: move;
         margin: 0 auto;
         border-radius: 7px;
-        border: 1px solid #f1f7fb;
+        border: 2px solid #f1f7fb;
         background-position: 5% 50%;
         background-repeat: no-repeat;
         background-size: contain;
@@ -90,7 +90,7 @@
           left: -5px;
           box-sizing: border-box;
           -moz-box-sizing: border-box;
-          stroke: 1.5px;
+          border: 2px solid #f1f7fb;
           &.output {
             left: auto;
             right: -5px;

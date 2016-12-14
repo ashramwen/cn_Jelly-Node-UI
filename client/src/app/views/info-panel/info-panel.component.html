@@ -1,11 +1,15 @@
 <div class="info-panel" *ngIf="info && data">
+  <div id="drag">
+  </div>
   <div class="info-panel-title">
     {{ 'Info Panel' | translate }}
   </div>
   <table class="info-table table">
     <thead>
       <tr>
-        <th colspan="2"><caption>Info</caption></th>
+        <th colspan="2">
+          <caption>Info</caption>
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -18,7 +22,9 @@
   <table class="data-table table">
     <thead>
       <tr>
-        <th colspan="2"><caption>Data</caption></th>
+        <th colspan="2">
+          <caption>Data</caption>
+        </th>
       </tr>
     </thead>
     <tbody>

@@ -1,6 +1,9 @@
 .info-panel {
   background-color: #c2cbd2;
   height: 100%;
+  position: relative;
+  width: 200px;
+  resize: horizontal;
   .info-panel-title {
     text-align: center;
     background-color: #e1e1e1;
@@ -35,5 +38,13 @@
       font-size: 13px;
       color: #424242;
     }
+  }
+  #drag {
+    position: absolute;
+    left: -4px;
+    top: 0;
+    bottom: 0;
+    width: 8px;
+    cursor: w-resize;
   }
 }

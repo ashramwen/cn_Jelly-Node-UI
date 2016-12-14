@@ -1,7 +1,7 @@
 import { JNBaseNode } from '../../core/models/jn-base-node.type';
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { JNInfoPanelModel } from './interfaces/info-panel-model.type';
-import { Events } from '../../share/services/event.service';
+import { Events, NODE_EVENTS } from '../../share/services/event.service';
 import { JNApplication, APP_READY } from '../../share/services/application-core.service';
 
 @Component({
@@ -23,21 +23,28 @@ export class InfoPanelComponent implements OnInit {
   constructor(private elementRef: ElementRef, private application: JNApplication, private events: Events) {
   }
 
-  ngOnInit() {
-    this.info = {};
-    this.data = {};
-    this.events.on('node_click', (node: JNBaseNode) => {
-      let infoPanel: JNInfoPanelModel = node.createInfoPanelModel();
-      if (infoPanel) {
-        this.info = infoPanel.info;
-        this.data = infoPanel.data;
-        this.complexDataHTML = infoPanel.complexDataHTML;
-        this.typeComponent = infoPanel.complexDataComponent;
-        this.complexData = infoPanel.complexData;
 
-        this.infoKeys = Object.keys(this.info);
-        this.dataKeys = Object.keys(this.data);
+  ngOnInit() {
+    this.info = null;
+    this.data = null;
+
+    this.events.on(NODE_EVENTS.SELECTION_CHANGED, (nodes: Array<JNBaseNode>) => {
+      if (nodes.length == 1) {
+        let infoPanel: JNInfoPanelModel = nodes[0].createInfoPanelModel();
+        if (infoPanel) {
+          this.info = infoPanel.info;
+          this.data = infoPanel.data;
+          this.complexDataHTML = infoPanel.complexDataHTML;
+          this.typeComponent = infoPanel.complexDataComponent;
+          this.complexData = infoPanel.complexData;
+
+          this.infoKeys = Object.keys(this.info);
+          this.dataKeys = Object.keys(this.data);
+        }
+      } else {
+        this.info = null;
+        this.data = null;
       }
-    });
+    })
   }
 }

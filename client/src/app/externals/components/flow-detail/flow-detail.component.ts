@@ -33,7 +33,7 @@ export class FlowDetailComponent implements OnInit, OnDestroy, AfterViewInit {
   nodeView: JNViewComponent;
 
   get isNew() {
-    return !this.nodeFlow || this.nodeFlow.flowID;
+    return !this.nodeFlow || !this.nodeFlow.flowID;
   }
 
   constructor(

@@ -1,4 +1,4 @@
-<div class="editor-modal" [hidden]="!editorShown">
+<div class="editor-modal" *ngIf="editorShown">
   <div class="editor-modal-content" (click)="$event.stopPropagation()">
     <div class="node-editor">
       <div class="node-editor-header">

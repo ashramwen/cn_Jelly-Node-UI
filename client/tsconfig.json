@@ -2,13 +2,27 @@
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
+    "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "sourceMap": true,
-    "noEmitHelpers": true
+    "noEmitHelpers": true,
+    "baseUrl": "./src",
+    "strictNullChecks": false,
+    "paths": {
+    },
+    "lib": [
+      "dom",
+      "es6"
+    ],
+    "types": [
+      "lodash",
+      "d3"
+    ]
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "dist"
   ],
   "filesGlob": [
     "./src/**/*.ts",
@@ -21,10 +35,6 @@
     "resolveGlobs": true,
     "forkChecker": true
   },
-  "types": [
-    "lodash",
-    "d3"
-  ],
   "compileOnSave": false,
   "buildOnSave": false,
   "atom": {

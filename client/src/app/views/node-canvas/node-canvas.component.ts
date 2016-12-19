@@ -138,6 +138,10 @@ export class NodeCanvasComponent implements OnInit, OnChanges {
     let flow: JNFlow = changes['nodeFlow'].currentValue;
     if (flow === changes['nodeFlow'].previousValue || !flow) return;
     this.d3Helper.loadFlow(flow);
+    // flow.onChanges(() => {
+    //   this.d3Helper.updateNodes();
+    //   console.log('1');
+    // });
   }
 
   private handleCommand(commandName: CANVAS_COMMANDS) {

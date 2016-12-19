@@ -305,7 +305,7 @@ export class D3HelperService {
     let canvasNode = new CanvasNode(node, this.canvas.node());
     this.nodes.push(canvasNode);
     this.drawNodes();
-    this.select(canvasNode);
+    // this.select(canvasNode);
   }
 
   drawNodes() {
@@ -705,13 +705,14 @@ export class D3HelperService {
     this.events.emit(NODE_EVENTS.SELECTION_BEFORE_REMOVED, node.node);
     this.links
       .filter(link => link.source === node || link.target === node)
-      .forEach(this.removeLink.bind(this, true));
+      .forEach(l=> this.removeLink(l, true));
     
     this.flow.removeNode(node.node);
     JNUtils.removeItem(this.nodes, node);
     setTimeout(() => {
       this.drawNodes();
     });
+    this.events.emit(NODE_EVENTS.SELECTION_CHANGED, []);
   }
 
   private removeLink(link: CanvasLink, preventEvent?: boolean) {

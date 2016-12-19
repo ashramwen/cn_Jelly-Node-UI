@@ -30,6 +30,14 @@ export class FlowDetailService {
     }
   }
 
+  disableRule(flow: JNFlow) {
+    return this.flowResource.disable({ flowID: flow.flowID }).$observable.toPromise();
+  }
+
+  enableRule(flow: JNFlow) {
+    return this.flowResource.enable({ flowID: flow.flowID }).$observable.toPromise();
+  }
+
   getFlow(flowID: string) {
     if (!flowID || flowID === 'new') {
       let nodeFlow = new JNFlow();

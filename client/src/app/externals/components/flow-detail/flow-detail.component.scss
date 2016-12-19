@@ -130,6 +130,7 @@ $control-margin: 10px;
                             text-align: center;
                             line-height: 28px;
                             float: left;
+                            cursor: pointer;
                         }
                         label:first-child{
                             border-radius: 5px 0px 0px 5px;
@@ -139,6 +140,7 @@ $control-margin: 10px;
                             border-radius: 0px 5px 5px 0px;
                         }
                         label.checked{
+                            cursor: default;
                             background: $toggle-btn-active-color;
                             color: #fff;
                         }

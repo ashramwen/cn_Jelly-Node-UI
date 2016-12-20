@@ -26,15 +26,15 @@
       <ul>
         <li *ngIf="!isNew && nodeFlow.published">
           <div class="btn-toggle">
-            <label [class.checked]="!nodeFlow.enabled" (click)="disableRule()"><input type="radio" name="enabled" [(ngModel)]="enabled" />禁用</label>
-            <label [class.checked]="nodeFlow.enabled" (click)="enableRule()"><input type="radio" name="enabled" [(ngModel)]="enabled" />启用</label>
+            <label [class.checked]="!nodeFlow.enabled" (click)="disableRule()"><input type="radio" name="enabled" [(ngModel)]="enabled" />{{'禁用' | translate}}</label>
+            <label [class.checked]="nodeFlow.enabled" (click)="enableRule()"><input type="radio" name="enabled" [(ngModel)]="enabled" />{{'启用' | translate}}</label>
           </div>
         </li>
         <li>
-          <button class="btn-save" (click)="submit()">保存</button>
+          <button class="btn-save" (click)="submit()">{{'保存' | translate}}</button>
         </li>
         <li>
-          <button class="btn-publish" (click)="publish()">{{isNew? '保存并发布': '发布'}}</button>
+          <button class="btn-publish" (click)="publish()">{{'保存并发布' | translate}}</button>
         </li>
       </ul>
     </div>

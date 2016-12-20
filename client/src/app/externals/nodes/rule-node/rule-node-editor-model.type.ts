@@ -39,9 +39,10 @@ import {
       input: <IRadioInput>{
         label: '何时触发',
         options: [
-          { text: '由假转真', value: 'FALSE_TO_TRUE' },
-          { text: '由真转假', value: 'TRUE_TO_FALSE' },
-          { text: '改变', value: 'CHANGE' }
+          { text: '为真', value: 'CONDITION_TRUE' },
+          { text: '由假转真', value: 'CONDITION_FALSE_TO_TRUE' },
+          { text: '由真转假', value: 'CONDITION_TRUE_TO_FALSE' },
+          { text: '改变', value: 'CONDITION_CHANGE' }
         ]
       },
       controlType: JNRadioControl,

@@ -8,7 +8,7 @@ import { IFlow } from './interfaces/flow.interface';
 import { JNApplication } from '../../share/services/application-core.service';
 
 @Serializable()
-export class JNFlow implements IFlow{
+export class JNFlow implements IFlow {
   flowName: string;
   flowDescription: string;
 
@@ -92,7 +92,7 @@ export class JNFlow implements IFlow{
   })
   id: string;
 
-  flowType: 'genericRule' | 'envRule' | 'reporting';
+  flowType: 'GenericRule' | 'EnvRule' | 'Reporting';
 
   @JsonProperty({
     serialize: (node: JNBaseNode) => {
@@ -189,7 +189,7 @@ export class JNFlow implements IFlow{
         node.init(d);
         return node;
       });
-    
+
     this.nodes
       .forEach((n) => {
         this.initNode(n);

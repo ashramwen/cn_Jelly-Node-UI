@@ -12,10 +12,10 @@ md-radio-group{
       .md-radio-container{
         
         .md-radio-outer-circle{
-          border-color: red;
+          border-color: $color-success;
         }
         .md-radio-inner-circle{
-          background-color: red;
+          background-color: $color-success;
         }
       }
     }

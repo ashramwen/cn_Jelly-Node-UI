@@ -80,7 +80,7 @@ export class JNDeviceTypeNodeEditorModel extends JNEditorModel {
         things: []
       });
       if (!fieldName) return;
-      if (!this.locations || !this.locations.length) return;
+      if (!this.locations || !this.locations.length || !typeName) return;
 
       let tableData = [];
       DeviceTypeNodeService.instance

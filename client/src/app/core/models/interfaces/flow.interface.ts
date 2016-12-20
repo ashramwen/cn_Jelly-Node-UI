@@ -1,5 +1,5 @@
 export interface IFlow {
-  flowType: 'genericRule' | 'envRule' | 'reporting';
+  flowType: 'GenericRule' | 'EnvRule' | 'Reporting';
   flowName: string;
   flowDescription: string;
   flowID: string;

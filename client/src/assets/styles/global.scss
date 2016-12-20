@@ -18,13 +18,19 @@ $node-height: 42px;
 $node-padding: 10px 16px;
 $node-stroke-width: 1.5px;
 
-$color-primary: blue;
+$color-primary: #7197bb;
 $color-danger: red;
-$color-success: green;
-$color-info: blue;
-$color-warning: yellow;
+$color-success: #95c62a;
+$color-info: #7197bb;
+$color-warning: #f8b551;
 $color-dark: #333;
 $color-grey: #999;
 $color-light: #eee;
+$color-white: #fff;
 
 $canvas-background-color: #2f363b;
+
+*[color=warning]{
+  background-color: $color-warning;
+  color: $color-white;
+}

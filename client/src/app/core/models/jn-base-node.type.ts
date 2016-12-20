@@ -98,15 +98,10 @@ export abstract class JNBaseNode {
   }
 
   set position(position: INodePosition) {
-    this.update({
-      position: position
-    });
+    this.model.position = position;
   }
 
-  public nodeMap: INodeMap = {
-    accepted: {},
-    outputTo: {}
-  };
+  public nodeMap: INodeMap;
 
   get accepted(): JNBaseNode[] {
     return JNUtils.toArray<JNBaseNode>(this.nodeMap.accepted)
@@ -140,6 +135,10 @@ export abstract class JNBaseNode {
   }
 
   constructor() {
+    this.nodeMap = {
+      accepted: {},
+      outputTo: {}
+    };
     this._modelChange = new SyncEvent<JNBaseNode>();
     this._stateChange = new SyncEvent<JNBaseNode>();
   }
@@ -220,12 +219,12 @@ export abstract class JNBaseNode {
       .toArray<JNBaseNode>(this.nodeMap.accepted)
       .find(p => p.value === node);
     if (!nodeAccepted) return Promise.resolve(true);
-    
+
     return new Promise((resolve, reject) => {
       this.whenReject(node).then(() => {
         delete this.nodeMap.accepted[node.body.nodeID];
         delete node.nodeMap.outputTo[this.body.nodeID];
-        
+
         let errors = this.validate();
         this.update(errors);
         resolve(node);
@@ -290,7 +289,7 @@ export abstract class JNBaseNode {
     this.outputTo.forEach((node) => {
       delete node.nodeMap.accepted[node.body.nodeID];
       node.reject(this);
-    })
+    });
   }
 
   public validateLinkWith(node: JNBaseNode) {
@@ -385,7 +384,7 @@ export abstract class JNBaseNode {
   protected subscriber(payload: IJNNodePayload) {
     this.state = 'listening';
     this.listener(payload).then(() => {
-      if (this.state != 'published') {
+      if (this.state !== 'published') {
         this.state = 'published';
       }
     });

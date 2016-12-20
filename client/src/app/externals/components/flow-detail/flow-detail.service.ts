@@ -19,13 +19,13 @@ export class FlowDetailService {
       return this.flowResource
         .update(flow.serialize())
         .$observable
-        .map(r=> JNFlow.deserialize(r))
-        .toPromise()
+        .map(r => JNFlow.deserialize(r))
+        .toPromise();
     } else {
       return this.flowResource
         .save(flow.serialize())
         .$observable
-        .map(r=> JNFlow.deserialize(r))
+        .map(r => JNFlow.deserialize(r))
         .toPromise();
     }
   }
@@ -41,7 +41,7 @@ export class FlowDetailService {
   getFlow(flowID: string) {
     if (!flowID || flowID === 'new') {
       let nodeFlow = new JNFlow();
-      nodeFlow.flowType = 'genericRule';
+      nodeFlow.flowType = 'GenericRule';
       return Promise.resolve(nodeFlow);
     } else {
       return this.flowResource.get({ flowID: flowID })
@@ -60,33 +60,10 @@ export class FlowDetailService {
     return Math.ceil(s / 20) / 5;
   }
 
-  private _launchIntoFullscreen(element) {
-    if(element.requestFullscreen) {
-      element.requestFullscreen();
-    } else if(element.mozRequestFullScreen) {
-      element.mozRequestFullScreen();
-    } else if(element.webkitRequestFullscreen) {
-      element.webkitRequestFullscreen();
-    } else if(element.msRequestFullscreen) {
-      element.msRequestFullscreen();
-    }
-  }
-
-  // Whack fullscreen
-  private _exitFullscreen() {
-    if(document.exitFullscreen) {
-      document.exitFullscreen();
-    } else if(document['mozCancelFullScreen']) {
-      document['mozCancelFullScreen']();
-    } else if(document.webkitExitFullscreen) {
-      document.webkitExitFullscreen();
-    }
-  }
-
-  get fullscreen() { 
+  get fullscreen() {
     if (document.webkitIsFullScreen !== undefined) {
       return document.webkitIsFullScreen;
-    } else if(document['isFullScreen'] !== undefined){
+    } else if (document['isFullScreen'] !== undefined) {
       return document['isFullScreen'];
     } else if (document['mozIsFullScreen'] !== undefined) {
       return document['mozIsFullScreen'];
@@ -94,6 +71,29 @@ export class FlowDetailService {
   }
 
   publishFlow(flow: JNFlow) {
-    return this.flowResource.publish({flowID: flow.flowID}).$observable.toPromise();
+    return this.flowResource.publish({ flowID: flow.flowID }).$observable.toPromise();
+  }
+
+  private _launchIntoFullscreen(element) {
+    if (element.requestFullscreen) {
+      element.requestFullscreen();
+    } else if (element.mozRequestFullScreen) {
+      element.mozRequestFullScreen();
+    } else if (element.webkitRequestFullscreen) {
+      element.webkitRequestFullscreen();
+    } else if (element.msRequestFullscreen) {
+      element.msRequestFullscreen();
+    }
+  }
+
+  // Whack fullscreen
+  private _exitFullscreen() {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document['mozCancelFullScreen']) {
+      document['mozCancelFullScreen']();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    }
   }
 }

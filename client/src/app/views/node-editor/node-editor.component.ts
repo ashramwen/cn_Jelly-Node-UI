@@ -1,7 +1,7 @@
 import {
   Component, ViewContainerRef, ViewChild,
   ElementRef, OnInit, Input, Output, OnChanges, SimpleChange,
-  EventEmitter
+  EventEmitter, trigger, state, style, transition, animate
 } from '@angular/core';
 import { FormGroup, FormControl, Validators, AsyncValidatorFn } from '@angular/forms';
 
@@ -13,11 +13,46 @@ import { JNBaseNode } from '../../core/models/jn-base-node.type';
 import { Subscription } from 'rxjs';
 import { Events, NODE_EVENTS } from '../../share/services/event.service';
 import { JNUtils } from '../../share/util';
+import { ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'jn-node-editor',
   template: require('./node-editor.component.html'),
-  styles: [require('./node-editor.component.scss')]
+  styles: [require('./node-editor.component.scss')],
+  encapsulation: ViewEncapsulation.None,
+  animations: [
+    trigger('editorState', [
+      state('inactive', style({
+        display: 'none'
+      })),
+      state('active',   style({
+        display: 'block'
+      })),
+      transition('inactive => active', animate('200ms ease-in')),
+      transition('active => inactive', animate('200ms ease-out'))
+    ]),
+    trigger('backDropState', [
+      state('inactive', style({
+        opacity: '0'
+      })),
+      state('active',   style({
+        opacity: '0.3'
+      })),
+      transition('inactive => active', animate('200ms ease-in')),
+      transition('active => inactive', animate('200ms ease-out'))
+    ]),
+    trigger('contentState', [
+      state('inactive', style({
+        right: '-350px'
+      })),
+      state('active',   style({
+        right: '0px'
+      })),
+      transition('inactive => active', animate('200ms ease-in')),
+      transition('active => inactive', animate('200ms ease-out'))
+    ])
+  ]
+
 })
 export class JNEditFormComponent implements OnInit {
 
@@ -25,13 +60,21 @@ export class JNEditFormComponent implements OnInit {
   private targetNode: JNBaseNode;
   private editorShown: boolean;
 
+  private backDropState: 'active' | 'inactive';
+  private contentState: 'active' | 'inactive';
+  private editorState: 'active' | 'inactive';
+
   private controls: IJNFormControl[] = [];
   private formGroup: FormGroup = new FormGroup({});
   private subscription: Subscription;
 
   constructor(
     private events: Events
-  ) { }
+  ) { 
+    this.backDropState = 'inactive';
+    this.contentState = 'inactive';
+    this.editorState = 'inactive';
+  }
 
   ngOnInit() {
   }
@@ -39,6 +82,9 @@ export class JNEditFormComponent implements OnInit {
   public show(node: JNBaseNode) {
     this.targetNode = node;
     this.editorShown = true;
+    this.backDropState = 'active';
+    this.contentState = 'active';
+    this.editorState = 'active';
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
@@ -54,6 +100,9 @@ export class JNEditFormComponent implements OnInit {
     this.targetNode = null;
     this.editorShown = false;
     this.editorModel = null;
+    this.backDropState = 'inactive';
+    this.contentState = 'inactive';
+    this.editorState = 'inactive';
   }
 
   private prepare() {

@@ -24,12 +24,11 @@ import { Events, NODE_EVENTS } from '../share/services/event.service';
 export class JNViewComponent implements OnInit, OnDestroy {
 
   id: string;
-  subs: Subscription;
   selectedNode: JNBaseNode;
 
   @Input()
   nodeFlow: JNFlow;
-  nodeDeleteEventListener: AppEventListener;
+  nodeDbClickEventListener: AppEventListener;
 
   @ViewChild('nodeEditor')
   nodeEditor: JNEditFormComponent;
@@ -42,12 +41,7 @@ export class JNViewComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.events.on('node_click', node => {
-      console.log('node_click', node);
-    });
-
-    this.events.on('node_dblclick', node => {
-      console.log('node_dblclick', node);
+    this.nodeDbClickEventListener = this.events.on('node_dblclick', node => {
       this.openEditModal(node);
     });
   }
@@ -60,8 +54,7 @@ export class JNViewComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subs.unsubscribe();
-    this.nodeDeleteEventListener.destroy();
+    this.nodeDbClickEventListener.destroy();
   }
 
   protected openEditModal(node: JNBaseNode) {

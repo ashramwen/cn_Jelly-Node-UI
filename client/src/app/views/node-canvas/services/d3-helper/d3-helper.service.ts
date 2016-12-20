@@ -1,5 +1,5 @@
 import { JNFlow } from './../../../../core/models/jn-flow.type';
-import { JNBaseNode } from '../../../../core/models/jn-base-node.type'
+import { JNBaseNode } from '../../../../core/models/jn-base-node.type';
 import { Injectable, Sanitizer, SecurityContext, Injector } from '@angular/core';
 import { TranslateService } from 'ng2-translate';
 import * as d3 from 'd3';
@@ -44,7 +44,7 @@ export class D3HelperService {
 
   private sourceNode: CanvasNode = null;
   private targetNode: CanvasNode = null;
-  private _dragOrigin: CanvasPoint
+  private _dragOrigin: CanvasPoint;
   private _shift: CanvasPoint;
   private NodeSettings: INodeSettings;
   private _scale: number;
@@ -151,7 +151,7 @@ export class D3HelperService {
       .attr('class', 'tooltip')
       .style('opacity', 0)
       .style('display', 'none');
-    
+
     this.dragWrapper = this.canvasWrapper
       .append('div')
       .attr('class', 'drag-wrapper');
@@ -160,7 +160,7 @@ export class D3HelperService {
     this.navMap = d3.select(this.parent)
       .append('div')
       .attr('class', 'nav-map');
-    
+
     this.navMap
       .append('div')
       .attr('class', 'view-port')
@@ -182,7 +182,6 @@ export class D3HelperService {
     this.brush.call(d3.brush()
       .on('start', () => {
         self.brush.raise();
-        var e = d3.event.target.extent();
       })
       .on('end', () => {
         // hide brush
@@ -210,9 +209,13 @@ export class D3HelperService {
           self.select(selectedObjects);
         }
         
-        self.updateNodes.bind(self)();
+        self._updateNodes.bind(self)();
         self.updateLinks.bind(self)();
       }));
+  }
+
+  public updateNodes() {
+    this._updateNodes();
   }
 
   initDragWrapper() {
@@ -272,12 +275,12 @@ export class D3HelperService {
     if (s < this.NodeSettings.MIN_SCALE) {
       this._scale = this.NodeSettings.MIN_SCALE;
     } else if (s > this.NodeSettings.MAX_SCALE) {
-      this._scale = this.NodeSettings.MAX_SCALE
+      this._scale = this.NodeSettings.MAX_SCALE;
     } else {
       this._scale = s;
     }
     this.updateCanvas();
-    this.updateNodes();
+    this._updateNodes();
   }
 
   loadFlow(flow: JNFlow) {
@@ -301,15 +304,49 @@ export class D3HelperService {
     this.select([]);
   }
 
-  addNode(node: JNBaseNode) {
+  public addNode(node: JNBaseNode) {
     let canvasNode = new CanvasNode(node, this.canvas.node());
     this.nodes.push(canvasNode);
     this.drawNodes();
     // this.select(canvasNode);
   }
 
-  drawNodes() {
+  public removeSelection() {
+    this.selections.forEach((o) => {
+      switch (o.constructor) {
+        case CanvasNode:
+          this.removeNode(<CanvasNode>o);
+          break;
+        case CanvasLink:
+          this.removeLink(<CanvasLink>o);
+          break;
+        default:
+          break;
+      }
+    });
+    this.hideTip();
+    this.selections = [];
+  }
+
+  public drawNodes() {
     let self = this;
+    let doubleClick = false;
+    let clickSubscriber: Subscriber<CanvasNode>;
+    let clickObservable = new Observable<CanvasNode>((s: Subscriber<CanvasNode>) => {
+      clickSubscriber = s;
+    });
+
+    clickObservable
+      .debounceTime(100)
+      .subscribe((node) => {
+        this.select(node);
+        if (!doubleClick) {
+          this.events.emit('node_click', node.node);
+        } else {
+          this.events.emit('node_dblclick', node.node);
+          doubleClick = false;
+        }
+      });
     
     let rects = this.vis
       .selectAll('g.node-group')
@@ -322,11 +359,11 @@ export class D3HelperService {
       .append('svg:g')
       .classed('node-group', true)
       .on('click', d => {
-        self.select(d);
-        self.events.emit('node_click', d.node);
+        clickSubscriber.next(d);
       })
       .on('dblclick', d => {
-        self.events.emit('node_dblclick', d.node);
+        doubleClick = true;
+        clickSubscriber.next(d);
       })
       .on('mousemove', (d: CanvasNode) => {
         if (d.error) {
@@ -408,7 +445,7 @@ export class D3HelperService {
           if (self.sourceNode) {
             self.createNodeLink(self.sourceNode, d);
           }
-          self.linkingNode = null
+          self.linkingNode = null;
           self.sourceNode = null;
           self.targetNode = null;
         })
@@ -465,7 +502,7 @@ export class D3HelperService {
       .insert('svg:rect');
     
     rects.exit().remove();
-    this.updateNodes();
+    this._updateNodes();
   }
 
   private updateCanvasContainer() {
@@ -566,7 +603,7 @@ export class D3HelperService {
       .style('height', `${height}px`);
   }
 
-  public updateNodes() {
+  private _updateNodes() {
     let self = this;
 
     // adjust node width and text position
@@ -611,7 +648,7 @@ export class D3HelperService {
       })
       .attr('font-family', 'icomoon')
       .style('font-size', `${self.NodeSettings.NODE_ICON_HOLDER_WIDTH}px`)
-      .text((d: CanvasNode)=>{
+      .text((d: CanvasNode) => {
         return d.icon;
       });
 
@@ -705,7 +742,7 @@ export class D3HelperService {
     this.events.emit(NODE_EVENTS.SELECTION_BEFORE_REMOVED, node.node);
     this.links
       .filter(link => link.source === node || link.target === node)
-      .forEach(l=> this.removeLink(l, true));
+      .forEach(l => this.removeLink(l, true));
     
     this.flow.removeNode(node.node);
     JNUtils.removeItem(this.nodes, node);
@@ -725,7 +762,7 @@ export class D3HelperService {
     this.flow.removeLink({source: link.source.node, target: link.target.node});
     this.drawLinks();
     setTimeout(() => {
-      this.updateNodes();
+      this._updateNodes();
     });
   }
 
@@ -736,10 +773,10 @@ export class D3HelperService {
       this.selections = [o];
     }
     let nodes = this.selections
-      .filter(o => o instanceof CanvasNode)
+      .filter(n => n instanceof CanvasNode)
       .map((n: CanvasNode) => n.node);
     this.events.emit(NODE_EVENTS.SELECTION_CHANGED, nodes);
-    this.updateNodes();
+    this._updateNodes();
   }
 
   private dragStart() {
@@ -766,7 +803,7 @@ export class D3HelperService {
           y: this._shift.y
         };
       });
-    this.updateNodes();
+    this._updateNodes();
   }
 
   private dragEnd() {
@@ -779,7 +816,7 @@ export class D3HelperService {
         return o instanceof CanvasNode;
       })
       .find((n: CanvasNode) => {
-        return !!n.offset.x || !!n.offset.y
+        return !!n.offset.x || !!n.offset.y;
       });
     if (!changed) return;
 
@@ -816,7 +853,7 @@ export class D3HelperService {
     this.events.emit(NODE_EVENTS.NODE_BEFORE_LINKED, t.node);
     t.node.accept(s.node);
     this.addLink(s, t);
-    this.updateNodes();
+    this._updateNodes();
   }
 
   private addLink(s: CanvasNode, t: CanvasNode) {
@@ -916,11 +953,8 @@ export class D3HelperService {
   private showTip(message: string) {
     let position = d3.mouse(this.canvas.node());
 
-    /*    
-    this.tip.transition()
-      .duration(200)
-      .style("opacity", .9);
-    */
+    this.tip
+      .style('opacity', .9);
     
     this.tip
       .text(() => {
@@ -974,18 +1008,5 @@ export class D3HelperService {
 
     let v = `M${source.x} ${source.y} C ${source.x + scale * deltaX / 2} ${source.y + scaleY * deltaY} ${target.x - scale * deltaX / 2} ${target.y - scaleY * deltaY} ${target.x} ${target.y}`;
     return v;
-  }
-
-  removeSelection() {
-    this.selections.forEach((o) => {
-      switch (o.constructor) {
-        case CanvasNode:
-          this.removeNode(<CanvasNode>o);
-        case CanvasLink:
-          this.removeLink(<CanvasLink>o);
-      }
-    });
-    this.hideTip();
-    this.selections = [];
   }
 }

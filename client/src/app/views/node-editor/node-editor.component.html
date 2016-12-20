@@ -1,19 +1,28 @@
-<div class="editor-modal" *ngIf="editorShown">
-  <div class="editor-modal-content" (click)="$event.stopPropagation()">
+<div class="editor-modal" [class.active]="editorShown" [@editorState]="editorState">
+  <div class="editor-modal-content" (click)="$event.stopPropagation()" [@contentState]="contentState">
     <div class="node-editor">
       <div class="node-editor-header">
-        {{(editorModel? editorModel.title : '') | translate}}
+        <div>
+          <title>
+            {{(editorModel? editorModel.title : '') | translate}}
+          </title>
+        </div>
+        <div>
+          <h5 class="sub-title">【{{(targetNode? targetNode.name : '') | translate}}】</h5>
+        </div>
       </div>
       <div class="node-editor-body">
-        <form [formGroup]="formGroup" (ngSubmit)="submit()">
-          <jn-control-container *ngFor="let control of controls" 
-          [controlSchema]="control"></jn-control-container>
+        <form [formGroup]="formGroup" (ngSubmit)="submit()" *ngIf="editorShown">
+          <jn-control-container 
+            *ngFor="let control of controls" 
+            [controlSchema]="control">
+          </jn-control-container>
         </form>
       </div>
       <div class="node-editor-footer">
-        <button (click)="submit()" md-raised-button class="md-raised pull-right" color="primary" type="button">Submit</button>
+        <button (click)="submit()" color="warning" class="jn-btn" type="button">Submit</button>
       </div>
     </div>
   </div>
-  <div class="editor-model-backdrop" (click)="hide()"></div>
+  <div class="editor-modal-backdrop" (click)="hide()" [@backDropState]="backDropState"></div>
 </div>

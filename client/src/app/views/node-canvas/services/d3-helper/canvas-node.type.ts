@@ -4,13 +4,13 @@ import { CanvasObject } from './canvas-object.type';
 import { JNUtils } from '../../../../share/util';
 import { SVGUtils } from './utils';
 
-export class CanvasNode extends CanvasObject{
+export class CanvasNode extends CanvasObject {
   node: JNBaseNode;
   offset: { x: number; y: number; };
 
   /**
    * @override CanvasObject.width
-   */  
+   */
   get width() {
     let left = this.hasInput ? SVGUtils.getWith(this.element.querySelector('g.input rect')) / 2 : 0;
     let right = this.hasOutput ? SVGUtils.getWith(this.element.querySelector('g.output rect')) / 2 : 0;
@@ -19,7 +19,7 @@ export class CanvasNode extends CanvasObject{
 
   /**
    * @override CanvasObject.height
-   */  
+   */
   get height() {
     return SVGUtils.getHeight(this.element.querySelector('rect.node'));
   }
@@ -28,14 +28,14 @@ export class CanvasNode extends CanvasObject{
    * @override CanvasObject.x
    */
   get x() {
-    return SVGUtils.getTranslateX(this.element)
+    return SVGUtils.getTranslateX(this.element);
   }
-  
+
   /**
    * @override CanvasObject.y
    */
   get y() {
-    return SVGUtils.getTranslateY(this.element)
+    return SVGUtils.getTranslateY(this.element);
   }
 
   /**
@@ -58,24 +58,27 @@ export class CanvasNode extends CanvasObject{
   /**
    * @desc has connected to any node
    */
-  get connected(): boolean{
+  get connected(): boolean {
     return this.inputConnected || this.outputConnected;
   }
 
   /**
-   * @desc input port has connections */
-  get inputConnected(): boolean{
+   * @desc input port has connections
+   */
+  get inputConnected(): boolean {
     return !!this.node.accepted.length;
   }
 
   /**
-   * @desc output port has connections */
+   * @desc output port has connections
+   */
   get outputConnected() {
     return !!this.node.outputTo.length;
   }
 
   /**
-   * @desc current position */
+   * @desc current position
+   */
   get position() {
     let {x, y} = this.node.position;
     return {
@@ -85,7 +88,8 @@ export class CanvasNode extends CanvasObject{
   }
 
   /**
-   * @override CanvasObject.error */
+   * @override CanvasObject.error
+   */
   get error() {
     let error = this.node.errors ? this.node.errors[0] : null;
     return error;
@@ -94,7 +98,8 @@ export class CanvasNode extends CanvasObject{
   /**
    * @argument {CanvasNode} s source node
    * @return {boolean}
-   * @desc description can be coonected with given node */
+   * @desc description can be coonected with given node
+   */
   connectable(s: CanvasNode) {
     return this.node.connectable(s.node);
   }
@@ -108,15 +113,16 @@ export class CanvasNode extends CanvasObject{
   /**
    * @desc has input port
    * @return {boolean} 
-   *  */
-  get hasInput() :boolean{
+   */
+  get hasInput(): boolean {
     let nodeType: typeof JNBaseNode = <typeof JNBaseNode>this.node.constructor;
     return nodeType.hasInput();
   }
 
   /**
    * @desc has output port
-   * @return {boolean} */
+   * @return {boolean}
+   */
   get hasOutput(): boolean {
     let nodeType: typeof JNBaseNode = <typeof JNBaseNode>this.node.constructor;
     return nodeType.hasOutput();

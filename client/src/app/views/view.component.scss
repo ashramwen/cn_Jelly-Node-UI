@@ -24,30 +24,4 @@
             z-index: 1;
         }
     }
-    .editor-modal{
-        width: 100%;
-        height: 100%;
-        top: 0px;
-        position: absolute;
-
-        .editor-model-backdrop{
-            background: rgba(0,0,0, 0.3);
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-        }
-        .editor-modal-content{
-            height: 100%;
-            position: absolute;
-            right: 0px;
-            width: 450px;
-            border: 1px solid #666;
-            background: #fff;
-            z-index: 2;
-            display: flex;
-            jn-node-editor{
-                flex: 1;
-            }
-        }
-    }
 }

@@ -42,7 +42,7 @@ export class FlowDetailComponent implements OnInit, OnDestroy, AfterViewInit {
     private events: Events,
     private flowDetailService: FlowDetailService,
     private elementRef: ElementRef,
-  ) { 
+  ) {
     this.editingName = false;
   }
 
@@ -58,7 +58,6 @@ export class FlowDetailComponent implements OnInit, OnDestroy, AfterViewInit {
     setInterval(() => {
       this.fullscreen = this.flowDetailService.fullscreen;
     }, 500);
-    
   }
 
   ngOnDestroy() {
@@ -86,7 +85,7 @@ export class FlowDetailComponent implements OnInit, OnDestroy, AfterViewInit {
     this.flowDetailService.toggleFullScreen(element);
     setTimeout(() => {
       this.fullscreen = this.flowDetailService.fullscreen;
-    },1000);
+    }, 1000);
   }
 
   publish() {
@@ -113,7 +112,7 @@ export class FlowDetailComponent implements OnInit, OnDestroy, AfterViewInit {
       .then((flow: JNFlow) => {
         this.router.navigate(['/flow']);
       });
-  } 
+  }
 
   scaleTxtBlur(event) {
     let s = this.flowDetailService.calcScale(this.scale);

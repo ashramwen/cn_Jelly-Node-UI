@@ -57,6 +57,8 @@ export class Draggable implements AfterViewInit {
      * Event fired when dragged ends
      */
     @Output() onDragEnd: EventEmitter<any> = new EventEmitter();
+    
+    private mouseOverElement: any;
 
     constructor(private ele: ElementRef) {}
 
@@ -66,7 +68,6 @@ export class Draggable implements AfterViewInit {
         this.ele.nativeElement.addEventListener('dragend', this.dragEnd.bind(this));
     }
 
-    private mouseOverElement: any;
 
     dragStart(e: DragEvent) {
         if (this.allowDrag()) {

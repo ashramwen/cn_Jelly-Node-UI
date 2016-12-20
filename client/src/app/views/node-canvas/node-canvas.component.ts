@@ -35,7 +35,7 @@ export class NodeCanvasComponent implements OnInit, OnChanges {
 
   private _dragEnabled: boolean;
   private _commands: { keyCombo: string[]; command: any };
-  
+
   get currentScale() {
     return this.d3Helper.currentScale;
   }
@@ -51,7 +51,7 @@ export class NodeCanvasComponent implements OnInit, OnChanges {
     private application: JNApplication,
     private editStack: EditStack,
     private keyboardService: JNKeyboardService
-  ) { 
+  ) {
     this._dragEnabled = false;
   }
 
@@ -138,10 +138,10 @@ export class NodeCanvasComponent implements OnInit, OnChanges {
     let flow: JNFlow = changes['nodeFlow'].currentValue;
     if (flow === changes['nodeFlow'].previousValue || !flow) return;
     this.d3Helper.loadFlow(flow);
-    // flow.onChanges(() => {
-    //   this.d3Helper.updateNodes();
-    //   console.log('1');
-    // });
+    flow.onChanges(() => {
+      this.d3Helper.updateNodes();
+      console.log('1');
+    });
   }
 
   private handleCommand(commandName: CANVAS_COMMANDS) {
@@ -157,6 +157,8 @@ export class NodeCanvasComponent implements OnInit, OnChanges {
         break;
       case CANVAS_COMMANDS.DISABLED_DRAG_MOVE:
         this.disableDragMove();
+        break;
+      default:
         break;
     }
   }

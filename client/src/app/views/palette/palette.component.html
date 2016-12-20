@@ -6,7 +6,7 @@
     <div class="palette-node-container">
       <div class="palette-node-group" *ngFor="let node of flowNodes;" [ngClass]="{'no': !node.acceptable && !node.directable, 'yes': node.acceptable || node.directable}">
         <div class="palette-function">
-          <div draggable="node.acceptable || node.directable" [dragData]="node" class="palette-node" [ngStyle]="nodeStyle">
+          <div draggable [disabled]="!node.acceptable && !node.directable" [dragData]="node" class="palette-node" [ngStyle]="nodeStyle">
             <div class="palette-icon" [ngStyle]="iconStyle">
               <i [ngStyle]="{'font-size': NodeSettings.NODE_ICON_HOLDER_WIDTH}">{{node.icon}}</i>
             </div>
@@ -32,7 +32,7 @@
         <div class="palette-node-container">
           <div class="palette-node-group" *ngFor="let node of connection.properties;" [ngClass]="{'no': !node.acceptable && !node.directable, 'yes': node.acceptable || node.directable}">
             <div class="palette-function">
-              <div draggable="node.acceptable || node.directable" [dragData]="node" class="palette-node" [ngStyle]="nodeStyle">
+              <div draggable [disabled]="!node.acceptable && !node.directable" [dragData]="node" class="palette-node" [ngStyle]="nodeStyle">
                 <div class="palette-icon" [ngStyle]="iconStyle">
                   <i [ngStyle]="{'font-size': NodeSettings.NODE_ICON_HOLDER_WIDTH}">{{node.icon}}</i>
                 </div>

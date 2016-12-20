@@ -42,11 +42,19 @@ var conditionParser = function(nodeSet, conditionNodes, clauses, summarySource, 
 				clause.upperLimit = currentNode.conditions[j].value
 				clause.upperIncluded = true
 				clause.lowerIncluded = false
-			} else if (currentNode.conditions[j].operator == 'gte') {
+			} else if (currentNode.conditions[j].operator == 'lt') {
+        clause.upperLimit = currentNode.conditions[j].value
+        clause.upperIncluded = false
+        clause.lowerIncluded = false
+      } else if (currentNode.conditions[j].operator == 'gte') {
 				clause.lowerLimit = currentNode.conditions[j].value
 				clause.lowerIncluded = true
 				clause.upperIncluded = false
-			}
+			} else if (currentNode.conditions[j].operator == 'gt') {
+        clause.lowerLimit = currentNode.conditions[j].value
+        clause.lowerIncluded = false
+        clause.upperIncluded = false
+      }
 			condition.clauses.push(clause)
 			//set summarySource -> source]
 			var conditionNodeID = currentNode.nodeID
@@ -104,7 +112,7 @@ module.exports = {
   	// construct nodeSet and primaryNodes
   	options.nodes.forEach(function(node) {
   		node.nodeID = parseInt(node.nodeID)
-  		if (node.type == 'rule')
+  		if (node.type == 'Rule')
   			primaryNodes.push(node)
   		if (!(node.nodeID in nodeSet))
   			nodeSet[node.nodeID] = node

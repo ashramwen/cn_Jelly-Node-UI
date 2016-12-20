@@ -32,8 +32,11 @@ export class PaletteComponent implements OnInit {
     let externalSettings = injector.get(JN_NODE_SETTING);
     this.NodeSettings = {};
     Object.assign(this.NodeSettings, NodeSettings, externalSettings);
-    this.NodeSettings.HALF_HANDLER_HEIGHT = this.NodeSettings.HANDLER_HEIGHT/2;
+    this.NodeSettings.HALF_HANDLER_HEIGHT = this.NodeSettings.HANDLER_HEIGHT / 2;
     Object.keys(this.NodeSettings).forEach(key => {
+      if (key == 'HANDLER_WIDTH' || key == 'HANDLER_HEIGHT') {
+        this.NodeSettings[key] = this.NodeSettings[key] + 2;
+      } 
       this.NodeSettings[key] = this.NodeSettings[key] + 'px';
     })
     console.log(this.NodeSettings);
@@ -71,7 +74,7 @@ export class PaletteComponent implements OnInit {
     this.portStyle = {
       'width': this.NodeSettings.HANDLER_WIDTH, 'height': this.NodeSettings.HANDLER_HEIGHT,
       'border-radius': this.NodeSettings.HANDLER_RADIUS, 'stroke-width': this.NodeSettings.PATH_STROKE_WIDTH,
-      'margin-top': "-"+this.NodeSettings.HALF_HANDLER_HEIGHT
+      'margin-top': "-" + this.NodeSettings.HALF_HANDLER_HEIGHT
     };
   }
 }

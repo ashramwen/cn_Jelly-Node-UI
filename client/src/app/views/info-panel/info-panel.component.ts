@@ -19,10 +19,27 @@ export class InfoPanelComponent implements OnInit {
   complexDataHTML: String;
   typeComponent;
   complexData;
+  width;
+  isMouseDown: Boolean;
 
   constructor(private elementRef: ElementRef, private application: JNApplication, private events: Events) {
+    this.width = 200;
   }
 
+  onMouseMove(event) {
+    if (this.isMouseDown) {
+      this.width = this.width - event.movementX;
+    }
+    console.log(event);
+  }
+
+  onMouseUp(event) {
+    this.isMouseDown = false;
+  }
+
+  onMouseDown(event) {
+    this.isMouseDown = true;
+  }
 
   ngOnInit() {
     this.info = null;

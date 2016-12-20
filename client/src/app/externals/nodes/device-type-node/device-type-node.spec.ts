@@ -3,7 +3,6 @@ import { JNDeviceTypeNode } from './device-type-node.type';
 import { CoreModule } from '../../../core/core.module';
 import { TestBed, async, inject } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { JNApplication } from '../../../core/services/application-core.service';
 import { JNLocationNode } from '../location-node/location-node.type';
 import { JNFlow } from '../../../core/models/jn-flow.type';
 import { AppModule } from '../../../app.module';

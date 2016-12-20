@@ -12,9 +12,9 @@
             </div>
             <div class="palette-label" dir="">{{node.name | translate}}</div>
             <div class="palette-port output" [ngClass]="{'connectable': node.directable, 'disconnectable': !node.directable && !node.hasOutput, 'hasOutput': !node.directable && node.hasOutput}"
-              [ngStyle]="portStyle"></div>
+              [ngStyle]="outputPortStyle"></div>
             <div class="palette-port input" [ngClass]="{'connectable': node.acceptable, 'disconnectable': !node.acceptable && !node.hasInput, 'hasOutput': !node.acceptable && node.hasInput}"
-              [ngStyle]="portStyle"></div>
+              [ngStyle]="inputPortStyle"></div>
           </div>
         </div>
       </div>
@@ -38,9 +38,9 @@
                 </div>
                 <div class="palette-label" dir="">{{node.name}}</div>
                 <div class="palette-port output" [ngClass]="{'connectable': node.directable, 'disconnectable': !node.directable && !node.hasOutput, 'hasOutput': !node.directable && node.hasOutput}"
-                  [ngStyle]="portStyle"></div>
+                  [ngStyle]="outputPortStyle"></div>
                 <div class="palette-port input" [ngClass]="{'connectable': node.acceptable, 'disconnectable': !node.acceptable && !node.hasInput, 'hasOutput': !node.acceptable && node.hasInput}"
-                  [ngStyle]="portStyle"></div>
+                  [ngStyle]="inputPortStyle"></div>
               </div>
             </div>
           </div>

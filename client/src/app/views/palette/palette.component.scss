@@ -87,13 +87,11 @@
           position: absolute;
           margin-top: -5px;
           top: 50%;
-          left: -5px;
           box-sizing: border-box;
           -moz-box-sizing: border-box;
           border: 2px solid #f1f7fb;
           &.output {
             left: auto;
-            right: -5px;
           }
           &.connectable {
             background-color: #8fc31f;

@@ -21,9 +21,9 @@ export interface ISelectOption {
     require('./select.component.scss')
   ],
   template: `
-      <bm-ng2-select [(ngModel)]="value" (selectionChanged)="selectChanged($event)">
-        <bm-ng2-option *ngFor="let o of options" [value]="o.value" [disabled]="o.disabled">{{o.text | translate}}</bm-ng2-option>
-      </bm-ng2-select>
+      <select class="jn-control" [(ngModel)]="value" (change)="selectChanged($event)">
+        <option *ngFor="let o of options" [value]="o.value" [disabled]="o.disabled">{{o.text | translate}}</option>
+      </select>
   `,
   providers: [VALUE_ACCESSOR],
   encapsulation: ViewEncapsulation.None

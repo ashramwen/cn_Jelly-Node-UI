@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, Input, ViewContainerRef, AfterViewInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { APP_READY } from '../share/services/application-core.service';
 import { JNBaseNode } from '../core/models/jn-base-node.type';
@@ -7,6 +7,7 @@ import { AppEventListener } from '../share/services/event-listener.type';
 import { JNEditFormComponent } from './node-editor/node-editor.component';
 import { NodeCanvasComponent } from './node-canvas/node-canvas.component';
 import { Events, NODE_EVENTS } from '../share/services/event.service';
+import { JNLoader } from '../share/modules/loader/services/loader.service';
 
 @Component({
   selector: 'jn-view',
@@ -21,7 +22,7 @@ import { Events, NODE_EVENTS } from '../share/services/event.service';
     `
   ]
 })
-export class JNViewComponent implements OnInit, OnDestroy {
+export class JNViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
   id: string;
   selectedNode: JNBaseNode;
@@ -36,14 +37,23 @@ export class JNViewComponent implements OnInit, OnDestroy {
   @ViewChild('nodeCanvas')
   nodeCanvas: NodeCanvasComponent;
 
+  @ViewChild('viewBody', { read: ViewContainerRef })
+  private viewBody: ViewContainerRef;
+
   constructor(
-    private events: Events
+    private events: Events,
+    private loader: JNLoader
   ) { }
 
   ngOnInit() {
     this.nodeDbClickEventListener = this.events.on('node_dblclick', node => {
       this.openEditModal(node);
-    });
+    });    
+  }
+
+  ngAfterViewInit() {
+    let loader = this.loader.showLoader(this.viewBody);
+    this.events.on(APP_READY, loader.dismiss);
   }
 
   protected initFlow() {

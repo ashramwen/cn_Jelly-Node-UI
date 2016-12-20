@@ -1,7 +1,7 @@
 import {
   Component, ViewContainerRef, ViewChild,
   ElementRef, OnInit, Input, Output, OnChanges, SimpleChange,
-  EventEmitter, trigger, state, style, transition, animate
+  EventEmitter, trigger, state, style, transition, animate, ViewEncapsulation
 } from '@angular/core';
 import { FormGroup, FormControl, Validators, AsyncValidatorFn } from '@angular/forms';
 
@@ -13,7 +13,7 @@ import { JNBaseNode } from '../../core/models/jn-base-node.type';
 import { Subscription } from 'rxjs';
 import { Events, NODE_EVENTS } from '../../share/services/event.service';
 import { JNUtils } from '../../share/util';
-import { ViewEncapsulation } from '@angular/core';
+import { JNLoader } from '../../share/modules/loader/services/loader.service';
 
 @Component({
   selector: 'jn-node-editor',
@@ -56,6 +56,8 @@ import { ViewEncapsulation } from '@angular/core';
 })
 export class JNEditFormComponent implements OnInit {
 
+  static instance: JNEditFormComponent;
+
   private editorModel: JNEditorModel;
   private targetNode: JNBaseNode;
   private editorShown: boolean;
@@ -68,12 +70,17 @@ export class JNEditFormComponent implements OnInit {
   private formGroup: FormGroup = new FormGroup({});
   private subscription: Subscription;
 
+  @ViewChild('editorContent', { read: ViewContainerRef })
+  private editorContent: ViewContainerRef;
+
   constructor(
-    private events: Events
+    private events: Events,
+    private loader: JNLoader
   ) { 
     this.backDropState = 'inactive';
     this.contentState = 'inactive';
     this.editorState = 'inactive';
+    JNEditFormComponent.instance = this;
   }
 
   ngOnInit() {
@@ -105,6 +112,10 @@ export class JNEditFormComponent implements OnInit {
     this.editorState = 'inactive';
   }
 
+  public showLoader() {
+    return this.loader.showLoader(this.editorContent);
+  }
+
   private prepare() {
     if (!this.editorModel) return;
     this.formGroup = this.editorModel.formGroup;
@@ -118,4 +129,5 @@ export class JNEditFormComponent implements OnInit {
     this.targetNode.update(result);
     this.hide();
   }
+
 }

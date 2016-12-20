@@ -10,6 +10,19 @@ json-editor{
       a.jsoneditor-poweredBy {
         display: none;
       }
+      .jsoneditor-modes{
+        .jsoneditor-contextmenu{
+          .jsoneditor-selected{
+            background-color: $color-primary;
+          }
+        }
+      }
+    }
+    button.jsoneditor-compact{
+      display: none;
+    }
+    button.jsoneditor-format{
+      display: none;
     }
   }
 }

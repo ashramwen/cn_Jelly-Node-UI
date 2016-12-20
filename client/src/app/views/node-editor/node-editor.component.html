@@ -1,6 +1,6 @@
 <div class="editor-modal" [class.active]="editorShown" [@editorState]="editorState">
   <div class="editor-modal-content" (click)="$event.stopPropagation()" [@contentState]="contentState">
-    <div class="node-editor">
+    <div class="node-editor" #editorContent>
       <div class="node-editor-header">
         <div>
           <title>

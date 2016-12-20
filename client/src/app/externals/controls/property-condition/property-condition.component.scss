@@ -1,10 +1,39 @@
 @import '../../../../assets/styles/global';
-jn-select{
-  margin-right: 5px;
-}
-.aggregation{
-  width: 80px;
-}
-.operator{
-  width: 50px;
+
+.condition-container{
+  padding: 0px;
+  margin-bottom: 15px;
+  margin-left: -10px;
+  display: flex;
+  .title-container{
+    width: 70px;
+    text-align: center;
+    padding-right: 30px;
+    .title-inner{
+      margin-top: 5%;
+      height: 90%;
+      width: 100%;
+      border-right: 2px dotted $color-primary;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+      label{
+        color: $color-primary;
+      }
+    }
+  }
+  .option-container{
+    flex: 1;
+    .option-row{
+      margin-bottom: 10px;
+      width: 60%;
+      display: flex;
+      &:last-child{
+        margin-bottom: 0px;
+      }
+    }
+  }
+  &:last-child{
+    margin-bottom: 0px;
+  }
 }

@@ -51,53 +51,88 @@ export interface IConditionResult {
     require('./property-condition.component.scss')
   ],
   template: `
-    <div *ngFor="let condition of conditions">
-      <div [ngSwitch]="condition.type" class="jn-form inline">
+    <div>
+      <div 
+        [ngSwitch]="condition.type" 
+        class="jn-form condition-container" 
+        *ngFor="let condition of conditions">
         <!-- range type row -->
         <template [ngSwitchCase]="'range'">
-          <label class="jn-form-label">{{condition.text}}</label>
-          <jn-select 
-            class="aggregation" 
-            [(ngModel)]="condition.aggregation" 
-            (ngModelChange)="modelChange($event)"
-            [options]="aggregationOptions"
-          ></jn-select>
-          <jn-select 
-            class="operator" 
-            [(ngModel)]="condition.operator" 
-            (ngModelChange)="modelChange($event)"
-            [options]="getOperators(condition.type)"
-          ></jn-select>
-          <input class="jn-form-control jn-text" type="text" [(ngModel)]="condition.value" (ngModelChange)="modelChange($event)" />
+          <div class="title-container">
+            <div class="title-inner">
+              <label>{{condition.text}}</label>
+            </div>
+          </div>
+          <div class="option-container">
+            <div class="option-row">
+              <jn-select 
+                class="aggregation" 
+                [(ngModel)]="condition.aggregation" 
+                (ngModelChange)="modelChange($event)"
+                [options]="aggregationOptions"
+              ></jn-select>
+            </div>
+            <div class="option-row">
+              <jn-select 
+                class="operator auto-width" 
+                [(ngModel)]="condition.operator" 
+                (ngModelChange)="modelChange($event)"
+                [options]="getOperators(condition.type)"
+              ></jn-select>
+            </div>
+            <div class="option-row">
+              <input class="jn-form-control jn-text" type="text" [(ngModel)]="condition.value" (ngModelChange)="modelChange($event)" />
+            </div>
+          </div>
         </template>
 
         <!-- enum type row -->
         <template [ngSwitchCase]="'enum'">
-          <label class="jn-form-label">{{condition.text}}</label>
-          <jn-select 
-            class="operator" 
-            [(ngModel)]="condition.operator" 
-            (ngModelChange)="modelChange($event)"
-            [options]="getOperators(condition.type)"
-          ></jn-select>
-          <jn-select 
-            class="jn-form-control" 
-            [(ngModel)]="condition.value" 
-            (ngModelChange)="modelChange($event)"
-            [options]="condition.options"
-          ></jn-select>
+          <div class="title-container">
+            <div class="title-inner">
+              <label>{{condition.text}}</label>
+            </div>
+          </div>
+          <div class="option-container">
+            <div class="option-row">
+              <jn-select 
+                class="operator auto-width" 
+                [(ngModel)]="condition.operator" 
+                (ngModelChange)="modelChange($event)"
+                [options]="getOperators(condition.type)"
+              ></jn-select>
+            </div>
+            <div class="option-row">
+              <jn-select 
+                class="jn-form-control" 
+                [(ngModel)]="condition.value" 
+                (ngModelChange)="modelChange($event)"
+                [options]="condition.options"
+              ></jn-select>
+            </div>
+          </div>
         </template>
 
         <!-- enum type row -->
         <template [ngSwitchCase]="'value'">
-          <label class="jn-form-label">{{condition.text}}</label>
-          <jn-select 
-            class="operator"
-            [(ngModel)]="condition.operator"
-            (ngModelChange)="modelChange($event)"
-            [options]="getOperators(condition.type)">
-          </jn-select>
-          <input type="text" class="jn-form-control" [(ngModel)]="condition.value" (ngModelChange)="modelChange($event)" />
+          <div class="title-container">
+            <div class="title-inner">
+              <label>{{condition.text}}</label>
+            </div>
+          </div>
+          <div class="option-container">
+            <div class="option-row">
+              <jn-select 
+                class="operator auto-width"
+                [(ngModel)]="condition.operator"
+                (ngModelChange)="modelChange($event)"
+                [options]="getOperators(condition.type)">
+              </jn-select>
+            </div>
+            <div class="option-row">
+              <input type="text" class="jn-form-control" [(ngModel)]="condition.value" (ngModelChange)="modelChange($event)" />
+            </div>
+          </div>
         </template>
 
       </div>

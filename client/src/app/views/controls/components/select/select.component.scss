@@ -1,23 +1,18 @@
-bm-ng2-select{
-  margin-right: 0px !important;
-  md-input{
-    .md-input-wrapper{
-      margin: 0px;
-    }
-    .md-input-infix{
-      input{
-        border-radius: 5px;
-        border: solid 1px #ccc;
-        cursor: pointer;
-        box-shadow: 2px 2px 5px 1px rgba(0,0,0,0.08);
-        text-indent: 10px;
-      }
-    }
-    .md-input-underline{
-      display: none;
+@import '../../controls.scss';
+
+jn-select{
+  width: 100%;
+  &.auto-width{
+    width: auto;
+    select{
+      width: auto;
+      min-width: 50px;
     }
   }
-  .fa-times{
-    display: none;
+  select{
+    background: $color-white;
+    border:solid 1px $color-primary;
+    height: 37px;
+    width: 100%;
   }
 }

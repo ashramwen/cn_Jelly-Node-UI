@@ -9,6 +9,7 @@ import { ICheckTableInput, JNCheckTableControl } from '../../../views/node-edito
 import { IThingRequest } from '../../resources/thing.type';
 import { DeviceTypeNodeService } from './device-type-node.service';
 import { JNNodeEditor } from '../../../core/models/node-editor-annotation';
+import { JNEditFormComponent } from '../../../views/node-editor/node-editor.component';
 
 @JNNodeEditor({
   title: 'nodeset.JNDeviceTypeNode.nodename',
@@ -82,11 +83,24 @@ export class JNDeviceTypeNodeEditorModel extends JNEditorModel {
       if (!fieldName) return;
       if (!this.locations || !this.locations.length || !typeName) return;
 
+
+      let loader = null;
+      if (JNEditFormComponent.instance) {
+        loader = JNEditFormComponent.instance.showLoader();
+      }
+
       let tableData = [];
       DeviceTypeNodeService.instance
         .getThings(this.locations, typeName)
         .then((tableData: any) => {
           (<ICheckTableInput>this.getInput('things')).tableData = tableData;
+          if (loader) {
+            loader.dismiss();
+          }
+        }, () => {
+          if (loader) {
+            loader.dismiss();
+          }
         });
     }
 

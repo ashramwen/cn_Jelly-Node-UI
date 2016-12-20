@@ -49,15 +49,27 @@ export interface IConditionResult {
   ],
   template: `
     <div *ngFor="let condition of conditions">
-      <div [ngSwitch]="condition.type">
-        <label>{{condition.text}}</label>
-        <select [(ngModel)]="value[condition.property].operator" (ngModelChange)="modelChange($event)">
-          <option *ngFor="let o of getOperators(condition.type)" [value]="o.value">{{o.text}}</option>
-        </select>
-        <select [(ngModel)]="value[condition.property].value" *ngSwitchWhen="enum" (ngModelChange)="modelChange($event)">
-          <option *ngFor="let o of condition.options" [value]="o.value">{{o.text}}</option>
-        </select>
-        <input type="text" *ngSwitchWhen="range" [(ngModel)]="value[condition.property].value" (ngModelChange)="modelChange($event)" />
+      <div [ngSwitch]="condition.type" class="condition-container">
+        <div class="title-container">
+          <div class="title-inner">
+            <label>{{condition.text}}</label>
+          </div>
+        </div>
+        <div class="option-container">
+          <div class="option-row">
+            <select [(ngModel)]="value[condition.property].operator" (ngModelChange)="modelChange($event)">
+              <option *ngFor="let o of getOperators(condition.type)" [value]="o.value">{{o.text}}</option>
+            </select>
+          </div>
+          <div class="option-row" *ngSwitchWhen="enum">
+            <select [(ngModel)]="value[condition.property].value" (ngModelChange)="modelChange($event)">
+              <option *ngFor="let o of condition.options" [value]="o.value">{{o.text}}</option>
+            </select>
+          </div>
+          <div class="option-row" *ngSwitchWhen="range">
+            <input type="text" [(ngModel)]="value[condition.property].value" (ngModelChange)="modelChange($event)" />
+          </div>
+        </div>
       </div>
     </div>
   `,

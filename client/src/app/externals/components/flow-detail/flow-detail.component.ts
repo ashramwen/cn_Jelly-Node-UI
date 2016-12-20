@@ -1,5 +1,5 @@
 import { Router, ActivatedRoute } from '@angular/router';
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, HostListener, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, HostListener, AfterViewInit, ViewContainerRef } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { JNBaseNode } from '../../../core/models/jn-base-node.type';
 import { JNFlow } from '../../../core/models/jn-flow.type';
@@ -8,6 +8,7 @@ import { AppEventListener } from '../../../share/services/event-listener.type';
 import { Events, NODE_EVENTS } from '../../../share/services/event.service';
 import { APP_READY } from '../../../share/services/application-core.service';
 import { JNViewComponent } from '../../../views/view.component';
+import { JNLoader } from '../../../share/modules/loader/services/loader.service';
 
 @Component({
   selector: 'app-flow-detail',
@@ -42,6 +43,8 @@ export class FlowDetailComponent implements OnInit, OnDestroy, AfterViewInit {
     private events: Events,
     private flowDetailService: FlowDetailService,
     private elementRef: ElementRef,
+    private loader: JNLoader,
+    private viewContainer: ViewContainerRef
   ) {
     this.editingName = false;
   }
@@ -89,28 +92,39 @@ export class FlowDetailComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   publish() {
+    let loader = this.loader.showLoader(this.viewContainer);
     if (this.isNew) {
       this.flowDetailService.saveFlow(this.nodeFlow)
         .then((flow) => {
           this.flowDetailService
             .publishFlow(flow)
             .then(() => {
+              loader.dismiss();
               this.router.navigate(['/flow']);
+            }, () => {
+              loader.dismiss();
             });
         });
     } else {
       this.flowDetailService
         .publishFlow(this.nodeFlow)
         .then(() => {
+          loader.dismiss();
           this.router.navigate(['/flow']);
+        }, () => {
+          loader.dismiss();
         });
     }
   }
 
   submit() {
+    let loader = this.loader.showLoader(this.viewContainer);
     this.flowDetailService.saveFlow(this.nodeFlow)
       .then((flow: JNFlow) => {
         this.router.navigate(['/flow']);
+        loader.dismiss();
+      }, () => {
+        loader.dismiss();
       });
   }
 
@@ -131,17 +145,26 @@ export class FlowDetailComponent implements OnInit, OnDestroy, AfterViewInit {
   enableRule() {
     if (this.nodeFlow.enabled) return;
 
+    let loader = this.loader.showLoader(this.viewContainer);
     this.flowDetailService.enableRule(this.nodeFlow)
       .then(() => {
         this.nodeFlow.enabled = true;
+        loader.dismiss();
+      }, () => {
+        loader.dismiss();
       });
   }
 
   disableRule() {
     if (!this.nodeFlow.enabled) return;
 
+    let loader = this.loader.showLoader(this.viewContainer);
+    
     this.flowDetailService.disableRule(this.nodeFlow).then(() => {
       this.nodeFlow.enabled = false;
+      loader.dismiss();
+    }, () => {
+      loader.dismiss();
     });
   }
 

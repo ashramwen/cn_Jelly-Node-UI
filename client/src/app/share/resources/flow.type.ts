@@ -59,7 +59,7 @@ export class NodeFlowResource extends JNNodeResource {
 
   @ResourceAction({
     method: RequestMethod.Put,
-    path: '/{!flowID}/disabled'
+    path: '/{!flowID}/disable'
   })
   disable: ResourceMethod<{ flowID: string }, string>;
 

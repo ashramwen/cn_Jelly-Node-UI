@@ -30,7 +30,6 @@ export class InfoPanelComponent implements OnInit {
     if (this.isMouseDown) {
       this.width = this.width - event.movementX;
     }
-    console.log(event);
   }
 
   onMouseUp(event) {
@@ -46,7 +45,7 @@ export class InfoPanelComponent implements OnInit {
     this.data = null;
 
     this.events.on(NODE_EVENTS.SELECTION_CHANGED, (nodes: Array<JNBaseNode>) => {
-      if (nodes.length == 1) {
+      if (nodes.length === 1) {
         let infoPanel: JNInfoPanelModel = nodes[0].createInfoPanelModel();
         if (infoPanel) {
           this.info = infoPanel.info;
@@ -62,6 +61,6 @@ export class InfoPanelComponent implements OnInit {
         this.info = null;
         this.data = null;
       }
-    })
+    });
   }
 }

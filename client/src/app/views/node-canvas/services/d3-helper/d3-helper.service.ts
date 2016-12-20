@@ -145,12 +145,6 @@ export class D3HelperService {
       .append('svg:g')
       .on('dblclick.zoom', null)
       .append('svg:g');
-    
-    this.tip = this.canvasWrapper
-      .append('div')
-      .attr('class', 'tooltip')
-      .style('opacity', 0)
-      .style('display', 'none');
 
     this.dragWrapper = this.canvasWrapper
       .append('div')
@@ -174,6 +168,7 @@ export class D3HelperService {
     this.initCanvasWrapper();
     
     this.updateCanvasContainer();
+    this.initToolTip();
   }
 
   initBrush() {
@@ -212,6 +207,22 @@ export class D3HelperService {
         self._updateNodes.bind(self)();
         self.updateLinks.bind(self)();
       }));
+  }
+
+  initToolTip() {
+    this.tip = this.canvasWrapper
+      .append('div')
+      .attr('class', 'tooltip')
+      .style('opacity', 0)
+      .style('display', 'none');
+    
+    this.tip
+      .append('span')
+      .attr('class', 'fa fa-exclamation-circle');
+    
+    this.tip
+      .append('span')
+      .attr('class', 'tip-msg');
   }
 
   public updateNodes() {
@@ -330,22 +341,22 @@ export class D3HelperService {
 
   public drawNodes() {
     let self = this;
-    let doubleClick = false;
-    let clickSubscriber: Subscriber<CanvasNode>;
-    let clickObservable = new Observable<CanvasNode>((s: Subscriber<CanvasNode>) => {
-      clickSubscriber = s;
+    let mouseDownSubscriber: Subscriber<CanvasNode>;
+    let dbClick = false;
+    let mouseDownObservable = new Observable<CanvasNode>((s) => {
+      mouseDownSubscriber = s;
     });
-
-    clickObservable
-      .debounceTime(100)
-      .subscribe((node) => {
-        this.select(node);
-        if (!doubleClick) {
-          this.events.emit('node_click', node.node);
+    mouseDownObservable
+      .subscribe((d) => {
+        if (dbClick) {
+          self.events.emit('node_dblclick', d.node);
         } else {
-          this.events.emit('node_dblclick', node.node);
-          doubleClick = false;
+          if (!self.selections || self.selections.indexOf(d) < 0) {
+            self.select(d);
+          }
+          self.hideTip();
         }
+        dbClick = false;  
       });
     
     let rects = this.vis
@@ -358,12 +369,9 @@ export class D3HelperService {
     let g = rects.enter()
       .append('svg:g')
       .classed('node-group', true)
-      .on('click', d => {
-        clickSubscriber.next(d);
-      })
       .on('dblclick', d => {
-        doubleClick = true;
-        clickSubscriber.next(d);
+        dbClick = true;
+        mouseDownSubscriber.next(d);
       })
       .on('mousemove', (d: CanvasNode) => {
         if (d.error) {
@@ -374,12 +382,9 @@ export class D3HelperService {
         self.hideTip();
       })
       .call(d3.drag()
-        .on('start', function(d: CanvasNode){
-          if (!self.selections || self.selections.indexOf(d) < 0) {
-            self.select(d);
-          }
-          self.hideTip();
-          self.dragStart.apply(self, arguments);
+        .on('start', function (d: CanvasNode) {
+          mouseDownSubscriber.next(d);
+          self.dragStart();
         })
         .on('drag', this.dragMove.bind(this))
         .on('end', this.dragEnd.bind(this))
@@ -957,6 +962,7 @@ export class D3HelperService {
       .style('opacity', .9);
     
     this.tip
+      .select('.tip-msg')
       .text(() => {
         return `${message}`;
       });
@@ -965,11 +971,11 @@ export class D3HelperService {
       .style('display', 'block')
       .style('left', (d, i, eles: Element[]) => {
         let ele = eles[i];
-        return position[0] - ele.getBoundingClientRect().width / 2 + 'px';
+        return position[0] - 8 + 'px';
       })
       .style('top', (d, i, eles) => {
         let ele = eles[i];
-        return position[1] - ele.getBoundingClientRect().height - 10 + 'px';
+        return position[1] - ele.getBoundingClientRect().height - 12 + 'px';
       });
   }
 

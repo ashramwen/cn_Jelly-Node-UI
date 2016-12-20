@@ -24,6 +24,7 @@ export class InfoPanelComponent implements OnInit {
 
   constructor(private elementRef: ElementRef, private application: JNApplication, private events: Events) {
     this.width = 200;
+    this.isMouseDown = false;
   }
 
   onMouseMove(event) {
@@ -41,6 +42,7 @@ export class InfoPanelComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.isMouseDown = false;
     this.info = null;
     this.data = null;
 

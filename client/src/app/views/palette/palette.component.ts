@@ -23,7 +23,8 @@ export class PaletteComponent implements OnInit {
 
   private nodeStyle: any;
   private iconStyle: any;
-  private portStyle: any;
+  private inputPortStyle: any;
+  private outputPortStyle: any;
   private NodeSettings;
 
   constructor(private application: JNApplication, private events: Events, private injector: Injector) {
@@ -33,10 +34,11 @@ export class PaletteComponent implements OnInit {
     this.NodeSettings = {};
     Object.assign(this.NodeSettings, NodeSettings, externalSettings);
     this.NodeSettings.HALF_HANDLER_HEIGHT = this.NodeSettings.HANDLER_HEIGHT / 2;
+    this.NodeSettings.PORT_SHIFT = -(this.NodeSettings.HANDLER_WIDTH / 2 + 2);
     Object.keys(this.NodeSettings).forEach(key => {
       if (key == 'HANDLER_WIDTH' || key == 'HANDLER_HEIGHT') {
         this.NodeSettings[key] = this.NodeSettings[key] + 2;
-      } 
+      }
       this.NodeSettings[key] = this.NodeSettings[key] + 'px';
     })
     console.log(this.NodeSettings);
@@ -71,10 +73,15 @@ export class PaletteComponent implements OnInit {
     this.iconStyle = {
       'width': this.NodeSettings.NODE_HEIGHT, 'height': this.NodeSettings.NODE_HEIGHT, 'line-height': this.NodeSettings.NODE_HEIGHT
     };
-    this.portStyle = {
+    this.inputPortStyle = {
       'width': this.NodeSettings.HANDLER_WIDTH, 'height': this.NodeSettings.HANDLER_HEIGHT,
       'border-radius': this.NodeSettings.HANDLER_RADIUS, 'stroke-width': this.NodeSettings.PATH_STROKE_WIDTH,
-      'margin-top': "-" + this.NodeSettings.HALF_HANDLER_HEIGHT
+      'margin-top': "-" + this.NodeSettings.HALF_HANDLER_HEIGHT, 'left': this.NodeSettings.PORT_SHIFT
+    };
+    this.outputPortStyle = {
+      'width': this.NodeSettings.HANDLER_WIDTH, 'height': this.NodeSettings.HANDLER_HEIGHT,
+      'border-radius': this.NodeSettings.HANDLER_RADIUS, 'stroke-width': this.NodeSettings.PATH_STROKE_WIDTH,
+      'margin-top': "-" + this.NodeSettings.HALF_HANDLER_HEIGHT, 'right': this.NodeSettings.PORT_SHIFT
     };
   }
 }

@@ -1,5 +1,5 @@
 <div class="info-panel" *ngIf="info && data" [ngStyle]="{width: width + 'px'}">
-  <div id="drag" (window:mousemove)="onMouseMove($event)" (window:mouseup)="onMouseUp($event)" (window:mousedown)="onMouseDown($event)">
+  <div id="drag" (window:mousemove)="onMouseMove($event)" (window:mouseup)="onMouseUp($event)" (mousedown)="onMouseDown($event)">
   </div>
   <div class="info-panel-title">
     {{ 'Info Panel' | translate }}

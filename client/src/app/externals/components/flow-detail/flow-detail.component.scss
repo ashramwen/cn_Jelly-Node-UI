@@ -11,8 +11,8 @@ $input-height: 14px;
 $input-width: 22px;
 $input-padding: 5px 14px;
 $toggle-btn-width: 66px;
-$toggle-btn-height: 28px;
-$toggle-btn-padding: 3px;
+$toggle-btn-height: 24px;
+$toggle-btn-padding: 2px;
 $toggle-btn-default-color: #909395;
 $toggle-btn-default-border-color: #82919c;
 $toggle-btn-active-color: #8fc31f;
@@ -134,6 +134,9 @@ $control-margin: 10px;
                                 border-color: $toggle-btn-active-border-color;
                                 div.slider{
                                     left: $toggle-btn-width - $toggle-slider-width - $toggle-btn-padding;
+                                    span.fa{
+                                        color: $toggle-btn-label-active-color;
+                                    }
                                 }
                             }
                         }
@@ -142,6 +145,7 @@ $control-margin: 10px;
                             display: inline-block;
                             margin-right: 5px;
                             font-size: 14px;
+                            font-weight: bold;
                         }
                         div.btn-toggle{
                             width: $toggle-btn-width;
@@ -152,6 +156,7 @@ $control-margin: 10px;
                             border-width: 1px;
                             border-radius: 4px;
                             cursor: pointer;
+                            box-shadow: inset 1px 1px 4px 1px rgba(0,0,0, 0.1);
                             div.slider{
                                 width: $toggle-slider-width;
                                 height: $toggle-btn-height - 2 * $toggle-btn-padding;
@@ -162,6 +167,12 @@ $control-margin: 10px;
                                 top: $toggle-btn-padding;
                                 transition: all 0.2s;
                                 box-shadow: 1px 1px 2px 1px rgba(0,0,0, 0.3);
+                                text-align: center;
+                                line-height: $toggle-btn-height - 2 * $toggle-btn-padding;
+                                span.fa{
+                                    color: $toggle-btn-label-default-color;
+                                    transform: rotate(90deg);
+                                }
                             }
                         }
                     }

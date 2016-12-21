@@ -27,7 +27,7 @@
         <li *ngIf="!isNew && nodeFlow.published" class="enable-toggle" [class.enabled]="nodeFlow.enabled">
           <label>{{nodeFlow.enabled? '已启用' : '已禁用' | translate}}</label>
           <div class="btn-toggle" (click)="toggleEnable()">
-            <div class="slider"></div>
+            <div class="slider"><span class="fa fa-bars"></span></div>
           </div>
         </li>
         <li>

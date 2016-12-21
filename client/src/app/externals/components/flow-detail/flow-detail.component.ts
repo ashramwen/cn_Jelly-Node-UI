@@ -168,6 +168,10 @@ export class FlowDetailComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
+  toggleEnable() {
+    this.nodeFlow.enabled ? this.disableRule() : this.enableRule();
+  }
+
   zoomIn() {
     this.nodeView.nodeCanvas.scale(this.nodeView.nodeCanvas.currentScale + 0.2);
     this.refreshScale();

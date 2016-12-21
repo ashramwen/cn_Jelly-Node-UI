@@ -1,3 +1,5 @@
+@import '../../../../assets/styles/global.scss';
+
 $title-font-size: 16px;
 $title-color: #485c6b;
 
@@ -8,10 +10,17 @@ $icon-active-color: #219be5;
 $input-height: 14px;
 $input-width: 22px;
 $input-padding: 5px 14px;
-$toggle-btn-wdith: 66px;
-$toggle-btn-height: 27px;
+$toggle-btn-width: 66px;
+$toggle-btn-height: 28px;
+$toggle-btn-padding: 3px;
 $toggle-btn-default-color: #909395;
+$toggle-btn-default-border-color: #82919c;
 $toggle-btn-active-color: #8fc31f;
+$toggle-btn-active-border-color: #7eb604;
+$toggle-btn-label-default-color: #869199;
+$toggle-btn-label-active-color: #6ea101;
+$toggle-slider-width: 28px;
+
 $control-btn-width: 60px;
 $control-btn-height: 27px;
 $header-margin-left: 15px;
@@ -112,39 +121,51 @@ $control-margin: 10px;
                     &:last-child{
                         margin-right: 0px;
                     }
-                    div.btn-toggle{
-                        width: $toggle-btn-wdith;
-                        height: $toggle-btn-height;
-                        display: inline-flex;
-                        input[type=radio]{
-                            display: none;
+                    &.enable-toggle{
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        &.enabled {
+                            label{
+                                color: $toggle-btn-label-active-color;
+                            }
+                            div.btn-toggle{
+                                background: $toggle-btn-active-color;
+                                border-color: $toggle-btn-active-border-color;
+                                div.slider{
+                                    left: $toggle-btn-width - $toggle-slider-width - $toggle-btn-padding;
+                                }
+                            }
                         }
                         label{
-                            flex: 1;
-                            height: 100%;
-                            border-color: $toggle-btn-default-color;
+                            color: $toggle-btn-label-default-color;
+                            display: inline-block;
+                            margin-right: 5px;
+                            font-size: 14px;
+                        }
+                        div.btn-toggle{
+                            width: $toggle-btn-width;
+                            height: $toggle-btn-height;
+                            background: $toggle-btn-default-color;
+                            border-color: $toggle-btn-default-border-color;
                             border-style: solid;
                             border-width: 1px;
-                            color: $toggle-btn-default-color;
-                            background: transparent;
-                            text-align: center;
-                            line-height: 28px;
-                            float: left;
+                            border-radius: 4px;
                             cursor: pointer;
-                        }
-                        label:first-child{
-                            border-radius: 5px 0px 0px 5px;
-                            border-right: none;
-                        }
-                        label:last-child{
-                            border-radius: 0px 5px 5px 0px;
-                        }
-                        label.checked{
-                            cursor: default;
-                            background: $toggle-btn-active-color;
-                            color: #fff;
+                            div.slider{
+                                width: $toggle-slider-width;
+                                height: $toggle-btn-height - 2 * $toggle-btn-padding;
+                                background: $color-white;
+                                border-radius: 2px;
+                                position: relative;
+                                left: $toggle-btn-padding;
+                                top: $toggle-btn-padding;
+                                transition: all 0.2s;
+                                box-shadow: 1px 1px 2px 1px rgba(0,0,0, 0.3);
+                            }
                         }
                     }
+                    
                     button.btn-save, button.btn-publish{
                         outline: none;
                         height: $control-btn-height;

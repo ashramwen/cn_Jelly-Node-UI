@@ -24,10 +24,10 @@
     </div>
     <div class="right-container">
       <ul>
-        <li *ngIf="!isNew && nodeFlow.published">
-          <div class="btn-toggle">
-            <label [class.checked]="!nodeFlow.enabled" (click)="disableRule()"><input type="radio" name="enabled" [(ngModel)]="enabled" />{{'禁用' | translate}}</label>
-            <label [class.checked]="nodeFlow.enabled" (click)="enableRule()"><input type="radio" name="enabled" [(ngModel)]="enabled" />{{'启用' | translate}}</label>
+        <li *ngIf="!isNew && nodeFlow.published" class="enable-toggle" [class.enabled]="nodeFlow.enabled">
+          <label>{{nodeFlow.enabled? '已启用' : '已禁用' | translate}}</label>
+          <div class="btn-toggle" (click)="toggleEnable()">
+            <div class="slider"></div>
           </div>
         </li>
         <li>

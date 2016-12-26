@@ -10,6 +10,7 @@ export class JNActionNodeService {
 
   public generateControls(action: string, schema: ISchema) {
     let controls: { [key: string]: IJNFormControl } = {};
+    if (!schema) return {};
     let actionControl = this.generateActionControl(action, schema);
     Object.assign(controls, actionControl);
     if (action && schema.content.actions[action]

@@ -19,6 +19,8 @@ Once you have those, you should install these globals with npm install --global:
 - `npm install` to install all dependencies or yarn
 - `npm run server` to start the dev server, and access the app at `http://locahost:3000`
 
+## Unit Test
+- `npm test`
 
 ## Development & Deployment
 ```

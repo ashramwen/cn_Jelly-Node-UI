@@ -88,6 +88,7 @@ $control-margin: 10px;
         .title-container{
             line-height: $header-height;
             min-width: 100px;
+            text-align: center;
             label.title{
                 font-size: $title-font-size;
                 color: $title-color;

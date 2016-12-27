@@ -378,6 +378,17 @@ export abstract class JNBaseNode {
   }
 
   /**
+   * @desc duplicate this node
+   */
+  public duplicate() {
+    let constructor = this.constructor;
+    let data = this.body;
+    data.nodeID = null;
+    data.accepts = [];
+    return JNBaseNode.factory(<new () => JNBaseNode>constructor, this.body);
+  }
+
+  /**
    * @desc subscribe input data
    * @param  {IJNNodePayload} payload
    */

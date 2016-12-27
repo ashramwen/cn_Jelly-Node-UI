@@ -88,6 +88,8 @@ export class NodeCanvasComponent implements OnInit, OnChanges {
     if (!command) return;
     console.log(command);
     this.handleCommand(command.commandName);
+    e.preventDefault();
+    e.stopPropagation();
   }
 
   @HostListener('keyup', ['$event'])
@@ -96,6 +98,8 @@ export class NodeCanvasComponent implements OnInit, OnChanges {
     if (!command) return;
     console.log(command);
     this.handleCommand(command.commandName);
+    e.preventDefault();
+    e.stopPropagation();
   }
 
   addNode(node: JNBaseNode) {
@@ -157,6 +161,12 @@ export class NodeCanvasComponent implements OnInit, OnChanges {
         break;
       case CANVAS_COMMANDS.DISABLED_DRAG_MOVE:
         this.disableDragMove();
+        break;
+      case CANVAS_COMMANDS.COPY:
+        this.d3Helper.copy();
+        break;
+      case CANVAS_COMMANDS.PASTE:
+        this.d3Helper.paste();
         break;
       default:
         break;

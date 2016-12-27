@@ -18,6 +18,7 @@ import { DragScrollService } from './drag-scroll.service';
 import { JNKeyboardService } from '../keyboard.service';
 import { CanvasSize } from './canvas-size.interface';
 import { Observable, Subscriber } from 'rxjs';
+import { JNClipboard } from './clipboard.service';
 
 @Injectable()
 export class D3HelperService {
@@ -49,6 +50,7 @@ export class D3HelperService {
   private NodeSettings: INodeSettings;
   private _scale: number;
   private dragScrollService: DragScrollService;
+  private clipboard: JNClipboard;
   private linkingNode: { from: 'input' | 'output'; node: CanvasNode };
   private navMapObservable: Observable<any>;
   private navMapSubscriber: Subscriber<any>;
@@ -229,7 +231,7 @@ export class D3HelperService {
     this._updateNodes();
   }
 
-  initDragWrapper() {
+  private initDragWrapper() {
     this.dragWrapper
       .attr('fill', '#fff')
       .style('position', 'absolute')
@@ -248,7 +250,7 @@ export class D3HelperService {
       .style('display', 'none');
   }
 
-  initCanvasWrapper() {
+  private initCanvasWrapper() {
     this.canvasWrapper.on('scroll', () => {
       this.updateMap();
       this.navMapSubscriber.next(false);
@@ -272,17 +274,17 @@ export class D3HelperService {
       });
   }
 
-  enableDrapMove() {
+  public enableDrapMove() {
     this.dragWrapper
       .style('display', 'block');
   }
 
-  disableDrapMove() {
+  public disableDrapMove() {
     this.dragWrapper
       .style('display', 'none');
   }
 
-  scale(s) {
+  public scale(s) {
     if (s < this.NodeSettings.MIN_SCALE) {
       this._scale = this.NodeSettings.MIN_SCALE;
     } else if (s > this.NodeSettings.MAX_SCALE) {
@@ -294,8 +296,9 @@ export class D3HelperService {
     this._updateNodes();
   }
 
-  loadFlow(flow: JNFlow) {
+  public loadFlow(flow: JNFlow) {
     this.flow = flow;
+    this.clipboard = JNClipboard.factory(flow);
     this.nodes = [];
     this.links = [];
     this.selections = [];
@@ -581,6 +584,19 @@ export class D3HelperService {
       .style('height', _vh)
       .style('top', _vy)
       .style('left', _vx);
+  }
+
+  public cut() {
+    this.copy();
+    this.removeSelection();
+  }
+
+  public copy() {
+    this.clipboard.copy(this.selections);
+  }
+
+  public paste() {
+    this.clipboard.paste();
   }
 
   private updateCanvasBackGround(width: number, height: number) {

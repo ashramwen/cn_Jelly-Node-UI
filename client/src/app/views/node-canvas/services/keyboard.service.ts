@@ -1,16 +1,23 @@
 import { Injectable } from '@angular/core';
+import { JNUtils } from '../../../share/util';
+
+const SPECIAL_KEYS = {
+  shift: { read: 'shiftKey' },
+  ctrl: { read: 'ctrlKey' },
+  alt: { read: 'altKey' },
+  meta: { read: 'metaKey' }
+};
 
 enum EVENT_TYPES {
   KEY_DOWN, KEY_UP
 };
 
 export enum CANVAS_COMMANDS {
-  REMOVE, UNDO, ENABLE_DRAG_MOVE, DISABLED_DRAG_MOVE
+  REMOVE, UNDO, ENABLE_DRAG_MOVE, DISABLED_DRAG_MOVE, COPY, PASTE
 };
 
 @Injectable()
 export class JNKeyboardService {
-  private keyMap: { [key: string]: boolean } = {};
 
   private commands: { keyCombo: string[]; commandName: CANVAS_COMMANDS; type: EVENT_TYPES }[] = [{
     keyCombo: ['Backspace'],
@@ -28,34 +35,50 @@ export class JNKeyboardService {
     keyCombo: ['h'],
     commandName: CANVAS_COMMANDS.DISABLED_DRAG_MOVE,
     type: EVENT_TYPES.KEY_UP
+  }, {
+    keyCombo: ['Meta', 'c'],
+    commandName: CANVAS_COMMANDS.COPY,
+    type: EVENT_TYPES.KEY_DOWN
+  }, {
+    keyCombo: ['Meta', 'v'],
+    commandName: CANVAS_COMMANDS.PASTE,
+    type: EVENT_TYPES.KEY_DOWN
   }];
 
   keydown(e: KeyboardEvent) {
-    this.keyMap[e.key] = true;
-    return this.matchEvent(e.key, EVENT_TYPES.KEY_DOWN);
+    return this.matchEvent(e, EVENT_TYPES.KEY_DOWN);
   }
 
   keyup(e: KeyboardEvent) {
-    this.keyMap[e.key] = false;
-    return this.matchEvent(e.key, EVENT_TYPES.KEY_UP);
+    return this.matchEvent(e, EVENT_TYPES.KEY_UP);
   }
 
-  matchEvent(key, type: EVENT_TYPES) {
+  matchEvent(e: KeyboardEvent, type: EVENT_TYPES) {
     let commands = this.commands.filter(m => m.type === type);
-    if (type === EVENT_TYPES.KEY_DOWN) {
-      for (let c of this.commands) {
-        let flag = true;
-        c.keyCombo.forEach(k => {
-          flag = flag && this.keyMap[k];
-        });
-        if (flag) {
-          return c;
-        }
-      }
-    } else {
-      return commands.find(c => c.keyCombo.indexOf(key) > -1);
-    }
+    
+    commands = commands.filter(c => {
 
-    return null;
+      let specialKeys: { [key: string]: { wanted: boolean, pressed: boolean } } = {
+        shift: { wanted: false, pressed: false },
+        ctrl: { wanted: false, pressed: false },
+        alt: { wanted: false, pressed: false },
+        meta: { wanted: false, pressed: false }
+      };
+
+      c.keyCombo.forEach(k => {
+        if (specialKeys[k]) {
+          specialKeys[k].wanted = true;
+        }
+      });
+
+      for (let key in specialKeys) {
+        specialKeys[key].pressed = e[SPECIAL_KEYS[key].read];
+        if (specialKeys[key].pressed
+          !== specialKeys[key].wanted) return false;
+      }
+      return true;
+    });
+
+    return commands.find(c => c.keyCombo.indexOf(e.key) > -1);
   }
 }

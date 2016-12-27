@@ -385,7 +385,7 @@ export abstract class JNBaseNode {
     let data = this.body;
     data.nodeID = null;
     data.accepts = [];
-    return JNBaseNode.factory(<new () => JNBaseNode>constructor, this.body);
+    return JNBaseNode.factory(<new () => JNBaseNode>constructor, data);
   }
 
   /**

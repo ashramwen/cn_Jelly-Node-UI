@@ -23,6 +23,8 @@ import { JNClipboard } from './clipboard.service';
 @Injectable()
 export class D3HelperService {
 
+  public flow: JNFlow;  
+
   private vis: any;
   private parent: Element;
   private canvasWrapper: d3.Selection<any, any, any, any>;
@@ -35,7 +37,6 @@ export class D3HelperService {
   private dragWrapper: d3.Selection<any, any, any, any>;
   private navMap: d3.Selection<any, any, any, any>;
 
-  private flow: JNFlow;  
   private nodes: CanvasNode[];
   private links: CanvasLink[];
 
@@ -54,6 +55,7 @@ export class D3HelperService {
   private linkingNode: { from: 'input' | 'output'; node: CanvasNode };
   private navMapObservable: Observable<any>;
   private navMapSubscriber: Subscriber<any>;
+  private _shiftEnabled: boolean;
 
   get currentScale() {
     return this._scale;
@@ -97,6 +99,8 @@ export class D3HelperService {
     this.NodeSettings = {};
     this._scale = 1;
     this.dragScrollService = DragScrollService.factory();
+    this.clipboard = JNClipboard.factory(this);
+    this._shiftEnabled = false;
 
     Object.assign(this.NodeSettings, NodeSettings, externalSettings); 
   }
@@ -298,7 +302,6 @@ export class D3HelperService {
 
   public loadFlow(flow: JNFlow) {
     this.flow = flow;
-    this.clipboard = JNClipboard.factory(flow);
     this.nodes = [];
     this.links = [];
     this.selections = [];
@@ -322,10 +325,12 @@ export class D3HelperService {
     let canvasNode = new CanvasNode(node, this.canvas.node());
     this.nodes.push(canvasNode);
     this.drawNodes();
+    return canvasNode;
     // this.select(canvasNode);
   }
 
   public removeSelection() {
+    this.events.emit(NODE_EVENTS.SELECTION_BEFORE_REMOVED, []);
     this.selections.forEach((o) => {
       switch (o.constructor) {
         case CanvasNode:
@@ -338,6 +343,7 @@ export class D3HelperService {
           break;
       }
     });
+    this.events.emit(NODE_EVENTS.SELECTION_CHANGED, []);
     this.hideTip();
     this.selections = [];
   }
@@ -451,6 +457,7 @@ export class D3HelperService {
         .on('end', (d: CanvasNode) => {
           self.vis.selectAll('g.new_link').remove();
           if (self.sourceNode) {
+            this.events.emit(NODE_EVENTS.NODE_BEFORE_LINKED, d.node);
             self.createNodeLink(self.sourceNode, d);
           }
           self.linkingNode = null;
@@ -500,6 +507,7 @@ export class D3HelperService {
         .on('end', (d: CanvasNode) => {
           self.vis.selectAll('g.new_link').remove();
           if (self.targetNode) {
+            this.events.emit(NODE_EVENTS.NODE_BEFORE_LINKED, d.node);
             self.createNodeLink(d, self.targetNode);
           }
           self.linkingNode = null;
@@ -511,6 +519,14 @@ export class D3HelperService {
     
     rects.exit().remove();
     this._updateNodes();
+  }
+
+  public enableShift() {
+    this._shiftEnabled = true;
+  }
+
+  public disableShift() {
+    this._shiftEnabled = false;
   }
 
   private updateCanvasContainer() {
@@ -596,7 +612,8 @@ export class D3HelperService {
   }
 
   public paste() {
-    this.clipboard.paste();
+    let result = this.clipboard.paste();
+    this.select(result);
   }
 
   private updateCanvasBackGround(width: number, height: number) {
@@ -760,25 +777,19 @@ export class D3HelperService {
   }
 
   private removeNode(node: CanvasNode) {
-    this.events.emit(NODE_EVENTS.SELECTION_BEFORE_REMOVED, node.node);
     this.links
       .filter(link => link.source === node || link.target === node)
-      .forEach(l => this.removeLink(l, true));
+      .forEach(l => this.removeLink(l));
     
     this.flow.removeNode(node.node);
     JNUtils.removeItem(this.nodes, node);
     setTimeout(() => {
       this.drawNodes();
     });
-    this.events.emit(NODE_EVENTS.SELECTION_CHANGED, []);
   }
 
-  private removeLink(link: CanvasLink, preventEvent?: boolean) {
-    if (this.links.indexOf(link) === -1) return; 
-    if (!preventEvent) {
-      this.events.emit(NODE_EVENTS.LINK_BEFORE_REMOVED,
-        { source: link.source.node, target: link.target.node });
-    }
+  private removeLink(link: CanvasLink) {
+    if (this.links.indexOf(link) === -1) return;
     JNUtils.removeItem(this.links, link);
     this.flow.removeLink({source: link.source.node, target: link.target.node});
     this.drawLinks();
@@ -789,9 +800,17 @@ export class D3HelperService {
 
   private select(o: CanvasObject[] | CanvasObject) {
     if (o instanceof Array) {
-      this.selections = o;
+      if (this._shiftEnabled) {
+        this.selections = this.selections.concat(o);
+      } else {
+        this.selections = o;
+      }
     } else {
-      this.selections = [o];
+      if (this._shiftEnabled) {
+        this.selections.push(o);
+      } else {
+        this.selections = [o];
+      }
     }
     let nodes = this.selections
       .filter(n => n instanceof CanvasNode)
@@ -871,16 +890,16 @@ export class D3HelperService {
   private createNodeLink = (s: CanvasNode, t: CanvasNode) => {
     if (this.links.find(l => l.source === s && l.target === t)) return;
     if (!t.node.connectable(s.node)) return;
-    this.events.emit(NODE_EVENTS.NODE_BEFORE_LINKED, t.node);
     t.node.accept(s.node);
     this.addLink(s, t);
     this._updateNodes();
   }
 
-  private addLink(s: CanvasNode, t: CanvasNode) {
+  public addLink(s: CanvasNode, t: CanvasNode) {
     let newLink: CanvasLink = new CanvasLink(s, t, this.canvas.node());
     this.links.push(newLink);
     this.drawLinks();
+    return newLink;
   }
 
   private drawLinks = () => {

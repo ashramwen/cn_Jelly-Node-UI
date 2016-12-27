@@ -2,52 +2,75 @@ import { CanvasNode } from './canvas-node.type';
 import { CanvasObject } from './canvas-object.type';
 import { JNBaseNode } from '../../../../core/models/jn-base-node.type';
 import { JNFlow } from '../../../../core/models/jn-flow.type';
+import { CanvasLink } from './canvas-link.type';
+import { D3HelperService } from './d3-helper.service';
+
+const PASTE_OFFSET = {
+  x: 30,
+  y: 30
+};
 
 export class JNClipboard{
 
-  private _flow: JNFlow;
+  private _canvas: D3HelperService;
+  private _originSelectedNodes: JNBaseNode[];
+  private _originSelectedLinks: { source: number; target: number }[];
   
-  static factory(flow: JNFlow) {
-    return new JNClipboard(flow);
+  static factory(canvas: D3HelperService) {
+    return new JNClipboard(canvas);
   }  
 
-  constructor(flow: JNFlow) {
-    this._flow = flow;
+  constructor(canvas: D3HelperService) {
+    this._canvas = canvas;
   }
 
-  private _originSelection: JNBaseNode[];
-
-  copy(selections: CanvasObject[]) {
-    this._originSelection = selections
+  public copy(selections: CanvasObject[]) {
+    let selectedNodes = selections
       .filter(s => s instanceof CanvasNode)
-      .map(s => <CanvasNode>s)
-      .map(n=> n.node.duplicate());
+      .map(s => <CanvasNode>s);
+    
+    this._originSelectedLinks = selections
+      .filter(l => l instanceof CanvasLink)
+      .map((l: CanvasLink) => {
+        return {
+          source: selectedNodes.indexOf(l.source),
+          target: selectedNodes.indexOf(l.target)
+        };
+      })
+      .filter(l => l.source > -1 && l.target > -1);
+    
+    this._originSelectedNodes = selectedNodes
+      .map(n => n.node.duplicate());
   }
 
-  paste() {
-    let nodes = this._originSelection
+  public paste(): CanvasObject[] {
+    let nodes = this._originSelectedNodes
       .map(n => {
         let _n = n.duplicate();
-        this._flow.addNode(_n);
-        return _n;
+        _n.position = {
+          x: _n.position.x + PASTE_OFFSET.x,
+          y: _n.position.y + PASTE_OFFSET.y
+        };
+        _n = this._canvas.flow.createNode(<new () => JNBaseNode>_n.constructor, _n.body);
+        this._canvas.flow.addNode(_n);
+        let canvasNode = this._canvas.addNode(_n);
+        return canvasNode;
+      });
+
+    let links = this._originSelectedLinks
+      .map((l) => {
+        nodes[l.target].node.accept(nodes[l.source].node);
+        return this._canvas.addLink(nodes[l.source], nodes[l.target]);
       });
     
-    nodes.forEach((_n, i) => {
-      let acceptedIndex = this._originSelection[i]
-        .accepted
-        .map(a => this._originSelection.indexOf(a))
-        .filter(index => index > -1)
-        .forEach((j) => {
-          nodes[i].accept(nodes[j]);
-        });
-      
-      _n.position = {
-        x: _n.position.x + 20,
-        y: _n.position.y + 20
-      };
-    });
+    this._originSelectedNodes = nodes.map(n => n.node.duplicate());
+
+    let result: CanvasObject[] = [];
+    result = result
+      .concat(nodes)
+      .concat(links);
     
-    this._originSelection = nodes;
+    return result;
   }
 
 }

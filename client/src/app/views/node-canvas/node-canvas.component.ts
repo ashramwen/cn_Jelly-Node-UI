@@ -64,7 +64,6 @@ export class NodeCanvasComponent implements OnInit, OnChanges {
     this.events.on(NODE_EVENTS.NODE_BEFORE_ADDED, this.onUserInput.bind(this));
     this.events.on(NODE_EVENTS.NODE_BEFORE_LINKED, this.onUserInput.bind(this));
     this.events.on(NODE_EVENTS.NODE_BEFORE_CHANGED, this.onUserInput.bind(this));
-    this.events.on(NODE_EVENTS.LINK_BEFORE_REMOVED, this.onUserInput.bind(this));
   }
 
   onItemDrop(e: DropEvent) {
@@ -133,7 +132,6 @@ export class NodeCanvasComponent implements OnInit, OnChanges {
   }
 
   onUserInput() {
-    this.d3Helper.drawNodes();
     this.editStack.do(this.nodeFlow.serialize());
     JNUtils.debug(this.editStack._doStack, this.editStack._undoStack);
   }
@@ -144,13 +142,13 @@ export class NodeCanvasComponent implements OnInit, OnChanges {
     this.d3Helper.loadFlow(flow);
     flow.onChanges(() => {
       this.d3Helper.updateNodes();
-      console.log('1');
     });
   }
 
   private handleCommand(commandName: CANVAS_COMMANDS) {
     switch (commandName) {
       case CANVAS_COMMANDS.REMOVE:
+        this.onUserInput();
         this.d3Helper.removeSelection();
         break;
       case CANVAS_COMMANDS.UNDO:
@@ -166,7 +164,18 @@ export class NodeCanvasComponent implements OnInit, OnChanges {
         this.d3Helper.copy();
         break;
       case CANVAS_COMMANDS.PASTE:
+        this.onUserInput();
         this.d3Helper.paste();
+        break;
+      case CANVAS_COMMANDS.CUT:
+        this.onUserInput();
+        this.d3Helper.cut();
+        break;
+      case CANVAS_COMMANDS.ENABLE_SHIFT:
+        this.d3Helper.enableShift();
+        break;
+      case CANVAS_COMMANDS.DISABLE_SHIFT:
+        this.d3Helper.disableShift();
         break;
       default:
         break;

@@ -9,6 +9,8 @@ import { Events, NODE_EVENTS } from '../../../share/services/event.service';
 import { APP_READY } from '../../../share/services/application-core.service';
 import { JNViewComponent } from '../../../views/view.component';
 import { JNLoader } from '../../../share/modules/loader/services/loader.service';
+import { ModalService } from '../../../share/modules/modal/services/modal.service';
+import { BUTTON_STYLES } from '../../../share/modules/modal/components/modal/modal.component';
 
 @Component({
   selector: 'app-flow-detail',
@@ -44,7 +46,8 @@ export class FlowDetailComponent implements OnInit, OnDestroy, AfterViewInit {
     private flowDetailService: FlowDetailService,
     private elementRef: ElementRef,
     private loader: JNLoader,
-    private viewContainer: ViewContainerRef
+    private viewContainer: ViewContainerRef,
+    private modalService: ModalService
   ) {
     this.editingName = false;
   }
@@ -57,6 +60,8 @@ export class FlowDetailComponent implements OnInit, OnDestroy, AfterViewInit {
             this.nodeFlow = flow;
           });
       });
+      
+      this.modalService.setRoot(this.viewContainer);
     });
     setInterval(() => {
       this.fullscreen = this.flowDetailService.fullscreen;
@@ -92,40 +97,89 @@ export class FlowDetailComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   publish() {
-    let loader = this.loader.showLoader(this.viewContainer);
-    if (this.isNew) {
-      this.flowDetailService.saveFlow(this.nodeFlow)
-        .then((flow) => {
-          this.flowDetailService
-            .publishFlow(flow)
-            .then(() => {
-              loader.dismiss();
-              this.router.navigate(['/flow']);
-            }, () => {
-              loader.dismiss();
-            });
-        });
-    } else {
-      this.flowDetailService
-        .publishFlow(this.nodeFlow)
-        .then(() => {
-          loader.dismiss();
-          this.router.navigate(['/flow']);
-        }, () => {
-          loader.dismiss();
-        });
-    }
+    
+    let callback = () => {
+      let loader = this.loader.showLoader(this.viewContainer);
+      if (this.isNew) {
+        this.flowDetailService.saveFlow(this.nodeFlow)
+          .then((flow) => {
+            this.flowDetailService
+              .publishFlow(flow)
+              .then(() => {
+                loader.dismiss();
+                this.router.navigate(['/flow']);
+              }, () => {
+                loader.dismiss();
+              });
+          });
+      } else {
+        this.flowDetailService
+          .publishFlow(this.nodeFlow)
+          .then(() => {
+            loader.dismiss();
+            this.router.navigate(['/flow']);
+          }, () => {
+            loader.dismiss();
+          });
+      }
+    };
+    
+    let modal;
+    let options = {
+      content: '是否确认要发布视图?',
+      icon: 'fa-save',
+      buttons: [{
+        text: '确认',
+        style: BUTTON_STYLES.SUCCESS,
+        callback: callback
+      }, {
+        text: '取消',
+        style: BUTTON_STYLES.PRIMARY,
+        callback: () => {
+          modal.dismiss();
+        } 
+      }]
+    };
+      
+    modal = this.modalService
+      .createModal(options);
+      
+    modal.show();
   }
 
   submit() {
-    let loader = this.loader.showLoader(this.viewContainer);
-    this.flowDetailService.saveFlow(this.nodeFlow)
-      .then((flow: JNFlow) => {
-        this.router.navigate(['/flow']);
-        loader.dismiss();
-      }, () => {
-        loader.dismiss();
-      });
+    let modal = null;
+    let toSubmit = () => {
+      let loader = this.loader.showLoader(this.viewContainer);
+      this.flowDetailService.saveFlow(this.nodeFlow)
+        .then((flow: JNFlow) => {
+          this.router.navigate(['/flow']);
+          loader.dismiss();
+        }, () => {
+          loader.dismiss();
+        });
+    };
+
+    let options = {
+      content: '是否确认要保存视图?',
+      icon: 'fa-save',
+      buttons: [{
+        text: '确认',
+        style: BUTTON_STYLES.SUCCESS,
+        callback: toSubmit
+      }, {
+        text: '取消',
+        style: BUTTON_STYLES.PRIMARY,
+        callback: () => {
+          modal.dismiss();
+        } 
+      }]
+    };
+      
+    modal = this.modalService
+      .createModal(options);
+      
+    modal.show();
   }
 
   scaleTxtBlur(event) {

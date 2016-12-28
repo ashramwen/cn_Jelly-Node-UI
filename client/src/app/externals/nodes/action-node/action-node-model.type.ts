@@ -6,8 +6,8 @@ export interface IDeviceAction extends INodeBody {
   actionName: string;
   typeName: string;
   properties: Array<{
-    propertyName: String;
-    propertyValue: String | number | boolean;
+    propertyName: string;
+    propertyValue: string | number | boolean;
   }>;
 }
 
@@ -18,8 +18,8 @@ export class JNActionNodeModel extends JNNodeModel<IDeviceAction> {
   actionName: string;
   typeName: string;
   properties: Array<{
-    propertyName: String;
-    propertyValue: String | number | boolean;
+    propertyName: string;
+    propertyValue: string | number | boolean;
   }>;
 
   constructor() {

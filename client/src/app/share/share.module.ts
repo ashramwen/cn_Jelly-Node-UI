@@ -18,6 +18,7 @@ import { ConfigContextService } from './services/config-context.service';
 import { Events } from './services/event.service';
 import { NODE_RESOURCES } from './resources/index';
 import { JNLoaderModule } from './modules/loader/loader.module';
+import { JNModalModule } from './modules/modal/modal.module';
 
 
 // Create config options (see ILocalStorageServiceConfigOptions) for deets:
@@ -32,8 +33,8 @@ const LOCAL_STORAGE_CONFIG_PROVIDER: Provider = {
 };
 
 @NgModule({
-  imports: [DragDropModule, HttpModule, TranslateModule.forRoot(), ResourceModule, JNLoaderModule],
-  exports: [DragDropModule, HttpModule, TranslateModule, ResourceModule, JNLoaderModule],
+  imports: [DragDropModule, HttpModule, TranslateModule.forRoot(), ResourceModule, JNLoaderModule, JNModalModule],
+  exports: [DragDropModule, HttpModule, TranslateModule, ResourceModule, JNLoaderModule, JNModalModule],
   providers: [
     LocalStorageService,
     LOCAL_STORAGE_CONFIG_PROVIDER,

@@ -27,6 +27,9 @@ export class JNActionNodeEditorModel extends JNEditorModel {
     let schema = RuleApplication.instance.resources.$schema.schemas[data.typeName];
     let controls = JNActionNodeService.instance.generateControls(data.actionName, schema);
     this.buildControls(controls);
+    data.properties.forEach((property) => {
+      this.setValue(property.propertyName, property.propertyValue);
+    });
   }
 
   protected formate(): JNActionNodeModel {

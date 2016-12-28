@@ -1,0 +1,16 @@
+<div class="backdrop"></div>
+<div class="backdrop" (click)="dismiss()">
+  <div class="modal-content" (click)="$event.stopPropagation();">
+    <div class="modal-body">
+      <div *ngIf="icon" class="icon-holder">
+        <div [class]="'fa ' + icon" ></div>
+      </div>
+      <jn-modal-content-loader [content]="content" [data]="data"></jn-modal-content-loader>
+    </div>
+    <div class="modal-footer">
+      <div class="btn-container" *ngIf="buttons && buttons.length">
+        <button *ngFor="let btn of buttons" [class]="styles[btn.style]" (click)="btn.callback()">{{btn.text}}</button>
+      </div>
+    </div>
+  </div>
+</div>

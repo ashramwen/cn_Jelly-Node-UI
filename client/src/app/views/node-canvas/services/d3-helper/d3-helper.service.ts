@@ -140,11 +140,6 @@ export class D3HelperService {
       .append('g')
       .attr('class', 'canvas');
     
-    this.brush = this.canvas
-      .append('g')
-      .attr('class', 'brush')
-      .attr('id', 'brush-wrapper');
-    
     this.initBrush();
       
     this.vis = this.canvas
@@ -180,6 +175,18 @@ export class D3HelperService {
   initBrush() {
     let self = this;
 
+    this.canvas
+      .select('g.brush')
+      .remove();
+
+    this.brush = this.canvas
+      .append('g')
+      .attr('class', 'brush')
+      .attr('id', 'brush-wrapper');
+    this.brush.lower();
+
+    // brush unbind event
+
     this.brush.call(d3.brush()
       .on('start', () => {
         self.brush.raise();
@@ -212,6 +219,13 @@ export class D3HelperService {
         
         self._updateNodes.bind(self)();
         self.updateLinks.bind(self)();
+
+        let nodes = self.selections
+          .filter(n => n instanceof CanvasNode)
+          .map((n: CanvasNode) => n.node);
+        
+        this.events.emit(NODE_EVENTS.SELECTION_CHANGED, nodes);
+        
       }));
   }
 
@@ -319,6 +333,7 @@ export class D3HelperService {
       });
     });
     this.select([]);
+    this.events.emit(NODE_EVENTS.SELECTION_CHANGED, []);
   }
 
   public addNode(node: JNBaseNode) {
@@ -559,6 +574,16 @@ export class D3HelperService {
     
     this.updateCanvasBackGround(maxWidth, maxHeight);
     this.updateDragWrapper(maxWidth, maxHeight);
+    this.updateBrushWrapper(maxWidth, maxHeight);
+  }
+
+  private updateBrushWrapper(width: number, height: number) {
+    this.initBrush();
+    /*
+    this.brush.select('rect')
+      .attr('width', width)
+      .attr('height', height);
+    */
   }
 
   private updateCanvas() {
@@ -614,6 +639,11 @@ export class D3HelperService {
   public paste() {
     let result = this.clipboard.paste();
     this.select(result);
+    let nodes = result
+      .filter(n => n instanceof CanvasNode)
+      .map((n: CanvasNode) => n.node);
+    
+    this.events.emit(NODE_EVENTS.SELECTION_CHANGED, nodes);
   }
 
   private updateCanvasBackGround(width: number, height: number) {
@@ -815,7 +845,6 @@ export class D3HelperService {
     let nodes = this.selections
       .filter(n => n instanceof CanvasNode)
       .map((n: CanvasNode) => n.node);
-    this.events.emit(NODE_EVENTS.SELECTION_CHANGED, nodes);
     this._updateNodes();
   }
 
@@ -869,6 +898,12 @@ export class D3HelperService {
       .forEach((n: CanvasNode, i) => {
         n.updatePosition();
       });
+    
+    let nodes = this.selections
+      .filter(n => n instanceof CanvasNode)
+      .map((n: CanvasNode) => n.node);
+    
+    this.events.emit(NODE_EVENTS.SELECTION_CHANGED, nodes);
   }
 
   private moveMouseLink = (linkData) => {

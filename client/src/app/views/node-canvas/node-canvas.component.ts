@@ -177,6 +177,8 @@ export class NodeCanvasComponent implements OnInit, OnChanges {
       case CANVAS_COMMANDS.DISABLE_SHIFT:
         this.d3Helper.disableShift();
         break;
+      case CANVAS_COMMANDS.SELECT_ALL:
+        this.d3Helper.selectAll();
       default:
         break;
     }

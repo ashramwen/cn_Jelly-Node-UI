@@ -71,6 +71,11 @@ export class Draggable implements AfterViewInit {
 
     dragStart(e: DragEvent) {
         if (this.allowDrag()) {
+            literate(<Element>e.target);
+            setTimeout(() => {
+                recover(<Element>e.target);
+            });
+
             (<Element>e.target).classList.add(this.dragOverClass);
             e.dataTransfer.setData('application/json', JSON.stringify(this.dragData));
             e.dataTransfer.setData(this.dragScope, this.dragScope);
@@ -79,6 +84,22 @@ export class Draggable implements AfterViewInit {
             this.onDragStart.emit(e);
         } else {
             e.preventDefault();
+        }
+
+        function literate(ele: Element) {
+            let style = ele.getAttribute('style') || '';
+            ele.setAttribute('style', style + ' background-color: transparent;');
+            if (ele.parentElement) {
+                literate(ele.parentElement);
+            }
+        }
+
+        function recover(ele: Element) {
+            let style = ele.getAttribute('style');
+            ele.setAttribute('style', style.substr(0, style.lastIndexOf('background-color: transparent;')));
+            if (ele.parentElement) {
+                recover(ele.parentElement);
+            }
         }
     }
 

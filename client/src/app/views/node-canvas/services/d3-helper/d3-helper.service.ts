@@ -544,6 +544,15 @@ export class D3HelperService {
     this._shiftEnabled = false;
   }
 
+  public selectAll() {
+    this.select((<CanvasObject[]>this.links).concat(this.nodes));
+    let nodes = this.selections
+      .filter(n => n instanceof CanvasNode)
+      .map((n: CanvasNode) => n.node);
+    
+    this.events.emit(NODE_EVENTS.SELECTION_CHANGED, nodes);
+  }
+
   private updateCanvasContainer() {
     let maxWidth = this.NodeSettings.CANVAS_WIDTH,
       maxHeight = this.NodeSettings.CANVAS_HEIGHT;

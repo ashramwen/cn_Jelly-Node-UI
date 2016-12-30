@@ -11,7 +11,6 @@
             (click)="toggleFullScreen()"></i>
           </li>
         <li>
-          <input type="text" class="scale-size-txt" autocomplete="off" (keydown.enter)="$event.target.blur()" (blur)="scaleTxtBlur()" [(ngModel)]="scale"><label class="scale-percentage">%</label>
         </li>
         <li><i class="fa fa-hand-stop-o" [class.active]="nodeView.nodeCanvas.dragEnabled" (click)="toggleDragMove()"></i></li>
       </ul>

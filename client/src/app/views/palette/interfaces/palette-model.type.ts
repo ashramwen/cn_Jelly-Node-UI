@@ -14,10 +14,14 @@ export abstract class JNPaletteModel {
   }
 
   get connections(): JNPaletteConnection[] {
-    return this.createConnections();
+    return this.createConnections()
+      .map(n => {
+        n.properties.forEach(p => p.isConnection = true);
+        return n;
+      });
   }
 
-  static getNodes() {
+  static getNodes(): JNPaletteNode[] {
     let types = JNUtils.toArray<typeof JNBaseNode>(JNApplication.instance.nodeTypeMapper).map(pair => pair.value);
 
     return types.map(nodeType => {

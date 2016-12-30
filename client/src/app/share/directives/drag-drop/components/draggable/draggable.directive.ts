@@ -1,3 +1,4 @@
+import { JNDragEvent } from './drag-event.type';
 import {
     Directive, ElementRef, HostListener, Input,
     Output, EventEmitter, AfterViewInit,
@@ -59,6 +60,7 @@ export class Draggable implements AfterViewInit {
     @Output() onDragEnd: EventEmitter<any> = new EventEmitter();
     
     private mouseOverElement: any;
+    private _event: JNDragEvent;
 
     constructor(private ele: ElementRef) {}
 
@@ -80,6 +82,9 @@ export class Draggable implements AfterViewInit {
             e.dataTransfer.setData('application/json', JSON.stringify(this.dragData));
             e.dataTransfer.setData(this.dragScope, this.dragScope);
             e.dataTransfer.setData('offset', JSON.stringify({ x: e.offsetX, y: e.offsetY }));
+
+            this._event = new JNDragEvent(e, this.dragData, { x: e.offsetX, y: e.offsetY });
+
             e.stopPropagation();
             this.onDragStart.emit(e);
         } else {
@@ -104,8 +109,9 @@ export class Draggable implements AfterViewInit {
     }
 
     // @HostListener('drag', ['$event'])
-    drag(e) {
-        this.onDrag.emit(e);
+    drag(e: DragEvent) {
+        this._event.nativeEvent = e;
+        this.onDrag.emit(this._event);
     }
 
     // @HostListener('dragend', ['$event'])

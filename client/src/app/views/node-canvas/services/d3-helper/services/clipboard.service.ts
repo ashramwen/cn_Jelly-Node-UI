@@ -1,9 +1,6 @@
-import { CanvasNode } from './canvas-node.type';
-import { CanvasObject } from './canvas-object.type';
-import { JNBaseNode } from '../../../../core/models/jn-base-node.type';
-import { JNFlow } from '../../../../core/models/jn-flow.type';
-import { CanvasLink } from './canvas-link.type';
-import { D3HelperService } from './d3-helper.service';
+import { CanvasNode, CanvasObject, CanvasLink } from '../models';
+import { JNBaseNode, JNFlow } from '../../../../../core/models';
+import { D3HelperService } from '../d3-helper.service';
 
 const PASTE_OFFSET = {
   x: 30,

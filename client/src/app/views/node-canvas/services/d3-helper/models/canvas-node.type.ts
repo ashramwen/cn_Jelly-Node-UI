@@ -1,8 +1,7 @@
-import { JNBaseNode } from '../../../../core/models/jn-base-node.type';
 import * as d3 from 'd3';
 import { CanvasObject } from './canvas-object.type';
-import { JNUtils } from '../../../../share/util';
-import { SVGUtils } from './utils';
+import { JNBaseNode } from '../../../../../core/models';
+import { SVGUtils } from '../utils';
 
 export class CanvasNode extends CanvasObject {
   node: JNBaseNode;

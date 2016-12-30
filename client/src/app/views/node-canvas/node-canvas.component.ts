@@ -3,7 +3,7 @@ import { JNFlow } from './../../core/models/jn-flow.type';
 import { JNBaseNode } from './../../core/models/jn-base-node.type';
 import { D3HelperService } from './services/d3-helper/d3-helper.service';
 import { JNPaletteNode } from '../palette/interfaces/palette-node.type';
-import { DropEvent } from '../../share/directives/drag-drop/components/droppable/drop-event.type';
+import { JNDropEvent } from '../../share/directives/drag-drop/components/droppable/drop-event.type';
 import { Events, NODE_EVENTS } from '../../share/services/event.service';
 import { JNApplication } from '../../share/services/application-core.service';
 import * as d3 from 'd3';
@@ -11,6 +11,8 @@ import { EditStack } from './services/edit-stack.service';
 import { JNUtils } from '../../share/util';
 import { Subscriber, Observable } from 'rxjs';
 import { JNKeyboardService, CANVAS_COMMANDS } from './services/keyboard.service';
+import { JNDragEvent } from '../../share/directives/drag-drop/components/draggable/drag-event.type';
+import { NodeSettings } from '../providers/constants';
 
 @Component({
   selector: 'jn-canvas',
@@ -64,9 +66,10 @@ export class NodeCanvasComponent implements OnInit, OnChanges {
     this.events.on(NODE_EVENTS.NODE_BEFORE_ADDED, this.onUserInput.bind(this));
     this.events.on(NODE_EVENTS.NODE_BEFORE_LINKED, this.onUserInput.bind(this));
     this.events.on(NODE_EVENTS.NODE_BEFORE_CHANGED, this.onUserInput.bind(this));
+    this.events.on(NODE_EVENTS.DRAG_MOVE, this.onItemDrag.bind(this))
   }
 
-  onItemDrop(e: DropEvent) {
+  onItemDrop(e: JNDropEvent) {
     if (!this.nodeFlow) return;
     let position = {
       x: (e.nativeEvent.offsetX - e.offset.x) / this.currentScale,
@@ -78,7 +81,24 @@ export class NodeCanvasComponent implements OnInit, OnChanges {
     let node = this.nodeFlow.createNode(<any>nodeType, property);
     this.events.emit(NODE_EVENTS.NODE_BEFORE_ADDED, node);
     this.nodeFlow.addNode(node);
-    this.addNode(node);
+    let newNode = this.addNode(node);
+    this.d3Helper.clearVirtualLink();
+    if (e.dragData.isConnection) {
+      this.d3Helper.createQuickLink(newNode, e);
+    }
+  }
+
+  onItemDrag(e: JNDragEvent) {
+    let container: Element = this.canvas.nativeElement;
+    if (e.nativeEvent.clientX < container.getClientRects()[0].left
+      || !e.dragData
+      || !e.dragData.isConnection
+    ) {
+      this.d3Helper.clearVirtualLink();
+      return;
+    }
+    
+    this.d3Helper.createVirtualLink(e);
   }
 
   @HostListener('keydown', ['$event'])
@@ -102,7 +122,7 @@ export class NodeCanvasComponent implements OnInit, OnChanges {
   }
 
   addNode(node: JNBaseNode) {
-    this.d3Helper.addNode(node);
+    return this.d3Helper.addNode(node);
   }
 
   update() {

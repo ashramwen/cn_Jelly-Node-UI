@@ -84,5 +84,9 @@ export class PaletteComponent implements OnInit {
       'margin-top': "-" + this.NodeSettings.HALF_HANDLER_HEIGHT, 'right': this.NodeSettings.PORT_SHIFT
     };
   }
+
+  private onDrag(event) {
+    this.events.emit(NODE_EVENTS.DRAG_MOVE, event);
+  }
 }
 

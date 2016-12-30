@@ -10,11 +10,12 @@ export class JNPaletteNode {
   icon: String;
   color: String;
   borderColor: String;
-  disabled: Boolean;
-  acceptable: Boolean;
-  directable: Boolean;
-  hasInput: Boolean;
-  hasOutput: Boolean;
+  disabled: boolean;
+  acceptable: boolean;
+  directable: boolean;
+  hasInput: boolean;
+  hasOutput: boolean;
+  isConnection: boolean;
 
   constructor(selectedNodeType: typeof JNBaseNode, nodeType: typeof JNBaseNode, name: string, property?: Object) {
     this.type = nodeType;

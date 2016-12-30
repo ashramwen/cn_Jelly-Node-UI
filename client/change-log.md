@@ -1,3 +1,5 @@
+# 2016-12-29 10:00 AM
+Add select all nodes (Ctrl + A/Meta + A)
 
 # 2016-12-28 5:30 PM
 Add alert modal

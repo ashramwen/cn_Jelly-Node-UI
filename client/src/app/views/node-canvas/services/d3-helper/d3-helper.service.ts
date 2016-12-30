@@ -1,12 +1,10 @@
-import { JNFlow } from './../../../../core/models/jn-flow.type';
-import { JNBaseNode } from '../../../../core/models/jn-base-node.type';
-import { Injectable, Sanitizer, SecurityContext, Injector } from '@angular/core';
-import { TranslateService } from 'ng2-translate';
 import * as d3 from 'd3';
-import { CanvasNode } from './canvas-node.type';
-import { CanvasPoint } from './canvas-point.type';
-import { CanvasLink } from './canvas-link.type';
-import { CanvasObject } from './canvas-object.type';
+import { Injectable, Sanitizer, SecurityContext, Injector } from '@angular/core';
+import { Observable, Subscriber } from 'rxjs';
+import { TranslateService } from 'ng2-translate';
+
+import { JNFlow, JNBaseNode } from './../../../../core/models';
+import { CanvasNode, CanvasPoint, CanvasLink, CanvasObject, CanvasSize } from './models';
 import { JNUtils } from '../../../../share/util';
 import { Events, NODE_EVENTS } from '../../../../share/services/event.service';
 import { cn } from '../../../../../assets/i18n/cn';
@@ -14,28 +12,33 @@ import { JN_NODE_SETTING } from '../../../../share/providers/constants';
 import { NodeSettings } from '../../../providers/constants';
 import { INodeSettings } from '../../../interfaces/node-settings.interface';
 import { SVGUtils } from './utils';
-import { DragScrollService } from './drag-scroll.service';
-import { JNKeyboardService } from '../keyboard.service';
-import { CanvasSize } from './canvas-size.interface';
-import { Observable, Subscriber } from 'rxjs';
-import { JNClipboard } from './clipboard.service';
+import { DragScrollService, JNClipboard } from './services';
+import { JNDragEvent } from '../../../../share/directives/drag-drop/components/draggable/drag-event.type';
+import { JNPaletteNode } from '../../../palette/interfaces/palette-node.type';
+import { JNDropEvent } from '../../../../share/directives/drag-drop/components/droppable/drop-event.type';
+import { CanvasRule } from './components/canvas-rule.type';
+import { CanvasBrush, BRUSH_EVENTS } from './components/canvas-brush.type';
+import { CanvasMap } from './components/canvas-map.type';
+import { CanvasDragWrapper, DRAG_WRAPPER_EVENTS } from './components/canvas-drag-wrapper.type';
+import { CanvasTip } from './components/canvas-tip.type';
+import { VirtualLinkService } from './services/virtual-link.service';
 
 @Injectable()
 export class D3HelperService {
 
   public flow: JNFlow;  
-
+  public NodeSettings: INodeSettings;
+  public canvasWrapper: d3.Selection<any, any, any, any>;
+  public canvasContainer: d3.Selection<any, any, any, any>;
+  public canvas: any;
+  public parent: Element;
+  
   private vis: any;
-  private parent: Element;
-  private canvasWrapper: d3.Selection<any, any, any, any>;
-  private canvasContainer: d3.Selection<any, any, any, any>;
-  private canvas: any;
-  private canvasBackground: d3.Selection<any, any, any, any>;
-  private canvasRule: d3.Selection<any, any, any, any>;
-  private brush: d3.Selection<any, any, any, any>;
-  private tip: d3.Selection<any, any, any, any>;
-  private dragWrapper: d3.Selection<any, any, any, any>;
-  private navMap: d3.Selection<any, any, any, any>;
+  private canvasRule: CanvasRule;
+  private canvasBrush: CanvasBrush;
+  private canvasMap: CanvasMap;
+  private dragWrapper: CanvasDragWrapper;
+  private canvasTip: CanvasTip;
 
   private nodes: CanvasNode[];
   private links: CanvasLink[];
@@ -48,49 +51,22 @@ export class D3HelperService {
   private targetNode: CanvasNode = null;
   private _dragOrigin: CanvasPoint;
   private _shift: CanvasPoint;
-  private NodeSettings: INodeSettings;
   private _scale: number;
   private dragScrollService: DragScrollService;
+  private virtualLinkService: VirtualLinkService;
   private clipboard: JNClipboard;
   private linkingNode: { from: 'input' | 'output'; node: CanvasNode };
-  private navMapObservable: Observable<any>;
-  private navMapSubscriber: Subscriber<any>;
   private _shiftEnabled: boolean;
 
   get currentScale() {
     return this._scale;
   }
 
-  get canvasContainerSize(): CanvasSize{
-    let ele = <HTMLDivElement> this.canvasContainer.node();
-    return {
-      width: ele.getBoundingClientRect().width,
-      height: ele.getBoundingClientRect().height
-    };
-  }
-
-  get viewPortSize(){
-    let ele = <HTMLDivElement>this.canvasWrapper.node();
-    return {
-      width: ele.getBoundingClientRect().width,
-      height: ele.getBoundingClientRect().height
-    };
-  }
-
-  get viewPortPosition() {
-    let ele = <HTMLDivElement>this.canvasWrapper.node();
-    return {
-      x: ele.scrollLeft,
-      y: ele.scrollTop
-    };
-  }
-
   constructor(
     private events: Events,
     private translate: TranslateService,
     private _sanitizer: Sanitizer,
-    private injector: Injector,
-    private keybordService: JNKeyboardService
+    private injector: Injector
   ) {
     this.nodes = [];
     this.links = [];
@@ -101,6 +77,7 @@ export class D3HelperService {
     this.dragScrollService = DragScrollService.factory();
     this.clipboard = JNClipboard.factory(this);
     this._shiftEnabled = false;
+    this.virtualLinkService = VirtualLinkService.factory(this);
 
     Object.assign(this.NodeSettings, NodeSettings, externalSettings); 
   }
@@ -112,20 +89,8 @@ export class D3HelperService {
     this.canvasWrapper = d3.select(parent)
       .append('div')
       .attr('class', 'canvas-wrapper');
-    
-    this.canvasBackground = this.canvasWrapper
-      .append('div')
-      .attr('class', 'canvas-background')
-      .style('position', 'absolute')
-      .style('left', 0)
-      .style('top', 0)
-      .style('overflow', 'hidden');
-    
-    this.canvasRule = this.canvasBackground
-      .append('div')
-      .attr('class', 'canvas-rule')
-      .style('width', '100%')
-      .style('height', '100%');
+
+    this.canvasRule = new CanvasRule(this);
     
     this.canvasContainer = this.canvasWrapper
       .append('svg')
@@ -140,166 +105,76 @@ export class D3HelperService {
       .append('g')
       .attr('class', 'canvas');
     
-    this.initBrush();
-      
+    this.canvasBrush = new CanvasBrush(this);
+    this.canvasBrush.on(BRUSH_EVENTS.END, this.brushEnd.bind(this));
+    
     this.vis = this.canvas
       .append('svg:g')
       .on('dblclick.zoom', null)
       .append('svg:g');
 
-    this.dragWrapper = this.canvasWrapper
-      .append('div')
-      .attr('class', 'drag-wrapper');
-    this.initDragWrapper();
+    this.dragWrapper = new CanvasDragWrapper(this);
+    this.dragWrapper
+      .on(DRAG_WRAPPER_EVENTS.DRAG_START, () => {
+        this.dragScrollService.dragStart(this.canvasWrapper.node());
+      });
+    this.dragWrapper
+      .on(DRAG_WRAPPER_EVENTS.DRAG, () => {
+        this.dragScrollService.dragMove();
+      });
 
-    this.navMap = d3.select(this.parent)
-      .append('div')
-      .attr('class', 'nav-map');
-
-    this.navMap
-      .append('div')
-      .attr('class', 'view-port')
-      .append('div')
-      .attr('class', 'inner');
-    
-    this.navMap
-      .append('svg')
-      .attr('class', 'canvas-map');
+    this.canvasMap = new CanvasMap(this);
     
     this.initCanvasWrapper();
-    
     this.updateCanvasContainer();
-    this.initToolTip();
+    this.canvasTip = new CanvasTip(this);
   }
 
-  initBrush() {
-    let self = this;
-
-    this.canvas
-      .select('g.brush')
-      .remove();
-
-    this.brush = this.canvas
-      .append('g')
-      .attr('class', 'brush')
-      .attr('id', 'brush-wrapper');
-    this.brush.lower();
-
-    // brush unbind event
-
-    this.brush.call(d3.brush()
-      .on('start', () => {
-        self.brush.raise();
-      })
-      .on('end', () => {
-        // hide brush
-        self.select([]);
-        self.brush.lower();
-        self.brush
-          .selectAll('.selection,.handle')
-          .style('display', 'none');
-        
-        // select nodes
-        let selection = d3.event.selection;
-        if (selection) {
-          let maxX = Math.max(selection[0][0], selection[1][0]),
-            maxY = Math.max(selection[0][1], selection[1][1]),
-            minX = Math.min(selection[0][0], selection[1][0]),
-            minY = Math.min(selection[0][1], selection[1][1]);
+  private brushEnd(selection: any) {
+    this.select([]);
+    // select nodes
+    if (selection) {
+      let maxX = Math.max(selection[0][0], selection[1][0]),
+        maxY = Math.max(selection[0][1], selection[1][1]),
+        minX = Math.min(selection[0][0], selection[1][0]),
+        minY = Math.min(selection[0][1], selection[1][1]);
           
-          let linksAndNodes: CanvasObject[] = (<Array<CanvasObject>>self.links).concat(self.nodes);
-          let selectedObjects = linksAndNodes.filter(n =>
-            n.x > minX
-            && n.x + n.width < maxX
-            && n.y > minY
-            && n.y + n.height < maxY);
+      let linksAndNodes: CanvasObject[] = (<Array<CanvasObject>>this.links).concat(this.nodes);
+      let selectedObjects = linksAndNodes.filter(n =>
+        n.x > minX
+        && n.x + n.width < maxX
+        && n.y > minY
+        && n.y + n.height < maxY);
           
-          self.select(selectedObjects);
-        }
+      this.select(selectedObjects);
+    }
         
-        self._updateNodes.bind(self)();
-        self.updateLinks.bind(self)();
+    this._updateNodes.bind(this)();
+    this.updateLinks.bind(this)();
 
-        let nodes = self.selections
-          .filter(n => n instanceof CanvasNode)
-          .map((n: CanvasNode) => n.node);
+    let nodes = this.selections
+      .filter(n => n instanceof CanvasNode)
+      .map((n: CanvasNode) => n.node);
         
-        this.events.emit(NODE_EVENTS.SELECTION_CHANGED, nodes);
-        
-      }));
-  }
-
-  initToolTip() {
-    this.tip = this.canvasWrapper
-      .append('div')
-      .attr('class', 'tooltip')
-      .style('opacity', 0)
-      .style('display', 'none');
-    
-    this.tip
-      .append('span')
-      .attr('class', 'fa fa-exclamation-circle');
-    
-    this.tip
-      .append('span')
-      .attr('class', 'tip-msg');
+    this.events.emit(NODE_EVENTS.SELECTION_CHANGED, nodes);
   }
 
   public updateNodes() {
     this._updateNodes();
   }
 
-  private initDragWrapper() {
-    this.dragWrapper
-      .attr('fill', '#fff')
-      .style('position', 'absolute')
-      .style('left', '0px')
-      .style('top', '0px')
-      .style('opacity', '0')
-      .call(d3.drag()
-        .on('start', () => {
-          let ele = this.canvasWrapper.node();
-          this.dragScrollService.dragStart(ele);
-        })
-        .on('drag', () => {
-          this.dragScrollService.dragMove();
-        })
-      )
-      .style('display', 'none');
-  }
-
   private initCanvasWrapper() {
     this.canvasWrapper.on('scroll', () => {
-      this.updateMap();
-      this.navMapSubscriber.next(false);
+      this.canvasMap.update();
     });
-
-    this.navMap
-      .on('mouseenter', () => {
-        this.navMapSubscriber.next(true);
-      })
-      .on('mouseleave', () => {
-        this.navMapSubscriber.next(false);
-      });
-    
-    this.navMapObservable = new Observable((subscriber) => {
-      this.navMapSubscriber = subscriber;
-    });
-    this.navMapObservable
-      .debounceTime(500)
-      .subscribe((flag) => {
-        this.navMap.style('display', flag ? 'block' : 'none');
-      });
   }
 
   public enableDrapMove() {
-    this.dragWrapper
-      .style('display', 'block');
+    this.dragWrapper.enable();
   }
 
   public disableDrapMove() {
-    this.dragWrapper
-      .style('display', 'none');
+    this.dragWrapper.disable();
   }
 
   public scale(s) {
@@ -359,16 +234,46 @@ export class D3HelperService {
       }
     });
     this.events.emit(NODE_EVENTS.SELECTION_CHANGED, []);
-    this.hideTip();
+    this.canvasTip.hide();
     this.selections = [];
+  }
+
+  public clearVirtualLink() {
+    this.vis.selectAll('g.new_link').remove();
+  }
+
+  public createQuickLink(newNode: CanvasNode, e: JNDropEvent) {
+    let node = this.selections
+      .filter(s => s instanceof CanvasNode)
+      .map(s => <CanvasNode>s)[0];
+    
+    let result = this.virtualLinkService.examVirtualLink(node, e);
+    if (result.accept) {
+      this.createNodeLink(node, newNode);
+    } else {
+      this.createNodeLink(newNode, node);
+    }
+  }
+
+  public createVirtualLink(e: JNDragEvent) {
+    let node = this.selections
+      .filter(s => s instanceof CanvasNode)
+      .map(s => <CanvasNode>s)[0];
+    
+    let result = this.virtualLinkService.examVirtualLink(node, e);
+    this.moveMouseLink(result.linkData);
   }
 
   public drawNodes() {
     let self = this;
     let mouseDownSubscriber: Subscriber<CanvasNode>;
+    let dragStartSubscriber: Subscriber<CanvasNode>;
     let dbClick = false;
     let mouseDownObservable = new Observable<CanvasNode>((s) => {
       mouseDownSubscriber = s;
+    });
+    let dragStartObservable = new Observable<CanvasNode>((s) => {
+      dragStartSubscriber = s;
     });
     mouseDownObservable
       .subscribe((d) => {
@@ -378,9 +283,16 @@ export class D3HelperService {
           if (!self.selections || self.selections.indexOf(d) < 0) {
             self.select(d);
           }
-          self.hideTip();
+          self.canvasTip.hide();
         }
         dbClick = false;  
+      });
+    
+    dragStartObservable
+      .debounceTime(200)
+      .subscribe((d) => {
+        if (!d) return;
+        this.events.emit(NODE_EVENTS.SELECTION_CHANGED, [d.node]);
       });
     
     let rects = this.vis
@@ -399,18 +311,22 @@ export class D3HelperService {
       })
       .on('mousemove', (d: CanvasNode) => {
         if (d.error) {
-          self.showTip(d.error.message);
+          self.canvasTip.show(d.error.message);
         }
       })
       .on('mouseleave', () => {
-        self.hideTip();
+        self.canvasTip.hide();
       })
       .call(d3.drag()
         .on('start', function (d: CanvasNode) {
           mouseDownSubscriber.next(d);
+          dragStartSubscriber.next(d);
           self.dragStart();
         })
-        .on('drag', this.dragMove.bind(this))
+        .on('drag', () => {
+          dragStartSubscriber.next(null);
+          this.dragMove();
+        })
         .on('end', this.dragEnd.bind(this))
       )
       .each((d: CanvasNode, i, eles) => {
@@ -581,59 +497,14 @@ export class D3HelperService {
       .attr('height', maxHeight)
       .classed('selected', d => !!this.selections.length);
     
-    this.updateCanvasBackGround(maxWidth, maxHeight);
-    this.updateDragWrapper(maxWidth, maxHeight);
-    this.updateBrushWrapper(maxWidth, maxHeight);
-  }
-
-  private updateBrushWrapper(width: number, height: number) {
-    this.initBrush();
-    /*
-    this.brush.select('rect')
-      .attr('width', width)
-      .attr('height', height);
-    */
+    this.canvasRule.update(maxWidth, maxHeight);
+    this.dragWrapper.update(maxWidth, maxHeight);
+    this.canvasBrush.update();
   }
 
   private updateCanvas() {
     this.canvas
       .attr('transform', `scale(${this._scale})`);
-  }
-
-  private updateMap() {
-
-    let scale = 1;
-    let scaleX = this.NodeSettings.MAP_WIDTH / this.canvasContainerSize.width;
-    let scaleY = this.NodeSettings.MAP_HEIGHT / this.canvasContainerSize.height;
-    scale = scaleX < scaleY ? scaleX : scaleY;
-    // scale *= this._scale;
-
-    this.navMap
-      .style('display', 'block');
-    
-    let svg = this.navMap
-      .select('svg')
-      .html(this.canvasContainer.html());
-    
-    svg
-      .attr('width', this.canvasContainerSize.width * scale)
-      .attr('height', this.canvasContainerSize.height * scale)
-      .select('g')
-      .attr('transform', `scale(${scale * this._scale})`)
-      .selectAll('text')
-      .remove();
-    
-    let viewPort = this.navMap.select('.view-port');
-    let _vw = this.viewPortSize.width * scale + 'px',
-      _vh = this.viewPortSize.height * scale + 'px',
-      _vy = this.viewPortPosition.y * scale + 'px',
-      _vx = this.viewPortPosition.x * scale + 'px';
-    
-    viewPort
-      .style('width', _vw)
-      .style('height', _vh)
-      .style('top', _vy)
-      .style('left', _vx);
   }
 
   public cut() {
@@ -653,31 +524,6 @@ export class D3HelperService {
       .map((n: CanvasNode) => n.node);
     
     this.events.emit(NODE_EVENTS.SELECTION_CHANGED, nodes);
-  }
-
-  private updateCanvasBackGround(width: number, height: number) {
-    let ruleSize = Math.floor(this.NodeSettings.RULE_SIZE * this._scale);
-    
-     this.canvasBackground
-      .style('width', `${width}px`)
-      .style('height', `${height}px`)
-      .style('background', `
-        -webkit-linear-gradient(top, transparent ${ruleSize - 1}px, rgba(255,255,255,0.06) ${ruleSize}px),
-        -webkit-linear-gradient(left, transparent ${ruleSize - 1}px, rgba(255,255,255,0.06) ${ruleSize}px), 
-        -webkit-linear-gradient(top, #2f363b 0px, #2f363b ${ruleSize}px)`)
-      .style('background-size', `${ruleSize}px ${ruleSize}px`);
-    
-    this.canvasRule
-      .style('background', `
-        -webkit-linear-gradient(top, transparent ${5 * ruleSize - 1}px, rgba(255,255,255,0.12) ${5 * ruleSize}px), 
-        -webkit-linear-gradient(left, transparent ${5 * ruleSize - 1}px, rgba(255,255,255,0.12) ${5 * ruleSize}px)`)
-      .style('background-size', `${5 * ruleSize}px ${5 * ruleSize}px`);
-  }
-
-  private updateDragWrapper(width: number, height: number) {
-    this.dragWrapper
-      .style('width', `${width}px`)
-      .style('height', `${height}px`);
   }
 
   private _updateNodes() {
@@ -915,7 +761,7 @@ export class D3HelperService {
     this.events.emit(NODE_EVENTS.SELECTION_CHANGED, nodes);
   }
 
-  private moveMouseLink = (linkData) => {
+  private moveMouseLink = (linkData: { source: CanvasPoint, target: CanvasPoint }) => {
     let link = this.vis.selectAll('g.new_link').data([linkData]);
     link.exit().remove();
     link.enter().insert('svg:g', ':first-child')
@@ -964,11 +810,11 @@ export class D3HelperService {
       })
       .on('mousemove', (d: CanvasLink) => {
         if (d.error) {
-          self.showTip(d.error.message);
+          self.canvasTip.show(d.error.message);
         }
       })
       .on('mouseleave', () => {
-        self.hideTip();
+        self.canvasTip.hide();
       })
       .call(d3.drag()
         .on('start', this.dragStart.bind(this))
@@ -1032,36 +878,6 @@ export class D3HelperService {
         target: { x: x2, y: y2 }
       };
     }
-  }
-
-  private showTip(message: string) {
-    let position = d3.mouse(this.canvas.node());
-
-    this.tip
-      .style('opacity', .9);
-    
-    this.tip
-      .select('.tip-msg')
-      .text(() => {
-        return `${message}`;
-      });
-    
-    this.tip
-      .style('display', 'block')
-      .style('left', (d, i, eles: Element[]) => {
-        let ele = eles[i];
-        return position[0] - 8 + 'px';
-      })
-      .style('top', (d, i, eles) => {
-        let ele = eles[i];
-        return position[1] - ele.getBoundingClientRect().height - 12 + 'px';
-      });
-  }
-
-  private hideTip() {
-    this.tip
-      .style('display', 'none')
-      .style('opacity', 0);
   }
 
   /**

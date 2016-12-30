@@ -1,5 +1,5 @@
 import { Directive, ElementRef, HostListener, Input, Output, EventEmitter } from '@angular/core';
-import { DropEvent } from './drop-event.type';
+import { JNDropEvent } from './drop-event.type';
 
 @Directive({
     selector: '[droppable]',
@@ -27,7 +27,7 @@ export class Droppable {
     /**
      * Event fired when an element is dropped on a valid drop target.
      */
-    @Output() onDrop: EventEmitter<DropEvent> = new EventEmitter<DropEvent>();
+    @Output() onDrop: EventEmitter<JNDropEvent> = new EventEmitter<JNDropEvent>();
 
     /**
      * CSS class applied on the draggable that is applied when the item is being dragged.
@@ -78,7 +78,7 @@ export class Droppable {
         } catch (e) {
             data = e;
         }
-        this.onDrop.emit(new DropEvent(e, data, offset));
+        this.onDrop.emit(new JNDropEvent(e, data, offset));
     }
 
     allowDrop(e): boolean {

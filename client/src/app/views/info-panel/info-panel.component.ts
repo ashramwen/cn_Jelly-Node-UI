@@ -21,12 +21,16 @@ export class InfoPanelComponent implements OnInit {
   complexData;
   width;
   isMouseDown: Boolean;
+  isInfo: Boolean;
 
   constructor(private elementRef: ElementRef, private application: JNApplication, private events: Events) {
     this.width = 200;
     this.isMouseDown = false;
   }
 
+  /**
+   * draggable border
+   */
   onMouseMove(event) {
     if (this.isMouseDown) {
       this.width = this.width - event.movementX;
@@ -41,10 +45,23 @@ export class InfoPanelComponent implements OnInit {
     this.isMouseDown = true;
   }
 
+  /**
+   * click tabs
+   */
+  onInfoClick() {
+    this.isInfo = true;
+  }
+
+  onIntroClick() {
+    this.isInfo = false;
+  }
+
   ngOnInit() {
     this.isMouseDown = false;
     this.info = null;
     this.data = null;
+    //tabs
+    this.isInfo = true;
 
     this.events.on(NODE_EVENTS.SELECTION_CHANGED, (nodes: Array<JNBaseNode>) => {
       if (nodes.length === 1) {

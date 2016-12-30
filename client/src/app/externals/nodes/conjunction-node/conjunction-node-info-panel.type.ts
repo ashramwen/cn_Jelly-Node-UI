@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'selector',
-  template: '<div>conjunction</div>'
+  template: ''
 })
 
 export class JNConjunctionNodeInfoPanelModel extends JNInfoPanelModel {

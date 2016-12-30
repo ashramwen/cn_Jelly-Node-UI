@@ -1,3 +1,6 @@
+# 2016-12-30 5:30 PM
+Add node quick connection
+
 # 2016-12-29 10:00 AM
 Add select all nodes (Ctrl + A/Meta + A)
 

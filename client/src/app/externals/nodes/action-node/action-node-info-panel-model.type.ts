@@ -8,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
       <table *ngFor="let property of inputs.properties; let i=index">
         <thead>
           <tr>
-            <th colspan="2"><caption>Property{{i+1}}</caption></th>
+            <th colspan="2"><caption>Property</caption></th>
           </tr>
         </thead>
         <tbody>
@@ -24,6 +24,6 @@ import { Component, OnInit } from '@angular/core';
 })
 export class JNActionNodeInfoPanelModel extends JNInfoPanelModel {
   generateComplexDataComponent() {
-    return this.constructor;
+    return this.constructor; 
   }
 }

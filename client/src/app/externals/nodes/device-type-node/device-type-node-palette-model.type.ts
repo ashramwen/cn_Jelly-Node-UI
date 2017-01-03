@@ -43,12 +43,15 @@ export class JNDeviceTypeNodePaletteModel extends JNPaletteModel {
     actionConnection.title = '命令';
     actionConnection.properties = [];
     actions.forEach((action) => {
-      let data: Object = {};
+      let data;
       data = {
         typeName: typeName,
-        properties: schemas[typeName].content.actions[action].in.properties,
+        properties: [],
         actionName: action
       };
+      Object.keys(schemas[typeName].content.actions[action].in.properties).forEach(function(property){
+        data.properties.push(property);
+      })
       actionConnection.properties.push(new JNPaletteNode(<typeof JNBaseNode>this.node.constructor, JNActionNode,
         JNBaseNode.getName(JNActionNode, data), data));
     })

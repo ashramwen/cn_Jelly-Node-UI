@@ -1,3 +1,4 @@
+import { JNDragEvent } from './drag-event.type';
 import {
     Directive, ElementRef, HostListener, Input,
     Output, EventEmitter, AfterViewInit,
@@ -59,6 +60,7 @@ export class Draggable implements AfterViewInit {
     @Output() onDragEnd: EventEmitter<any> = new EventEmitter();
     
     private mouseOverElement: any;
+    private _event: JNDragEvent;
 
     constructor(private ele: ElementRef) {}
 
@@ -71,20 +73,45 @@ export class Draggable implements AfterViewInit {
 
     dragStart(e: DragEvent) {
         if (this.allowDrag()) {
+            literate(<Element>e.target);
+            setTimeout(() => {
+                recover(<Element>e.target);
+            });
+
             (<Element>e.target).classList.add(this.dragOverClass);
             e.dataTransfer.setData('application/json', JSON.stringify(this.dragData));
             e.dataTransfer.setData(this.dragScope, this.dragScope);
             e.dataTransfer.setData('offset', JSON.stringify({ x: e.offsetX, y: e.offsetY }));
+
+            this._event = new JNDragEvent(e, this.dragData, { x: e.offsetX, y: e.offsetY });
+
             e.stopPropagation();
             this.onDragStart.emit(e);
         } else {
             e.preventDefault();
         }
+
+        function literate(ele: Element) {
+            let style = ele.getAttribute('style') || '';
+            ele.setAttribute('style', style + ' background-color: transparent;');
+            if (ele.parentElement) {
+                literate(ele.parentElement);
+            }
+        }
+
+        function recover(ele: Element) {
+            let style = ele.getAttribute('style');
+            ele.setAttribute('style', style.substr(0, style.lastIndexOf('background-color: transparent;')));
+            if (ele.parentElement) {
+                recover(ele.parentElement);
+            }
+        }
     }
 
     // @HostListener('drag', ['$event'])
-    drag(e) {
-        this.onDrag.emit(e);
+    drag(e: DragEvent) {
+        this._event.nativeEvent = e;
+        this.onDrag.emit(this._event);
     }
 
     // @HostListener('dragend', ['$event'])

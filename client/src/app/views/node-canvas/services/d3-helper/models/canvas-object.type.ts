@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { SVGUtils } from './utils';
+import { SVGUtils } from '../utils';
 
 export class CanvasObject {
   element: SVGSVGElement; // native SVG element

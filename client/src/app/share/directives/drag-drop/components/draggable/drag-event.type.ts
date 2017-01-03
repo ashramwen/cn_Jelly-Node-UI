@@ -1,5 +1,5 @@
-export class JNDropEvent {
-    nativeEvent: any;
+export class JNDragEvent {
+    nativeEvent: DragEvent;
     dragData: any;
     offset: {
         x: number;

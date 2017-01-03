@@ -13,7 +13,7 @@ enum EVENT_TYPES {
 };
 
 export enum CANVAS_COMMANDS {
-  REMOVE, UNDO, ENABLE_DRAG_MOVE, DISABLED_DRAG_MOVE, COPY, PASTE, CUT, ENABLE_SHIFT, DISABLE_SHIFT
+  REMOVE, UNDO, ENABLE_DRAG_MOVE, DISABLED_DRAG_MOVE, COPY, PASTE, CUT, SELECT_ALL, ENABLE_SHIFT, DISABLE_SHIFT
 };
 
 @Injectable()
@@ -46,6 +46,10 @@ export class JNKeyboardService {
   }, {
     keyCombo: [['meta', 'x'], ['ctrl', 'x']],
     commandName: CANVAS_COMMANDS.CUT,
+    type: EVENT_TYPES.KEY_DOWN
+  }, {
+    keyCombo: [['meta', 'a'], ['ctrl', 'a']],
+    commandName: CANVAS_COMMANDS.SELECT_ALL,
     type: EVENT_TYPES.KEY_DOWN
   }, {
     keyCombo: [['shift']],

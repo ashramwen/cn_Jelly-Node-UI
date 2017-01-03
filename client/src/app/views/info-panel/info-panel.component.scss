@@ -46,4 +46,28 @@
     width: 8px;
     cursor: w-resize;
   }
+  .intro {
+    padding: 0 15px;
+  }
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    background-color: #f1f1f1;
+    height: 40px;
+  }
+  li {
+    display: block;
+    color: #000;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 16px;
+    float: left;
+    text-decoration: none;
+    &:hover {
+      background-color: #555;
+      color: white;
+    }
+  }
 }

@@ -25,6 +25,10 @@ export abstract class JNInfoPanelModel {
     return this.generateComplexDataComponent(this.complexData);
   }
 
+  get intro() {
+    return this.generateIntro();
+  }
+
   constructor(node) {
     this.node = node;
   }
@@ -76,5 +80,9 @@ export abstract class JNInfoPanelModel {
 
   protected generateComplexDataComponent(complexData) {
     return ;
+  }
+
+  protected generateIntro() {
+    return '';
   }
 }

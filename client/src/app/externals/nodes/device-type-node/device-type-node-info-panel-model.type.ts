@@ -36,4 +36,12 @@ export class JNDeviceTypeNodeInfoPanelModel extends JNInfoPanelModel {
   generateComplexDataComponent() {
     return this.constructor;
   }
+
+  generateIntro() {
+
+    return `
+# Title
+Some __test__
+`;
+  }
 }

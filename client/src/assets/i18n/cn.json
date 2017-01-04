@@ -31,5 +31,20 @@
     "JNTimeNode": {
       "nodename": "时间节点"
     }
+  },
+  "JNModules": {
+    "palette": {
+      "title": "节点面板",
+      "connections": {
+        "title": "节点面板"
+      }
+    },
+    "infoPanel": {
+      "title": "信息面板",
+      "nodeInfomation": "节点信息",
+      "introduction": "简介",
+      "infomation": "信息",
+      "data": "数据"
+    }
   }
 }

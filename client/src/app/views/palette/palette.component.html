@@ -1,7 +1,7 @@
 <div class="palette">
   <div class="palette-property">
     <div class="palette-title">
-      {{'节点面板' | translate}}
+      {{'JNModules.palette.title' | translate}}
     </div>
     <div class="palette-node-container">
       <div class="palette-node-group" *ngFor="let node of flowNodes;" [ngClass]="{'no': !node.acceptable && !node.directable, 'yes': node.acceptable || node.directable}">
@@ -11,8 +11,7 @@
               <i [ngStyle]="{'font-size': NodeSettings.NODE_ICON_HOLDER_WIDTH}">{{node.icon}}</i>
             </div>
             <div class="palette-label" dir="">{{node.name | translate}}</div>
-            <div class="palette-port output" [ngClass]="{'connectable': node.directable, 'disconnectable': !node.directable && !node.hasOutput, 'hasOutput': !node.directable && node.hasOutput}"
-              [ngStyle]="outputPortStyle"></div>
+            <div class="palette-port output" [ngClass]="{'connectable': node.directable, 'disconnectable': !node.directable && !node.hasOutput, 'hasOutput': !node.directable && node.hasOutput}" [ngStyle]="outputPortStyle"></div>
             <div class="palette-port input" [ngClass]="{'connectable': node.acceptable, 'disconnectable': !node.acceptable && !node.hasInput, 'hasOutput': !node.acceptable && node.hasInput}"
               [ngStyle]="inputPortStyle"></div>
           </div>
@@ -22,7 +21,7 @@
   </div>
   <div class="palette-property" *ngIf="connections && connections.length > 0">
     <div class="connections-title">
-      {{'Connections' | translate}}
+      {{'JNModules.palette.connections.title' | translate}}
     </div>
     <div *ngFor="let connection of connections; let j=index;">
       <div class="palette-connection">

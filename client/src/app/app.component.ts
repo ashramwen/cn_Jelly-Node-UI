@@ -8,6 +8,7 @@ import { BeehiveThing } from './externals/resources/thing.type';
 import { JNFlow } from './core/models/jn-flow.type';
 import { JNApplication } from './share/services/application-core.service';
 import { Events } from './share/services/event.service';
+import { cn } from '../../dist/assets/i18n/cn';
 
 @Component({
   selector: 'app',
@@ -22,12 +23,8 @@ import { Events } from './share/services/event.service';
 export class AppComponent implements OnInit {
 
   constructor(
-    private application: JNApplication, private events: Events, private $thing: BeehiveThing) {
-    // this language will be used as a fallback when a translation isn't found in the current language
-
-    // the lang to use, if the lang isn't available, it will use the current loader to get them
-    // translate.use('cn');
-
+    private application: JNApplication, private events: Events, private $thing: BeehiveThing, translate: TranslateService) {
+    translate.use('cn');
     // translate.setTranslation('cn', cn);
     // translate.setTranslation('en', en);
   }

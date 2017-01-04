@@ -2,18 +2,18 @@
   <div id="drag" (window:mousemove)="onMouseMove($event)" (window:mouseup)="onMouseUp($event)" (mousedown)="onMouseDown($event)">
   </div>
   <div class="info-panel-title">
-    {{ 'Info Panel' | translate }}
+    {{ 'JNModules.infoPanel.title' | translate }}
   </div>
   <ul class="nav">
-    <li [class.active]="isInfo" (click)="onInfoClick()"><div></div>节点信息</li>
-    <li [class.active]="!isInfo" (click)="onIntroClick()"><div></div>简介</li>
+    <li [class.active]="isInfo" (click)="onInfoClick()"><div></div>{{ 'JNModules.infoPanel.nodeInfomation' | translate }}</li>
+    <li [class.active]="!isInfo" (click)="onIntroClick()"><div></div>{{ 'JNModules.infoPanel.introduction' | translate }}</li>
   </ul>
   <div [hidden]="!isInfo" class="info-panel-info">
     <table class="info-table table">
       <thead>
         <tr>
           <th colspan="2">
-            <caption>Info</caption>
+            <caption>{{ 'JNModules.infoPanel.infomation' | translate }}</caption>
           </th>
         </tr>
       </thead>
@@ -28,7 +28,7 @@
       <thead>
         <tr>
           <th colspan="2">
-            <caption>Data</caption>
+            <caption>{{ 'JNModules.infoPanel.data' | translate }}</caption>
           </th>
         </tr>
       </thead>

@@ -31,5 +31,9 @@ export const cn = {
     "JNTimeNode": {
       "nodename": "时间节点"
     }
+  },
+  "JNModules": {
+    "palette": "节点面板",
+    "infoPanel": "信息面板"
   }
 };

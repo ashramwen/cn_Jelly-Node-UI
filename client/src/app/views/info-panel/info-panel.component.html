@@ -5,8 +5,8 @@
     {{ 'Info Panel' | translate }}
   </div>
   <ul class="nav">
-    <li [class.active]="isInfo" (click)="onInfoClick()">信息</li>
-    <li [class.active]="!isInfo" (click)="onIntroClick()">介绍</li>
+    <li [class.active]="isInfo" (click)="onInfoClick()"><div></div>节点信息</li>
+    <li [class.active]="!isInfo" (click)="onIntroClick()"><div></div>简介</li>
   </ul>
   <div [hidden]="!isInfo" class="info-panel-info">
     <table class="info-table table">
@@ -43,6 +43,9 @@
       <info-panel-wrapper [hidden]="!isInfo" [type]="typeComponent" [data]="complexData" *ngIf="typeComponent"></info-panel-wrapper>
     </div>
   </div>
-  <div class="intro" [hidden]="isInfo" innerHtml="{{intro}}">
+  <div class="intro" [hidden]="isInfo">
+    <p>【{{info.type}}】</p>
+    <div innerHtml="{{intro}}">
+    </div>
   </div>
 </div>

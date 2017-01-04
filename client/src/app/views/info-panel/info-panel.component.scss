@@ -47,27 +47,56 @@
     cursor: w-resize;
   }
   .intro {
-    padding: 0 15px;
+    padding: 0 5px;
+    background-color: #e9eff4;
+    margin-top: 10px;
+    border-bottom: 4px solid #9da6ad;
+    p {
+      border-bottom: 1px solid #99a3ab;
+      padding: 5px 0;
+      font-size: 14px;
+      color: #828282;
+    }
   }
   ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
     width: 100%;
-    background-color: #f1f1f1;
+    background-color: #889299;
     height: 40px;
   }
   li {
     display: block;
-    color: #000;
+    color: #fff;
     height: 40px;
     line-height: 40px;
-    padding: 0 16px;
     float: left;
     text-decoration: none;
+    width: 50%;
+    text-align: center;
+    position: relative;
+    z-index: 1;
     &:hover {
-      background-color: #555;
+      background-color: #99a3ab;
       color: white;
+    }
+    &.active {
+      background-color: #99a3ab;
+      color: white;
+      span {
+        border-bottom: 2px solid #ffc000;
+        width: 60%;
+      }
+      div:before {
+        content: "";
+        position: absolute;
+        left: 30%;
+        bottom: 0;
+        height: 2px;
+        width: 45%;
+        border-bottom: 2px solid #ffc000;
+      }
     }
   }
 }

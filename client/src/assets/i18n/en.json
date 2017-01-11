@@ -36,7 +36,7 @@
     "palette": {
       "title": "Node Panel",
       "connections": {
-        "title": "Node Panel"
+        "title": "Connection Panel"
       }
     },
     "infoPanel": {

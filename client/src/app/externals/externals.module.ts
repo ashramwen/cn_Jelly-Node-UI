@@ -1,15 +1,15 @@
 import { NgModule, ANALYZE_FOR_ENTRY_COMPONENTS } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { MaterialModule } from '@angular/material';
+import { Http } from '@angular/http';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+
 import { BEEHIVE_RESOURCES } from './resources/index';
 import { BEEHIVE_RPOVIDERS } from './services/index';
-import { Http } from '@angular/http';
 import { RuleApplication } from './rule-application-core';
-import { ResourceProviders } from 'ng2-resource-rest';
 import { AuthenHelperSerivce } from './services/authen-helper.service';
 import { ResourceService } from './resources/resources.service';
 import { EXTERNAL_CONTROLS } from './controls/index';
-import { BrowserModule } from '@angular/platform-browser';
-import { MaterialModule } from '@angular/material';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { JNEditorControlModule } from '../views/node-editor/components/control.module';
 import { JNControlsModule } from '../views/controls/controls.module';
 import { JNApplication } from '../share/services/application-core.service';

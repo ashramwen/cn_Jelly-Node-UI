@@ -261,7 +261,7 @@ export class D3HelperService {
       .map(s => <CanvasNode>s)[0];
     
     let result = this.virtualLinkService.examVirtualLink(node, e);
-    this.moveMouseLink(result.linkData);
+    this.moveMouseLink(result.linkData, 'dashed');
   }
 
   public drawNodes() {
@@ -761,11 +761,12 @@ export class D3HelperService {
     this.events.emit(NODE_EVENTS.SELECTION_CHANGED, nodes);
   }
 
-  private moveMouseLink = (linkData: { source: CanvasPoint, target: CanvasPoint }) => {
+  private moveMouseLink (linkData: { source: CanvasPoint, target: CanvasPoint }, style: 'line' | 'dashed' = 'line') {
     let link = this.vis.selectAll('g.new_link').data([linkData]);
     link.exit().remove();
     link.enter().insert('svg:g', ':first-child')
       .classed('new_link', true)
+      .classed('dashed', style === 'dashed')
       .insert('svg:path')
       .attr('d', (_d) => {
         return this.genLinkPathValueWithPoints(_d.source, _d.target);

@@ -25,6 +25,9 @@ export class AppComponent implements OnInit {
   constructor(
     private application: JNApplication, private events: Events, private $thing: BeehiveThing, translate: TranslateService) {
     translate.use('cn');
+    translate.use('en');
+
+    console.log('translate', translate);
     // translate.setTranslation('cn', cn);
     // translate.setTranslation('en', en);
   }

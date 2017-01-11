@@ -1,0 +1,50 @@
+{
+  "APP_NAME": "Jelly-Node",
+  "terms": {
+    "pleaseSelect": "--please select--"
+  },
+  "nodeset": {
+    "JNRuleNode": {
+      "nodename": "Rule"
+    },
+    "JNDeviceTypeNode": {
+      "nodename": "Device Type"
+    },
+    "JNDevicePropertyNode": {
+      "nodename": "Device Property"
+    },
+    "JNLocationNode": {
+      "nodename": "Location"
+    },
+    "JNConjunctionNode": {
+      "nodename": "Conjunction"
+    },
+    "JNConditionNode": {
+      "nodename": "Condition"
+    },
+    "JNApiNode": {
+      "nodename": "API"
+    },
+    "JNActionNode": {
+      "nodename": "Action"
+    },
+    "JNTimeNode": {
+      "nodename": "Time"
+    }
+  },
+  "JNModules": {
+    "palette": {
+      "title": "Node Panel",
+      "connections": {
+        "title": "Node Panel"
+      }
+    },
+    "infoPanel": {
+      "title": "Info Panel",
+      "nodeInfomation": "Node Info",
+      "introduction": "Introduction",
+      "infomation": "Info",
+      "data": "Data"
+    }
+  }
+}

@@ -96,6 +96,9 @@ svg {
     stroke-width: $stroke-active-width;
     fill: transparent;
   }
+  g.new_link path {
+    stroke-dasharray: 5,5;
+  }
   g.link {
     cursor: pointer;
     path {

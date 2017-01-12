@@ -23,12 +23,12 @@
     <div class="connections-title">
       {{'JNModules.palette.connections.title' | translate}}
     </div>
-    <div *ngFor="let connection of connections; let j=index;">
-      <div class="palette-connection">
-        <div class="palette-connection-title">
-          {{connection.title}}
-        </div>
-        <div class="palette-node-container">
+    <div class="palette-node-container">
+      <div *ngFor="let connection of connections; let j=index;">
+        <div class="palette-connection">
+          <div class="palette-connection-title">
+            {{connection.title}}
+          </div>
           <div class="palette-node-group" *ngFor="let node of connection.properties;" [ngClass]="{'no': !node.acceptable && !node.directable, 'yes': node.acceptable || node.directable}">
             <div class="palette-function">
               <div draggable (onDrag)="onDrag($event)" [disabled]="!node.acceptable && !node.directable" [dragData]="node" class="palette-node" [ngStyle]="nodeStyle">

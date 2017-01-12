@@ -4,7 +4,7 @@
   background-color: #808e99;
   .palette-property {
     border-bottom: 1px solid;
-    overflow: scroll;
+    height: 100%;
     &.half {
       height: 50%;
     }
@@ -27,84 +27,88 @@
       background-color: #dce7ea;
       border-bottom: 1px solid;
     }
-    .palette-connection {
-      border-bottom: 1px solid;
-      .palette-connection-title {
-        height: 38px;
-        line-height: 38px;
-        font-size: 14px;
-        color: #565b5c;
-        text-align: center;
-        background-color: #8fadc4;
+    .palette-node-container {
+      overflow: scroll;
+      height: calc(100% - 39px);
+      .palette-connection {
         border-bottom: 1px solid;
-      }
-    }
-    .palette-node-group {
-      padding: 10px 0;
-      background-color: #485c6b;
-      &.no {
-        font-size: 14px;
-        color: #485c6b;
-        background-color: #808e99;
-      }
-      &.yes {
-        &:hover {
-          background: #344654;
-        }
-      }
-      .palette-node {
-        width: 152px;
-        position: relative;
-        cursor: move;
-        margin: 0 auto;
-        border-radius: 7px;
-        border: 2px solid #f1f7fb;
-        background-position: 5% 50%;
-        background-repeat: no-repeat;
-        background-size: contain;
-        background-color: transparent;
-        .palette-label {
-          color: #f1f7fb;
+        .palette-connection-title {
+          height: 38px;
+          line-height: 38px;
           font-size: 14px;
-          overflow: hidden;
+          color: #565b5c;
           text-align: center;
-          // &.right {
-          //   margin-left: 0 !important;
-          //   margin-right: 40px;
-          // }
+          background-color: #8fadc4;
+          border-bottom: 1px solid;
         }
-        .palette-icon {
-          text-align: center;
-          font-family: icomoon;
-          float: left;
-          // &.left {
-          //   left: 0;
-          // }
-          // &.right {
-          //   left: 140px;
-          // }
-          i {
-            color: #f1f7fb;
+      }
+      .palette-node-group {
+        padding: 10px 0;
+        background-color: #485c6b;
+        &.no {
+          font-size: 14px;
+          color: #485c6b;
+          background-color: #808e99;
+        }
+        &.yes {
+          &:hover {
+            background: #344654;
           }
         }
-        .palette-port {
-          position: absolute;
-          margin-top: -6px;
-          top: 50%;
-          box-sizing: border-box;
-          -moz-box-sizing: border-box;
+        .palette-node {
+          width: 152px;
+          position: relative;
+          cursor: move;
+          margin: 0 auto;
+          border-radius: 7px;
           border: 2px solid #f1f7fb;
-          &.output {
-            left: auto;
+          background-position: 5% 50%;
+          background-repeat: no-repeat;
+          background-size: contain;
+          background-color: transparent;
+          .palette-label {
+            color: #f1f7fb;
+            font-size: 14px;
+            overflow: hidden;
+            text-align: center;
+            // &.right {
+            //   margin-left: 0 !important;
+            //   margin-right: 40px;
+            // }
           }
-          &.connectable {
-            background-color: #8fc31f;
+          .palette-icon {
+            text-align: center;
+            font-family: icomoon;
+            float: left;
+            // &.left {
+            //   left: 0;
+            // }
+            // &.right {
+            //   left: 140px;
+            // }
+            i {
+              color: #f1f7fb;
+            }
           }
-          &.disconnectable {
-            display: none;
-          }
-          &.hasOutput {
-            background-color: #fff;
+          .palette-port {
+            position: absolute;
+            margin-top: -6px;
+            top: 50%;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            border: 2px solid #f1f7fb;
+            &.output {
+              left: auto;
+            }
+            &.connectable {
+              background-color: #8fc31f;
+            }
+            &.disconnectable {
+              display: none;
+            }
+            &.hasOutput {
+              background-color: #fff;
+            }
           }
         }
       }

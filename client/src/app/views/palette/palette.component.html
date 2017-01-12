@@ -1,5 +1,5 @@
 <div class="palette">
-  <div class="palette-property">
+  <div class="palette-property" [ngClass]="{'half': connections && connections.length > 0}">
     <div class="palette-title">
       {{'JNModules.palette.title' | translate}}
     </div>
@@ -19,7 +19,7 @@
       </div>
     </div>
   </div>
-  <div class="palette-property" *ngIf="connections && connections.length > 0">
+  <div class="palette-property half" *ngIf="connections && connections.length > 0">
     <div class="connections-title">
       {{'JNModules.palette.connections.title' | translate}}
     </div>

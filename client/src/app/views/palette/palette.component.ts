@@ -26,6 +26,7 @@ export class PaletteComponent implements OnInit {
   private inputPortStyle: any;
   private outputPortStyle: any;
   private NodeSettings;
+  private propertyHeight;
 
   constructor(private application: JNApplication, private events: Events, private injector: Injector) {
     this.flowNodes = [];
@@ -33,7 +34,7 @@ export class PaletteComponent implements OnInit {
     let externalSettings = injector.get(JN_NODE_SETTING);
     this.NodeSettings = {};
     Object.assign(this.NodeSettings, NodeSettings, externalSettings);
-    this.NodeSettings.HALF_HANDLER_HEIGHT = this.NodeSettings.HANDLER_HEIGHT / 2;
+    this.NodeSettings.HALF_HANDLER_HEIGHT = (this.NodeSettings.HANDLER_HEIGHT + 2) / 2;
     this.NodeSettings.PORT_SHIFT = -(this.NodeSettings.HANDLER_WIDTH / 2 + 2);
     Object.keys(this.NodeSettings).forEach(key => {
       if (key == 'HANDLER_WIDTH' || key == 'HANDLER_HEIGHT') {
@@ -53,7 +54,9 @@ export class PaletteComponent implements OnInit {
           this.flowNodes = palette.nodes;
           this.connections = palette.connections;
           console.log('connections', this.connections);
+          if (this.connections.length > 0) {
 
+          }
         } else {
           this.flowNodes = JNPaletteModel.getNodes();
           this.connections = [];

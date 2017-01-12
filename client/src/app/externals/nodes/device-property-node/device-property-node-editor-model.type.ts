@@ -20,7 +20,7 @@ import {
   formControls: {
     property: {
       input: <ISelectInput>{
-        label: '设备属性',
+        label: 'nodeset.JNDevicePropertyNode.deviceProperty',
         options: []
       },
       controlType: JNSelectControl,

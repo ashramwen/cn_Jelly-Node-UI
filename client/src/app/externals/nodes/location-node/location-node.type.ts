@@ -16,7 +16,7 @@ import { JNDeviceTypeNode } from '../device-type-node/device-type-node.type';
   paletteModel: JNLocationNodePaletteModel,
   accepts: [],
   modelRules: [{
-    message: '必须选择一个地址',
+    message: 'nodeset.JNLocationNode.errors.locationRequired',
     validator: (model: JNLocationNodeModel) => {
       return !!model.locationID;
     }

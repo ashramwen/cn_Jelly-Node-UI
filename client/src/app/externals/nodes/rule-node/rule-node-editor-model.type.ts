@@ -17,7 +17,7 @@ import {
   formControls: {
     ruleName: {
       input: <ITextInput>{
-        label: '规则名称',
+        label: 'nodeset.JNRuleNode.ruleName',
         maxLength: 50
       },
       controlType: JNTextControl,
@@ -37,12 +37,12 @@ import {
     },
     triggerWhen: {
       input: <IRadioInput>{
-        label: '何时触发',
+        label: 'nodeset.JNRuleNode.triggerWhen',
         options: [
-          { text: '为真', value: 'CONDITION_TRUE' },
-          { text: '由假转真', value: 'CONDITION_FALSE_TO_TRUE' },
-          { text: '由真转假', value: 'CONDITION_TRUE_TO_FALSE' },
-          { text: '改变', value: 'CONDITION_CHANGE' }
+          { text: 'nodeset.JNRuleNode.conditionTrue', value: 'CONDITION_TRUE' },
+          { text: 'nodeset.JNRuleNode.conditionFalseToTrue', value: 'CONDITION_FALSE_TO_TRUE' },
+          { text: 'nodeset.JNRuleNode.conditionTrueToFalse', value: 'CONDITION_TRUE_TO_FALSE' },
+          { text: 'nodeset.JNRuleNode.conditionChange', value: 'CONDITION_CHANGE' }
         ]
       },
       controlType: JNRadioControl,
@@ -50,7 +50,7 @@ import {
     },
     description: {
       input: <ITextareaInput>{
-        label: '描述',
+        label: 'terms.description',
         maxLength: 500
       },
       controlType: JNTextAreaControl,

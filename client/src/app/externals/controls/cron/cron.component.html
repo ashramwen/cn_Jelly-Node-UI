@@ -12,7 +12,7 @@
 <!-- year -->
 <div class="jn-form" *ngIf="!(yearValue !== 'enum')">
   <label class="jn-form-label">
-    年份
+    {{'nodeset.JNTimeNode.selectedYears' | translate}}
   </label>
   <jn-button-toggle-group class="jn-form-control"
     (ngModelChange)="change($event)"
@@ -24,7 +24,7 @@
 <!-- month -->
 <div class="jn-form" *ngIf="!(monthValue !== 'enum')">
   <label class="jn-form-label">
-    月份
+    {{'nodeset.JNTimeNode.selectedMonths' | translate}}
   </label>
   <jn-button-toggle-group class="jn-form-control" 
     (ngModelChange)="change($event)"
@@ -36,7 +36,7 @@
 <!-- week -->
 <div class="jn-form" *ngIf="!(weekValue !== 'enum')">
   <label class="jn-form-label">
-    第几周
+    {{'nodeset.JNTimeNode.selectedWeeks' | translate}}
   </label>
   <jn-button-toggle-group class="jn-form-control" 
     (ngModelChange)="change($event)"
@@ -48,7 +48,7 @@
 <!-- day -->
 <div class="jn-form" *ngIf="!(dayValue !== 'enum')">
   <label class="jn-form-label">
-    第几天
+    {{'nodeset.JNTimeNode.selectedDays' | translate}}
   </label>
   <jn-button-toggle-group class="jn-form-control" 
     (ngModelChange)="change($event)"
@@ -61,7 +61,7 @@
 <!-- Hour -->
 <div class="jn-form">
   <label class="jn-form-label">
-    第几小时
+    {{'nodeset.JNTimeNode.selectedHours' | translate}}    
   </label>
   <jn-button-toggle-group class="jn-form-control" 
     (ngModelChange)="change($event)"
@@ -74,7 +74,7 @@
 <!-- Minutes -->
 <div class="jn-form">
   <label class="jn-form-label">
-    第几分钟
+    {{'nodeset.JNTimeNode.selectedMinutes' | translate}}    
   </label>
   <jn-button-toggle-group class="jn-form-control" 
     (ngModelChange)="change($event)"

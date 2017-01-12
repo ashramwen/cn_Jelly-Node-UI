@@ -50,94 +50,7 @@ export interface IConditionResult {
     require('../../../views/node-editor/components/control.scss'),
     require('./property-condition.component.scss')
   ],
-  template: `
-    <div>
-      <div 
-        [ngSwitch]="condition.type" 
-        class="jn-form condition-container" 
-        *ngFor="let condition of conditions">
-        <!-- range type row -->
-        <template [ngSwitchCase]="'range'">
-          <div class="title-container">
-            <div class="title-inner">
-              <label>{{condition.text}}</label>
-            </div>
-          </div>
-          <div class="option-container">
-            <div class="option-row">
-              <jn-select 
-                class="aggregation" 
-                [(ngModel)]="condition.aggregation" 
-                (ngModelChange)="modelChange($event)"
-                [options]="aggregationOptions"
-              ></jn-select>
-            </div>
-            <div class="option-row">
-              <jn-select 
-                class="operator auto-width" 
-                [(ngModel)]="condition.operator" 
-                (ngModelChange)="modelChange($event)"
-                [options]="getOperators(condition.type)"
-              ></jn-select>
-            </div>
-            <div class="option-row">
-              <input class="jn-form-control jn-text" type="text" [(ngModel)]="condition.value" (ngModelChange)="modelChange($event)" />
-            </div>
-          </div>
-        </template>
-
-        <!-- enum type row -->
-        <template [ngSwitchCase]="'enum'">
-          <div class="title-container">
-            <div class="title-inner">
-              <label>{{condition.text}}</label>
-            </div>
-          </div>
-          <div class="option-container">
-            <div class="option-row">
-              <jn-select 
-                class="operator auto-width" 
-                [(ngModel)]="condition.operator" 
-                (ngModelChange)="modelChange($event)"
-                [options]="getOperators(condition.type)"
-              ></jn-select>
-            </div>
-            <div class="option-row">
-              <jn-select 
-                class="jn-form-control" 
-                [(ngModel)]="condition.value" 
-                (ngModelChange)="modelChange($event)"
-                [options]="condition.options"
-              ></jn-select>
-            </div>
-          </div>
-        </template>
-
-        <!-- enum type row -->
-        <template [ngSwitchCase]="'value'">
-          <div class="title-container">
-            <div class="title-inner">
-              <label>{{condition.text}}</label>
-            </div>
-          </div>
-          <div class="option-container">
-            <div class="option-row">
-              <jn-select 
-                class="operator auto-width"
-                [(ngModel)]="condition.operator"
-                (ngModelChange)="modelChange($event)"
-                [options]="getOperators(condition.type)">
-              </jn-select>
-            </div>
-            <div class="option-row">
-              <input type="text" class="jn-form-control" [(ngModel)]="condition.value" (ngModelChange)="modelChange($event)" />
-            </div>
-          </div>
-        </template>
-
-      </div>
-    </div>
-  `,
+  templateUrl: './property-condition.component.html',
   providers: [VALUE_ACCESSOR],
   encapsulation: ViewEncapsulation.None
 })
@@ -172,19 +85,19 @@ export class RulePropertyCondition extends JNEditorFormControl {
   }];
 
   private _aggregations = [{
-    text: '求和',
+    text: 'terms.sum',
     value: 'sum'
   }, {
-    text: '最小值',
+    text: 'terms.min',
     value: 'min'
   }, {
-    text: '最大值',
+    text: 'terms.max',
     value: 'max'
   }, {
-    text: '平均值',
+    text: 'terms.average',
     value: 'avg'
   }, {
-    text: '计数',
+    text: 'terms.count',
     value: 'count'
   }];
 

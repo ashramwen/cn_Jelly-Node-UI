@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FlowListService } from './flow-list.service';
 import { JNFlow } from '../../../core/models/jn-flow.type';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { JNUtils } from '../../../share/util';
 import { Events } from '../../../share/services/event.service';
 import { APP_READY } from '../../../share/services/application-core.service';
@@ -17,7 +17,8 @@ export class FlowListComponent implements OnInit{
   constructor(
     private flowListService: FlowListService,
     private events: Events,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) { 
     this.flows = [];
   }
@@ -32,11 +33,15 @@ export class FlowListComponent implements OnInit{
   }
 
   goFlow(flow: JNFlow) {
-    this.router.navigate(['/flow', flow.flowID]);
+    this.route.params.subscribe(params => {
+      this.router.navigate([params['lan'], 'flow', flow.flowID]);
+    });
   }
 
   createFlow() {
-    this.router.navigate(['/flow', 'new']);
+    this.route.params.subscribe(params => {
+      this.router.navigate([params['lan'], 'flow', 'new']);
+    });
   }
 
   deleteFlow(flow: JNFlow) {

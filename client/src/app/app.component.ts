@@ -8,7 +8,12 @@ import { BeehiveThing } from './externals/resources/thing.type';
 import { JNFlow } from './core/models/jn-flow.type';
 import { JNApplication } from './share/services/application-core.service';
 import { Events } from './share/services/event.service';
-import { cn } from '../../dist/assets/i18n/cn';
+import { Router, ActivatedRoute, Routes } from '@angular/router';
+import { ResourceParams } from 'ng2-resource-rest';
+
+const cn = require('../assets/i18n/cn.json');
+const en = require('../assets/i18n/en.json');
+
 
 @Component({
   selector: 'app',
@@ -23,20 +28,19 @@ import { cn } from '../../dist/assets/i18n/cn';
 export class AppComponent implements OnInit {
 
   constructor(
-    private application: JNApplication, private events: Events, private $thing: BeehiveThing, translate: TranslateService) {
-    translate.use('cn');
-    translate.use('en');
-
-    console.log('translate', translate);
+    private application: JNApplication,
+    private events: Events,
+    private $thing: BeehiveThing,
+    private translate: TranslateService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {
+    console.log(en);
     // translate.setTranslation('cn', cn);
     // translate.setTranslation('en', en);
+    this.translate.use('en');
   }
 
   ngOnInit() {
-    setTimeout(() => {
-      // let nodeFlow = new JNFlow();
-      // let node = nodeFlow.createNode(JNLocationNode);
-      // console.log(node);
-    }, 3000);
   }
 }

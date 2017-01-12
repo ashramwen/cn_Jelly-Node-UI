@@ -16,7 +16,7 @@ import { JNEditFormComponent } from '../../../views/node-editor/node-editor.comp
   formControls: {
     typeName: {
       input: <ISelectInput>{
-        label: '设备种类',
+        label: 'terms.deviceType',
         options: []
       },
       controlType: JNSelectControl,
@@ -24,15 +24,15 @@ import { JNEditFormComponent } from '../../../views/node-editor/node-editor.comp
     },
     things: {
       input: <ICheckTableInput>{
-        label: '设备选择列表',
+        label: 'nodeset.JNDeviceTypeNode.thingList',
         tableFields: [{
           displayName: 'ID',
           fieldName: 'thingID'
         }, {
-          displayName: '设备编号',
+          displayName: 'terms.thingID',
           fieldName: 'vendorThingID'
         }, {
-          displayName: '位置',
+          displayName: 'terms.location',
           fieldName: 'location'
         }],
         tableData: [],

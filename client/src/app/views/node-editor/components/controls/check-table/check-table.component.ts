@@ -46,7 +46,7 @@ interface ITableField {
           <tr>
             <th></th>
             <th *ngFor="let field of tableFields">
-              {{field.displayName}}
+              {{field.displayName | translate}}
             </th>
           </tr>
         </thead>

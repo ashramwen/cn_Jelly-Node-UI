@@ -7,6 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { TranslateModule } from 'ng2-translate';
 import { HttpModule, Http } from '@angular/http';
 import { TranslateLoader, TranslateStaticLoader } from "ng2-translate/src/translate.service";
+import { RouterModule } from '@angular/router';
 
 
 /*
@@ -15,7 +16,9 @@ import { TranslateLoader, TranslateStaticLoader } from "ng2-translate/src/transl
 */
 @NgModule({
   imports: [
-    ExternalsModule, AppRoutingModule, HttpModule, TranslateModule.forRoot({
+    RouterModule,
+    ExternalsModule, AppRoutingModule, HttpModule,
+    TranslateModule.forRoot({
       provide: TranslateLoader,
       useFactory: (http: Http) => new TranslateStaticLoader(http, '/assets/i18n', '.json'),
       deps: [Http]

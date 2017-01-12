@@ -121,7 +121,7 @@ svg {
 
 div.tooltip {
   position: absolute;
-  text-align: center;
+  text-align: left;
   max-width: 200px;
   min-width: 100px;
   padding: 10px;
@@ -130,6 +130,7 @@ div.tooltip {
   border: 0px;
   border-radius: 3px;
   pointer-events: none;
+  line-height: 17px;
   span.fa{
     font-size: 15px;
     margin-right: 10px;

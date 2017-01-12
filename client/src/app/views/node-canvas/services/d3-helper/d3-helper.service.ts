@@ -311,7 +311,10 @@ export class D3HelperService {
       })
       .on('mousemove', (d: CanvasNode) => {
         if (d.error) {
-          self.canvasTip.show(d.error.message);
+          this.translate.get(d.error.message)
+            .subscribe((translated) => {
+              self.canvasTip.show(translated || d.error.message);
+            });
         }
       })
       .on('mouseleave', () => {
@@ -811,7 +814,10 @@ export class D3HelperService {
       })
       .on('mousemove', (d: CanvasLink) => {
         if (d.error) {
-          self.canvasTip.show(d.error.message);
+          this.translate.get(d.error.message)
+            .subscribe((translated) => {
+              self.canvasTip.show(translated || d.error.message);
+            });
         }
       })
       .on('mouseleave', () => {

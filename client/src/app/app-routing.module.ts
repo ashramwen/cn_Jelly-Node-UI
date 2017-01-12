@@ -6,10 +6,10 @@ import { FlowDetailComponent } from './externals/components/flow-detail/flow-det
 
 
 const routes: Routes = [
-    { path: '', redirectTo: '/login', pathMatch: 'full' },
-    { path: 'login', component: LoginComponent },
-    { path: 'flow', component: FlowListComponent },
-    { path: 'flow/:id', component: FlowDetailComponent }
+    { path: '', redirectTo: 'cn/login', pathMatch: 'full' },
+    { path: ':lan/login', component: LoginComponent },
+    { path: ':lan/flow', component: FlowListComponent },
+    { path: ':lan/flow/:id', component: FlowDetailComponent }
 ];
 
 @NgModule({

@@ -20,12 +20,12 @@ import { JNActionNodeInfoPanelModel } from './action-node-info-panel-model.type'
   paletteModel: JNActionPaletteNodeModel,
   accepts: ['DeviceType'],
   modelRules: [{
-    message: '必须选择一个行为',
+    message: 'nodeset.JNActionNode.errors.actionRequired',
     validator: (model: JNActionNodeModel) => {
       return !!model.actionName;
     }
   }, {
-    message: '所选行为与设备类型不符',
+    message: 'nodeset.JNActionNode.errors.actionDeviceNotMatch',
     validator: (model: JNActionNodeModel) => {
       if (!model.actionName) return true;
       let schema = RuleApplication.instance.resources.$schema.schemas[model.typeName];
@@ -34,7 +34,7 @@ import { JNActionNodeInfoPanelModel } from './action-node-info-panel-model.type'
       return true;
     }
   }, {
-    message: '某些属性值为空',
+    message: 'nodeset.JNActionNode.errors.emptyProperty',
     validator: (model: JNActionNodeModel) => {
       if (!model.properties) return true;
       for (let property of model.properties) {
@@ -48,9 +48,9 @@ import { JNActionNodeInfoPanelModel } from './action-node-info-panel-model.type'
   connectRules: {
     global: [],
     nodes: [{
-      nodeType: 'DeviceType',
+      nodeType: 'nodeset.JNActionNode.errors.DeviceType',
       rules: [{
-        message: `<DeviceProperty>节点只接受一个<DeviceType>节点作为输入。`,
+        message: `multiDeviceType`,
         validator: (node: JNActionNode, target: JNDeviceTypeNode) => {
           let deviceTypeNodes = JNUtils.toArray<JNBaseNode>(node.nodeMap.accepted)
             .map(pair => pair.value)
@@ -61,7 +61,7 @@ import { JNActionNodeInfoPanelModel } from './action-node-info-panel-model.type'
           return false;
         }
       }, {
-        message: `<DeviceType>节点不能同时与<Action>节点与<DeviceProperty>相连。`,
+        message: `nodeset.JNActionNode.errors.actionPropertyConflict`,
         validator: (node: JNActionNode, target: JNDeviceTypeNode) => {
           let nodes = target.outputTo
             .filter(n => n instanceof JNDevicePropertyNode);

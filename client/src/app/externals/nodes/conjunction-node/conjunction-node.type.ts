@@ -15,7 +15,7 @@ import { JNConjunctionNodeInfoPanelModel } from './conjunction-node-info-panel.t
   paletteModel: JNConjunctionNodePaletteModel,
   accepts: ['Condition', 'Conjunction'],
   modelRules: [{
-    message: '连接表达式不能为空',
+    message: 'nodeset.JNConjunctionNode.errors.expressionRequired',
     validator: (model: JNConjunctionNodeModel) => {
       return !!model.conjunction;
     }

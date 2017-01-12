@@ -15,12 +15,12 @@ import { JNTimeNodeInfoPanelModel } from './time-node-info-panel-model.type';
   paletteModel: JNTimeNodePaletteModel,
   accepts: [],
   modelRules: [{
-    message: '必须选择一种间隔类型',
+    message: 'nodeset.JNTimeNode.errors.scheduleTypeRequired',
     validator: (model: JNTimeNodeModel) => {
       return !!model.timeType;
     }
   }, {
-    message: '间隔格式不正确',
+    message: 'nodeset.JNTimeNode.errors.cronError',
     validator: (model: JNTimeNodeModel) => {
       if (!model.timeType) return true;
       if (model.timeType === 'interval') {

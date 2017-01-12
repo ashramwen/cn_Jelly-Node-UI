@@ -21,7 +21,7 @@ import { JNNodeEditor } from '../../../core/models/node-editor-annotation';
     location: {
       input: <ISelectSetInput>{
         set: [],
-        label: '位置'
+        label: 'terms.location'
       },
       controlType: JNSelectSetControl,
       $validators: []

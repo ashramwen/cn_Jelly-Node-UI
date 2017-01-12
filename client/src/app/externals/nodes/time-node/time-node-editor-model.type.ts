@@ -19,12 +19,12 @@ import {
   formControls: {
     timeType: {
       input: <IRadioInput>{
-        label: '触发类型',
+        label: 'nodeset.JNTimeNode.type',
         options: [{
-          text: '固定间隔',
+          text: 'nodeset.JNTimeNode.interval',
           value: 'interval'
         }, {
-          text: '定时定点',
+          text: 'nodeset.JNTimeNode.schedule',
           value: 'cron'
         }]
       },
@@ -33,14 +33,14 @@ import {
     },
     cron: {
       input: {
-        label: '表达式'
+        label: 'nodeset.JNTimeNode.schedule'
       },
       controlType: RuleCron,
       $validators: []
     },
     interval: {
       input: <ITextareaInput>{
-        label: '间隔时间',
+        label: 'nodeset.JNTimeNode.interval',
         maxLength: 500
       },
       controlType: JNTextControl,
@@ -48,15 +48,15 @@ import {
     },
     timeUnit: {
       input: <ISelectInput>{
-        label: '时间单位',
+        label: 'nodeset.JNTimeNode.timeUnit',
         options: [{
-          text: '天',
+          text: 'terms.day',
           value: 'day'
         }, {
-          text: '小时',
+          text: 'terms.hour',
           value: 'hour'
         }, {
-          text: '分钟',
+          text: 'terms.minute',
           value: 'min'
         }]
       },

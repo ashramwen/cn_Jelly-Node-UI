@@ -20,12 +20,12 @@ import { JNDeviceTypeNodeInfoPanelModel } from './device-type-node-info-panel-mo
   paletteModel: JNDeviceTypeNodePaletteModel,
   accepts: ['Location', 'Rule'],
   modelRules: [{
-    message: '必须选择一个设备类型',
+    message: 'nodeset.JNDeviceTypeNode.errors.typeRequired',
     validator: (model: JNDeviceTypeNodeModel) => {
       return !!model.typeName;
     }
   }, {
-    message: '必须包含至少一个设备',
+    message: 'nodeset.JNDeviceTypeNode.errors.deviceRequired',
     validator: (model: JNDeviceTypeNodeModel) => {
       return !!model.things && !!model.things.length;
     }

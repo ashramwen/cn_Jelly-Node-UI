@@ -20,12 +20,12 @@ import { JNDevicePropertyNodeInfoPanelModel } from './device-property-node-info-
   paletteModel: JNDevicePropertyNodePaletteModel,
   accepts: ['DeviceType'],
   modelRules: [{
-    message: '必须选择一个属性',
+    message: 'nodeset.JNDevicePropertyNode.errors.propertyRequired',
     validator: (model: JNDevicePropertyNodeModel) => {
       return !!model.property;
     }
   }, {
-    message: '属性值与所属设备类型不符',
+    message: 'nodeset.JNDevicePropertyNode.errors.propertyDeviceConflict',
     validator: (model: JNDevicePropertyNodeModel) => {
       if (!model.typeName) return true;
       if (!model.property) return true;
@@ -45,7 +45,7 @@ import { JNDevicePropertyNodeInfoPanelModel } from './device-property-node-info-
     nodes: [{
       nodeType: 'DeviceType',
       rules: [{
-        message: `<DeviceProperty>节点只接受一个<DeviceType>节点作为输入。`,
+        message: `nodeset.JNDevicePropertyNode.errors.multiDeviceType`,
         validator: (node, target) => {
           let deviceTypeNodes = JNUtils.toArray<JNBaseNode>(node.nodeMap.accepted)
             .map(pair => pair.value)
@@ -56,7 +56,7 @@ import { JNDevicePropertyNodeInfoPanelModel } from './device-property-node-info-
           return false;
         }
       }, {
-          message: `<DeviceType>节点不能同时与<Action>节点与<DeviceProperty>相连。`,
+          message: `nodeset.JNDevicePropertyNode.errors.propertyActionConflict`,
           validator: (node: JNDevicePropertyNode, target: JNDeviceTypeNode) => {
             let nodes = target.outputTo.filter(n => n instanceof JNActionNode);
             return !nodes.length;

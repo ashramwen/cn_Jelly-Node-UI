@@ -1,35 +1,126 @@
 {
   "APP_NAME": "Jelly-Node",
   "terms": {
-    "pleaseSelect": "--please select--"
+    "pleaseSelect": "--please select--",
+    "save": "Save",
+    "public": "Publish",
+    "saveAndPublish": "Save & Publish",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "flowList": "Flow List",
+    "submit": "Submit",
+    "deviceType": "Type",
+    "thingID": "VendorThingID",
+    "location": "Location",
+    "min": "Min",
+    "max": "Max",
+    "average": "Avg",
+    "count": "Count",
+    "sum": "Sum",
+    "and": "And",
+    "or": "Or",
+    "nor": "Nor",
+    "description": "Description",
+    "day": "Day",
+    "hour": "Hour",
+    "minute": "Minute"
   },
   "nodeset": {
     "JNRuleNode": {
-      "nodename": "Rule"
+      "nodename": "Rule",
+      "ruleName": "Rule Name",
+      "triggerWhen": "Tigger When",
+      "conditionTrue": "True",
+      "conditionFalseToTrue": "F2T",
+      "conditionTrueToFalse": "T2F",
+      "conditionChange": "Change",
+      "errors": {
+        "ruleNameRequired": "Rule Name is Required.",
+        "triggerWhenRequired": "Rule Trigger Condition is Required."
+      }
     },
     "JNDeviceTypeNode": {
-      "nodename": "Device Type"
+      "nodename": "Device Type",
+      "thingList": "Device List",
+      "errors": {
+        "typeRequired": "Device Type is Required.",
+        "deviceRequired": "At Least One Device is Required."
+      }
     },
     "JNDevicePropertyNode": {
-      "nodename": "Device Property"
+      "nodename": "Device Property",
+      "deviceProperty": "Property",
+      "errors": {
+        "propertyRequired": "At Least One Property is Required.",
+        "propertyDeviceConflict": "Property and Device Not Match.",
+        "multiDeviceType": "<DeviceProperty> Node Only Accept One <DeviceType> Node as Input.",
+        "propertyActionConflict": "<DeviceType> Node Cannot Connect to <Action> Node and <DeviceProperty> Node At the Same Time."
+      }
     },
     "JNLocationNode": {
-      "nodename": "Location"
+      "nodename": "Location",
+      "errors": {
+        "locationRequired": "Location is Required."
+      }
     },
     "JNConjunctionNode": {
-      "nodename": "Conjunction"
+      "nodename": "Conjunction",
+      "connectionExpression": "Connection",
+      "errors": {
+        "expressionRequired": "Conjunction Express is Required."
+      }
     },
     "JNConditionNode": {
-      "nodename": "Condition"
+      "nodename": "Condition",
+      "errors": {
+        "conditionPropertyRequired": "Condition's Property Cannot be Empty.",
+        "conditionRequired": "At Least One Condition is Required.",
+        "deviceTypeConflict": "<Condition> Node Can Only Accept <DeviceProperty> Nodes Connected to the Same <DeviceType> node.",
+        "devicePropertyConflict": "<Condition> Node Cannot Connect to Same <DeviceType> Node."
+      }
     },
     "JNApiNode": {
-      "nodename": "API"
+      "nodename": "API",
+      "apiName": "API Name",
+      "requestMethod": "Request",
+      "errors": {
+        "emptyApiName": "API Name Cannot be Empty.",
+        "emptyUrl": "API URL Cannot be Empty.",
+        "emptyRequestMethod": "API Request Method Cannot be Empty."
+      }
     },
     "JNActionNode": {
-      "nodename": "Action"
+      "nodename": "Action",
+      "deviceAction": "Action",
+      "errors": {
+        "actionRequired": "Must Select One Action.",
+        "actionDeviceNotMatch": "Action / Device Not Match.",
+        "emptyProperty": "Some Properties Are Empty.",
+        "multiDeviceType": "<DeviceProperty> Node Only Accept One <DeviceType> Node as Input.",
+        "actionPropertyConflict": "<DeviceType> is Not Allowed to Connect <Action> Node and <DeviceProperty> Node At The Same Time."
+      }
     },
     "JNTimeNode": {
-      "nodename": "Time"
+      "nodename": "Time",
+      "type": "Type",
+      "schedule": "Schedule",
+      "interval": "Interval",
+      "timeUnit": "Unit",
+      "everyYear": "Every Year",
+      "selectedYears": "Selected Years",
+      "everyMonth": "Every Month",
+      "selectedMonths": "Selected Months",
+      "noneWeek": "None Week",
+      "everyWeek": "Every Week",
+      "selectedWeeks": "Selected Week",
+      "everyday": "Everyday",
+      "selectedDays": "Selected Days",
+      "selectedHours": "Selected Hours",
+      "selectedMinutes": "Selected Minutes",
+      "errors": {
+        "scheduleTypeRequired": "Schedule Type is Required.",
+        "cronError": "Wrong Schedule Formatting."
+      }
     }
   },
   "JNModules": {
@@ -46,5 +137,49 @@
       "infomation": "Info",
       "data": "Data"
     }
-  }
+  },
+  "智能电表": "Electric Meter",
+  "环境传感器": "Environment Sensor",
+  "二氧化碳": "CO2",
+  "空调": "Air Condition",
+  "电量": "Kwh",
+  "功率": "Capacity",
+  "功率因数": "Capacity Factor",
+  
+  "电源": "Power",
+  "电源控制": "Switch",
+  "新风": "Air system",
+  "多码门": "Door",
+  "智能密码锁": "Trick Lock",
+  "网关": "Gateway",
+  "照明": "Lighting",
+  "楼号": "Building",
+  "层号": "Floor", 
+  "区域": "Area", 
+  "区块": "Region", 
+  "工位": "Position",
+  "烟雾感应": "Smoke Detection",
+  "温度": "Temperature",
+  "空气质量": "Air Quality",
+  "湿度": "Humidity",
+  "噪音指数": "Noise",
+  "亮度": "Brightness",
+  "连接状态" : "Connection",
+  "人体感应": "PD",
+  "阀门控制": "Gate Control",
+  "阀门状态": "Gate Status",
+  "温度控制": "Temperature Control",
+  "设置的温度": "Temperature",
+  "运行模式": "Mode",
+  "风速控制": "Speed Control",
+  "风速": "Speed",
+  "制冷": "Cooling",
+  "制热": "Heating",
+  "通风": "None",
+  "开": "On",
+  "关": "Off",
+  "低速": "Low Speed",
+  "中速": "Mid Speed",
+  "高速": "High Speed",
+  "自动": "Auto"
 }

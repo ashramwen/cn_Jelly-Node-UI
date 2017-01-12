@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationExtras, ActivatedRoute } from '@angular/router';
 import { JNAuthenHelperSerivce } from '../../../share/services/authen-helper.service';
 
 @Component({
@@ -39,13 +39,21 @@ export class LoginComponent{
 
   constructor(
     private auth: JNAuthenHelperSerivce,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   login() {
+    let navigationExtras: NavigationExtras = {
+      preserveQueryParams: true,
+      preserveFragment: true
+    };
+    
     this.auth.login(this.credential)
       .then(() => {
-        this.router.navigate(['/flow']);
+        this.route.params.subscribe(params => {
+          this.router.navigate([params['lan'], 'flow']);
+        });
       });
   }
 }

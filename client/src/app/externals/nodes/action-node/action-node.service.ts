@@ -27,7 +27,7 @@ export class JNActionNodeService {
     return {
       actionName: {
         input: <ISelectInput>{
-          label: '设备行为',
+          label: 'nodeset.JNActionNode.deviceAction',
           options: JNUtils.toArray<ISchemaAction>(schema.content.actions)
             .map(pair => {
               return { text: pair.value.displayNameCN, value: pair.key };

@@ -1,35 +1,125 @@
 {
   "APP_NAME": "Jelly-Node",
   "terms": {
-    "pleaseSelect": "--请选择--"
+    "pleaseSelect": "--请选择--",
+    "save": "保存",
+    "public": "发布",
+    "saveAndPublish": "保存并发布",
+    "enabled": "已启用",
+    "disabled": "已禁用",
+    "flowList": "流程列表",
+    "submit": "提交",
+    "deviceType": "设备种类",
+    "thingID": "设备编号",
+    "min": "最小值",
+    "max": "最大值",
+    "average": "平均值",
+    "count": "计数",
+    "sum": "总和",
+    "and": "与",
+    "or": "或",
+    "nor": "非",
+    "description": "描述",
+    "day": "天",
+    "hour": "小时",
+    "minute": "分钟"
   },
   "nodeset": {
     "JNRuleNode": {
-      "nodename": "规则节点"
+      "nodename": "规则节点",
+      "ruleName": "规则名称",
+      "triggerWhen": "何时触发",
+      "conditionTrue": "为真",
+      "conditionFalseToTrue": "由假转真",
+      "conditionTrueToFalse": "由真转假",
+      "conditionChange": "条件改变",
+      "errors": {
+        "ruleNameRequired": "必须包含规则名称",
+        "triggerWhenRequired": "必须包含规则触发条件"
+      }
     },
     "JNDeviceTypeNode": {
-      "nodename": "设备种类节点"
+      "nodename": "设备种类节点",
+      "thingList": "设备选择列表",
+      "errors": {
+        "typeRequired": "必须选择一个设备类型",
+        "deviceRequired": "必须包含至少一个设备"
+      }
     },
     "JNDevicePropertyNode": {
-      "nodename": "设备属性节点"
+      "nodename": "设备属性节点",
+      "deviceProperty": "设备属性",
+      "errors": {
+        "propertyRequired": "必须选择一个属性",
+        "propertyDeviceConflict": "属性值与所属设备类型不符",
+        "multiDeviceType": "<DeviceProperty>节点只接受一个<DeviceType>节点作为输入。",
+        "propertyActionConflict": "<DeviceType>节点不能同时与<Action>节点与<DeviceProperty>相连。"
+      }
     },
     "JNLocationNode": {
-      "nodename": "位置节点"
+      "nodename": "位置节点",
+      "errors": {
+        "locationRequired": "必须选择一个地址"
+      }
     },
     "JNConjunctionNode": {
-      "nodename": "连接节点"
+      "nodename": "连接节点",
+      "connectionExpression": "连接表达式",
+      "errors": {
+        "expressionRequired": "连接表达式不能为空"
+      }
     },
     "JNConditionNode": {
-      "nodename": "条件节点"
+      "nodename": "条件节点",
+      "errors": {
+        "conditionPropertyRequired": "属性条件值不能为空",
+        "conditionRequired": "至少选择包含一个条件",
+        "deviceTypeConflict": "<Condition>节点只接受来自同一<DeviceType>节点的<DeviceProperty>节点。",
+        "devicePropertyConflict": "<Condition>不能与拥有相同属性的<DeviceType>的节点相连。"
+      }
     },
     "JNApiNode": {
-      "nodename": "API节点"
+      "nodename": "API节点",
+      "apiName": "API名称",
+      "requestMethod": "请求方式",
+      "errors": {
+        "emptyApiName": "API名称不能为空",
+        "emptyUrl": "API URL不能为空",
+        "emptyRequestMethod": "API 请求方式不能为空"
+      }
     },
     "JNActionNode": {
-      "nodename": "行为节点"
+      "nodename": "行为节点",
+      "deviceAction": "设备行为",
+      "errors": {
+        "actionRequired": "必须选择一个行为",
+        "actionDeviceNotMatch": "所选行为与设备类型不符",
+        "emptyProperty": "某些属性值为空",
+        "multiDeviceType": "<DeviceProperty>节点只接受一个<DeviceType>节点作为输入。",
+        "actionPropertyConflict": "<DeviceType>节点不能同时与<Action>节点与<DeviceProperty>相连。"
+      }
     },
     "JNTimeNode": {
-      "nodename": "时间节点"
+      "nodename": "时间节点",
+      "type": "触发类型",
+      "schedule": "定时定点",
+      "interval": "固定间隔",
+      "timeUnit": "时间单位",
+      "everyYear": "每年",
+      "selectedYears": "指定年份",
+      "everyMonth": "每月",
+      "selectedMonths": "指定月份",
+      "everyWeek": "每周",
+      "selectedWeek": "指定周",
+      "noneWeek": "不指定周",
+      "everyday": "每天",
+      "selectedDays": "指定天",
+      "selectedHours": "指定小时",
+      "selectedMinutes": "指定分钟",
+      "errors": {
+        "scheduleTypeRequired": "必须选择一种间隔类型",
+        "cronError": "间隔格式不正确"
+      }
     }
   },
   "JNModules": {

@@ -19,15 +19,15 @@ import {
   formControls: {
     conjunction: {
       input: <ISelectInput>{
-        label: '连接表达式',
+        label: 'nodeset.JNConjunctionNode.connectionExpression',
         options: [{
-          text: '与',
+          text: 'terms.and',
           value: 'and'
         }, {
-          text: '或',
+          text: 'terms.or',
           value: 'or'
         }, {
-          text: '非',
+          text: 'terms.nor',
           value: 'nor'
         }]
       },

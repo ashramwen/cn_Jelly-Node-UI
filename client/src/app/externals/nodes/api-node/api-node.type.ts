@@ -18,17 +18,17 @@ import { JNApiNodeInfoPanelModel } from './api-node-info-panel-model.type';
   paletteModel: JNApiPaletteNodeModel,
   accepts: ['Rule'],
   modelRules: [{
-    message: 'API名称不能为空',
+    message: 'nodeset.JNApiNode.errors.emptyApiName',
     validator: (model: JNApiNodeModel) => {
       return !!model.apiName;
     }
   }, {
-    message: 'API URL不能为空',
+    message: 'nodeset.JNApiNode.errors.emptyUrl',
     validator: (model: JNApiNodeModel) => {
       return !!model.apiUrl;
     }
   }, {
-    message: 'API 请求方式不能为空',
+    message: 'nodeset.JNApiNode.errors.emptyRequestMethod',
     validator: (model: JNApiNodeModel) => {
       return !!model.method;
     }

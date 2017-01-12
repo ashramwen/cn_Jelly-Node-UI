@@ -22,7 +22,7 @@ import {
 
     apiName: {
       input: <ITextInput>{
-        label: 'API名称',
+        label: 'nodeset.JNApiNode.apiName',
         maxLength: 0,
       },
       controlType: JNTextControl,
@@ -38,7 +38,7 @@ import {
     },
     method: {
       input: <ISelectInput>{
-        label: '请求方式',
+        label: 'nodeset.JNApiNode.requestMethod',
         options: [{
           text: 'GET',
           value: 'GET'

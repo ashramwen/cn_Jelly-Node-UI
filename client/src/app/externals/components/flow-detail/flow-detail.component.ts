@@ -11,6 +11,7 @@ import { JNViewComponent } from '../../../views/view.component';
 import { JNLoader } from '../../../share/modules/loader/services/loader.service';
 import { ModalService } from '../../../share/modules/modal/services/modal.service';
 import { BUTTON_STYLES } from '../../../share/modules/modal/components/modal/modal.component';
+import { TranslateService } from 'ng2-translate';
 
 @Component({
   selector: 'app-flow-detail',

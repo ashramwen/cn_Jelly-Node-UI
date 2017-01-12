@@ -16,12 +16,12 @@ import { JNTimeNode } from '../time-node/time-node.type';
   paletteModel: JNRuleNodePaletteModel,
   accepts: ['Condition', 'Conjunction', 'Time'],
   modelRules: [{
-    message: '必须包含规则名称',
+    message: 'nodeset.JNRuleNode.errors.ruleNameRequired',
     validator: (model: JNRuleNodeModel) => {
       return !!model.ruleName;
     }
   }, {
-    message: '必须包含规则触发条件',
+    message: 'nodeset.JNRuleNode.errors.triggerWhenRequired',
     validator: (model: JNRuleNodeModel) => {
       return !!model.triggerWhen;
     }

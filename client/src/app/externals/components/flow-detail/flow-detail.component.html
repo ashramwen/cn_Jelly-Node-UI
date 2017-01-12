@@ -24,16 +24,16 @@
     <div class="right-container">
       <ul>
         <li *ngIf="!isNew && nodeFlow.published" class="enable-toggle" [class.enabled]="nodeFlow.enabled">
-          <label>{{nodeFlow.enabled? '已启用' : '已禁用' | translate}}</label>
+          <label>{{(nodeFlow.enabled? 'terms.enabled' : 'terms.disabled') | translate}}</label>
           <div class="btn-toggle" (click)="toggleEnable()">
             <div class="slider"><span class="fa fa-bars"></span></div>
           </div>
         </li>
         <li>
-          <button class="btn-save" (click)="submit()">{{'保存' | translate}}</button>
+          <button class="btn-save" (click)="submit()">{{'terms.save' | translate}}</button>
         </li>
         <li>
-          <button class="btn-publish" (click)="publish()">{{'保存并发布' | translate}}</button>
+          <button class="btn-publish" (click)="publish()">{{'terms.saveAndPublish' | translate}}</button>
         </li>
       </ul>
     </div>

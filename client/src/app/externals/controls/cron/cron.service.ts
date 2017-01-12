@@ -33,37 +33,37 @@ export class CronService {
 
 
   yearOptions = [{
-    text: '每一年',
+    text: 'nodeset.JNTimeNode.everyYear',
     value: '*'
   }, {
-    text: '指定年',
+    text: 'nodeset.JNTimeNode.selectedYears',
     value: 'enum'
   }];
 
   monthOptions = [{
-    text: '每个月',
+    text: 'nodeset.JNTimeNode.everyMonth',
     value: '*'
   }, {
-    text: '指定月',
+    text: 'nodeset.JNTimeNode.selectedMonths',
     value: 'enum'
   }];
 
   weekOptions = [{
-    text: '不指定周',
+    text: 'nodeset.JNTimeNode.noneWeek',
     value: '?'
   }, {
-    text: '每一周',
+    text: 'nodeset.JNTimeNode.everyWeek',
     value: '*'
   }, {
-    text: '指定周',
+    text: 'nodeset.JNTimeNode.selectedWeeks',
     value: 'enum'
   }];
 
   dayOptions = [{
-    text: '每一天',
+    text: 'nodeset.JNTimeNode.everyday',
     value: '*'
   }, {
-    text: '指定天',
+    text: 'nodeset.JNTimeNode.selectedDays',
     value: 'enum'
   }];
 

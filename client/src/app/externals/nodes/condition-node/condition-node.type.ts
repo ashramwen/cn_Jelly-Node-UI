@@ -21,7 +21,7 @@ import { JNConditionNodeInfoPanelModel } from './condition-node-info-panel-model
   paletteModel: JNCondtionNodePaletteMode,
   accepts: ['DeviceProperty'],
   modelRules: [{
-    message: '属性条件值不能为空',
+    message: 'nodeset.JNConditionNode.errors.conditionPropertyRequired',
     validator: (model: JNConditionNodeModel) => {
       if (!model.conditions) return true;
       for (let condition of model.conditions) {
@@ -32,7 +32,7 @@ import { JNConditionNodeInfoPanelModel } from './condition-node-info-panel-model
       return true;
     }
   }, {
-      message: '至少选择包含一个条件',
+      message: 'nodeset.JNConditionNode.errors.conditionRequired',
       validator: (model: JNConditionNodeModel) => {
         return !!model.conditions && !!model.conditions.length;
       }
@@ -43,7 +43,7 @@ import { JNConditionNodeInfoPanelModel } from './condition-node-info-panel-model
       nodeType: 'DeviceProperty',
       rules: [
         {
-          message: `<Condition>节点只接受来自同一<DeviceType>节点的<DeviceProperty>节点。`,
+          message: `nodeset.JNConditionNode.errors.deviceTypeConflict`,
           validator: (node: JNConditionNode, target: JNDevicePropertyNode) => {
             let inputPropertyNodes = JNUtils.toArray<JNBaseNode>(node.nodeMap.accepted)
               .map(r => r.value)
@@ -64,7 +64,7 @@ import { JNConditionNodeInfoPanelModel } from './condition-node-info-panel-model
           }
         },
         {
-          message: `<Condition>不能与拥有相同属性的<DeviceType>的节点相连。`,
+          message: `nodeset.JNConditionNode.errors.devicePropertyConflict`,
           validator: (node: JNConditionNode, target: JNDevicePropertyNode) => {
             let nodes = JNUtils.toArray<JNBaseNode>(node.nodeMap.accepted)
               .filter(p => p.value instanceof JNDevicePropertyNode)

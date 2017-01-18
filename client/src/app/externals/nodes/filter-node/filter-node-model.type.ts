@@ -3,23 +3,25 @@ import { Serializable } from '../../../../bin/JsonMapper';
 import { INodeBody } from '../../../core/models/interfaces/node-body.interface';
 
 export interface IFilter extends INodeBody {
-  field: string;
-  expression: string;
-  valueHolder: string;
+  expressions: Array<{
+    field: string;
+    operator?: 'gte' | 'gt' | 'lt' | 'lte' | 'eq' | 'ne';
+    valueHolder: any;
+  }>;
 }
 
 @Serializable()
 export class JNFilterNodeModel extends JNNodeModel<IFilter> implements IFilter {
   static deserialize: (data: any) => JNFilterNodeModel;
 
-  field: string;
-  expression: string;
-  valueHolder: string;
+  expressions: Array<{
+    field: string;
+    operator?: 'gte' | 'gt' | 'lt' | 'lte' | 'eq' | 'ne';
+    valueHolder: any;
+  }>;
 
   constructor() {
     super();
-    this.field = null;
-    this.expression = null;
-    this.valueHolder = null;
+    this.expressions = null;
   }
 }

@@ -125,6 +125,7 @@ export abstract class JNEditorModel {
    * @param  {any} value
    */
   protected setValue(fieldName: string, value: any): void {
+    if (!this._formControls[fieldName]) {throw new Error('fieldName not existing')};
     this._formControls[fieldName].formControl.setValue(value);
   }
 

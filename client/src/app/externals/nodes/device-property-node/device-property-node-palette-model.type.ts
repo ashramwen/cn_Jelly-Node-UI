@@ -17,7 +17,7 @@ export class JNDevicePropertyNodePaletteModel extends JNPaletteModel {
     let deviceTypes = Object.keys(schemas);
     let connection = new JNPaletteConnection();
 
-    connection.title = '设备种类';
+    connection.title = 'nodeset.JNDeviceTypeNode.nodename';
     connection.properties = [];
     deviceTypes.forEach((deviceType) => {
       let data: Object = {};

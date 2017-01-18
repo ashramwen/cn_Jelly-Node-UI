@@ -21,7 +21,7 @@ export class JNDeviceTypeNodePaletteModel extends JNPaletteModel {
     let schemas = RuleApplication.instance.resources.$schema.schemas;
     let deviceProperties = Object.keys(schemas[typeName].content.statesSchema.properties);
     let connection = new JNPaletteConnection();
-    connection.title = '设备属性';
+    connection.title = 'nodeset.JNDevicePropertyNode.nodename';
     connection.properties = [];
     deviceProperties.forEach((deviceProperty) => {
       let data: Object = {};
@@ -40,7 +40,7 @@ export class JNDeviceTypeNodePaletteModel extends JNPaletteModel {
     }
     let actions = Object.keys(schemas[typeName].content.actions);
     let actionConnection = new JNPaletteConnection();
-    actionConnection.title = '命令';
+    actionConnection.title = 'nodeset.JNActionNode.nodename';
     actionConnection.properties = [];
     actions.forEach((action) => {
       let data;

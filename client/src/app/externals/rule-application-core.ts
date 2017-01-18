@@ -12,6 +12,7 @@ import { Events } from '../share/services/event.service';
 import { JNAuthenHelperSerivce } from '../share/services/authen-helper.service';
 import { TranslateService } from 'ng2-translate';
 import { cn, en } from '../../assets/i18n';
+import { JNFilterNode } from './nodes/filter-node/filter-node.type';
 
 
 @Injectable()
@@ -20,7 +21,8 @@ export class RuleApplication extends JNApplication {
 
   get nodeTypeMapper() {
     return {
-      Time: JNTimeNode
+      Time: JNTimeNode,
+      Filter: JNFilterNode
     };
   }
 

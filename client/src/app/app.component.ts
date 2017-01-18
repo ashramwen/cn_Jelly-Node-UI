@@ -1,10 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { TranslateService } from 'ng2-translate';
 
-import { JNDeviceTypeNode } from './externals/nodes/device-type-node/device-type-node.type';
-import { JNLocationNode } from './externals/nodes/location-node/location-node.type';
-import { JNDeviceTypeNodeModel } from './externals/nodes/device-type-node/device-type-node-model.type';
-import { BeehiveThing } from './externals/resources/thing.type';
 import { JNFlow } from './core/models/jn-flow.type';
 import { JNApplication } from './share/services/application-core.service';
 import { Events } from './share/services/event.service';
@@ -30,7 +26,6 @@ export class AppComponent implements OnInit {
   constructor(
     private application: JNApplication,
     private events: Events,
-    private $thing: BeehiveThing,
     private translate: TranslateService,
     private route: ActivatedRoute,
     private router: Router

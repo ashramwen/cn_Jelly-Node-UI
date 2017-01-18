@@ -4,11 +4,9 @@ import { MaterialModule } from '@angular/material';
 import { Http } from '@angular/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
-import { BEEHIVE_RESOURCES } from './resources/index';
 import { BEEHIVE_RPOVIDERS } from './services/index';
 import { RuleApplication } from './rule-application-core';
 import { AuthenHelperSerivce } from './services/authen-helper.service';
-import { ResourceService } from './resources/resources.service';
 import { EXTERNAL_CONTROLS } from './controls/index';
 import { JNEditorControlModule } from '../views/node-editor/components/control.module';
 import { JNControlsModule } from '../views/controls/controls.module';
@@ -49,7 +47,7 @@ const NODE_SETTINGS: INodeSettings = {
   exports: [LoginComponent, FlowListComponent, FlowDetailComponent],
   declarations: [...EXTERNAL_CONTROLS, ...EXTERNAL_EDITOR_WRAPPED_CONTROLS,
     LoginComponent, FlowListComponent, FlowDetailComponent, KeysPipe],
-  providers: [BEEHIVE_RESOURCES, BEEHIVE_RPOVIDERS,
+  providers: [BEEHIVE_RPOVIDERS,
     {
       provide: ANALYZE_FOR_ENTRY_COMPONENTS,
       multi: true,
@@ -62,15 +60,14 @@ const NODE_SETTINGS: INodeSettings = {
         cacheContext: CacheContextService,
         http: Http,
         events: Events,
-        resource: ResourceService,
         authenHelper: AuthenHelperSerivce,
         authen: JNAuthenHelperSerivce,
         translate: TranslateService
       ) => new RuleApplication(appContext, cacheContext,
-        configContext, http, events, resource, authenHelper, authen, translate),
+        configContext, http, events, authenHelper, authen, translate),
       deps: [
         ApplicationContextService, ConfigContextService,
-        CacheContextService, Http, Events, ResourceService, AuthenHelperSerivce, JNAuthenHelperSerivce, TranslateService]
+        CacheContextService, Http, Events, AuthenHelperSerivce, JNAuthenHelperSerivce, TranslateService]
     },
     {
       provide: JN_NODE_SETTING,

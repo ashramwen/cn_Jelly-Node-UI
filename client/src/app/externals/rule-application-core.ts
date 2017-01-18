@@ -12,6 +12,7 @@ import { Events } from '../share/services/event.service';
 import { JNAuthenHelperSerivce } from '../share/services/authen-helper.service';
 import { TranslateService } from 'ng2-translate';
 import { cn, en } from '../../assets/i18n';
+import { LineChartNode } from './nodes/line-chart-node/line-chart-node.type';
 
 
 @Injectable()
@@ -20,7 +21,8 @@ export class RuleApplication extends JNApplication {
 
   get nodeTypeMapper() {
     return {
-      Time: JNTimeNode
+      Time: JNTimeNode,
+      Line: LineChartNode
     };
   }
 

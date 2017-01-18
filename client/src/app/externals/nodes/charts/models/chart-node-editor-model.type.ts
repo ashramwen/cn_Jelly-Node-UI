@@ -1,13 +1,13 @@
-import { JNNodeEditor } from '../../../core/models/node-editor-annotation';
-import { JNEditorModel } from '../../../views/node-editor/interfaces/editor-model.type';
-import { ITextInput, JNTextControl } from '../../../views/node-editor/components/controls/text/text.component';
-import { ChartNodeModel } from '../../models/chart-node-model.type';
+import { JNNodeEditor } from '../../../../core/models/node-editor-annotation';
+import { JNEditorModel } from '../../../../views/node-editor/interfaces/editor-model.type';
+import { ITextInput, JNTextControl } from '../../../../views/node-editor/components/controls/text/text.component';
+import { ChartNodeModel } from './chart-node-model.type';
 
 
 import {
   JNTextAreaControl,
   ITextareaInput
-} from '../../../views/node-editor/components/controls/textarea/textarea.component';
+} from '../../../../views/node-editor/components/controls/textarea/textarea.component';
 
 @JNNodeEditor({
   title: 'nodeset.JNTimeNode.nodename',
@@ -35,7 +35,7 @@ import {
     }
   }
 })
-export class LineChartEditorModel extends JNEditorModel{
+export class ChartNodeEditorModel extends JNEditorModel{
 
   model: ChartNodeModel;  
 

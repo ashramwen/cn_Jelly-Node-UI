@@ -1,15 +1,18 @@
-import { JNNode } from '../../core/models/node-annotation';
-import { JNBaseNode } from '../../core/models/jn-base-node.type';
 import { ChartNodeModel, IChart } from './chart-node-model.type';
+import { JNBaseNode } from '../../../../core/models/jn-base-node.type';
+import { JNNode } from '../../../../core/models/node-annotation';
+import { ChartNodeEditorModel } from './chart-node-editor-model.type';
+import { ChartNodeInfoPanelModel } from './chart-node-info-panel-model.type';
+import { ChartNodePaletteModel } from './chart-node-palette-model.type';
 
 @JNNode({
   title: 'Line Chart',
   icon: '\ue905',
   color: '',
   borderColor: '',
-  editorModel: null,
-  infoPanelModel: null,
-  paletteModel: null,
+  editorModel: ChartNodeEditorModel,
+  infoPanelModel: ChartNodeInfoPanelModel,
+  paletteModel: ChartNodePaletteModel,
   accepts: [],
   modelRules: [{
     message: 'X axis or Y axis displayname is empty.',

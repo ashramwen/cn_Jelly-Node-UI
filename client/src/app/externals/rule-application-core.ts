@@ -12,7 +12,11 @@ import { Events } from '../share/services/event.service';
 import { JNAuthenHelperSerivce } from '../share/services/authen-helper.service';
 import { TranslateService } from 'ng2-translate';
 import { cn, en } from '../../assets/i18n';
-import { LineChartNode } from './nodes/line-chart-node/line-chart-node.type';
+import { BucketNode } from './nodes/bucket-node/bucket-node.type';
+import { LineChartNode } from './nodes/charts/line-chart-node/line-chart-node.type';
+import { MetricNode } from './nodes/metric-node/metric-node.type';
+import { ExtendNode } from './nodes/extend-node/extend-node.type';
+import { DrilldownNode } from './nodes/drilldown-node/drilldown-node.type';
 
 
 @Injectable()
@@ -22,7 +26,11 @@ export class RuleApplication extends JNApplication {
   get nodeTypeMapper() {
     return {
       Time: JNTimeNode,
-      Line: LineChartNode
+      LineChart: LineChartNode,
+      Bucket: BucketNode,
+      Metric: MetricNode,
+      Extend: ExtendNode,
+      Drilldown: DrilldownNode
     };
   }
 
@@ -48,9 +56,10 @@ export class RuleApplication extends JNApplication {
     this.translate.setTranslation('en', en);
 
     return new Promise((resolve, reject) => {
-      this.authen.login({ userName: 'beehive_admin', password: '1qaz2wsx' }).then(() => {
-        resolve(true);
-      });
+      resolve(true);
+      // this.authen.login({ userName: 'beehive_admin', password: '1qaz2wsx' }).then(() => {
+      //   resolve(true);
+      // });
     });
   }
 

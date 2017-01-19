@@ -27,8 +27,7 @@ export class RuleApplication extends JNApplication {
   get nodeTypeMapper() {
     return {
       Time: JNTimeNode,
-      Filter: JNFilterNode
-      Time: JNTimeNode,
+      Filter: JNFilterNode,
       LineChart: LineChartNode,
       Bucket: BucketNode,
       Metric: MetricNode,

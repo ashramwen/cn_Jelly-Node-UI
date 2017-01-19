@@ -6,5 +6,4 @@ import { MetricNodeInfoPanelModel } from './metric-node/metric-node-info-panel-m
 import { ExtendNodeInfoPanelModel } from './extend-node/extend-node-info-panel-model.type';
 import { DrilldownNodeInfoPanelModel } from './drilldown-node/drilldown-node-info-panel-model.type';
 
-export const EXTERNAL_INFO_PANEL_COMPONENTS = [JNTimeNodeInfoPanelModel, JNFilterNodeInfoPanelModel];
-export const EXTERNAL_INFO_PANEL_COMPONENTS = [JNTimeNodeInfoPanelModel, ChartNodeInfoPanelModel, BucketNodeInfoPanelModel, MetricNodeInfoPanelModel, ExtendNodeInfoPanelModel, DrilldownNodeInfoPanelModel];
+export const EXTERNAL_INFO_PANEL_COMPONENTS = [JNTimeNodeInfoPanelModel, JNFilterNodeInfoPanelModel,ChartNodeInfoPanelModel, BucketNodeInfoPanelModel, MetricNodeInfoPanelModel, ExtendNodeInfoPanelModel, DrilldownNodeInfoPanelModel];

@@ -6,7 +6,7 @@ import { JNFilterNodePaletteModel } from './filter-node-palette-mode.type';
 import { JNFilterNodeInfoPanelModel } from './filter-node-info-panel-model.type';
 
 @JNNode({
-  title: 'nodeset.JNFilterNode.nodename',
+  title: 'Filter',
   icon: '',
   color: '',
   borderColor: '',

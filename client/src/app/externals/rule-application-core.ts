@@ -48,6 +48,7 @@ export class RuleApplication extends JNApplication {
 
   get nodeTypes() {
     return [
+      JNFilterNode,
       LineChartNode,
       BarChartNode,
       BubbleChartNode,

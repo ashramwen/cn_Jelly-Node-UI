@@ -41,7 +41,7 @@ export class PaletteComponent implements OnInit {
         this.NodeSettings[key] = this.NodeSettings[key] + 2;
       }
       this.NodeSettings[key] = this.NodeSettings[key] + 'px';
-    })
+    });
     console.log(this.NodeSettings);
   }
 

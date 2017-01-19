@@ -13,7 +13,7 @@ import { BucketNodeModel, IBucket } from './bucket-node-model.type';
   editorModel: BucketNodeEditorModel,
   infoPanelModel: BucketNodeInfoPanelModel,
   paletteModel: BucketNodePaletteModel,
-  accepts: ['LineChart', 'Bucket'],
+  accepts: ['LineChart', 'Bucket', 'SubChart'],
   modelRules: []
 })
 export class BucketNode extends JNBaseNode {

@@ -17,6 +17,7 @@ import { LineChartNode } from './nodes/charts/line-chart-node/line-chart-node.ty
 import { MetricNode } from './nodes/metric-node/metric-node.type';
 import { ExtendNode } from './nodes/extend-node/extend-node.type';
 import { DrilldownNode } from './nodes/drilldown-node/drilldown-node.type';
+import { SubChartNode } from './nodes/sub-chart-node/sub-chart-node.type';
 
 
 @Injectable()
@@ -25,12 +26,12 @@ export class RuleApplication extends JNApplication {
 
   get nodeTypeMapper() {
     return {
-      Time: JNTimeNode,
       LineChart: LineChartNode,
       Bucket: BucketNode,
       Metric: MetricNode,
       Extend: ExtendNode,
-      Drilldown: DrilldownNode
+      Drilldown: DrilldownNode,
+      SubChart: SubChartNode
     };
   }
 

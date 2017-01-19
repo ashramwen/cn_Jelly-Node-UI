@@ -17,17 +17,7 @@ import { JNFilterNodeInfoPanelModel } from './filter-node-info-panel-model.type'
   modelRules: [{
     message: 'nodeset.JNFilterNode.errors.scheduleTypeRequired',
     validator: (model: JNFilterNodeModel) => {
-      return !!model.timeType;
-    }
-  }, {
-    message: 'nodeset.JNFilterNode.errors.cronError',
-    validator: (model: JNFilterNodeModel) => {
-      if (!model.timeType) return true;
-      if (model.timeType === 'interval') {
-        return !!model.interval && !!model.timeUnit;
-      } else {
-        return !!model.cron && model.cron.length === 11;
-      }
+      return !!model.conditions;
     }
   }]
 })

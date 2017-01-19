@@ -3,7 +3,7 @@ import { Serializable } from '../../../../bin/JsonMapper';
 import { INodeBody } from '../../../core/models/interfaces/node-body.interface';
 
 export interface IFilter extends INodeBody {
-  expressions: Array<{
+  conditions: Array<{
     field: string;
     operator?: 'gte' | 'gt' | 'lt' | 'lte' | 'eq' | 'ne';
     valueHolder: any;
@@ -14,7 +14,7 @@ export interface IFilter extends INodeBody {
 export class JNFilterNodeModel extends JNNodeModel<IFilter> implements IFilter {
   static deserialize: (data: any) => JNFilterNodeModel;
 
-  expressions: Array<{
+  conditions: Array<{
     field: string;
     operator?: 'gte' | 'gt' | 'lt' | 'lte' | 'eq' | 'ne';
     valueHolder: any;
@@ -22,6 +22,6 @@ export class JNFilterNodeModel extends JNNodeModel<IFilter> implements IFilter {
 
   constructor() {
     super();
-    this.expressions = null;
+    this.conditions = [];
   }
 }

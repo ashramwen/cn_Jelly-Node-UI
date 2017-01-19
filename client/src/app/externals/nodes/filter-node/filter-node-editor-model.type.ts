@@ -8,7 +8,7 @@ import { ISelectInput, JNSelectControl } from '../../../views/node-editor/compon
 import { RuleApplication } from '../../rule-application-core';
 import { JNUtils } from '../../../share/util';
 import { JNFilterNodeModel } from './filter-node-model.type';
-import { RulePropertyCondition, IPropertyConditionsInput } from '../../controls/property-condition/property-condition.component';
+import { RulePropertyCondition, IPropertyConditionsInput, IPropertyCondition } from '../../controls/property-condition/property-condition.component';
 import { JNNodeEditor } from '../../../core/models/node-editor-annotation';
 import {
   JNTextAreaControl,
@@ -18,7 +18,7 @@ import {
 @JNNodeEditor({
   title: 'nodeset.JNFilterNode.nodename',
   formControls: {
-    conditionGroup: {
+    conditions: {
       input: <IPropertyConditionsInput>{
         label: '连接表达式',
         conditions: []
@@ -35,7 +35,16 @@ export class JNFilterNodeEditorModel extends JNEditorModel {
   }
 
   protected parse(data: JNFilterNodeModel) {
-    this.setValue("expressions", data.expressions);
+    if(!data.conditions || !data.conditions.length){
+      data.conditions = [{
+          field: "",
+          operator: "gte",
+          valueHolder: ""
+        }];
+    }
+    this.model.conditions = data.conditions;
+    (<IPropertyConditionsInput>this.getInput("conditions")).conditions = data.conditions;
+    this.setValue("conditions", data.conditions);
   }
 
   protected formate(): JNFilterNodeModel {
@@ -45,13 +54,14 @@ export class JNFilterNodeEditorModel extends JNEditorModel {
   protected updated(fieldName: string, value: any): void {
     if (!value) return;
     (<Array<any>>value).forEach((_c) => {
-      let expression = this.model.expressions.find((c) => {
+      let expression = this.model.conditions.find((c) => {
         return c.field === _c.field;
       });
-      expression.field = _c.fi;
+      expression.field = _c.field;
       expression.operator = _c.operator;
       expression.valueHolder = _c.valueHolder;
     });
+    this.model["conditions"] = this.model.conditions;
   }
 
 }

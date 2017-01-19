@@ -8,7 +8,7 @@ import { ExtendNodeModel } from './extend-node-model.type';
 
 @JNNode({
   title: 'Extend',
-  icon: '\ue905',
+  icon: '\uf065',
   color: '',
   borderColor: '',
   editorModel: ExtendNodeEditorModel,

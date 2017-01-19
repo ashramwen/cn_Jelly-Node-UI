@@ -10,7 +10,7 @@ import { SubChartNode } from '../sub-chart-node/sub-chart-node.type';
 
 @JNNode({
   title: 'Bucket',
-  icon: '\ue905',
+  icon: '\uf171',
   color: '',
   borderColor: '',
   editorModel: BucketNodeEditorModel,

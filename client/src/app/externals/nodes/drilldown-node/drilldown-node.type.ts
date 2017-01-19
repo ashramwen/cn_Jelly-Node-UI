@@ -8,7 +8,7 @@ import { DrilldownNodeModel } from './drilldown-node-model.type';
 
 @JNNode({
   title: 'Drilldown',
-  icon: '\ue905',
+  icon: '\uf063',
   color: '',
   borderColor: '',
   editorModel: DrilldownEditorModel,

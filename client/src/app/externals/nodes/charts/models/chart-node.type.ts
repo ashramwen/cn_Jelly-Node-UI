@@ -7,7 +7,7 @@ import { ChartNodePaletteModel } from './chart-node-palette-model.type';
 
 @JNNode({
   title: 'Line Chart',
-  icon: '\ue905',
+  icon: '\uf201',
   color: '',
   borderColor: '',
   editorModel: ChartNodeEditorModel,

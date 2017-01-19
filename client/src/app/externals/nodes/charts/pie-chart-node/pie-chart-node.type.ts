@@ -4,4 +4,6 @@ import { JNNodeExtend } from '../../../../core/models/node-extend-annotation';
 @JNNodeExtend()
 export class PieChartNode extends ChartNode {
   static title: string = 'Pie Chart';
+  static icon: string = '\uf200';
+
 }

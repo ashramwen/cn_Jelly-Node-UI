@@ -572,7 +572,7 @@ export class D3HelperService {
       .attr('y', () => {
         return Math.floor(self.NodeSettings.NODE_HEIGHT / 2 + self.NodeSettings.NODE_ICON_HOLDER_WIDTH / 2);
       })
-      .attr('font-family', 'icomoon')
+      .attr('font-family', 'FontAwesome')
       .style('font-size', `${self.NodeSettings.NODE_ICON_HOLDER_WIDTH}px`)
       .text((d: CanvasNode) => {
         return d.icon;

@@ -4,4 +4,5 @@ import { JNNodeExtend } from '../../../../core/models/node-extend-annotation';
 @JNNodeExtend()
 export class BarChartNode extends ChartNode {
   static title: string = 'Bar Chart';
+  static icon: string = '\uf080';
 }

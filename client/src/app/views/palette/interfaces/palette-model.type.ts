@@ -39,7 +39,7 @@ export abstract class JNPaletteModel {
 
   private getNodes(): Array<JNPaletteNode> {
     let nodes: Array<JNPaletteNode> = [];
-    let types = JNUtils.toArray<typeof JNBaseNode>(JNApplication.instance.nodeTypeMapper).map(pair => pair.value);
+    let types = JNApplication.instance.nodeTypes;
 
     return types.map(nodeType => {
       return new JNPaletteNode(<typeof JNBaseNode>this.node.constructor,

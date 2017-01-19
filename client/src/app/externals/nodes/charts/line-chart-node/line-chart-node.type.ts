@@ -3,5 +3,6 @@ import { JNNodeExtend } from '../../../../core/models/node-extend-annotation';
 
 @JNNodeExtend()
 export class LineChartNode extends ChartNode {
-    static title: string = 'Line Chart';
+  static title: string = 'Line Chart';
+  static icon: string = '\uf201';
 }

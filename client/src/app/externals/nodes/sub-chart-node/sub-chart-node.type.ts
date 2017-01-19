@@ -7,7 +7,7 @@ import { SubChartNodeModel, ISubChart } from './sub-chart-node-model.type';
 
 @JNNode({
   title: 'Sub Chart',
-  icon: '\ue905',
+  icon: '\uf1fe',
   color: '',
   borderColor: '',
   editorModel: SubChartNodeEditorModel,

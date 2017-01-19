@@ -78,7 +78,7 @@
           }
           .palette-icon {
             text-align: center;
-            font-family: icomoon;
+            font-family: FontAwesome;
             float: left;
             // &.left {
             //   left: 0;
@@ -87,6 +87,7 @@
             //   left: 140px;
             // }
             i {
+              font-style: normal;
               color: #f1f7fb;
             }
           }

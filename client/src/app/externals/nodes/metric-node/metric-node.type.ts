@@ -10,7 +10,7 @@ import { SubChartNode } from '../sub-chart-node/sub-chart-node.type';
 
 @JNNode({
   title: 'Metric',
-  icon: '\ue905',
+  icon: '\uf176',
   color: '',
   borderColor: '',
   editorModel: MetricNodeEditorModel,

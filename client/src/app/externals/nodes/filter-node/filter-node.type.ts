@@ -7,7 +7,7 @@ import { JNFilterNodeInfoPanelModel } from './filter-node-info-panel-model.type'
 
 @JNNode({
   title: 'Filter',
-  icon: '',
+  icon: '\uf0b0',
   color: '',
   borderColor: '',
   editorModel: JNFilterNodeEditorModel,

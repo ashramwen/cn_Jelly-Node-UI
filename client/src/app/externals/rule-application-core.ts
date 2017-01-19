@@ -23,6 +23,7 @@ import { BubbleChartNode } from './nodes/charts/bubble-chart-node/bubble-chart-n
 import { PieChartNode } from './nodes/charts/pie-chart-node/pie-chart-node.type';
 import { ScatterChartNode } from './nodes/charts/scatter-chart-node/scatter-chart-node.type';
 import { ChartNode } from './nodes/charts/models/chart-node.type';
+import { TimeFilterNode } from './nodes/time-filter-node/time-filter-node.type';
 
 
 @Injectable()
@@ -42,7 +43,8 @@ export class RuleApplication extends JNApplication {
       BarChart: BarChartNode,
       BubbleChart: BubbleChartNode,
       PieChart: PieChartNode,
-      ScatterChart: ScatterChartNode
+      ScatterChart: ScatterChartNode,
+      TimeFilter: TimeFilterNode
     };
   }
 
@@ -58,7 +60,8 @@ export class RuleApplication extends JNApplication {
       MetricNode,
       ExtendNode,
       DrilldownNode,
-      SubChartNode
+      SubChartNode,
+      TimeFilterNode
     ];
   }
 

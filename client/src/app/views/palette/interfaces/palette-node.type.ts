@@ -19,6 +19,7 @@ export class JNPaletteNode {
 
   constructor(selectedNodeType: typeof JNBaseNode, nodeType: typeof JNBaseNode, name: string, property?: Object) {
     this.type = nodeType;
+    let a = JNApplication;
     this.typeName = JNUtils.toArray<typeof JNBaseNode>(JNApplication.instance.nodeTypeMapper)
       .find(p => p.value === this.type).key;
     this.name = name;

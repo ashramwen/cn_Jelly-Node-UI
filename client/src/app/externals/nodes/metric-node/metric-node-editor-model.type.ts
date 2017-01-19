@@ -36,6 +36,14 @@ import { MetricNodeModel } from './metric-node-model.type';
       },
       controlType: JNSelectControl,
       $validators: []
+    },
+    yAxisGroupID: {
+      input: <ISelectInput>{
+        label: "Y-Axis",
+        options: []
+      },
+      controlType: JNSelectControl,
+      $validators: []
     }
   }
 })
@@ -49,6 +57,14 @@ export class MetricNodeEditorModel extends JNEditorModel{
   protected parse(data: MetricNodeModel) {
     this.setValue('aggregationMethod', data.aggregationMethod);
     this.setValue('field', data.field);
+    (<ISelectInput>this.getInput('yAxisGroupID')).options = data.yAxisGroupIDs
+      .map((id) => {
+        return {
+          text: id,
+          value: id
+        };
+      });
+    this.setValue('yAxisGroupID', data.yAxisGroupID);
   }
 
   protected formate(): MetricNodeModel {

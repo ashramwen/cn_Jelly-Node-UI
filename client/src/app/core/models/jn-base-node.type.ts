@@ -65,9 +65,11 @@ export abstract class JNBaseNode {
    * @param  {typeofJNBaseNode} right
    */
   static connectable(left: typeof JNBaseNode, right: typeof JNBaseNode): boolean {
-    return right.accepts
+    return !!right.accepts
       .map(nodeName => JNApplication.instance.nodeTypeMapper[nodeName])
-      .indexOf(left) > -1;
+      .find((n) => {
+        return n === left || n.isPrototypeOf(left);
+      });
   }
 
   /**

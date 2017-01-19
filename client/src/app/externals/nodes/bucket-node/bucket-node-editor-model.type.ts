@@ -58,7 +58,7 @@ import { ISelectInput, JNSelectControl } from '../../../views/node-editor/compon
           value: 'm'  
         }]
       },
-      controlType: JNTextControl,
+      controlType: JNSelectControl,
       $validators: []
     }
   }

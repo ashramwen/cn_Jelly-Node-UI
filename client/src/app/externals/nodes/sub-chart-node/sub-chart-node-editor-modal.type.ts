@@ -5,36 +5,20 @@ import { ISelectInput, JNSelectControl } from '../../../views/node-editor/compon
 import { SubChartNodeModel } from './sub-chart-node-model.type';
 
 @JNNodeEditor({
-  title: 'Metric',
+  title: 'Sub-Chart',
   formControls: {
-    field: {
+    xAxisDisplayName: {
       input: <ITextInput>{
-        label: "Field",
+        label: "X Label",
       },
       controlType: JNTextControl,
       $validators: []
     },
-    aggregationMethod: {
-      input: <ISelectInput>{
-        label: "method",
-        options: [{
-          text: 'Average',
-          value: 'avg'
-        }, {
-          text: 'Maximun',
-          value: 'max'
-        }, {
-          text: 'Minimun',
-          value: 'min'  
-        }, {
-          text: 'Sum',
-          value: 'sum'  
-        }, {
-          text: 'Count',
-          value: 'count' 
-        }]
+    yAxisDisplayName: {
+      input: <ITextInput>{
+        label: "Y Label",
       },
-      controlType: JNSelectControl,
+      controlType: JNTextControl,
       $validators: []
     }
   }

@@ -4,6 +4,9 @@ import { BucketNodeEditorModel } from './bucket-node-editor-model.type';
 import { BucketNodeInfoPanelModel } from './bucket-node-info-panel-model.type';
 import { BucketNodePaletteModel } from './bucket-node-palette-model.type';
 import { BucketNodeModel, IBucket } from './bucket-node-model.type';
+import { JNUtils } from '../../../share/util';
+import { ChartNode } from '../charts/models/chart-node.type';
+import { SubChartNode } from '../sub-chart-node/sub-chart-node.type';
 
 @JNNode({
   title: 'Bucket',
@@ -13,7 +16,7 @@ import { BucketNodeModel, IBucket } from './bucket-node-model.type';
   editorModel: BucketNodeEditorModel,
   infoPanelModel: BucketNodeInfoPanelModel,
   paletteModel: BucketNodePaletteModel,
-  accepts: ['LineChart', 'Bucket', 'SubChart'],
+  accepts: ['LineChart', 'BarChart', 'PieChart', 'ScatterChart', 'BubbleChart', 'SubChart'],
   modelRules: []
 })
 export class BucketNode extends JNBaseNode {

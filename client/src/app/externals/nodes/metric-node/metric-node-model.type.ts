@@ -13,10 +13,14 @@ export class MetricNodeModel extends JNNodeModel<IMetric> implements IMetric {
 
   public aggregationMethod;
   public field;
+  public yAxisGroupID: string;
+  public yAxisGroupIDs: string[];
 
   constructor() {
     super();
     this.aggregationMethod = null;
     this.field = null;
+    this.yAxisGroupID = null;
+    this.yAxisGroupIDs = [];
   }
 }

@@ -9,14 +9,14 @@ import { ChartNode } from '../charts/models/chart-node.type';
 import { SubChartNode } from '../sub-chart-node/sub-chart-node.type';
 
 @JNNode({
-  title: 'Bucket',
+  title: 'Aggregation',
   icon: '\uf171',
   color: '',
   borderColor: '',
   editorModel: BucketNodeEditorModel,
   infoPanelModel: BucketNodeInfoPanelModel,
   paletteModel: BucketNodePaletteModel,
-  accepts: ['LineChart', 'BarChart', 'PieChart', 'ScatterChart', 'BubbleChart', 'SubChart'],
+  accepts: ['ChartContainer', 'Bucket', 'SubChart'],
   modelRules: []
 })
 export class BucketNode extends JNBaseNode {

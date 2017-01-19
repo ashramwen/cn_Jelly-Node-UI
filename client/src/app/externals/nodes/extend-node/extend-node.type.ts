@@ -14,7 +14,7 @@ import { ExtendNodeModel } from './extend-node-model.type';
   editorModel: ExtendNodeEditorModel,
   infoPanelModel: ExtendNodeInfoPanelModel,
   paletteModel: ExtendNodePaletteModel,
-  accepts: ['LineChart', 'BarChart', 'PieChart', 'ScatterChart', 'BubbleChart'],
+  accepts: ['ChartContainer'],
   modelRules: []
 })
 export class ExtendNode extends JNBaseNode {

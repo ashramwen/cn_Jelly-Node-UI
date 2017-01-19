@@ -11,7 +11,6 @@ import { Events } from '../share/services/event.service';
 import { JNAuthenHelperSerivce } from '../share/services/authen-helper.service';
 import { TranslateService } from 'ng2-translate';
 import { cn, en } from '../../assets/i18n';
-import { JNFilterNode } from './nodes/filter-node/filter-node.type';
 import { BucketNode } from './nodes/bucket-node/bucket-node.type';
 import { LineChartNode } from './nodes/charts/line-chart-node/line-chart-node.type';
 import { MetricNode } from './nodes/metric-node/metric-node.type';
@@ -34,7 +33,6 @@ export class RuleApplication extends JNApplication {
 
   get nodeTypeMapper() {
     return {
-      Filter: JNFilterNode,
       LineChart: LineChartNode,
       Chart: ChartNode,
       Bucket: BucketNode,
@@ -54,7 +52,6 @@ export class RuleApplication extends JNApplication {
 
   get nodeTypes() {
     return [
-      JNFilterNode,
       LineChartNode,
       BarChartNode,
       BubbleChartNode,

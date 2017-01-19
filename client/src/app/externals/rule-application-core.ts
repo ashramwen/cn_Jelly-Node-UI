@@ -25,6 +25,7 @@ import { ScatterChartNode } from './nodes/charts/scatter-chart-node/scatter-char
 import { ChartNode } from './nodes/charts/models/chart-node.type';
 import { TimeFilterNode } from './nodes/time-filter-node/time-filter-node.type';
 import { RangeFilterNode } from './nodes/range-filter-node/range-filter-node.type';
+import { TermsFilterNode } from './nodes/terms-filter-node/terms-filter-node.type';
 
 
 @Injectable()
@@ -46,7 +47,8 @@ export class RuleApplication extends JNApplication {
       PieChart: PieChartNode,
       ScatterChart: ScatterChartNode,
       TimeFilter: TimeFilterNode,
-      RangeFilter: RangeFilterNode
+      RangeFilter: RangeFilterNode,
+      TermsFilter: TermsFilterNode
     };
   }
 
@@ -64,7 +66,8 @@ export class RuleApplication extends JNApplication {
       DrilldownNode,
       SubChartNode,
       TimeFilterNode,
-      RangeFilterNode
+      RangeFilterNode,
+      TermsFilterNode
     ];
   }
 

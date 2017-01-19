@@ -6,6 +6,7 @@ import { ExtendNodeInfoPanelModel } from './extend-node/extend-node-info-panel-m
 import { DrilldownNodeInfoPanelModel } from './drilldown-node/drilldown-node-info-panel-model.type';
 import { SubChartNodeInfoPanelModel } from './sub-chart-node/sub-chart-node-info-panel-model.type';
 import { TimeFilterNodeInfoPanelModel } from './time-filter-node/time-filter-node-info-panel-model.type';
+import { RangeFilterNodeInfoPanelModel } from './range-filter-node/range-filter-node-info-panel-model.type';
 
 export const EXTERNAL_INFO_PANEL_COMPONENTS = [
     JNFilterNodeInfoPanelModel,
@@ -15,5 +16,6 @@ export const EXTERNAL_INFO_PANEL_COMPONENTS = [
     ExtendNodeInfoPanelModel,
     DrilldownNodeInfoPanelModel,
     SubChartNodeInfoPanelModel,
-    TimeFilterNodeInfoPanelModel
+    TimeFilterNodeInfoPanelModel,
+    RangeFilterNodeInfoPanelModel
     ];

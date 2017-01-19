@@ -20,6 +20,8 @@ export abstract class JNApplication {
     [key: string]: typeof JNBaseNode
   };
 
+  nodeTypes: Array<typeof JNBaseNode>;
+
   constructor(
     public applicationContext: ApplicationContextService,
     public cacheContext: CacheContextService,

@@ -14,7 +14,7 @@ import { DrilldownNodeModel } from './drilldown-node-model.type';
   editorModel: DrilldownEditorModel,
   infoPanelModel: DrilldownNodeInfoPanelModel,
   paletteModel: DrilldownNodePaletteModel,
-  accepts: ['LineChart'],
+  accepts: ['LineChart', 'BarChart', 'PieChart', 'ScatterChart', 'BubbleChart', 'SubChart'],
   modelRules: []
 })
 export class DrilldownNode extends JNBaseNode {

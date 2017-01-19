@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 
 import { BEEHIVE_HEADERS, JNConfig } from '../jn-config';
 import { AuthenHelperSerivce } from './services/authen-helper.service';
-import { JNTimeNode } from './nodes/time-node/time-node.type';
 import { JNApplication } from '../share/services/application-core.service';
 import { ApplicationContextService } from '../share/services/application-context.service';
 import { CacheContextService } from '../share/services/cache-context.service';
@@ -18,6 +17,12 @@ import { LineChartNode } from './nodes/charts/line-chart-node/line-chart-node.ty
 import { MetricNode } from './nodes/metric-node/metric-node.type';
 import { ExtendNode } from './nodes/extend-node/extend-node.type';
 import { DrilldownNode } from './nodes/drilldown-node/drilldown-node.type';
+import { SubChartNode } from './nodes/sub-chart-node/sub-chart-node.type';
+import { BarChartNode } from './nodes/charts/bar-chart-node/bar-chart-node.type';
+import { BubbleChartNode } from './nodes/charts/bubble-chart-node/bubble-chart-node.type';
+import { PieChartNode } from './nodes/charts/pie-chart-node/pie-chart-node.type';
+import { ScatterChartNode } from './nodes/charts/scatter-chart-node/scatter-chart-node.type';
+import { ChartNode } from './nodes/charts/models/chart-node.type';
 
 
 @Injectable()
@@ -26,14 +31,34 @@ export class RuleApplication extends JNApplication {
 
   get nodeTypeMapper() {
     return {
-      Time: JNTimeNode,
       Filter: JNFilterNode,
       LineChart: LineChartNode,
+      Chart: ChartNode,
       Bucket: BucketNode,
       Metric: MetricNode,
       Extend: ExtendNode,
-      Drilldown: DrilldownNode
+      Drilldown: DrilldownNode,
+      SubChart: SubChartNode,
+      BarChart: BarChartNode,
+      BubbleChart: BubbleChartNode,
+      PieChart: PieChartNode,
+      ScatterChart: ScatterChartNode
     };
+  }
+
+  get nodeTypes() {
+    return [
+      LineChartNode,
+      BarChartNode,
+      BubbleChartNode,
+      PieChartNode,
+      ScatterChartNode,
+      BucketNode,
+      MetricNode,
+      ExtendNode,
+      DrilldownNode,
+      SubChartNode
+    ];
   }
 
   constructor(

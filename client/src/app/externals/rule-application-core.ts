@@ -11,7 +11,6 @@ import { Events } from '../share/services/event.service';
 import { JNAuthenHelperSerivce } from '../share/services/authen-helper.service';
 import { TranslateService } from 'ng2-translate';
 import { cn, en } from '../../assets/i18n';
-import { JNFilterNode } from './nodes/filter-node/filter-node.type';
 import { BucketNode } from './nodes/bucket-node/bucket-node.type';
 import { LineChartNode } from './nodes/charts/line-chart-node/line-chart-node.type';
 import { MetricNode } from './nodes/metric-node/metric-node.type';
@@ -23,12 +22,14 @@ import { BubbleChartNode } from './nodes/charts/bubble-chart-node/bubble-chart-n
 import { PieChartNode } from './nodes/charts/pie-chart-node/pie-chart-node.type';
 import { ScatterChartNode } from './nodes/charts/scatter-chart-node/scatter-chart-node.type';
 import { ChartNode } from './nodes/charts/models/chart-node.type';
-import { ChartContainerNode } from './nodes/chart-container-node/chart-contianer-node.type';
-import { AnyNode } from './nodes/any-node/any-node.type';
+import { ChartContainerNode } from './nodes/chart-container-node/chart-container-node.type';
 import { AnalysisTargetNode } from './nodes/analysis-target-node/analysis-target-node.type';
 import { XAxisNode } from './nodes/x-axis-node/x-axis-node.type';
 import { YAxisNode } from './nodes/y-axis-node/y-axis-node.type';
 import { DataSourceNode } from './nodes/data-source/data-source-node.type';
+import { TimeFilterNode } from './nodes/time-filter-node/time-filter-node.type';
+import { RangeFilterNode } from './nodes/range-filter-node/range-filter-node.type';
+import { TermsFilterNode } from './nodes/terms-filter-node/terms-filter-node.type';
 
 
 @Injectable()
@@ -37,7 +38,6 @@ export class RuleApplication extends JNApplication {
 
   get nodeTypeMapper() {
     return {
-      Filter: JNFilterNode,
       LineChart: LineChartNode,
       Chart: ChartNode,
       Bucket: BucketNode,
@@ -50,17 +50,18 @@ export class RuleApplication extends JNApplication {
       PieChart: PieChartNode,
       ScatterChart: ScatterChartNode,
       ChartContainer: ChartContainerNode,
-      Any: AnyNode,
       AnalysisTarget: AnalysisTargetNode,
       XAxis: XAxisNode,
       YAxis: YAxisNode,
-      DataSource: DataSourceNode
+      DataSource: DataSourceNode,
+      TimeFilter: TimeFilterNode,
+      RangeFilter: RangeFilterNode,
+      TermsFilter: TermsFilterNode
     };
   }
 
   get nodeTypes() {
     return [
-      JNFilterNode,
       ChartContainerNode,
       LineChartNode,
       BarChartNode,
@@ -72,11 +73,13 @@ export class RuleApplication extends JNApplication {
       ExtendNode,
       DrilldownNode,
       SubChartNode,
-      AnyNode,
       AnalysisTargetNode,
       XAxisNode,
       YAxisNode,
-      DataSourceNode
+      DataSourceNode,
+      TimeFilterNode,
+      RangeFilterNode,
+      TermsFilterNode
     ];
   }
 

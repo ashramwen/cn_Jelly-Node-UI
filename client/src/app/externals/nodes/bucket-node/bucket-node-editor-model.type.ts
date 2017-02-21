@@ -8,10 +8,20 @@ import { ISelectInput, JNSelectControl } from '../../../views/node-editor/compon
   title: 'Bucket',
   formControls: {
     field: {
-      input: <ITextInput>{
+      input: <ISelectInput>{
         label: "Field",
+        options: [{
+          text: 'timestamp',
+          value: 'timestamp'
+        }, {
+          text: 'CO2',
+          value: 'CO2'  
+        }, {
+          text: 'Temperature',
+          value: 'Temperature'
+        }]
       },
-      controlType: JNTextControl,
+      controlType: JNSelectControl,
       $validators: []
     },
     aggregation: {

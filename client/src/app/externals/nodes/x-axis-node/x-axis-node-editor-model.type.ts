@@ -7,9 +7,9 @@ import { XAxisNodeModel } from './x-axis-node-model.type';
 @JNNodeEditor({
   title: 'nodeset.JNTimeNode.nodename',
   formControls: {
-    name: {
+    xAxisDisplayName: {
       input: <ITextInput>{
-        label: "Name",
+        label: "X Axis",
       },
       controlType: JNTextControl,
       $validators: []

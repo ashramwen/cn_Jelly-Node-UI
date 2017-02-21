@@ -16,7 +16,7 @@ import { ChartContainerNodeEditorModel } from './chart-container-node-editor-mod
   editorModel: ChartContainerNodeEditorModel,
   infoPanelModel: ChartContainerNodeInfoPanelModel,
   paletteModel: ChartContainerNodePaletteModel,
-  accepts: ['Filter'],
+  accepts: ['DataSource'],
   modelRules: []
 })
 export class ChartContainerNode extends JNBaseNode {

@@ -8,10 +8,20 @@ import { MetricNodeModel } from './metric-node-model.type';
   title: 'Metric',
   formControls: {
     field: {
-      input: <ITextInput>{
+      input: <ISelectInput>{
         label: "Field",
+        options: [{
+          text: 'CO2',
+          value: 'CO2'
+        }, {
+          text: 'Temperature',
+          value: 'Temperature'  
+        }, {
+          text: 'location',
+          value: 'location'  
+        }]
       },
-      controlType: JNTextControl,
+      controlType: JNSelectControl,
       $validators: []
     },
     aggregationMethod: {
@@ -36,14 +46,6 @@ import { MetricNodeModel } from './metric-node-model.type';
       },
       controlType: JNSelectControl,
       $validators: []
-    },
-    yAxisGroupID: {
-      input: <ISelectInput>{
-        label: "Y-Axis",
-        options: []
-      },
-      controlType: JNSelectControl,
-      $validators: []
     }
   }
 })
@@ -57,14 +59,6 @@ export class MetricNodeEditorModel extends JNEditorModel{
   protected parse(data: MetricNodeModel) {
     this.setValue('aggregationMethod', data.aggregationMethod);
     this.setValue('field', data.field);
-    (<ISelectInput>this.getInput('yAxisGroupID')).options = data.yAxisGroupIDs
-      .map((id) => {
-        return {
-          text: id,
-          value: id
-        };
-      });
-    this.setValue('yAxisGroupID', data.yAxisGroupID);
   }
 
   protected formate(): MetricNodeModel {

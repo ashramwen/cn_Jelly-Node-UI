@@ -9,14 +9,14 @@ import { ChartNode } from '../charts/models/chart-node.type';
 import { SubChartNode } from '../sub-chart-node/sub-chart-node.type';
 
 @JNNode({
-  title: 'TermsFilter',
+  title: 'Terms Filter',
   icon: '\uf0b0',
   color: '',
   borderColor: '',
   editorModel: TermsFilterNodeEditorModel,
   infoPanelModel: TermsFilterNodeInfoPanelModel,
   paletteModel: TermsFilterNodePaletteModel,
-  accepts: [],
+  accepts: ['AnalysisTarget'],
   modelRules: []
 })
 export class TermsFilterNode extends JNBaseNode {

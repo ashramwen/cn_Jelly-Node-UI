@@ -16,7 +16,7 @@ import { DataSourceNodeModel, IDataSource } from './data-source-node-model.type'
   editorModel: DataSourceNodeEditorModel,
   infoPanelModel: DataSourceNodeInfoPanelModel,
   paletteModel: DataSourceNodePaletteModel,
-  accepts: ['ChartContainer', 'Bucket', 'SubChart', 'Any'],
+  accepts: ['Metric', 'RangeFilter', 'TermsFilter', 'TimeFilter'],
   modelRules: []
 })
 export class DataSourceNode extends JNBaseNode {

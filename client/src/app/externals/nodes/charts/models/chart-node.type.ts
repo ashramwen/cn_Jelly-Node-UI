@@ -13,15 +13,8 @@ import { ChartNodePaletteModel } from './chart-node-palette-model.type';
   editorModel: ChartNodeEditorModel,
   infoPanelModel: ChartNodeInfoPanelModel,
   paletteModel: ChartNodePaletteModel,
-  accepts: ['ChartContainer'],
-  modelRules: [{
-    message: 'X axis or Y axis displayname is empty.',
-    validator: (model: ChartNodeModel) => {
-      return !!model.xAxisDisplayName
-        || !!model.yAxisDisplayName
-        || !model.yAxisDisplayName.length;
-    }
-  }]
+  accepts: ['ChartContainer', 'Drilldown'],
+  modelRules: []
 })
 export class ChartNode extends JNBaseNode {
 

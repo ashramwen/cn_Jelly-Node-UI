@@ -10,13 +10,13 @@ import { XAxisNodePaletteModel } from './x-axis-node-palette-model.type';
 
 @JNNode({
   title: 'X Axis',
-  icon: '\uf171',
+  icon: '\uf178',
   color: '',
   borderColor: '',
   editorModel: XAxisNodeEditorModel,
   infoPanelModel: XAxisNodeInfoPanelModel,
   paletteModel: XAxisNodePaletteModel,
-  accepts: ['ChartContainer', 'Bucket', 'SubChart', 'Any'],
+  accepts: ['ChartContainer'],
   modelRules: []
 })
 export class XAxisNode extends JNBaseNode {

@@ -10,13 +10,14 @@ import { SubChartNode } from '../sub-chart-node/sub-chart-node.type';
 
 @JNNode({
   title: 'Metric',
-  icon: '\uf176',
+  icon: '\uf02b',
   color: '',
   borderColor: '',
   editorModel: MetricNodeEditorModel,
   infoPanelModel: MetricNodeInfoPanelModel,
   paletteModel: MetricNodePaletteModel,
-  accepts: ['LineChart', 'BarChart', 'PieChart', 'ScatterChart', 'BubbleChart', 'SubChart'],
+  // accepts: ['LineChart', 'BarChart', 'PieChart', 'ScatterChart', 'BubbleChart', 'SubChart'],
+  accepts: ['Bucket'],
   modelRules: []
 })
 export class MetricNode extends JNBaseNode {
@@ -35,12 +36,11 @@ export class MetricNode extends JNBaseNode {
         .map(p => p.value)
         .find(n => n instanceof ChartNode || n instanceof SubChartNode);
       
-      if (node) {
-        this.update({
-          yAxisGroupIDs: (<ChartNode>node).body.yAxisDisplayName
-        });
-      }
       resolve(true);
     });
+  }
+
+  getTitle() {
+    return this.model.field || 'Metric';
   }
 }

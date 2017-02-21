@@ -1,17 +1,24 @@
 import { JNNodeEditor } from '../../../core/models/node-editor-annotation';
 import { JNEditorModel } from '../../../views/node-editor/interfaces/editor-model.type';
 import { ITextInput, JNTextControl } from '../../../views/node-editor/components/controls/text/text.component';
-import { ISelectInput } from '../../../views/node-editor/components/controls/select/select.component';
+import { ISelectInput, JNSelectControl } from '../../../views/node-editor/components/controls/select/select.component';
 import { AnalysisTargetNodeModel } from './analysis-target-node-model.type';
 
 @JNNodeEditor({
   title: 'nodeset.JNTimeNode.nodename',
   formControls: {
-    name: {
-      input: <ITextInput>{
-        label: "Name",
+    analysisTarget: {
+      input: <ISelectInput>{
+        label: "Target",
+        options: [{
+          text: 'sample_index1',
+          value: 'sample_index1'
+        }, {
+          text: 'sample_index2',
+          value: 'sample_index2'
+        }]
       },
-      controlType: JNTextControl,
+      controlType: JNSelectControl,
       $validators: []
     }
   }
@@ -24,6 +31,7 @@ export class AnalysisTargetNodeEditorModel extends JNEditorModel{
   }
 
   protected parse(data: AnalysisTargetNodeModel) {
+    this.setValue('analysisTarget', data.analysisTarget);
   }
 
   protected formate(): AnalysisTargetNodeModel {

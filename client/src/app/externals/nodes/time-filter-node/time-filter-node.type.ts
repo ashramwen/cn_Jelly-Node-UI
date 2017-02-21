@@ -9,14 +9,14 @@ import { ChartNode } from '../charts/models/chart-node.type';
 import { SubChartNode } from '../sub-chart-node/sub-chart-node.type';
 
 @JNNode({
-  title: 'TimeFilter',
-  icon: '\uf0b0',
+  title: 'Time Filter',
+  icon: '\uf017',
   color: '',
   borderColor: '',
   editorModel: TimeFilterNodeEditorModel,
   infoPanelModel: TimeFilterNodeInfoPanelModel,
   paletteModel: TimeFilterNodePaletteModel,
-  accepts: [],
+  accepts: ['AnalysisTarget'],
   modelRules: []
 })
 export class TimeFilterNode extends JNBaseNode {

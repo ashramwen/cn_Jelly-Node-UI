@@ -3,17 +3,17 @@ import { Serializable } from '../../../../bin/JsonMapper';
 import { JNNodeModel } from '../../../core/models/jn-node-model.type';
 
 export interface IAnalysisTarget extends INodeBody {
-  name: string;
+  analysisTarget: string;
 }
 
 @Serializable()
 export class AnalysisTargetNodeModel extends JNNodeModel<IAnalysisTarget> implements IAnalysisTarget {
   static deserialize: (data: any) => AnalysisTargetNodeModel;
 
-  public name;
+  public analysisTarget;
 
   constructor() {
     super();
-    this.name = null;
+    this.analysisTarget = null;
   }
 }

@@ -7,9 +7,9 @@ import { YAxisNodeModel } from './y-axis-node-model.type';
 @JNNodeEditor({
   title: 'nodeset.JNTimeNode.nodename',
   formControls: {
-    name: {
+    yAxisDisplayName: {
       input: <ITextInput>{
-        label: "Name",
+        label: "Y Label",
       },
       controlType: JNTextControl,
       $validators: []

@@ -9,14 +9,14 @@ import { ChartNode } from '../charts/models/chart-node.type';
 import { SubChartNode } from '../sub-chart-node/sub-chart-node.type';
 
 @JNNode({
-  title: 'RangeFilter',
-  icon: '\uf0b0',
+  title: 'Range Filter',
+  icon: '\uf2c8',
   color: '',
   borderColor: '',
   editorModel: RangeFilterNodeEditorModel,
   infoPanelModel: RangeFilterNodeInfoPanelModel,
   paletteModel: RangeFilterNodePaletteModel,
-  accepts: [],
+  accepts: ['AnalysisTarget'],
   modelRules: []
 })
 export class RangeFilterNode extends JNBaseNode {

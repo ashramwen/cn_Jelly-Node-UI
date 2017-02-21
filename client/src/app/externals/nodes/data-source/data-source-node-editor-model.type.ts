@@ -6,15 +6,7 @@ import { DataSourceNodeModel } from './data-source-node-model.type';
 
 @JNNodeEditor({
   title: 'nodeset.JNTimeNode.nodename',
-  formControls: {
-    name: {
-      input: <ITextInput>{
-        label: "Name",
-      },
-      controlType: JNTextControl,
-      $validators: []
-    }
-  }
+  formControls: { }
 })
 export class DataSourceNodeEditorModel extends JNEditorModel{
 

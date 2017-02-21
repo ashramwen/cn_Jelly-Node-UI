@@ -10,13 +10,13 @@ import { AnalysisTargetNodeModel, IAnalysisTarget } from './analysis-target-node
 
 @JNNode({
   title: 'Analysis',
-  icon: '\uf171',
+  icon: '\uf247',
   color: '',
   borderColor: '',
   editorModel: AnalysisTargetNodeEditorModel,
   infoPanelModel: AnalysisTargetNodeInfoPanelModel,
   paletteModel: AnalysisTargetNodePaletteModel,
-  accepts: ['ChartContainer', 'Bucket', 'SubChart', 'Any'],
+  accepts: [],
   modelRules: []
 })
 export class AnalysisTargetNode extends JNBaseNode {

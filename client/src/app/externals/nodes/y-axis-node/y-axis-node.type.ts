@@ -10,13 +10,13 @@ import { YAxisNodePaletteModel } from './y-axis-node-palette-model.type';
 
 @JNNode({
   title: 'Y Axis',
-  icon: '\uf171',
+  icon: '\uf176',
   color: '',
   borderColor: '',
   editorModel: YAxisNodeEditorModel,
   infoPanelModel: YAxisNodeInfoPanelModel,
   paletteModel: YAxisNodePaletteModel,
-  accepts: ['ChartContainer', 'Bucket', 'SubChart', 'Any'],
+  accepts: ['ChartContainer', 'LineChart', 'BarChart', 'PieChart', 'ScatterChart', 'BubbleChart', 'SubChart'],
   modelRules: []
 })
 export class YAxisNode extends JNBaseNode {

@@ -7,6 +7,13 @@ import { ChartContainerNodeModel } from './chart-container-node-model';
 @JNNodeEditor({
   title: 'Chart Container',
   formControls: {
+    chartName: {
+      input: <ITextInput>{
+        label: "Name",
+      },
+      controlType: JNTextControl,
+      $validators: []
+    }
   }
 })
 export class ChartContainerNodeEditorModel extends JNEditorModel{

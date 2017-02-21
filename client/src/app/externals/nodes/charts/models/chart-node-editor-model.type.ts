@@ -2,6 +2,7 @@ import { JNNodeEditor } from '../../../../core/models/node-editor-annotation';
 import { JNEditorModel } from '../../../../views/node-editor/interfaces/editor-model.type';
 import { ITextInput, JNTextControl } from '../../../../views/node-editor/components/controls/text/text.component';
 import { ChartNodeModel } from './chart-node-model.type';
+import { ISelectInput, JNSelectControl } from '../../../../views/node-editor/components/controls/select/select.component';
 
 
 import {
@@ -10,27 +11,20 @@ import {
 } from '../../../../views/node-editor/components/controls/textarea/textarea.component';
 
 @JNNodeEditor({
-  title: 'nodeset.JNTimeNode.nodename',
+  title: 'Chart',
   formControls: {
-    name: {
-      input: <ITextInput>{
-        label: "Name",
+    fieldName: {
+      input: <ISelectInput>{
+        label: "Field",
+        options: [{
+          text: "CO2",
+          value: "CO2"
+        }, {
+          text: "Temperature",
+          value: "Temperature"  
+        }]
       },
-      controlType: JNTextControl,
-      $validators: []
-    },
-    xAxisDisplayName: {
-      input: <ITextInput>{
-        label: "X Label",
-      },
-      controlType: JNTextControl,
-      $validators: []
-    },
-    yAxisDisplayName: {
-      input: <ITextInput>{
-        label: "Y Label",
-      },
-      controlType: JNTextControl,
+      controlType: JNSelectControl,
       $validators: []
     }
   }
@@ -43,9 +37,7 @@ export class ChartNodeEditorModel extends JNEditorModel{
   }
 
   protected parse(data: ChartNodeModel) {
-    this.setValue('name', data.name);
-    this.setValue('xAxisDisplayName', data.xAxisDisplayName);
-    this.setValue('yAxisDisplayName', data.yAxisDisplayName.join(';'));
+    this.setValue('fieldName', data.fieldName);
   }
 
   protected formate(): ChartNodeModel {
@@ -53,10 +45,6 @@ export class ChartNodeEditorModel extends JNEditorModel{
   }
 
   protected updated(fieldName: string, value: any): void {
-    if (fieldName === 'yAxisDisplayName') {
-      this.model.yAxisDisplayName = value.split(';');
-    } else {
-      this.model[fieldName] = value;
-    }
+    this.model[fieldName] = value;
   }
 }

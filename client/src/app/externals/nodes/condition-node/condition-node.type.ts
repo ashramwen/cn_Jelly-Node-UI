@@ -109,7 +109,7 @@ export class JNConditionNode extends JNBaseNode  {
           this.update({
             typeName: null,
             conditions: []
-          })
+          }, payload.influenceMap);
           resolve(true);
           return;
         }
@@ -140,7 +140,7 @@ export class JNConditionNode extends JNBaseNode  {
         this.update({
           typeName: typeName,
           conditions: conditions
-        });
+        }, payload.influenceMap);
       }
       resolve(true);
     });

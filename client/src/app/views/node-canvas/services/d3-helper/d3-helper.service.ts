@@ -409,7 +409,7 @@ export class D3HelperService {
         if (!self.linkingNode) return;
 
         let connectable = self.linkingNode.from === 'input'
-          && d.connectable(self.linkingNode.node);
+          && self.linkingNode.node.connectable(d);
         
         d3.select(this)
           .classed('error', !connectable)

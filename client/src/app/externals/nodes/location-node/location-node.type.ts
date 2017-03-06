@@ -38,6 +38,6 @@ export class JNLocationNode extends JNBaseNode {
   }
 
   protected listener() {
-    return null;
+    return Promise.resolve();
   }
 }

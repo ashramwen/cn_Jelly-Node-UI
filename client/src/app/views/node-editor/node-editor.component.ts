@@ -126,7 +126,7 @@ export class JNEditFormComponent implements OnInit {
     let result = this.editorModel.submit();
     JNUtils.debug(result);
     this.events.emit(NODE_EVENTS.NODE_BEFORE_CHANGED, this.targetNode);
-    this.targetNode.update(result);
+    this.targetNode.update(result, []);
     this.hide();
   }
 

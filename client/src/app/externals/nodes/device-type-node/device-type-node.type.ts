@@ -66,9 +66,9 @@ export class JNDeviceTypeNode extends JNBaseNode {
     return Promise.resolve(true);
   }
 
-  protected listener(event: IJNNodePayload) {
+  protected listener(payload: IJNNodePayload) {
     return new Promise((resolve) => {
-      if (event.type === JNLocationNode) {
+      if (payload.type === JNLocationNode) {
         let locations = JNUtils.toArray<JNLocationNode>(this.nodeMap.accepted)
           .map(pair => pair.value)
           .filter(n => !!n.body.locationID)
@@ -77,7 +77,7 @@ export class JNDeviceTypeNode extends JNBaseNode {
         if (!this.model.typeName) {
           this.update({
             locations: locations
-          });
+          }, payload.influenceMap);
           resolve();
           return;
         }
@@ -89,7 +89,7 @@ export class JNDeviceTypeNode extends JNBaseNode {
           this.update({
             locations: locations,
             things: thingIDs
-          });
+          }, payload.influenceMap);
           resolve();
         });
       }

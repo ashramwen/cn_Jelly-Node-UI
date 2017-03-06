@@ -99,7 +99,7 @@ export class JNActionNode extends JNBaseNode  {
         typeName: null,
         actionName: null,
         properties: []
-      });
+      }, []);
     }
     return Promise.resolve(true);
   }
@@ -112,7 +112,7 @@ export class JNActionNode extends JNBaseNode  {
             actionName: null,
             properties: [],
             typeName: payload.data['typeName']
-          });
+          }, payload.influenceMap);
         }
       }
       resolve(true);

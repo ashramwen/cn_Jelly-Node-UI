@@ -119,13 +119,12 @@ export abstract class JNBaseNode {
 
   set state(s) {
     this._state = s;
-    this._stateChange.post(this);
   }
 
   protected abstract model: JNNodeModel<any>; // node model
   private _modelChange: SyncEvent<JNBaseNode>;
   private _state: 'listening' | 'publishing' | 'published';
-  private _stateChange: SyncEvent<JNBaseNode>;
+  private _influenceMap: JNBaseNode[];
 
   /**
    * @desc return body
@@ -140,7 +139,7 @@ export abstract class JNBaseNode {
       outputTo: {}
     };
     this._modelChange = new SyncEvent<JNBaseNode>();
-    this._stateChange = new SyncEvent<JNBaseNode>();
+    this._influenceMap = null;
   }
 
   /**
@@ -206,8 +205,7 @@ export abstract class JNBaseNode {
     node.nodeMap.outputTo[this.body.nodeID] = this;
     this.update({
       accepts: this.accepted.map(n => n.body.nodeID)
-    });
-    node.publishData();
+    }, []);
   }
 
   /**
@@ -226,9 +224,8 @@ export abstract class JNBaseNode {
         delete node.nodeMap.outputTo[this.body.nodeID];
 
         let errors = this.validate();
-        this.update(errors);
+        this.update(errors, []);
         resolve(node);
-        this.publishData();
       }, (err) => {
         reject(err);
       });
@@ -250,12 +247,12 @@ export abstract class JNBaseNode {
    * @param  {Object} data
    * @desc update node by given data and publish new body
    */
-  public update(data: Object) {
+  public update(data: Object, influenceMap: JNBaseNode[]) {
     this.model.accepts = this.accepted
       .map(n => n.body.nodeID);
     this.model = this.parser(data);
     this.model.extends(this.validate());
-    this.publishData();
+    this.dispatchData(influenceMap);
     this._modelChange.post(this);
   };
 
@@ -373,10 +370,6 @@ export abstract class JNBaseNode {
     return this._modelChange.attach(cb);
   }
 
-  public onStateChanges(cb: any) {
-    return this._stateChange.attach(cb);
-  }
-
   /**
    * @desc duplicate this node
    */
@@ -393,11 +386,7 @@ export abstract class JNBaseNode {
    * @param  {IJNNodePayload} payload
    */
   protected subscriber(payload: IJNNodePayload) {
-    this.state = 'listening';
     this.listener(payload).then(() => {
-      if (this.state !== 'published') {
-        this.state = 'published';
-      }
     });
   }
 
@@ -424,25 +413,32 @@ export abstract class JNBaseNode {
   /**
    * @desc publish data 
    */
-  private publishData() {
-    this.state = 'publishing';
-    if (!this.outputTo.length) {
-      this.state = 'published';
+  private dispatchData(influenceMap: JNBaseNode[] = []) {
+    if (!this.outputTo.length && !this.accepted.length) {
       return;
     }
+    influenceMap.push(this);
+
     this.buildOutput().then((output) => {
       let payload: IJNNodePayload = {
         type: this.constructor,
         data: output,
         valid: this.model.valid,
-        error: this.model.errors
+        error: this.model.errors,
+        influenceMap: influenceMap
       };
-      JNUtils.toArray<JNBaseNode>(this.nodeMap.outputTo)
-        .map(pair => pair.value)
+      this.outputTo
         .forEach((node) => {
+          if (influenceMap.indexOf(node) > -1) return;
           node.subscriber(payload);
         });
-      this.state = 'published';
+      this.accepted
+        .forEach((node) => {
+          if (influenceMap.indexOf(node) > -1) return;
+          node.subscriber(payload);
+        });
+      
+      this._influenceMap = null;
     });
   }
 

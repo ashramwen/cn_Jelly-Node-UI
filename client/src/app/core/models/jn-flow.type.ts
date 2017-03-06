@@ -207,7 +207,7 @@ export class JNFlow implements IFlow {
   }
 
   initNode(node: JNBaseNode) {
-    node.onStateChanges(() => { this.whenNodeUpdated(node); });
+    node.onChanges(() => { this.whenNodeUpdated(node); });
   }
 
   public onChanges(cb: any) {

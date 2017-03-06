@@ -7,4 +7,5 @@ export interface IJNNodePayload {
   data: Object;
   valid: boolean;
   error: NodeError[];
+  influenceMap: JNBaseNode[]
 }

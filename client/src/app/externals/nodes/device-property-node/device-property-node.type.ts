@@ -103,13 +103,13 @@ export class JNDevicePropertyNode extends JNBaseNode {
           this.update({
             typeName: deviceTypeNodes[0].body['typeName'],
             property: null
-          });
+          }, payload.influenceMap);
         }
       } else {
         this.update({
           typeName: null,
           property: null
-        });
+        }, payload.influenceMap);
       }
     }
     return Promise.resolve(true);
